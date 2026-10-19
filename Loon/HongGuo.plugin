@@ -1,17 +1,25 @@
 #!name = 红果短剧广告拦截
-#!desc = 拦截红果短剧广告，已去除影响抖音的宽泛规则。原始规则来自 Tartarus2014/Loon-Script，经裁剪适配。
-#!author = Tartarus2014
+#!desc = 红果短剧核心广告与穿山甲/字节系兜底拦截规则(已去重合并)。插件规则与主配置自动合并，不含 DNS 与 IPv6 设置。
+#!author = Tartarus2014 & Customized
 #!homepage = https://github.com/Tartarus2014/Loon-Script
 #!icon = https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png
 #!tag = 去广告
-#!date = 2026-10-19
-#!version = 1.1.0
+#!date = 2026-10-20
 
 [Rule]
+# 红果核心广告拦截
 DOMAIN-SUFFIX,hongguoapp.com,REJECT
 DOMAIN-SUFFIX,hongguosdk.com,REJECT
 DOMAIN-KEYWORD,hongguo.ad,REJECT
+
+# 穿山甲与广告联盟 SDK
 DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
 DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
 DOMAIN-SUFFIX,ad.pangle.cn,REJECT
 DOMAIN-SUFFIX,ad.pangolin.cn,REJECT
+DOMAIN-KEYWORD,ad-union-sdk,REJECT
+
+# 字节系广告与配置兜底
+DOMAIN-KEYWORD,be-pack,REJECT
+DOMAIN-SUFFIX,zijieapi.com,REJECT
+DOMAIN-KEYWORD,tnc.snssdk,REJECT

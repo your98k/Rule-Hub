@@ -1,23 +1,29 @@
-name: '红果短剧广告拦截（不改全局 IPv6）'
+name: '红果短剧广告拦截'
 desc: |-
-  基于 Tartarus2014/Loon-Script 的裁剪规则。
-  保留原有候选域名拦截，不覆盖 IPv6 或 DNS 设置。
-  此版本不提供局部 IPv6 开关；域名拦截效果及兼容性需实测。
+  红果短剧核心广告与穿山甲/字节系兜底拦截规则（已去重合并）。
+  采用默认前插合并，不改动现有 DNS 与 IPv6 全局设置。
 author: 'Tartarus2014 & Customized'
 homepage: 'https://github.com/Tartarus2014/Loon-Script'
 icon: 'https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png'
 category: '去广告'
-date: '2026-10-19'
-version: '1.4.1'
+date: '2026-10-20'
+version: '1.5.0'
 
 rules:
-  # 原插件中的红果相关候选规则
+  # 红果核心广告拦截
   - DOMAIN-SUFFIX,hongguoapp.com,REJECT
   - DOMAIN-SUFFIX,hongguosdk.com,REJECT
   - DOMAIN-KEYWORD,hongguo.ad,REJECT
-  # 原插件中的穿山甲相关候选规则
+
+  # 穿山甲与广告联盟 SDK
   - DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
   - DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
   - DOMAIN-SUFFIX,ad.pangle.cn,REJECT
   - DOMAIN-SUFFIX,ad.pangolin.cn,REJECT
+  - DOMAIN-KEYWORD,ad-union-sdk,REJECT
+
+  # 字节系广告与配置兜底
+  - DOMAIN-KEYWORD,be-pack,REJECT
+  - DOMAIN-SUFFIX,zijieapi.com,REJECT
+  - DOMAIN-KEYWORD,tnc.snssdk,REJECT
 
