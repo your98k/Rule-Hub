@@ -5,6 +5,7 @@
 #!icon = https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png
 #!tag = 去广告
 #!date = 2026-10-20
+#!version = 1.5.0
 
 [Rule]
 # 红果核心广告拦截
