@@ -1,0 +1,106 @@
+name: 'YouTube 去广告 · 可调参数'
+desc: |-
+  沿用原 YouTube / YouTube Music 去广告脚本。
+  支持手动设置上传按钮、Shorts 按钮、选段按钮、
+  字幕翻译语言、歌词翻译语言和调试模式。
+  使用前需启用 MITM，并安装、信任相应证书。
+version: '1.0.0'
+author: 'Maasea[https://github.com/Maasea], VirgilClyne[https://github.com/VirgilClyne], Choler[https://github.com/Choler], DivineEngine[https://github.com/DivineEngine], app2smile[https://github.com/app2smile]'
+homepage: 'https://hub.kelee.one'
+openUrl: 'https://apps.apple.com/app/id544007664'
+icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png'
+category: 'ad'
+
+arguments-version: 1
+arguments:
+  blockUpload:
+    type: switch
+    title: '隐藏上传按钮'
+    description: '隐藏 YouTube 底栏的上传按钮'
+    default: false
+
+  blockShorts:
+    type: switch
+    title: '隐藏 Shorts 按钮'
+    description: '隐藏 YouTube 底栏的 Shorts 按钮'
+    default: false
+
+  blockImmersive:
+    type: switch
+    title: '隐藏选段按钮'
+    description: '隐藏 YouTube Music 底栏的选段按钮'
+    default: false
+
+  captionLang:
+    type: select
+    title: '字幕翻译语言'
+    description: '设置字幕翻译的目标语言'
+    default: 'zh-Hans'
+    options:
+      - value: 'off'
+        label: '关闭翻译'
+      - value: 'zh-Hans'
+        label: '简体中文'
+      - value: 'zh-Hant'
+        label: '繁體中文'
+      - value: 'en'
+        label: '英语'
+      - value: 'ja'
+        label: '日语'
+      - value: 'ko'
+        label: '韩语'
+
+  lyricLang:
+    type: select
+    title: '歌词翻译语言'
+    description: '设置 YouTube Music 歌词翻译的目标语言'
+    default: 'zh-Hans'
+    options:
+      - value: 'off'
+        label: '关闭翻译'
+      - value: 'zh-Hans'
+        label: '简体中文'
+      - value: 'zh-Hant'
+        label: '繁體中文'
+      - value: 'en'
+        label: '英语'
+      - value: 'ja'
+        label: '日语'
+      - value: 'ko'
+        label: '韩语'
+
+  debug:
+    type: switch
+    title: '启用调试模式'
+    description: '控制脚本调试日志；日常使用建议关闭'
+    default: true
+
+http:
+  mitm:
+    - '*.googlevideo.com'
+    - 'youtubei.googleapis.com'
+
+  force-http-engine:
+    - '*.googlevideo.com'
+    - 'youtubei.googleapis.com'
+
+  url-rewrite:
+    - '^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad - reject-200'
+
+  script:
+    - match: '^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch))(\?(.*))?$'
+      name: 'YouTube去广告'
+      type: response
+      require-body: true
+      binary-mode: true
+      timeout: 20
+      argument: '{"blockUpload":${args.blockUpload|json},"blockShorts":${args.blockShorts|json},"blockImmersive":${args.blockImmersive|json},"captionLang":${args.captionLang|json},"lyricLang":${args.lyricLang|json},"debug":${args.debug|json}}'
+
+rules:
+  - 'AND,((DOMAIN-SUFFIX,googlevideo.com),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,youtubei.googleapis.com),(PROTOCOL,QUIC)),REJECT'
+
+script-providers:
+  YouTube去广告:
+    url: 'https://kelee.one/Resource/JavaScript/YouTube/YouTube_remove_ads/YouTube_remove_ads_response.js'
+    interval: 86400
