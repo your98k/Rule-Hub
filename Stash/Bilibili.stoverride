@@ -5,7 +5,7 @@ desc: |-
   解锁后台播放与投屏、移除无用功能与链接跟踪参数，
   支持空降助手跳过视频中插入的广告。
   使用前需启用 MitM（建议 MitM over HTTP/2），iOS 15 及以上。
-version: '1.1.3'
+version: '1.1.4'
 author: 'kokoryh[https://github.com/kokoryh], Biliverse[https://github.com/Biliverse]'
 homepage: 'https://github.com/kokoryh/Sparkle'
 openUrl: 'https://apps.apple.com/app/id736536022'
@@ -95,6 +95,18 @@ http:
     # 去除动态中的最常访问
     - '^https?:\/\/api\.vc\.bilibili\.com\/dynamic_svr\/v1\/dynamic_svr\/mix_uplist - reject-dict'
   mock:
+    # B 站商业归因上报 → 本地成功响应（阻止上传）
+    - match: ^https?:\/\/cm\.bilibili\.com\/cm\/api\/(conversion\/mobile\/v2|fees\/wise)
+      base64: 'eyJjb2RlIjowLCJtZXNzYWdlIjoiMCIsImRhdGEiOnt9fQ=='
+      status-code: 200
+      headers:
+        Content-Type: application/json
+    # 第三方广告归因（千问 / Solar Engine）→ 本地成功响应
+    - match: ^https?:\/\/(adtrack\.qianwen\.com|tkio-redirect\.solar-engine\.com)\/
+      base64: 'eyJjb2RlIjowLCJtZXNzYWdlIjoiMCIsImRhdGEiOnt9fQ=='
+      status-code: 200
+      headers:
+        Content-Type: application/json
     # 搜索默认词
     - match: ^https?:\/\/(?:grpc\.biliapi\.net|app\.biliapi\.net|app\.bilibili\.com|app\.biliapi\.com)\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$
       base64: 'AAAAACEaHeaQnOe0ouinhumikeOAgeeVquWJp+aIlnVw5Li7KAE='
