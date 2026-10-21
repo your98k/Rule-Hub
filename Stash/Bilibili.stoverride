@@ -5,7 +5,7 @@ desc: |-
   解锁后台播放与投屏、移除无用功能与链接跟踪参数，
   支持空降助手跳过视频中插入的广告。
   使用前需启用 MitM（建议 MitM over HTTP/2），iOS 15 及以上。
-version: '1.1.4'
+version: '1.1.5'
 author: 'kokoryh[https://github.com/kokoryh], Biliverse[https://github.com/Biliverse]'
 homepage: 'https://github.com/kokoryh/Sparkle'
 openUrl: 'https://apps.apple.com/app/id736536022'
@@ -47,7 +47,12 @@ arguments:
 rules:
   - 'AND,((DOMAIN-SUFFIX,bilibili.com),(PROTOCOL,QUIC)),REJECT'
   - 'AND,((DOMAIN-SUFFIX,biliapi.net),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,biliapi.com),(PROTOCOL,QUIC)),REJECT'
   - 'AND,((DOMAIN-SUFFIX,biligame.com),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,bilivideo.com),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,bilivideo.cn),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,hdslb.com),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,b23.tv),(PROTOCOL,QUIC)),REJECT'
   - 'DOMAIN,bsbsb.top,${args.airborne_policy}'
   - 'DOMAIN,api.biliapi.com,REJECT'
   - 'DOMAIN,app.biliapi.com,REJECT'
