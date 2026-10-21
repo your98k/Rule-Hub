@@ -5,7 +5,7 @@ desc: |-
   解锁后台播放与投屏、移除无用功能与链接跟踪参数，
   支持空降助手跳过视频中插入的广告。
   使用前需启用 MitM（建议 MitM over HTTP/2），iOS 15 及以上。
-version: '1.1.2'
+version: '1.1.3'
 author: 'kokoryh[https://github.com/kokoryh], Biliverse[https://github.com/Biliverse]'
 homepage: 'https://github.com/kokoryh/Sparkle'
 openUrl: 'https://apps.apple.com/app/id736536022'
@@ -167,19 +167,19 @@ http:
 
 script-providers:
   bilibili.mock:
-    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/test/Script/Bilibili_mock.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/test/Script/Bilibili_mock.js?v=113'
     interval: 86400
   bilibili.jq:
-    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/test/Script/Bilibili_jq.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/test/Script/Bilibili_jq.js?v=113'
     interval: 86400
   bilibili.patch:
-    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/test/Script/Bilibili_patch.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/test/Script/Bilibili_patch.js?v=113'
     interval: 86400
   bilibili.protobuf.request:
-    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/test/Script/dist/bilibili.protobuf.request.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/test/Script/dist/bilibili.protobuf.request.js?v=113'
     interval: 86400
   bilibili.protobuf.response:
-    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/test/Script/dist/bilibili.protobuf.response.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/test/Script/dist/bilibili.protobuf.response.js?v=113'
     interval: 86400
   bilibili.json:
     url: 'https://raw.githubusercontent.com/kokoryh/Sparkle/refs/heads/master/dist/bilibili.json.js'
