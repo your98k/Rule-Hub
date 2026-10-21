@@ -19,6 +19,7 @@
 | **YouTube 去广告** | **TF 3.7+** | 去除 YouTube 视频与信息流广告，支持可调参数（底栏 Shorts/上传按钮、字幕/歌词翻译等） | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube.stoverride) |
 | **哔哩哔哩去广告** | **iOS 15+** | 过滤广告/青少年模式弹窗/互动弹幕，解锁后台播放与投屏，支持空降助手跳过片中广告（可调参数） | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride) |
 | **红果短剧去广告** | 通用 | 裁剪域名拦截，不改动全局 IPv6/DNS | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
+| **广告拦截&净化合集** | 通用 | 约 730 款 APP/小程序广告拦截与净化（12306、爱奇艺、百度地图、贴吧、B站等），每款 APP 独立开关可调 | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/blockAds.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/blockAds.stoverride) |
 
 ---
 
@@ -68,6 +69,30 @@
 
 ---
 
+## 📖 广告拦截&净化合集 (blockAds) 使用特别说明
+
+> 基于 [fmz200/wool_scripts](https://github.com/fmz200/wool_scripts)（奶思）整理的综合性广告拦截与净化合集，覆盖 **约 730 款 APP 与小程序**。
+
+### 📌 功能特点
+- **广覆盖**：12306、爱奇艺、百度地图、百度贴吧、哔哩哔哩、菜鸟裹裹、阿里云盘等海量 APP/小程序的开屏、信息流、横幅广告拦截与页面净化。
+- **独立开关**：每款 APP/小程序都有独立的 `arguments` 开关（80+ 个参数），可在导入后按需单独启用/停用，避免误伤。
+- **远程脚本联动**：广告净化脚本通过 `script-providers` 从原作者仓库（fmz200/wool_scripts、kokoryh、zirawell 等）自动拉取并每日更新。
+
+### 📌 详细配置步骤
+1. **安装并信任 MitM 证书**（必要前提）：
+   - 打开 Stash -> **设置** -> **MitM**。
+   - 生成并安装 CA 证书到系统，并在 iOS **系统设置** -> **通用** -> **关于本机** -> **证书信任设置** 中完全信任该证书。
+2. **导入覆写**：
+   - 在 Stash **覆写 (Overrides)** 页面点击右上角 `+`，选择「从 URL 下载」。
+   - 填入上方 blockAds 覆写的 Raw 链接或 jsDelivr CDN 链接。
+3. **按需调整参数**（强烈建议）：
+   - 导入后点击该覆写卡片，进入参数列表，把**用不到的 APP 开关关闭**，仅保留自己常用 APP，可显著降低资源占用与误拦截概率。
+4. **生效与排错**：
+   - ⚠️ **某些 APP 需清除缓存或卸载重装后拦截才会生效**（作者原文提示）。
+   - 启用或更新覆写后，建议彻底划掉相关 APP 重新打开。
+
+---
+
 ## 🚀 其它规则通用安装方法
 
 ### Loon
@@ -87,5 +112,6 @@
 ## 📌 鸣谢与声明
 - **YouTube 去广告** 原作者群：Maasea, VirgilClyne, Choler, DivineEngine, app2smile
 - **哔哩哔哩去广告** 原作者：kokoryh（[Sparkle](https://github.com/kokoryh/Sparkle)），脚本由 `script-providers` 直接引用其官方 dist
+- **广告拦截&净化合集** 原作者：奶思（[fmz200/wool_scripts](https://github.com/fmz200/wool_scripts)），另引用 kokoryh、zirawell 等脚本
 - **红果短剧** 原始规则：Tartarus2014
 - 本项目规则仅供学习研究与个人自用，请勿商用。
