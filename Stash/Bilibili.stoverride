@@ -5,7 +5,7 @@ desc: |-
   解锁后台播放与投屏、移除无用功能与链接跟踪参数，
   支持空降助手跳过视频中插入的广告。
   使用前需启用 MitM（建议 MitM over HTTP/2），iOS 15 及以上。
-version: '1.1.1'
+version: '1.1.2'
 author: 'kokoryh[https://github.com/kokoryh], Biliverse[https://github.com/Biliverse]'
 homepage: 'https://github.com/kokoryh/Sparkle'
 openUrl: 'https://apps.apple.com/app/id736536022'
@@ -176,10 +176,10 @@ script-providers:
     url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/test/Script/Bilibili_patch.js'
     interval: 86400
   bilibili.protobuf.request:
-    url: 'https://raw.githubusercontent.com/kokoryh/Sparkle/refs/heads/master/dist/bilibili.protobuf.request.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/test/Script/dist/bilibili.protobuf.request.js'
     interval: 86400
   bilibili.protobuf.response:
-    url: 'https://raw.githubusercontent.com/kokoryh/Sparkle/refs/heads/master/dist/bilibili.protobuf.response.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/test/Script/dist/bilibili.protobuf.response.js'
     interval: 86400
   bilibili.json:
     url: 'https://raw.githubusercontent.com/kokoryh/Sparkle/refs/heads/master/dist/bilibili.json.js'
