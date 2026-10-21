@@ -5,7 +5,7 @@ desc: |-
   解锁后台播放与投屏、移除无用功能与链接跟踪参数，
   支持空降助手跳过视频中插入的广告。
   使用前需启用 MitM（建议 MitM over HTTP/2），iOS 15 及以上。
-version: '1.0.6'
+version: '1.0.7'
 author: 'kokoryh[https://github.com/kokoryh]'
 homepage: 'https://github.com/kokoryh/Sparkle'
 openUrl: 'https://apps.apple.com/app/id736536022'
@@ -60,6 +60,13 @@ rules:
 
 http:
   mitm:
+    - 'grpc.biliapi.net'
+    - 'app.bilibili.com'
+    - 'api.bilibili.com'
+    - 'api.live.bilibili.com'
+    - 'www.bilibili.com'
+    - 'line3-h5-mobile-api.biligame.com'
+  force-http-engine:
     - 'grpc.biliapi.net'
     - 'app.bilibili.com'
     - 'api.bilibili.com'
