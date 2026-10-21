@@ -5,7 +5,7 @@ desc: |-
   解锁后台播放与投屏、移除无用功能与链接跟踪参数，
   支持空降助手跳过视频中插入的广告。
   使用前需启用 MitM（建议 MitM over HTTP/2），iOS 15 及以上。
-version: '1.0.8'
+version: '1.0.9'
 author: 'kokoryh[https://github.com/kokoryh]'
 homepage: 'https://github.com/kokoryh/Sparkle'
 openUrl: 'https://apps.apple.com/app/id736536022'
@@ -78,7 +78,7 @@ http:
     - name: bilibili.mock
       type: request
       timeout: 10
-      match: '^https:\/\/(?:app\.bilibili\.com\/x\/v2\/splash\/list|ap[ip]\.bilibili\.com\/x\/(?:resource\/(?:top\/activity|patch\/tab(?:\/v2)?)|v2\/(?:search\/square|vip\/ads\/materials))|api\.bilibili\.com\/pgc\/activity\/deliver\/material\/receive|api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info|line3-h5-mobile-api\.biligame\.com\/game\/live\/large_card_material|grpc\.biliapi\.net\/bilibili\.app\.)'
+      match: '^https:\/\/(?:app\.bilibili\.com\/x\/v2\/splash\/list|ap[ip]\.bilibili\.com\/x\/(?:resource\/(?:top\/activity|patch\/tab(?:\/v2)?)|v2\/(?:search\/square|vip\/ads\/materials))|api\.bilibili\.com\/pgc\/activity\/deliver\/material\/receive|api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info|line3-h5-mobile-api\.biligame\.com\/game\/live\/large_card_material|(?:grpc\.biliapi\.net|ap[ip]\.bilibili\.com)\/bilibili\.app\.)'
     # —— Body Rewrite：response 阶段改写 JSON ——
     - name: bilibili.jq
       type: response
