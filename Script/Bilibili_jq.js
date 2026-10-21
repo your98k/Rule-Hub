@@ -46,6 +46,27 @@
     }
     return finish();
   }
+  // 我的页 → 兜底删除新版客户端漏网的服务入口（哔哩万象 / NFT 等）
+  if (/^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine(\/ipad)?\?/.test(url)) {
+    const EXCLUDE = /哔哩万象|Biliverse|我的\s?NFT|数字藏品/;
+    const walk = function (o) {
+      if (Array.isArray(o)) { o.forEach(walk); return; }
+      if (o && typeof o === 'object') {
+        for (const k of Object.keys(o)) {
+          const v = o[k];
+          if (Array.isArray(v)) {
+            const filtered = v.filter(function (it) { return !(it && typeof it === 'object' && typeof it.title === 'string' && EXCLUDE.test(it.title)); });
+            if (filtered.length !== v.length) o[k] = filtered;
+            else v.forEach(walk);
+          } else if (v && typeof v === 'object') {
+            walk(v);
+          }
+        }
+      }
+    };
+    walk(data);
+    return finish();
+  }
   // 未匹配：放行
   $done({});
 })();
