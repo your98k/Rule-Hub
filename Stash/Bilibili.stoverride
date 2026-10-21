@@ -5,7 +5,7 @@ desc: |-
   解锁后台播放与投屏、移除无用功能与链接跟踪参数，
   支持空降助手跳过视频中插入的广告。
   使用前需启用 MitM（建议 MitM over HTTP/2），iOS 15 及以上。
-version: '1.0.4'
+version: '1.0.5'
 author: 'kokoryh[https://github.com/kokoryh]'
 homepage: 'https://github.com/kokoryh/Sparkle'
 openUrl: 'https://apps.apple.com/app/id736536022'
@@ -57,12 +57,12 @@ rules:
 
 http:
   mitm:
-    - 'grpc.biliapi.net:443'
-    - 'app.bilibili.com:443'
-    - 'api.bilibili.com:443'
-    - 'api.live.bilibili.com:443'
-    - 'www.bilibili.com:443'
-    - 'line3-h5-mobile-api.biligame.com:443'
+    - 'grpc.biliapi.net'
+    - 'app.bilibili.com'
+    - 'api.bilibili.com'
+    - 'api.live.bilibili.com'
+    - 'www.bilibili.com'
+    - 'line3-h5-mobile-api.biligame.com'
   force-http-engine:
     - 'grpc.biliapi.net'
     - 'app.bilibili.com'
@@ -70,12 +70,6 @@ http:
     - 'api.live.bilibili.com'
     - 'www.bilibili.com'
     - 'line3-h5-mobile-api.biligame.com'
-    - 'grpc.biliapi.net:443'
-    - 'app.bilibili.com:443'
-    - 'api.bilibili.com:443'
-    - 'api.live.bilibili.com:443'
-    - 'www.bilibili.com:443'
-    - 'line3-h5-mobile-api.biligame.com:443'
   script:
     # —— Map Local：request 阶段直接返回 mock 响应 ——
     - name: bilibili.mock
