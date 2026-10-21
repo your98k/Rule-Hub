@@ -5,7 +5,7 @@ desc: |-
   解锁后台播放与投屏、移除无用功能与链接跟踪参数，
   支持空降助手跳过视频中插入的广告。
   使用前需启用 MitM（建议 MitM over HTTP/2），iOS 15 及以上。
-version: '1.0.1'
+version: '1.0.2'
 author: 'kokoryh[https://github.com/kokoryh]'
 homepage: 'https://github.com/kokoryh/Sparkle'
 openUrl: 'https://apps.apple.com/app/id736536022'
@@ -67,112 +67,19 @@ http:
     # —— Map Local：request 阶段直接返回 mock 响应 ——
     - name: bilibili.mock
       type: request
+      timeout: 10
       match: '^https:\/\/(?:app\.bilibili\.com\/x\/v2\/splash\/list|ap[ip]\.bilibili\.com\/x\/(?:resource\/(?:top\/activity|patch\/tab(?:\/v2)?)|v2\/(?:search\/square|vip\/ads\/materials))|api\.bilibili\.com\/pgc\/activity\/deliver\/material\/receive|api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info|line3-h5-mobile-api\.biligame\.com\/game\/live\/large_card_material|grpc\.biliapi\.net\/bilibili\.app\.)'
-      script: |-
-        let finished = false;
-        (function () {
-          const url = $request.url;
-          const grpcMock = [
-            ['/bilibili\\.app\\.interface\\.v1\\.Teenagers/ModeStatus$', 'AAAAABMKEQgCEgl0ZWVuYWdlcnMgAioA'],
-            ['/bilibili\\.app\\.interface\\.v1\\.Search/DefaultWords$', 'AAAAACEaHeaQnOe0ouinhumikeOAgeeVquWJp+aIlnVw5Li7KAE='],
-            ['/bilibili\\.app\\.(?:view\\.v1\\.View/TFInfo|viewunite\\.v1\\.View/(?:PlayPause|ViewEndPage))$', 'AAAAAAA='],
-          ];
-          for (let i = 0; i < grpcMock.length; i++) {
-            if (new RegExp(grpcMock[i][0]).test(url)) {
-              const bin = atob(grpcMock[i][1]);
-              const bytes = new Uint8Array(bin.length);
-              for (let j = 0; j < bin.length; j++) bytes[j] = bin.charCodeAt(j);
-              $done({ response: { status: 200, headers: { 'content-type': 'application/grpc', 'grpc-status': '0' }, bodyBytes: bytes } });
-              finished = true;
-              return;
-            }
-          }
-          const jsonResp = function (obj) {
-            return { response: { status: 200, headers: { 'content-type': 'application/json' }, body: JSON.stringify(obj) } };
-          };
-          if (/^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/list\?/.test(url)) {
-            $done(jsonResp({ code: 0, message: 'OK', ttl: 1, data: { max_time: 0, min_interval: 31536000, pull_interval: 31536000, keep_ids: [], show: [], list: [{}], splash_request_id: '' } }));
-            finished = true;
-            return;
-          }
-          if (/^https:\/\/ap[ip]\.bilibili\.com\/x\/(?:resource\/(?:top\/activity|patch\/tab(?:\/v2)?)|v2\/search\/square|vip\/ads\/materials)\?/.test(url)) {
-            $done(jsonResp({ code: -404, message: '-404', ttl: 1, data: null }));
-            finished = true;
-            return;
-          }
-          if (/^https:\/\/api\.bilibili\.com\/pgc\/activity\/deliver\/material\/receive\?/.test(url)) {
-            $done(jsonResp({ code: 0, data: { closeType: 'close_win', container: [], showTime: '' }, message: 'success' }));
-            finished = true;
-            return;
-          }
-          if (/^https:\/\/api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info\?/.test(url)) {
-            $done(jsonResp({}));
-            finished = true;
-            return;
-          }
-          if (/^https:\/\/line3-h5-mobile-api\.biligame\.com\/game\/live\/large_card_material\?/.test(url)) {
-            $done(jsonResp({ code: 0, message: 'success' }));
-            finished = true;
-            return;
-          }
-        })();
-        if (!finished) $done({});
     # —— Body Rewrite：response 阶段改写 JSON ——
     - name: bilibili.jq
       type: response
       require-body: true
-      max-size: 10485760
+      timeout: 10
       match: '^https:\/\/(?:api\.live\.bilibili\.com\/xlive\/open-interface\/v2\/tracker\/conf|api\.bilibili\.com\/x\/pd-proxy\/tracker|api\.bilibili\.com\/pgc\/(?:view\/v2\/app\/season|page\/channel))\?'
-      script: |-
-        (function () {
-          const url = $request.url;
-          let data;
-          try {
-            data = JSON.parse($response.body);
-          } catch (e) {
-            $done({});
-            return;
-          }
-          const finish = function () { $done({ body: JSON.stringify(data) }); };
-          if (/^https:\/\/api\.live\.bilibili\.com\/xlive\/open-interface\/v2\/tracker\/conf\?/.test(url)) {
-            if (data.data) data.data.domains = ['wss://tracker.chat.bilibili.com'];
-            return finish();
-          }
-          if (/^https:\/\/api\.bilibili\.com\/x\/pd-proxy\/tracker\?/.test(url)) {
-            if (Array.isArray(data.data)) {
-              data.data.forEach(function (row) {
-                if (Array.isArray(row)) row.forEach(function (_, j) { row[j] = 'stun.chat.bilibili.com:3478'; });
-              });
-            }
-            return finish();
-          }
-          if (/^https:\/\/api\.bilibili\.com\/pgc\/view\/v2\/app\/season\?/.test(url)) {
-            if (data.data) delete data.data.payment;
-            return finish();
-          }
-          if (/^https:\/\/api\.bilibili\.com\/pgc\/page\/channel\?/.test(url)) {
-            if (data.data && Array.isArray(data.data.modules)) {
-              data.data.modules = data.data.modules
-                .filter(function (m) { return m.type !== 'TIP'; })
-                .map(function (m) {
-                  if (m.type === 'BANNER' && m.module_data && Array.isArray(m.module_data.items)) {
-                    m.module_data.items = m.module_data.items.filter(function (it) {
-                      return !(it.url && it.url.startsWith('https://www.bilibili.com/blackboard/era/'));
-                    });
-                  }
-                  return m;
-                });
-            }
-            return finish();
-          }
-          $done({});
-        })();
     # —— protobuf 请求（空降助手 + 评论净化）——
     - name: bilibili.protobuf.request
       type: request
       require-body: true
       binary-mode: true
-      max-size: 10485760
       timeout: 10
       argument: '{"purifyComment":${args.purify_comment|json},"logLevel":"${args.log_level}"}'
       match: '^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(?:community\.service\.dm\.v1\.DM\/DmSegMobile|app\.viewunite\.v1\.View\/View|main\.community\.reply\.v1\.Reply\/MainList)$'
@@ -181,7 +88,6 @@ http:
       type: response
       require-body: true
       binary-mode: true
-      max-size: 10485760
       timeout: 10
       argument: '{"displayUpList":"auto","purifyComment":${args.purify_comment|json},"sponsorBlock":${args.airborne|json},"logLevel":"${args.log_level}"}'
       match: '^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(?:app\.(?:show\.v1\.Popular\/Index|dynamic\.v2\.Dynamic\/DynAll|view(?:unite)?\.v1\.View\/(?:View|ViewProgress|RelatesFeed|AIRelateAsync)|playurl\.v1\.PlayURL\/PlayView|playerunite\.v1\.Player\/PlayViewUnite)|polymer\.app\.search\.v1\.Search\/SearchAll|community\.service\.dm\.v1\.DM\/DmView|main\.community\.reply\.v1\.Reply\/MainList|pgc\.gateway\.player\.v2\.PlayURL\/PlayView)$'
@@ -189,17 +95,23 @@ http:
     - name: bilibili.json
       type: response
       require-body: true
-      max-size: 10485760
+      timeout: 10
       argument: '{"showCreatorHub":0}'
       match: '^https:\/\/app\.bilibili\.com\/x\/(?:resource\/show\/tab\/v2|v2\/(?:splash\/(?:list|show|event\/list2)|feed\/index(?:\/story)?|account\/(?:mine(?:\/ipad)?|myinfo)))\?'
     # —— 直播间网页广告 ——
     - name: bilibili.webpage
       type: response
       require-body: true
-      max-size: 10485760
+      timeout: 10
       match: '^https:\/\/www\.bilibili\.com\/blackboard\/era\/.+\.html\?'
 
 script-providers:
+  bilibili.mock:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Bilibili_mock.js'
+    interval: 86400
+  bilibili.jq:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Bilibili_jq.js'
+    interval: 86400
   bilibili.protobuf.request:
     url: 'https://raw.githubusercontent.com/kokoryh/Sparkle/refs/heads/master/dist/bilibili.protobuf.request.js'
     interval: 86400
