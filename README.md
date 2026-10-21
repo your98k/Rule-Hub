@@ -17,6 +17,7 @@
 | 覆写名称 | 版本要求 | 说明 | 订阅链接 (GitHub Raw) | 国内加速 (jsDelivr CDN) |
 | :--- | :---: | :--- | :--- | :--- |
 | **YouTube 去广告** | **TF 3.7+** | 去除 YouTube 视频与信息流广告，支持可调参数（底栏 Shorts/上传按钮、字幕/歌词翻译等） | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube.stoverride) |
+| **哔哩哔哩去广告** | **iOS 15+** | 过滤广告/青少年模式弹窗/互动弹幕，解锁后台播放与投屏，支持空降助手跳过片中广告（可调参数） | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride) |
 | **红果短剧去广告** | 通用 | 裁剪域名拦截，不改动全局 IPv6/DNS | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
 
 ---
@@ -43,6 +44,30 @@
 
 ---
 
+## 📖 哔哩哔哩去广告使用特别说明
+
+> ⚠️ **前置要求**：基于 kokoryh/Sparkle 移植，需 **iOS 15 及以上**，并在 Stash 中启用 **MitM over HTTP/2**，否则部分 gRPC 接口无法生效。
+
+### 📌 详细配置步骤：
+1. **安装并信任 MitM 证书**（必要前提）：
+   - 打开 Stash -> **设置** -> **MitM**。
+   - 生成并安装 CA 证书到系统，并在 iOS **系统设置** -> **通用** -> **关于本机** -> **证书信任设置** 中完全信任该证书。
+2. **导入覆写**：
+   - 在 Stash **覆写 (Overrides)** 页面点击右上角 `+`，选择「从 URL 下载」。
+   - 填入上方哔哩哔哩覆写的 Raw 链接或 jsDelivr CDN 链接。
+3. **参数个性化配置**（可选）：
+   - 导入后点击该覆写卡片，可直接调整参数：
+     - **空降助手**：跳过视频中插入的广告（默认开启，依赖第三方服务器 `bsbsb.top`，数据来自社区标注，可能存在偏差或失效）。
+     - **空降助手策略**：`bsbsb.top` 的走线策略，默认 `DIRECT` 直连，可填写自己的代理组名。
+     - **过滤置顶评论广告**：移除评论区置顶的广告与带货链接（默认开启）。
+     - **日志等级**：默认 `ERROR`，日常使用无需调整。
+4. **生效与排错**：
+   - 首次启用或更新覆写后，请**强制划掉退出哔哩哔哩 App** 重新打开。
+   - **彻底关闭空降助手**：除关闭参数开关外，还需在覆写脚本中删除 `DmSegMobile` 匹配段（该请求脚本无法通过参数停用）。
+   - **关于"百年大会员"**：脚本会将本地页面显示的会员状态改为大会员样式（`role: 15`），仅客户端 UI 效果，**并非真实会员**，无任何服务器特权。
+
+---
+
 ## 🚀 其它规则通用安装方法
 
 ### Loon
@@ -61,5 +86,6 @@
 
 ## 📌 鸣谢与声明
 - **YouTube 去广告** 原作者群：Maasea, VirgilClyne, Choler, DivineEngine, app2smile
+- **哔哩哔哩去广告** 原作者：kokoryh（[Sparkle](https://github.com/kokoryh/Sparkle)），脚本由 `script-providers` 直接引用其官方 dist
 - **红果短剧** 原始规则：Tartarus2014
 - 本项目规则仅供学习研究与个人自用，请勿商用。

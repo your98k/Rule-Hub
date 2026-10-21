@@ -1,13 +1,16 @@
-name: '哔哩哔哩去广告'
+name: '哔哩哔哩去广告 · 可调参数'
 desc: |-
-  基于 kokoryh/Sparkle 的 Stash 覆写版本。
-  过滤广告、移除青少年模式弹窗与互动弹幕、解锁后台播放/投屏、
-  移除无用功能与链接跟踪参数、空降助手跳过片中广告。
-  需开启 HTTP 解密(MitM)，建议 iOS 15+ 且启用 MitM over HTTP/2。
-author: 'kokoryh (Sparkle)'
-homepage: 'https://github.com/kokoryh/Sparkle'
-icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/Bilibili.png'
+  基于 kokoryh/Sparkle 移植。
+  过滤广告、移除青少年模式弹窗与互动弹幕、
+  解锁后台播放与投屏、移除无用功能与链接跟踪参数，
+  支持空降助手跳过视频中插入的广告。
+  使用前需启用 MitM（建议 MitM over HTTP/2），iOS 15 及以上。
 version: '1.0.0'
+author: 'kokoryh[https://github.com/kokoryh]'
+homepage: 'https://github.com/kokoryh/Sparkle'
+openUrl: 'https://apps.apple.com/app/id736536022'
+icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/Bilibili.png'
+category: 'ad'
 
 arguments-version: 1
 arguments:
