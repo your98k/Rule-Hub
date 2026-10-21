@@ -1,12 +1,12 @@
 name: '哔哩哔哩去广告 · 可调参数'
 desc: |-
-  基于 kokoryh/Sparkle 移植。
-  过滤广告、移除青少年模式弹窗与互动弹幕、
+  基于 kokoryh/Sparkle 移植，融合 Biliverse/ADBlock 的域名覆盖方案。
+  过滤广告、暂停广告、青少年模式弹窗与互动弹幕、
   解锁后台播放与投屏、移除无用功能与链接跟踪参数，
   支持空降助手跳过视频中插入的广告。
   使用前需启用 MitM（建议 MitM over HTTP/2），iOS 15 及以上。
-version: '1.0.9'
-author: 'kokoryh[https://github.com/kokoryh]'
+version: '1.1.5'
+author: 'kokoryh[https://github.com/kokoryh], Biliverse[https://github.com/Biliverse]'
 homepage: 'https://github.com/kokoryh/Sparkle'
 openUrl: 'https://apps.apple.com/app/id736536022'
 icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/Bilibili.png'
@@ -47,7 +47,12 @@ arguments:
 rules:
   - 'AND,((DOMAIN-SUFFIX,bilibili.com),(PROTOCOL,QUIC)),REJECT'
   - 'AND,((DOMAIN-SUFFIX,biliapi.net),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,biliapi.com),(PROTOCOL,QUIC)),REJECT'
   - 'AND,((DOMAIN-SUFFIX,biligame.com),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,bilivideo.com),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,bilivideo.cn),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,hdslb.com),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,b23.tv),(PROTOCOL,QUIC)),REJECT'
   - 'DOMAIN,bsbsb.top,${args.airborne_policy}'
   - 'DOMAIN,api.biliapi.com,REJECT'
   - 'DOMAIN,app.biliapi.com,REJECT'
@@ -60,47 +65,109 @@ rules:
 
 http:
   mitm:
-    - 'grpc.biliapi.net'
     - 'app.bilibili.com'
     - 'api.bilibili.com'
     - 'api.live.bilibili.com'
+    - 'api.vc.bilibili.com'
+    - 'app.biliapi.net'
+    - 'app.biliapi.com'
+    - 'api.biliapi.net'
+    - 'grpc.biliapi.net'
+    - 'grpc.bilibili.com'
+    - 'cm.bilibili.com'
+    - 'adtrack.qianwen.com'
+    - 'tkio-redirect.solar-engine.com'
     - 'www.bilibili.com'
     - 'line3-h5-mobile-api.biligame.com'
   force-http-engine:
-    - 'grpc.biliapi.net'
     - 'app.bilibili.com'
     - 'api.bilibili.com'
     - 'api.live.bilibili.com'
+    - 'api.vc.bilibili.com'
+    - 'app.biliapi.net'
+    - 'app.biliapi.com'
+    - 'api.biliapi.net'
+    - 'grpc.biliapi.net'
+    - 'grpc.bilibili.com'
+    - 'cm.bilibili.com'
     - 'www.bilibili.com'
     - 'line3-h5-mobile-api.biligame.com'
+  url-rewrite:
+    # 去除搜索中的大家都在搜
+    - '^https?:\/\/api\.vc\.bilibili\.com\/search_svr\/v\d\/Search\/recommend_words - reject-dict'
+    # 去除动态中的话题
+    - '^https?:\/\/api\.vc\.bilibili\.com\/topic_svr\/v1\/topic_svr - reject-dict'
+    # 去除动态中的最常访问
+    - '^https?:\/\/api\.vc\.bilibili\.com\/dynamic_svr\/v1\/dynamic_svr\/mix_uplist - reject-dict'
+  mock:
+    # B 站商业归因上报 → 本地成功响应（阻止上传）
+    - match: ^https?:\/\/cm\.bilibili\.com\/cm\/api\/(conversion\/mobile\/v2|fees\/wise)
+      base64: 'eyJjb2RlIjowLCJtZXNzYWdlIjoiMCIsImRhdGEiOnt9fQ=='
+      status-code: 200
+      headers:
+        Content-Type: application/json
+    # 第三方广告归因（千问 / Solar Engine）→ 本地成功响应
+    - match: ^https?:\/\/(adtrack\.qianwen\.com|tkio-redirect\.solar-engine\.com)\/
+      base64: 'eyJjb2RlIjowLCJtZXNzYWdlIjoiMCIsImRhdGEiOnt9fQ=='
+      status-code: 200
+      headers:
+        Content-Type: application/json
+    # 搜索默认词
+    - match: ^https?:\/\/(?:grpc\.biliapi\.net|app\.biliapi\.net|app\.bilibili\.com|app\.biliapi\.com)\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$
+      base64: 'AAAAACEaHeaQnOe0ouinhumikeOAgeeVquWJp+aIlnVw5Li7KAE='
+      status-code: 200
+      headers:
+        Content-Type: application/grpc
+        grpc-status: '0'
+    # 青少年模式
+    - match: ^https?:\/\/(?:grpc\.biliapi\.net|app\.biliapi\.net|app\.bilibili\.com|app\.biliapi\.com)\/bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus$
+      base64: 'AAAAABMKEQgCEgl0ZWVuYWdlcnMgAioA'
+      status-code: 200
+      headers:
+        Content-Type: application/grpc
+        grpc-status: '0'
+    # 暂停广告 / 视频结束页 / TF 提示 → 空响应
+    - match: ^https?:\/\/(?:grpc\.biliapi\.net|app\.biliapi\.net|app\.bilibili\.com|app\.biliapi\.com)\/bilibili\.app\.(?:view\.v1\.View\/TFInfo|viewunite\.v1\.View\/(?:PlayPause|ViewEndPage))$
+      base64: 'AAAAAAA='
+      status-code: 200
+      headers:
+        Content-Type: application/grpc
+        grpc-status: '0'
   script:
-    # —— Map Local：request 阶段直接返回 mock 响应 ——
+    # —— Map Local：request 阶段返回 JSON mock（开屏 -404 等）——
     - name: bilibili.mock
       type: request
       timeout: 10
-      match: '^https:\/\/(?:app\.bilibili\.com\/x\/v2\/splash\/list|ap[ip]\.bilibili\.com\/x\/(?:resource\/(?:top\/activity|patch\/tab(?:\/v2)?)|v2\/(?:search\/square|vip\/ads\/materials))|api\.bilibili\.com\/pgc\/activity\/deliver\/material\/receive|api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info|line3-h5-mobile-api\.biligame\.com\/game\/live\/large_card_material|(?:grpc\.biliapi\.net|ap[ip]\.bilibili\.com)\/bilibili\.app\.)'
+      match: '^https:\/\/(?:app\.bilibili\.com\/x\/v2\/splash\/list|ap[ip]\.bilibili\.com\/x\/(?:resource\/(?:top\/activity|patch\/tab(?:\/v2)?)|v2\/(?:search\/square|vip\/ads\/materials))|api\.bilibili\.com\/pgc\/activity\/deliver\/material\/receive|api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info|line3-h5-mobile-api\.biligame\.com\/game\/live\/large_card_material)'
     # —— Body Rewrite：response 阶段改写 JSON ——
     - name: bilibili.jq
       type: response
       require-body: true
       timeout: 10
       match: '^https:\/\/(?:api\.live\.bilibili\.com\/xlive\/open-interface\/v2\/tracker\/conf|api\.bilibili\.com\/x\/pd-proxy\/tracker|api\.bilibili\.com\/pgc\/(?:view\/v2\/app\/season|page\/channel))\?'
-    # —— protobuf 请求（空降助手 + 评论净化）——
+    # —— protobuf 请求（空降助手 + 评论净化 + View 净化）——
     - name: bilibili.protobuf.request
       type: request
       require-body: true
       binary-mode: true
       timeout: 10
       argument: '{"purifyComment":${args.purify_comment|json},"logLevel":"${args.log_level}"}'
-      match: '^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(?:community\.service\.dm\.v1\.DM\/DmSegMobile|app\.viewunite\.v1\.View\/View|main\.community\.reply\.v1\.Reply\/MainList)$'
-    # —— protobuf 响应（净化各类 protobuf 接口）——
+      match: '^https:\/\/(?:grpc|app)\.bili(?:bili\.com|api\.net)\/bilibili\.(?:community\.service\.dm\.v1\.DM\/DmSegMobile|app\.viewunite\.v1\.View\/View|main\.community\.reply\.v1\.Reply\/MainList)$'
+    # —— protobuf 响应（净化各类 protobuf 接口，含暂停广告）——
     - name: bilibili.protobuf.response
       type: response
       require-body: true
       binary-mode: true
       timeout: 10
       argument: '{"displayUpList":"auto","purifyComment":${args.purify_comment|json},"sponsorBlock":${args.airborne|json},"logLevel":"${args.log_level}"}'
-      match: '^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(?:app\.(?:show\.v1\.Popular\/Index|dynamic\.v2\.Dynamic\/DynAll|view(?:unite)?\.v1\.View\/(?:View|ViewProgress|RelatesFeed|AIRelateAsync)|playurl\.v1\.PlayURL\/PlayView|playerunite\.v1\.Player\/PlayViewUnite)|polymer\.app\.search\.v1\.Search\/SearchAll|community\.service\.dm\.v1\.DM\/DmView|main\.community\.reply\.v1\.Reply\/MainList|pgc\.gateway\.player\.v2\.PlayURL\/PlayView)$'
+      match: '^https:\/\/(?:grpc|app)\.bili(?:bili\.com|api\.net)\/bilibili\.(?:app\.(?:show\.v1\.Popular\/Index|dynamic\.v2\.Dynamic\/DynAll|view(?:unite)?\.v1\.View\/(?:View|ViewProgress|RelatesFeed|AIRelateAsync)|playurl\.v1\.PlayURL\/PlayView|playerunite\.v1\.Player\/PlayViewUnite)|polymer\.app\.search\.v1\.Search\/SearchAll|community\.service\.dm\.v1\.DM\/DmView|main\.community\.reply\.v1\.Reply\/MainList|pgc\.gateway\.player\.v2\.PlayURL\/PlayView)$'
+    # —— 播放器关联推荐广告过滤（PlayerRelates，Sparkle 未覆盖）——
+    - name: bilibili.patch
+      type: response
+      require-body: true
+      binary-mode: true
+      timeout: 10
+      match: '^https:\/\/(?:grpc|app)\.bili(?:bili\.com|api\.net)\/bilibili\.app\.view\.v1\.View\/PlayerRelates$'
     # —— JSON 界面改写（开屏兜底 / 首页信息流 / 我的页 / 直播）——
     - name: bilibili.json
       type: response
@@ -117,16 +184,19 @@ http:
 
 script-providers:
   bilibili.mock:
-    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Bilibili_mock.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Bilibili_mock.js?v=113'
     interval: 86400
   bilibili.jq:
-    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Bilibili_jq.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Bilibili_jq.js?v=113'
+    interval: 86400
+  bilibili.patch:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Bilibili_patch.js?v=113'
     interval: 86400
   bilibili.protobuf.request:
-    url: 'https://raw.githubusercontent.com/kokoryh/Sparkle/refs/heads/master/dist/bilibili.protobuf.request.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/dist/bilibili.protobuf.request.js?v=113'
     interval: 86400
   bilibili.protobuf.response:
-    url: 'https://raw.githubusercontent.com/kokoryh/Sparkle/refs/heads/master/dist/bilibili.protobuf.response.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/dist/bilibili.protobuf.response.js?v=113'
     interval: 86400
   bilibili.json:
     url: 'https://raw.githubusercontent.com/kokoryh/Sparkle/refs/heads/master/dist/bilibili.json.js'
