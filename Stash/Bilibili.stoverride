@@ -1,3 +1,53 @@
-# Biliverse ADBlock v0.7.5 Stash Native
 name: '📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)'
+desc: |-
+  哔哩哔哩：去广告
+  自定义去除APP内界面元素
+openUrl: http://boxjs.com/#/app/BiliBili.ADBlock
+author: ClydeTime[https://github.com/ClydeTime], VirgilClyne[https://github.com/VirgilClyne], RuCu6[https://github.com/RuCu6]
+homepage: https://biliverse.github.io/guide/ad-block
+icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bilibili_Letter.png
+category: Biliverse
+date: 2024-04-09 23:38:00
 version: 0.7.5-native.2
+http:
+  mitm:
+  - biliverse.github.io
+  - manga.bilibili.com
+  - api.live.bilibili.com
+  - api.vc.bilibili.com
+  - app.bilibili.com
+  - app.biliapi.net
+  - app.biliapi.com
+  - api.bilibili.com
+  - api.biliapi.net
+  - grpc.biliapi.net
+  - cm.bilibili.com
+  - adtrack.qianwen.com
+  - tkio-redirect.solar-engine.com
+  url-rewrite:
+  - ^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.Comic\/ListFlash - reject-dict
+  - ^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.Comic\/Flash - reject-dict
+  - ^https?:\/\/api\.vc\.bilibili\.com\/topic_svr\/v1\/topic_svr\/ - reject-dict
+  - ^https?:\/\/api\.vc\.bilibili\.com\/dynamic_svr\/v1\/dynamic_svr\/mix_uplist - reject-dict
+  - ^https?:\/\/api\.vc\.bilibili\.com\/search_svr\/v\d\/Search\/recommend_words - reject-dict
+  - ^https?:\/\/api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info\? - reject-dict
+  mock:
+  - match: ^https?:\/\/(grpc\.biliapi\.net|app\.biliapi\.net|app\.bilibili\.com|app\.biliapi\.com)\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$
+    base64: AAAAAAA=
+    status-code: 200
+    headers:
+      Content-Type: application/grpc
+      grpc-status: '0'
+script-providers:
+  PreferencePanes.Config.ADBlock:
+    url: https://github.com/Biliverse/ADBlock/releases/download/v0.7.5/config.bundle.js
+    interval: 86400
+  📺 BiliBili.ADBlock.request.json:
+    url: https://github.com/Biliverse/ADBlock/releases/download/v0.7.5/request.bundle.js
+    interval: 86400
+  📺 BiliBili.ADBlock.response.json:
+    url: https://github.com/Biliverse/ADBlock/releases/download/v0.7.5/response.bundle.js
+    interval: 86400
+  📺 BiliBili.ADBlock.response.grpc:
+    url: https://github.com/Biliverse/ADBlock/releases/download/v0.7.5/response.bundle.js
+    interval: 86400
