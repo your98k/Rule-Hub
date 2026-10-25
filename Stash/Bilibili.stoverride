@@ -1,347 +1,1540 @@
-name: '📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)'
-desc: '哔哩哔哩：去广告
+#Rule-Hub Bilibili v1.1.5 本地轻量增强。原文件：https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride
+#新增脚本原创 GPL-3.0-or-later；协议布局核对自 Rule-Hub/Sparkle 与 Biliverse。
+#替换旧覆写使用，不与旧版叠加。没有删除原配置数组，按Stash默认递归合并/数组前插。
 
-  自定义去除APP内界面元素'
-openUrl: http://boxjs.com/#/app/BiliBili.ADBlock
-author: 'ClydeTime[https://github.com/ClydeTime]
+'name': '哔哩哔哩去广告 · Rule-Hub 横幅增强版'
+'desc': '以 your98k/Rule-Hub Bilibili v1.1.5 为底座的本地增强文件，非上游官方版本。
 
-  VirgilClyne[https://github.com/VirgilClyne]
+  保留原导航/我的页/网页与空降实现，新增截图中的动态/个人动态流/播放页/交互弹幕/彩色弹幕开关，另补齐首页、直播、隐私与独立横幅控制。
 
-  app2smile[https://github.com/app2smile]
+  重点：旧版播放页 cm_under_player(48)、广告 Tab，及新版简介页活动/会员/BANNER 模块、cm(7)、播放器 prompt_bar、番剧提示横幅；全部使用已核对字段。新版未知48字段保留，不盲删。
 
-  RuCu6[https://github.com/RuCu6]
+  小型 wire-level 脚本只改指定字段，不展开整份 protobuf 对象，不叠加前版约1MB业务脚本。无变化直接放行，未知字段及正常视频保留。
 
-  Maasea[https://github.com/Maasea]'
-homepage: https://biliverse.github.io/guide/ad-block
-icon: https://github.com/Biliverse/ADBlock/raw/main/src/assets/icon_rounded.png
-category: 🪐 Biliverse
-date: '2026-10-17 17:08:28'
-version: 0.7.5-native.3
-http:
-  mitm:
-  - biliverse.github.io
-  - manga.bilibili.com
-  - api.live.bilibili.com
-  - api.vc.bilibili.com
-  - app.bilibili.com
-  - app.biliapi.net
-  - app.biliapi.com
-  - api.bilibili.com
-  - api.biliapi.net
-  - grpc.biliapi.net
-  - cm.bilibili.com
-  - adtrack.qianwen.com
-  - tkio-redirect.solar-engine.com
-  url-rewrite:
-  - ^https?:\/\/api\.vc\.bilibili\.com\/search_svr\/v\d\/Search\/recommend_words - reject-dict
-  - ^https?:\/\/api\.vc\.bilibili\.com\/topic_svr\/v1\/topic_svr - reject-dict
-  - ^https?:\/\/api\.vc\.bilibili\.com\/dynamic_svr\/v1\/dynamic_svr\/mix_uplist - reject-dict
-  - ^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.Comic\/Flash - reject-dict
-  - ^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.Comic\/ListFlash - reject-dict
-  - ^https?:\/\/api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info\? - reject-dict
-  mock:
-  - match: ^https?:\/\/(grpc\.biliapi\.net|app\.biliapi\.net|app\.bilibili\.com|app\.biliapi\.com)\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$
-    base64: AAAAAAA=
-    status-code: 200
-    headers:
-      Content-Type: application/grpc
-      grpc-status: '0'
-  script:
-  - match: ^https:\/\/(?:biliverse\.github\.io|app\.bilibili\.com)\/api\/ADBlock(?:\?.*)?$
-    name: PreferencePanes.Config.ADBlock
-    type: request
-    require-body: false
-  - match: ^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/feed\/index\?
-    name: 📺 BiliBili.ADBlock.request.json
-    type: request
-    require-body: false
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-  - match: ^https?:\/\/(cm\.bilibili\.com\/cm\/api\/(conversion\/mobile\/v2|fees\/wise)|adtrack\.qianwen\.com\/v3\/ad\/(show\/)?bilibili|tkio-redirect\.solar-engine\.com\/receive\/turl\/)
-    name: 📺 BiliBili.ADBlock.request.json
-    type: request
-    require-body: false
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-  - match: ^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/(splash\/(brand\/list|event\/list2|list|show)|feed\/index(\/(relate\/)?story)?|search\/square)
-    name: 📺 BiliBili.ADBlock.response.json
-    type: response
-    require-body: true
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-    max-size: 1048576
-  - match: ^https?:\/\/api\.bili(bili\.com|api\.net)\/x\/(web-interface\/wbi\/index\/top\/feed\/rcmd|vip\/ads\/materials)\?
-    name: 📺 BiliBili.ADBlock.response.json
-    type: response
-    require-body: true
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-    max-size: 1048576
-  - match: ^https?:\/\/api\.bili(bili\.com|api\.net)\/pgc\/page\/(bangumi|cinema\/tab\?)
-    name: 📺 BiliBili.ADBlock.response.json
-    type: response
-    require-body: true
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-    max-size: 1048576
-  - match: ^https?:\/\/api\.live\.bilibili\.com\/xlive\/(app-room\/v1\/index\/getInfoByRoom|app-interface\/v2\/(index\/feed|room\/recList))
-    name: 📺 BiliBili.ADBlock.response.json
-    type: response
-    require-body: true
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-    max-size: 1048576
-  - match: ^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.(view\.v1\.View\/(View|TFInfo|RelatesFeed|PlayerRelates|ViewProgress)|viewunite\.v1\.View\/(View|RelatesFeed|AIRelateAsync|ViewProgress|PlayPause|ViewEndPage)|playerunite\.v1\.Player\/PlayViewUnite)$
-    name: 📺 BiliBili.ADBlock.response.grpc
-    type: response
-    require-body: true
-    binary-mode: true
-    max-size: 262144
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-  - match: ^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.dynamic\.v2\.Dynamic\/Dyn(All|Video)(Personal)?$
-    name: 📺 BiliBili.ADBlock.response.grpc
-    type: response
-    require-body: true
-    binary-mode: true
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-    max-size: 262144
-  - match: ^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.playurl\.v1\.PlayURL\/PlayView$
-    name: 📺 BiliBili.ADBlock.response.grpc
-    type: response
-    require-body: true
-    binary-mode: true
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-    max-size: 262144
-  - match: ^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.polymer\.app\.search\.v1\.Search\/SearchAll$
-    name: 📺 BiliBili.ADBlock.response.grpc
-    type: response
-    require-body: true
-    binary-mode: true
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-    max-size: 262144
-  - match: ^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.community\.service\.dm\.v1\.DM\/(DmView|DmSegMobile)
-    name: 📺 BiliBili.ADBlock.response.grpc
-    type: response
-    require-body: true
-    binary-mode: true
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-    max-size: 262144
-  - match: ^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus
-    name: 📺 BiliBili.ADBlock.response.grpc
-    type: response
-    require-body: true
-    binary-mode: true
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-    max-size: 262144
-  - match: ^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.main\.community\.reply\.v1\.Reply\/(MainList|DetailList|ReplyInfo)$
-    name: 📺 BiliBili.ADBlock.response.grpc
-    type: response
-    require-body: true
-    binary-mode: true
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-    max-size: 262144
-  - match: ^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.main\.community\.reply\.v2\.Reply\/SubjectDescription$
-    name: 📺 BiliBili.ADBlock.response.grpc
-    type: response
-    require-body: true
-    binary-mode: true
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-    max-size: 262144
-  - match: ^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.pgc\.gateway\.player\.v2\.PlayURL\/PlayView$
-    name: 📺 BiliBili.ADBlock.response.grpc
-    type: response
-    require-body: true
-    binary-mode: true
-    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-    max-size: 262144
-script-providers:
-  PreferencePanes.Config.ADBlock:
-    url: https://github.com/Biliverse/ADBlock/releases/download/v0.7.5/config.bundle.js
-    interval: 86400
-  📺 BiliBili.ADBlock.request.json:
-    url: https://github.com/Biliverse/ADBlock/releases/download/v0.7.5/request.bundle.js
-    interval: 86400
-  📺 BiliBili.ADBlock.response.json:
-    url: https://github.com/Biliverse/ADBlock/releases/download/v0.7.5/response.bundle.js
-    interval: 86400
-  📺 BiliBili.ADBlock.response.grpc:
-    url: https://github.com/Biliverse/ADBlock/releases/download/v0.7.5/response.bundle.js
-    interval: 86400
-arguments-version: 1
-arguments:
-  Splash:
-    type: switch
-    title: '[开屏] 去除广告'
-    description: 是否启用此处修改
-    default: true
-  Feed_AD:
-    type: switch
-    title: '[推荐] 去除广告'
-    description: 是否启用此处修改
-    default: true
-  Feed_Activity:
-    type: switch
-    title: '[推荐] 去除“活动大图”'
-    description: 是否启用此处修改
-    default: false
-  Feed_Vertical:
-    type: switch
-    title: '[推荐] 去除竖屏视频'
-    description: 是否启用此处修改
-    default: false
-  Feed_BlockUpLiveList:
-    type: input
-    title: '[推荐] 屏蔽UP主直播推广'
-    description: 填 0 表示不屏蔽；仅支持单个数字 UID。上游多 UID 会触发类型错误，暂不开放。
-    default: 0
-    value-type: integer
-    minimum: 0
-    maximum: 9007199254740991
-    required: true
-  Feed_Story:
-    type: switch
-    title: '[首页] 去除短视频流广告'
-    description: 是否启用此处修改
-    default: true
-  Feed_StoryCommercial:
-    type: switch
-    title: '[首页] 去除Story商业按钮'
-    description: 移除Story中的“助TA必火”等商业推广按钮，不删除视频卡片。
-    default: true
-  Search_AD:
-    type: switch
-    title: '[搜索] 去除广告'
-    description: 是否启用此处修改
-    default: true
-  Search_Tracking:
-    type: switch
-    title: '[搜索] 移除响应跟踪参数'
-    description: 清理SearchAll结果对象及跳转链接中的trackid、report_flow_data，不修改播放签名和预加载数据。
-    default: false
-  Search_HotSearch:
-    type: switch
-    title: '[搜索] 去除“热搜”'
-    description: 是否启用此处修改
-    default: true
-  PGC_AD:
-    type: switch
-    title: '[番剧电影] 去除广告'
-    description: 是否启用此处修改
-    default: true
-  Xlive_AD:
-    type: switch
-    title: '[直播] 去除广告'
-    description: 是否启用此处修改
-    default: true
-  Xlive_RemoveTrackingCallbacks:
-    type: switch
-    title: '[直播] 移除推荐回调'
-    description: 移除直播推荐卡的show_callback与click_callback；可能影响推荐状态和翻页。
-    default: false
-  Xlive_RemovePreloadTracking:
-    type: switch
-    title: '[直播] 移除预载链接trackid'
-    description: 只移除直播small_card_v1.subtitle_style.link中的trackid，保留播放、清晰度和会话参数。
-    default: false
-  Dynamic_HotTopics:
-    type: switch
-    title: '[动态] 去除“热门话题”'
-    description: 是否启用此处修改
-    default: true
-  Dynamic_MostVisited:
-    type: switch
-    title: '[动态] 去除“最常访问”'
-    description: 是否启用此处修改
-    default: false
-  Dynamic_MostVisitedLiveOnly:
-    type: switch
-    title: '[动态] “最常访问”仅显示直播'
-    description: 是否启用此处修改
-    default: false
-  Dynamic_AdCard:
-    type: switch
-    title: '[动态] 去除广告卡片'
-    description: 是否启用此处修改
-    default: true
-  Dynamic_PersonalAdCard:
-    type: switch
-    title: '[动态] 去除个人流广告卡片'
-    description: 过滤DynAllPersonal与DynVideoPersonal中的cardType=15；当前抓包尚无广告阳性样本。
-    default: true
-  View_AD:
-    type: switch
-    title: '[视频] 去除播放页广告'
-    description: 是否启用此处修改
-    default: true
-  DM_Command:
-    type: switch
-    title: '[弹幕] 去除交互式弹幕'
-    description: 是否启用此处修改
-    default: false
-  DM_Colorful:
-    type: switch
-    title: '[弹幕] 替换彩色弹幕'
-    description: 是否启用此处修改
-    default: false
-  DM_Airborne:
-    type: switch
-    title: '[弹幕] 空降助手'
-    description: 是否启用此处修改
-    default: true
-  Reply_AD:
-    type: switch
-    title: '[评论] 去除广告'
-    description: 是否启用此处修改
-    default: true
-  Reply_CommercialLinks:
-    type: switch
-    title: '[评论] 禁用普通评论商业跳转'
-    description: 保留普通评论正文与回复树，仅移除已识别商品链接的可点击映射。
-    default: false
-  Reply_SubjectDescriptionCommercial:
-    type: switch
-    title: '[评论] 隐藏编辑器商品能力'
-    description: 移除SubjectDescription中的商品与商业助手按钮(type 5/8)；当前抓包中它们均为隐藏状态。
-    default: false
-  Privacy_Tracking:
-    type: switch
-    title: '[隐私] 移除响应链接跟踪参数'
-    description: 清理推荐、Story 与评论跳转链接中的高置信度归因参数，保留目标和界面功能参数。
-    default: true
-  Privacy_BlockBiliCommercial:
-    type: switch
-    title: '[隐私] 阻止B站商业上报'
-    description: 本地成功响应conversion/mobile/v2与fees/wise，阻止相关请求上传。
-    default: true
-  Privacy_BlockThirdParty:
-    type: switch
-    title: '[隐私] 阻止第三方广告归因'
-    description: 本地响应已确认的千问与Solar Engine广告展示、点击和归因请求。
-    default: true
-  Privacy_Strict:
-    type: switch
-    title: '[隐私] 严格模式'
-    description: 同时启用响应跟踪清理、商业链接与上报阻断，并移除直播show/click callback；可能影响跳转、推荐和翻页。
-    default: false
-  Storage:
-    type: select
-    title: '[储存] 配置来源'
-    description: Argument：本页原生参数优先；PersistentStore：已有持久化/BoxJS配置优先。
-    default: Argument
-    options:
-    - value: Argument
-      label: Stash 原生参数优先
-    - value: PersistentStore
-      label: PersistentStore / BoxJS 优先
-  LogLevel:
-    type: select
-    title: '[调试] 日志等级'
-    description: 选择脚本日志的输出等级，低于所选等级的日志将全部输出。
-    default: WARN
-    options:
-    - value: 'OFF'
-      label: 关闭
-    - value: ERROR
-      label: 错误
-    - value: WARN
-      label: 警告
-    - value: INFO
-      label: 信息
-    - value: DEBUG
-      label: 调试
-    - value: ALL
-      label: 全部
+  需要 Stash iOS/tvOS 3.7+ 或 macOS 4.4+。导入后在覆写详情 → 参数设置。停用原 Rule-Hub 及其他重叠 B站覆写，不要同时启用。
+
+  需启用 MitM 并信任自己的 CA。总开关只控制此覆写 HTTP 改写，原 QUIC/备用API/P2P 规则及 MitM 主机保留；彻底退出请关闭整份覆写。
+
+  默认自动引擎，不强制未经实机验证的 JSC。gRPC 输入512KB、解压1MB、JSON1MB上限，超限原样放行，过大接口可能无法去广告。
+
+  空降沿用原作者请求重放及 Chronos 方案，会查询 bsbsb.top/下载原作者资源；不保证当前客户端兼容。关闭空降后不再重放弹幕请求。
+
+  我的页/底部导航净化沿用原作者全部行为（可能包含本地展示修改，不代表会员或服务端权限）；可以单独关闭。
+
+  保留原规则中的备用API域名拒绝，可能触发客户端回退；原全局端口拒绝改为仅B站视频域名以免影响其他服务。
+
+  已做 YAML/脚本模拟校验，未在真实 Stash/B站当前客户端中实测。此文件不会自动更新到原仓库，远程作者脚本仍按其地址更新。
+
+  新增处理代码 GPL-3.0-or-later，gzip 解码器 pako 为 MIT/zlib；完整许可与可维护源码见仓库 Script/Bilibili_enhanced.* 与 LICENSE 文件。'
+'version': '1.1.5-enhanced.1'
+'author': 'kokoryh[https://github.com/kokoryh], Biliverse[https://github.com/Biliverse]'
+'homepage': 'https://github.com/kokoryh/Sparkle'
+'openUrl': 'https://apps.apple.com/app/id736536022'
+'icon': 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/Bilibili.png'
+'category': 'ad'
+'arguments-version': 1
+'arguments':
+  'master_enabled':
+    'type': 'switch'
+    'title': '[总开关] 启用 HTTP 净化'
+    'description': '控制所有本文件新增及原有 HTTP 拦截；网络分流规则和 MitM 域名仍保留。'
+    'default': true
+  'view_banner':
+    'type': 'switch'
+    'title': '[视频] 去除播放页横幅广告'
+    'description': '独立控制旧版播放器下方横幅(cm_under_player)、新版活动/会员/BANNER模块、cm广告栏、播放器prompt_bar及番剧试看提示栏。与下方播放页卡片去广告独立。'
+    'default': true
+  'splash_ad':
+    'type': 'switch'
+    'title': '[开屏] 去除广告'
+    'description': '是否启用此处修改'
+    'default': true
+  'feed_ad':
+    'type': 'switch'
+    'title': '[推荐] 去除广告'
+    'description': '按已确认广告标志过滤推荐卡片，保留普通视频和正常直播；与活动大图/竖屏/名单分别控制。'
+    'default': true
+  'feed_activity':
+    'type': 'switch'
+    'title': '[推荐] 去除“活动大图”'
+    'description': '过滤首页推荐活动大图；轻量版不改写推荐请求签名，不请求新视频补位。'
+    'default': false
+  'feed_vertical':
+    'type': 'switch'
+    'title': '[推荐] 去除竖屏视频'
+    'description': '过滤首页竖屏视频，不额外请求补位；与首页广告主开关独立。'
+    'default': false
+  'feed_block_uids':
+    'type': 'input'
+    'title': '[推荐] 屏蔽UP主直播推广'
+    'description': '逗号、中文逗号、分号或空格分隔UP主UID；只控制推荐中的直播推广，需开启“启用UP主直播名单”，不依赖首页去广告。'
+    'default': ''
+    'max-length': 4096
+  'story_ad':
+    'type': 'switch'
+    'title': '[首页] 去除短视频流广告'
+    'description': '是否启用此处修改'
+    'default': true
+  'story_commercial':
+    'type': 'switch'
+    'title': '[首页] 去除Story商业按钮'
+    'description': '移除Story中的“助TA必火”等商业推广按钮，不删除视频卡片。'
+    'default': true
+  'search_ad':
+    'type': 'switch'
+    'title': '[搜索] 去除广告'
+    'description': '是否启用此处修改'
+    'default': true
+  'search_hot':
+    'type': 'switch'
+    'title': '[搜索] 去除“热搜”'
+    'description': '是否启用此处修改'
+    'default': true
+  'pgc_ad':
+    'type': 'switch'
+    'title': '[番剧电影] 去除广告'
+    'description': '是否启用此处修改'
+    'default': true
+  'live_ad':
+    'type': 'switch'
+    'title': '[直播] 去除广告'
+    'description': '是否启用此处修改'
+    'default': true
+  'live_callbacks':
+    'type': 'switch'
+    'title': '[直播] 移除推荐回调'
+    'description': '移除直播推荐卡的show_callback与click_callback；可能影响推荐状态和翻页。'
+    'default': false
+  'live_preload_tracking':
+    'type': 'switch'
+    'title': '[直播] 移除预载链接trackid'
+    'description': '只移除直播small_card_v1.subtitle_style.link中的trackid，保留播放、清晰度和会话参数。'
+    'default': false
+  'dynamic_topics':
+    'type': 'switch'
+    'title': '[动态] 去除“热门话题”'
+    'description': '同时控制旧版话题接口和新版 gRPC 动态热门话题。'
+    'default': true
+  'dynamic_most_visited':
+    'type': 'switch'
+    'title': '[动态] 去除“最常访问”'
+    'description': '同时控制旧版接口和新版 gRPC 的最常访问区域；开启时优先于“仅显示直播”。'
+    'default': false
+  'dynamic_live_only':
+    'type': 'switch'
+    'title': '[动态] “最常访问”仅显示直播'
+    'description': '最常访问仅保留 live_state=1 的UP；“去除最常访问”开启时优先隐藏。'
+    'default': false
+  'dynamic_ad':
+    'type': 'switch'
+    'title': '[动态] 去除广告卡片'
+    'description': '过滤 DynAll/DynVideo 的 cardType=15 广告，保留其他动态及未知字段，不连带删除转发卡片。'
+    'default': true
+  'dynamic_personal_ad':
+    'type': 'switch'
+    'title': '[动态] 去除个人流广告卡片'
+    'description': '过滤 DynAllPersonal/DynVideoPersonal 的 cardType=15；仅协议夹具验证，缺少当前客户端广告阳性实机样本。'
+    'default': false
+  'view_ad':
+    'type': 'switch'
+    'title': '[视频] 去除播放页广告'
+    'description': '清理播放页广告卡片、关联推荐广告及广告视频片段；横幅广告请另看上方独立开关。不会把全部推荐内容清空。'
+    'default': true
+  'dm_command':
+    'type': 'switch'
+    'title': '[弹幕] 去除交互式弹幕'
+    'description': '只移除 DmView 的交互式弹幕字段，水印与彩色弹幕由独立开关控制。'
+    'default': false
+  'dm_colorful':
+    'type': 'switch'
+    'title': '[弹幕] 替换彩色弹幕'
+    'description': '只移除会员彩色类型60001标志，不修改普通弹幕文字、时间、RGB颜色与其他类型。'
+    'default': false
+  'reply_ad':
+    'type': 'switch'
+    'title': '[评论] 去除广告'
+    'description': '是否启用此处修改'
+    'default': true
+  'privacy_tracking':
+    'type': 'switch'
+    'title': '[隐私] 移除响应链接跟踪参数'
+    'description': '只清理JSON响应跳转链接的已知归因参数及track字段；不扫描未知protobuf字节，不改视频地址/播放签名。'
+    'default': true
+  'privacy_bili_report':
+    'type': 'switch'
+    'title': '[隐私] 阻止B站商业上报'
+    'description': '本地成功响应conversion/mobile/v2与fees/wise，阻止相关请求上传。'
+    'default': false
+  'privacy_third_party':
+    'type': 'switch'
+    'title': '[隐私] 阻止第三方广告归因'
+    'description': '本地响应已确认的千问与Solar Engine广告展示、点击和归因请求。'
+    'default': false
+  'feed_uid_filter':
+    'type': 'switch'
+    'title': '[推荐] 启用 UP 主直播名单'
+    'description': '关闭后保留已填 UID 名单，但不执行名单屏蔽；仍依赖“推荐去广告”。'
+    'default': true
+  'search_recommend':
+    'type': 'switch'
+    'title': '[搜索] 去除大家都在搜'
+    'description': '控制旧版 recommend_words 接口；与热搜和搜索广告独立。'
+    'default': true
+  'search_default_words':
+    'type': 'switch'
+    'title': '[搜索] 去除搜索框默认词'
+    'description': '开启时返回 HTTP 200、grpc-status 0 和五字节空 gRPC 帧；关闭则不拦截该请求。'
+    'default': true
+  'manga_flash':
+    'type': 'switch'
+    'title': '[漫画] 去除 Flash 广告'
+    'description': '仅控制漫画 Flash 接口的空字典响应。'
+    'default': true
+  'manga_list_flash':
+    'type': 'switch'
+    'title': '[漫画] 去除 ListFlash 广告'
+    'description': '仅控制漫画 ListFlash 接口的空字典响应。'
+    'default': true
+  'live_shopping':
+    'type': 'switch'
+    'title': '[直播] 去除购物信息'
+    'description': '独立控制购物接口Mock；直播房间已有购物区域也可能受“直播去广告”控制。'
+    'default': true
+  'view_tfinfo':
+    'type': 'switch'
+    'title': '[视频] 去除免流办卡推广'
+    'description': '独立控制旧版 TFInfo 接口；不再无条件跟随响应脚本执行。'
+    'default': true
+  'background_play':
+    'type': 'switch'
+    'title': '[视频] 调整旧版后台播放配置'
+    'description': '沿用原作者本地播放配置调整；不表示解锁会员或服务端权限。'
+    'default': true
+  'pgc_player_tips':
+    'type': 'switch'
+    'title': '[番剧] 隐藏播放器提示栏'
+    'description': '控制番剧 cast_tips 及原作者 payment 展示清理；试看提示横幅由播放页横幅开关独立控制。'
+    'default': true
+  'teenagers_popup':
+    'type': 'switch'
+    'title': '[界面] 隐藏青少年模式提醒'
+    'description': '仅保留上游 ModeStatus 提醒字段修改；不等于解除已启用的青少年模式或监护设置。'
+    'default': true
+  'dm_watermark':
+    'type': 'switch'
+    'title': '[弹幕] 去除雲視聽水印'
+    'description': '独立控制 DmView 的 activityMeta 清理，不受交互式弹幕开关影响。'
+    'default': true
+  'airborne':
+    'type': 'switch'
+    'title': '空降助手'
+    'description': '沿用原作者bsbsb.top与Chronos空降实现，涉及第三方视频标识查询和弹幕请求重放；关闭后不执行该请求脚本，需实际客户端支持。'
+    'default': true
+  'airborne_policy':
+    'type': 'input'
+    'title': '空降助手策略'
+    'description': '填写你的代理组名，默认 DIRECT 直连'
+    'default': 'DIRECT'
+    'required': true
+    'max-length': 128
+  'purify_comment':
+    'type': 'switch'
+    'title': '过滤置顶评论广告'
+    'default': true
+    'description': '仅过滤已识别b23.tv/cm或mall等置顶带货链接；不因“淘宝/京东”等普通文字误删整条评论。'
+  'popular_ad':
+    'type': 'switch'
+    'title': '[热门] 过滤广告推广卡片'
+    'description': '保留原热门页推广卡片过滤，未知类型原样保留。'
+    'default': true
+  'view_modules':
+    'type': 'switch'
+    'title': '[视频] 隐藏附加推广模块'
+    'description': '沿用原作者特殊标签/视频提及模块清理；普通简介和目录不会删除。'
+    'default': true
+  'remove_charge_button':
+    'type': 'switch'
+    'title': '[视频] 隐藏充电增强入口'
+    'description': '仅沿用原作者 elec_plus_btn 清理，不修改用户余额或服务端功能。'
+    'default': true
+  'cast_enabled':
+    'type': 'switch'
+    'title': '[视频] 调整投屏配置'
+    'description': '调整旧版PlayView投屏及新版CASTCONF=2，和后台播放BACKGROUNDPLAY=9分别控制；不保证服务端授权。'
+    'default': true
+  'navigation_clean':
+    'type': 'switch'
+    'title': '[界面] 原版底部导航净化'
+    'description': '只运行原作者JSON脚本的底部导航分支；会改变原导航排列。'
+    'default': true
+  'mine_clean':
+    'type': 'switch'
+    'title': '[界面] 原版我的页净化'
+    'description': '运行原作者JSON脚本的我的页/用户展示分支；保留其全部原有行为，不代表真实会员资格。'
+    'default': true
+  'webpage_ad':
+    'type': 'switch'
+    'title': '[网页] 清理直播活动网页广告'
+    'description': '沿用原作者webpage脚本。'
+    'default': true
+  'resource_ad':
+    'type': 'switch'
+    'title': '[界面] 清理顶部活动资源'
+    'description': '仅Mock资源top/activity、patch/tab系列接口，与视频横幅独立。'
+    'default': true
+  'game_ad':
+    'type': 'switch'
+    'title': '[游戏] 清理直播游戏大卡片'
+    'description': '仅Mock原作者已匹配的game/live/large_card_material接口。'
+    'default': true
+  'p2p_block':
+    'type': 'switch'
+    'title': '[隐私] 净化P2P tracker配置'
+    'description': '仅控制JSON tracker改写；原QUIC/P2P分流规则仍保留。'
+    'default': true
+  'log_level':
+    'type': 'select'
+    'title': '日志等级'
+    'default': '4'
+    'options':
+      - 'value': '1'
+        'label': 'DEBUG'
+      - 'value': '2'
+        'label': 'INFO'
+      - 'value': '3'
+        'label': 'WARN'
+      - 'value': '4'
+        'label': 'ERROR'
+      - 'value': '5'
+        'label': 'OFF'
+  'script_engine':
+    'type': 'select'
+    'title': '[高级] 脚本引擎'
+    'description': '默认自动以保留原版兼容性。可自行尝试JSC，但不保证原远程空降/界面脚本支持；tvOS不要选择WebKit。'
+    'default': 'auto'
+    'options':
+      - 'value': 'auto'
+        'label': '自动（兼容优先）'
+      - 'value': 'jsc'
+        'label': 'JavaScriptCore（需实测）'
+      - 'value': 'webkit'
+        'label': 'WebKit（iOS/macOS）'
+  'grpc_max_size':
+    'type': 'input'
+    'value-type': 'integer'
+    'title': '[高级] gRPC 输入上限（字节）'
+    'description': '超过上限原样放行，可能不再过滤该响应；调高会增加内存占用。'
+    'default': 524288
+    'minimum': 65536
+    'maximum': 2097152
+  'decode_max_size':
+    'type': 'input'
+    'value-type': 'integer'
+    'title': '[高级] gRPC 解压与输出上限（字节）'
+    'description': '超过上限原样放行，可能不再过滤该响应；调高会增加内存占用。'
+    'default': 1048576
+    'minimum': 131072
+    'maximum': 4194304
+  'json_max_size':
+    'type': 'input'
+    'value-type': 'integer'
+    'title': '[高级] JSON 响应上限（字节）'
+    'description': '超过上限原样放行，可能不再过滤该响应；调高会增加内存占用。'
+    'default': 1048576
+    'minimum': 131072
+    'maximum': 4194304
+'rules':
+  - 'AND,((DOMAIN-SUFFIX,bilibili.com),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,biliapi.net),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,biliapi.com),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,biligame.com),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,bilivideo.com),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,bilivideo.cn),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,hdslb.com),(PROTOCOL,QUIC)),REJECT'
+  - 'AND,((DOMAIN-SUFFIX,b23.tv),(PROTOCOL,QUIC)),REJECT'
+  - 'DOMAIN,bsbsb.top,${args.airborne_policy}'
+  - 'DOMAIN,api.biliapi.com,REJECT'
+  - 'DOMAIN,app.biliapi.com,REJECT'
+  - 'DOMAIN,api.biliapi.net,REJECT'
+  - 'DOMAIN,app.biliapi.net,REJECT'
+  - 'AND,((DOMAIN-SUFFIX,chat.bilibili.com),(OR,((DOMAIN-KEYWORD,stun),(DOMAIN-KEYWORD,tracker),(DOMAIN-KEYWORD,p2p)))),REJECT'
+  - 'AND,((OR,((DOMAIN-SUFFIX,bilivideo.com),(DOMAIN-SUFFIX,bilivideo.cn))),(DST-PORT,4480)),REJECT'
+  - 'AND,((OR,((DOMAIN-SUFFIX,bilivideo.com),(DOMAIN-SUFFIX,bilivideo.cn))),(DST-PORT,4483)),REJECT'
+  - 'AND,((OR,((DOMAIN-SUFFIX,bilivideo.com),(DOMAIN-SUFFIX,bilivideo.cn))),(DST-PORT,9102)),REJECT'
+'http':
+  'mitm':
+    - 'app.bilibili.com'
+    - 'api.bilibili.com'
+    - 'api.live.bilibili.com'
+    - 'api.vc.bilibili.com'
+    - 'app.biliapi.net'
+    - 'app.biliapi.com'
+    - 'api.biliapi.net'
+    - 'grpc.biliapi.net'
+    - 'grpc.bilibili.com'
+    - 'cm.bilibili.com'
+    - 'adtrack.qianwen.com'
+    - 'tkio-redirect.solar-engine.com'
+    - 'www.bilibili.com'
+    - 'line3-h5-mobile-api.biligame.com'
+    - 'api.biliapi.com'
+    - 'manga.bilibili.com'
+  'force-http-engine':
+    - 'app.bilibili.com'
+    - 'api.bilibili.com'
+    - 'api.live.bilibili.com'
+    - 'api.vc.bilibili.com'
+    - 'app.biliapi.net'
+    - 'app.biliapi.com'
+    - 'api.biliapi.net'
+    - 'grpc.biliapi.net'
+    - 'grpc.bilibili.com'
+    - 'cm.bilibili.com'
+    - 'www.bilibili.com'
+    - 'line3-h5-mobile-api.biligame.com'
+    - 'api.biliapi.com'
+    - 'manga.bilibili.com'
+  'url-rewrite':
+    - '^h[${args.master_enabled|json}][${args.search_recommend|json}]ps?://api\.vc\.bilibili\.com\/search_svr\/v\d\/Search\/recommend_words - reject-dict'
+    - '^h[${args.master_enabled|json}][${args.dynamic_topics|json}]ps?://api\.vc\.bilibili\.com\/topic_svr\/v1\/topic_svr - reject-dict'
+    - '^h[${args.master_enabled|json}][${args.dynamic_most_visited|json}]ps?://api\.vc\.bilibili\.com\/dynamic_svr\/v1\/dynamic_svr\/mix_uplist - reject-dict'
+    - '^h[${args.master_enabled|json}][${args.manga_flash|json}]ps?://manga\.bilibili\.com/twirp/comic\.v\d\.Comic/Flash(?:\?|$) - reject-dict'
+    - '^h[${args.master_enabled|json}][${args.manga_list_flash|json}]ps?://manga\.bilibili\.com/twirp/comic\.v\d\.Comic/ListFlash(?:\?|$) - reject-dict'
+  'mock':
+    - 'match': '^h[${args.master_enabled|json}][${args.splash_ad|json}]ps?://(?:app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/x/v2/splash/list(?:\?|$)'
+      'status-code': 200
+      'headers':
+        'Content-Type': 'application/json'
+      'text': '{"code":0,"message":"OK","ttl":1,"data":{"max_time":0,"min_interval":31536000,"pull_interval":31536000,"keep_ids":[],"show":[],"list":[{}],"splash_request_id":""}}'
+    - 'match': '^h[${args.master_enabled|json}][${args.resource_ad|json}]ps?://(?:(?:app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)|(?:api\.bilibili\.com|api\.biliapi\.net|api\.biliapi\.com))/x/resource/(?:top/activity|patch/tab(?:/v2)?)(?:\?|$)'
+      'status-code': 200
+      'headers':
+        'Content-Type': 'application/json'
+      'text': '{"code":-404,"message":"-404","ttl":1,"data":null}'
+    - 'match': '^h[${args.master_enabled|json}][${args.view_banner|json}]ps?://(?:api\.bilibili\.com|api\.biliapi\.net|api\.biliapi\.com)/x/(?:v2/)?vip/ads/materials(?:\?|$)'
+      'status-code': 200
+      'headers':
+        'Content-Type': 'application/json'
+      'text': '{"code":-404,"message":"-404","ttl":1,"data":null}'
+    - 'match': '^h[${args.master_enabled|json}][${args.pgc_ad|json}]ps?://(?:api\.bilibili\.com|api\.biliapi\.net|api\.biliapi\.com)/pgc/activity/deliver/material/receive(?:\?|$)'
+      'status-code': 200
+      'headers':
+        'Content-Type': 'application/json'
+      'text': '{"code":0,"message":"success","data":{"closeType":"close_win","container":[],"showTime":""}}'
+    - 'match': '^h[${args.master_enabled|json}][${args.live_shopping|json}]ps?://api\.live\.bilibili\.com/xlive/e-commerce-interface/v1/ecommerce-user/get_shopping_info(?:\?|$)'
+      'status-code': 200
+      'headers':
+        'Content-Type': 'application/json'
+      'text': '{}'
+    - 'match': '^h[${args.master_enabled|json}][${args.game_ad|json}]ps?://line3-h5-mobile-api\.biligame\.com/game/live/large_card_material(?:\?|$)'
+      'status-code': 200
+      'headers':
+        'Content-Type': 'application/json'
+      'text': '{"code":0,"message":"success"}'
+    - 'match': '^h[${args.master_enabled|json}][${args.privacy_bili_report|json}]ps?://cm\.bilibili\.com/cm/api/(?:conversion/mobile/v2|fees/wise)(?:\?|$)'
+      'status-code': 200
+      'headers':
+        'Content-Type': 'application/json'
+      'text': '{"code":0,"message":"0","data":{}}'
+    - 'match': '^h[${args.master_enabled|json}][${args.privacy_third_party|json}]ps?://adtrack\.qianwen\.com/v3/ad/(?:show/)?bilibili(?:\?|$)'
+      'status-code': 200
+      'headers':
+        'Content-Type': 'application/json'
+      'text': '{"code":0,"message":"0","data":{}}'
+    - 'match': '^h[${args.master_enabled|json}][${args.privacy_third_party|json}]ps?://tkio-redirect\.solar-engine\.com/receive/turl/'
+      'status-code': 200
+      'headers':
+        'Content-Type': 'application/json'
+      'text': '{"status":0}'
+    - 'match': '^h[${args.master_enabled|json}][${args.search_default_words|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.interface\.v1\.Search/DefaultWords$'
+      'status-code': 200
+      'headers':
+        'Content-Type': 'application/grpc'
+        'grpc-status': '0'
+      'base64': 'AAAAAAA='
+    - 'match': '^h[${args.master_enabled|json}][${args.teenagers_popup|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.interface\.v1\.Teenagers/ModeStatus$'
+      'status-code': 200
+      'headers':
+        'Content-Type': 'application/grpc'
+        'grpc-status': '0'
+      'base64': 'AAAAABMKEQgCEgl0ZWVuYWdlcnMgAioA'
+    - 'match': '^h[${args.master_enabled|json}][${args.view_tfinfo|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.view\.v1\.View/TFInfo$'
+      'status-code': 200
+      'headers':
+        'Content-Type': 'application/grpc'
+        'grpc-status': '0'
+      'base64': 'AAAAAAA='
+    - 'match': '^h[${args.master_enabled|json}][${args.view_ad|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.viewunite\.v1\.View/(?:PlayPause|ViewEndPage)$'
+      'status-code': 200
+      'headers':
+        'Content-Type': 'application/grpc'
+        'grpc-status': '0'
+      'base64': 'AAAAAAA='
+  'script':
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.view_banner|json}${args.view_ad|json}${args.view_modules|json}${args.remove_charge_button|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.view(?:unite)?\.v1\.View/View$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"view_banner":${args.view_banner|json},"view_ad":${args.view_ad|json},"view_modules":${args.view_modules|json},"remove_charge_button":${args.remove_charge_button|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.view_banner|json}${args.view_ad|json}${args.view_modules|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.viewunite\.v1\.View/AIRelateAsync$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"view_banner":${args.view_banner|json},"view_ad":${args.view_ad|json},"view_modules":${args.view_modules|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.view_ad|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.view\.v1\.View/(?:RelatesFeed|PlayerRelates)$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"view_ad":${args.view_ad|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.view_ad|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.viewunite\.v1\.View/RelatesFeed$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"view_ad":${args.view_ad|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.view_ad|json}${args.airborne|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.view(?:unite)?\.v1\.View/ViewProgress$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"view_ad":${args.view_ad|json},"airborne":${args.airborne|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.view_banner|json}${args.view_ad|json}${args.background_play|json}${args.cast_enabled|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.playerunite\.v1\.Player/PlayViewUnite$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"view_banner":${args.view_banner|json},"view_ad":${args.view_ad|json},"background_play":${args.background_play|json},"cast_enabled":${args.cast_enabled|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.background_play|json}${args.cast_enabled|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.playurl\.v1\.PlayURL/PlayView$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"background_play":${args.background_play|json},"cast_enabled":${args.cast_enabled|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.dynamic_ad|json}${args.dynamic_topics|json}${args.dynamic_most_visited|json}${args.dynamic_live_only|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.dynamic\.v2\.Dynamic/Dyn(?:All|Video)$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"dynamic_ad":${args.dynamic_ad|json},"dynamic_topics":${args.dynamic_topics|json},"dynamic_most_visited":${args.dynamic_most_visited|json},"dynamic_live_only":${args.dynamic_live_only|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.dynamic_personal_ad|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.dynamic\.v2\.Dynamic/Dyn(?:All|Video)Personal$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"dynamic_personal_ad":${args.dynamic_personal_ad|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.dm_command|json}${args.dm_watermark|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.community\.service\.dm\.v1\.DM/DmView$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"dm_command":${args.dm_command|json},"dm_watermark":${args.dm_watermark|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.dm_colorful|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.community\.service\.dm\.v1\.DM/DmSegMobile$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"dm_colorful":${args.dm_colorful|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.reply_ad|json}${args.purify_comment|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.main\.community\.reply\.v1\.Reply/MainList$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"reply_ad":${args.reply_ad|json},"purify_comment":${args.purify_comment|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.search_ad|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.polymer\.app\.search\.v1\.Search/SearchAll$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"search_ad":${args.search_ad|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.view_banner|json}${args.pgc_player_tips|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.pgc\.gateway\.player\.v2\.PlayURL/PlayView$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"view_banner":${args.view_banner|json},"pgc_player_tips":${args.pgc_player_tips|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.wire'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.popular_ad|json}]ps?://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/bilibili\.app\.show\.v1\.Popular/Index$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"popular_ad":${args.popular_ad|json},"grpc_max_size":${args.grpc_max_size|json},"decode_max_size":${args.decode_max_size|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'bilibili.protobuf.request'
+      'type': 'request'
+      'match': '^h[${args.master_enabled|json}][${args.airborne|json}]ps?://(?:grpc\.biliapi\.net|app\.bilibili\.com)/bilibili\.community\.service\.dm\.v1\.DM/DmSegMobile$'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"purifyComment":${args.purify_comment|json},"sponsorBlock":${args.airborne|json},"logLevel":${args.log_level|json}}'
+      'require-body': true
+      'binary-mode': true
+      'max-size': '${args.grpc_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.json'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.feed_ad|json}${args.feed_activity|json}${args.feed_vertical|json}${args.feed_uid_filter|json}${args.privacy_tracking|json}]ps?://(?:app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/x/v2/feed/index(?:\?|$)'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"feed_ad":${args.feed_ad|json},"feed_activity":${args.feed_activity|json},"feed_vertical":${args.feed_vertical|json},"feed_uid_filter":${args.feed_uid_filter|json},"privacy_tracking":${args.privacy_tracking|json},"feed_block_uids":${args.feed_block_uids|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'max-size': '${args.json_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.json'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.story_ad|json}${args.story_commercial|json}${args.privacy_tracking|json}]ps?://(?:app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/x/v2/feed/index/(?:relate/)?story(?:\?|$)'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"story_ad":${args.story_ad|json},"story_commercial":${args.story_commercial|json},"privacy_tracking":${args.privacy_tracking|json},"feed_block_uids":${args.feed_block_uids|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'max-size': '${args.json_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.json'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.splash_ad|json}]ps?://(?:app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/x/v2/splash/(?:show|brand/list|event/list2)(?:\?|$)'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"splash_ad":${args.splash_ad|json},"feed_block_uids":${args.feed_block_uids|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'max-size': '${args.json_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.json'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.search_hot|json}]ps?://(?:app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/x/v2/search/square(?:\?|$)'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"search_hot":${args.search_hot|json},"feed_block_uids":${args.feed_block_uids|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'max-size': '${args.json_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.json'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.feed_ad|json}]ps?://(?:api\.bilibili\.com|api\.biliapi\.net|api\.biliapi\.com)/x/web-interface/wbi/index/top/feed/rcmd(?:\?|$)'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"feed_ad":${args.feed_ad|json},"feed_block_uids":${args.feed_block_uids|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'max-size': '${args.json_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.json'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.live_ad|json}${args.live_callbacks|json}${args.live_preload_tracking|json}${args.privacy_tracking|json}]ps?://api\.live\.bilibili\.com/xlive/(?:app-interface/v2/(?:index/feed|room/recList)|app-room/v1/index/getInfoByRoom)(?:\?|$)'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"live_ad":${args.live_ad|json},"live_callbacks":${args.live_callbacks|json},"live_preload_tracking":${args.live_preload_tracking|json},"privacy_tracking":${args.privacy_tracking|json},"feed_block_uids":${args.feed_block_uids|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'max-size': '${args.json_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.json'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.pgc_ad|json}]ps?://(?:api\.bilibili\.com|api\.biliapi\.net|api\.biliapi\.com)/pgc/page/(?:bangumi|cinema/tab|channel)(?:\?|$)'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"pgc_ad":${args.pgc_ad|json},"feed_block_uids":${args.feed_block_uids|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'max-size': '${args.json_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.json'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.p2p_block|json}]ps?://(?:api\.live\.bilibili\.com/xlive/open-interface/v2/tracker/conf|api\.bilibili\.com/x/pd-proxy/tracker)(?:\?|$)'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"p2p_block":${args.p2p_block|json},"feed_block_uids":${args.feed_block_uids|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'max-size': '${args.json_max_size}'
+    - 'name': 'rulehub.bilibili.enhanced.json'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.pgc_player_tips|json}]ps?://(?:api\.bilibili\.com|api\.biliapi\.net|api\.biliapi\.com)/pgc/view/v2/app/season(?:\?|$)'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"master_enabled":${args.master_enabled|json},"pgc_player_tips":${args.pgc_player_tips|json},"feed_block_uids":${args.feed_block_uids|json},"log_level":${args.log_level|json}}'
+      'require-body': true
+      'max-size': '${args.json_max_size}'
+    - 'name': 'bilibili.json'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.navigation_clean|json}]ps?://(?:app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/x/resource/show/tab/v2(?:\?|$)'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"showCreatorHub":false,"logLevel":${args.log_level|json}}'
+      'require-body': true
+      'max-size': '${args.json_max_size}'
+    - 'name': 'bilibili.json'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.mine_clean|json}]ps?://(?:app\.bilibili\.com|app\.biliapi\.net|app\.biliapi\.com)/x/v2/account/(?:mine(?:/ipad)?|myinfo)(?:\?|$)'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'argument': '{"showCreatorHub":false,"logLevel":${args.log_level|json}}'
+      'require-body': true
+      'max-size': '${args.json_max_size}'
+    - 'name': 'bilibili.webpage'
+      'type': 'response'
+      'match': '^h[${args.master_enabled|json}][${args.webpage_ad|json}]ps?://www\.bilibili\.com\/blackboard\/era\/.+\.html\?'
+      'timeout': 10
+      'engine': '${args.script_engine}'
+      'require-body': true
+      'max-size': '${args.json_max_size}'
+'script-providers':
+  'rulehub.bilibili.enhanced.wire':
+    'payload': "/*! pako 2.1.0 https://github.com/nodeca/pako @license (MIT AND Zlib) */
+
+      !function(e,t){\"object\"==typeof exports&&\"undefined\"!=typeof module?t(exports):\"function\"==typeof define&&define.amd?define([\"exports\"],t):t((e=\"undefined\"!=typeof globalThis?globalThis:e||self).pako={})}(this,(function(e){\"use strict\";var t=(e,t,i,n)=>{let a=65535&e|0,r=e>>>16&65535|0,o=0;for(;0!==i;){o=i>2e3?2e3:i,i-=o;do{a=a+t[n++]|0,r=r+a|0}while(--o);a%=65521,r%=65521}return a|r<<16|0};const i=new Uint32Array((()=>{let e,t=[];for(var i=0;i<256;i++){e=i;for(var n=0;n<8;n++)e=1&e?3988292384^e>>>1:e>>>1;t[i]=e}return t})());var n=(e,t,n,a)=>{const r=i,o=a+n;e^=-1;for(let i=a;i<o;i++)e=e>>>8^r[255&(e^t[i])];return-1^e};const a=16209;var r=function(e,t){let i,n,r,o,s,l,d,f,c,h,u,w,b,m,k,_,g,p,v,x,y,E,R,A;const Z=e.state;i=e.next_in,R=e.input,n=i+(e.avail_in-5),r=e.next_out,A=e.output,o=r-(t-e.avail_out),s=r+(e.avail_out-257),l=Z.dmax,d=Z.wsize,f=Z.whave,c=Z.wnext,h=Z.window,u=Z.hold,w=Z.bits,b=Z.lencode,m=Z.distcode,k=(1<<Z.lenbits)-1,_=(1<<Z.distbits)-1;e:do{w<15&&(u+=R[i++]<<w,w+=8,u+=R[i++]<<w,w+=8),g=b[u&k];t:for(;;){if(p=g>>>24,u>>>=p,w-=p,p=g>>>16&255,0===p)A[r++]=65535&g;else{if(!(16&p)){if(0==(64&p)){g=b[(65535&g)+(u&(1<<p)-1)];continue t}if(32&p){Z.mode=16191;break e}e.msg=\"invalid literal/length code\",Z.mode=a;break e}v=65535&g,p&=15,p&&(w<p&&(u+=R[i++]<<w,w+=8),v+=u&(1<<p)-1,u>>>=p,w-=p),w<15&&(u+=R[i++]<<w,w+=8,u+=R[i++]<<w,w+=8),g=m[u&_];i:for(;;){if(p=g>>>24,u>>>=p,w-=p,p=g>>>16&255,!(16&p)){if(0==(64&p)){g=m[(65535&g)+(u&(1<<p)-1)];continue i}e.msg=\"invalid distance code\",Z.mode=a;break e}if(x=65535&g,p&=15,w<p&&(u+=R[i++]<<w,w+=8,w<p&&(u+=R[i++]<<w,w+=8)),x+=u&(1<<p)-1,x>l){e.msg=\"invalid distance too far back\",Z.mode=a;break e}if(u>>>=p,w-=p,p=r-o,x>p){if(p=x-p,p>f&&Z.sane){e.msg=\"invalid distance too far back\",Z.mode=a;break e}if(y=0,E=h,0===c){if(y+=d-p,p<v){v-=p;do{A[r++]=h[y++]}while(--p);y=r-x,E=A}}else if(c<p){if(y+=d+c-p,p-=c,p<v){v-=p;do{A[r++]=h[y++]}while(--p);if(y=0,c<v){p=c,v-=p;do{A[r++]=h[y++]}while(--p);y=r-x,E=A}}}else if(y+=c-p,p<v){v-=p;do{A[r++]=h[y++]}while(--p);y=r-x,E=A}for(;v>2;)A[r++]=E[y++],A[r++]=E[y++],A[r++]=E[y++],v-=3;v&&(A[r++]=E[y++],v>1&&(A[r++]=E[y++]))}else{y=r-x;do{A[r++]=A[y++],A[r++]=A[y++],A[r++]=A[y++],v-=3}while(v>2);v&&(A[r++]=A[y++],v>1&&(A[r++]=A[y++]))}break}}break}}while(i<n&&r<s);v=w>>3,i-=v,w-=v<<3,u&=(1<<w)-1,e.next_in=i,e.next_out=r,e.avail_in=i<n?n-i+5:5-(i-n),e.avail_out=r<s?s-r+257:257-(r-s),Z.hold=u,Z.bits=w};const o=15,s=new Uint16Array([3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258,0,0]),l=new Uint8Array([16,16,16,16,16,16,16,16,17,17,17,17,18,18,18,18,19,19,19,19,20,20,20,20,21,21,21,21,16,72,78]),d=new Uint16Array([1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577,0,0]),f=new Uint8Array([16,16,16,16,17,17,18,18,19,19,20,20,21,21,22,22,23,23,24,24,25,25,26,26,27,27,28,28,29,29,64,64]);var c=(e,t,i,n,a,r,c,h)=>{const u=h.bits;let w,b,m,k,_,g,p=0,v=0,x=0,y=0,E=0,R=0,A=0,Z=0,S=0,T=0,O=null;const U=new Uint16Array(16),D=new Uint16Array(16);let I,B,N,C=null;for(p=0;p<=o;p++)U[p]=0;for(v=0;v<n;v++)U[t[i+v]]++;for(E=u,y=o;y>=1&&0===U[y];y--);if(E>y&&(E=y),0===y)return a[r++]=20971520,a[r++]=20971520,h.bits=1,0;for(x=1;x<y&&0===U[x];x++);for(E<x&&(E=x),Z=1,p=1;p<=o;p++)if(Z<<=1,Z-=U[p],Z<0)return-1;if(Z>0&&(0===e||1!==y))return-1;for(D[1]=0,p=1;p<o;p++)D[p+1]=D[p]+U[p];for(v=0;v<n;v++)0!==t[i+v]&&(c[D[t[i+v]]++]=v);if(0===e?(O=C=c,g=20):1===e?(O=s,C=l,g=257):(O=d,C=f,g=0),T=0,v=0,p=x,_=r,R=E,A=0,m=-1,S=1<<E,k=S-1,1===e&&S>852||2===e&&S>592)return 1;for(;;){I=p-A,c[v]+1<g?(B=0,N=c[v]):c[v]>=g?(B=C[c[v]-g],N=O[c[v]-g]):(B=96,N=0),w=1<<p-A,b=1<<R,x=b;do{b-=w,a[_+(T>>A)+b]=I<<24|B<<16|N|0}while(0!==b);for(w=1<<p-1;T&w;)w>>=1;if(0!==w?(T&=w-1,T+=w):T=0,v++,0==--U[p]){if(p===y)break;p=t[i+c[v]]}if(p>E&&(T&k)!==m){for(0===A&&(A=E),_+=x,R=p-A,Z=1<<R;R+A<y&&(Z-=U[R+A],!(Z<=0));)R++,Z<<=1;if(S+=1<<R,1===e&&S>852||2===e&&S>592)return 1;m=T&k,a[m]=E<<24|R<<16|_-r|0}}return 0!==T&&(a[_+T]=p-A<<24|64<<16|0),h.bits=E,0},h={Z_NO_FLUSH:0,Z_PARTIAL_FLUSH:1,Z_SYNC_FLUSH:2,Z_FULL_FLUSH:3,Z_FINISH:4,Z_BLOCK:5,Z_TREES:6,Z_OK:0,Z_STREAM_END:1,Z_NEED_DICT:2,Z_ERRNO:-1,Z_STREAM_ERROR:-2,Z_DATA_ERROR:-3,Z_MEM_ERROR:-4,Z_BUF_ERROR:-5,Z_NO_COMPRESSION:0,Z_BEST_SPEED:1,Z_BEST_COMPRESSION:9,Z_DEFAULT_COMPRESSION:-1,Z_FILTERED:1,Z_HUFFMAN_ONLY:2,Z_RLE:3,Z_FIXED:4,Z_DEFAULT_STRATEGY:0,Z_BINARY:0,Z_TEXT:1,Z_UNKNOWN:2,Z_DEFLATED:8};const{Z_FINISH:u,Z_BLOCK:w,Z_TREES:b,Z_OK:m,Z_STREAM_END:k,Z_NEED_DICT:_,Z_STREAM_ERROR:g,Z_DATA_ERROR:p,Z_MEM_ERROR:v,Z_BUF_ERROR:x,Z_DEFLATED:y}=h,E=16180,R=16190,A=16191,Z=16192,S=16194,T=16199,O=16200,U=16206,D=16209,I=e=>(e>>>24&255)+(e>>>8&65280)+((65280&e)<<8)+((255&e)<<24);function B(){this.strm=null,this.mode=0,this.last=!1,this.wrap=0,this.havedict=!1,this.flags=0,this.dmax=0,this.check=0,this.total=0,this.head=null,this.wbits=0,this.wsize=0,this.whave=0,this.wnext=0,this.window=null,this.hold=0,this.bits=0,this.length=0,this.offset=0,this.extra=0,this.lencode=null,this.distcode=null,this.lenbits=0,this.distbits=0,this.ncode=0,this.nlen=0,this.ndist=0,this.have=0,this.next=null,this.lens=new Uint16Array(320),this.work=new Uint16Array(288),this.lendyn=null,this.distdyn=null,this.sane=0,this.back=0,this.was=0}const N=e=>{if(!e)return 1;const t=e.state;return!t||t.strm!==e||t.mode<E||t.mode>16211?1:0},C=e=>{if(N(e))return g;const t=e.state;return e.total_in=e.total_out=t.total=0,e.msg=\"\",t.wrap&&(e.adler=1&t.wrap),t.mode=E,t.last=0,t.havedict=0,t.flags=-1,t.dmax=32768,t.head=null,t.hold=0,t.bits=0,t.lencode=t.lendyn=new Int32Array(852),t.distcode=t.distdyn=new Int32Array(592),t.sane=1,t.back=-1,m},z=e=>{if(N(e))return g;const t=e.state;return t.wsize=0,t.whave=0,t.wnext=0,C(e)},F=(e,t)=>{let i;if(N(e))return g;const n=e.state;return t<0?(i=0,t=-t):(i=5+(t>>4),t<48&&(t&=15)),t&&(t<8||t>15)?g:(null!==n.window&&n.wbits!==t&&(n.window=null),n.wrap=i,n.wbits=t,z(e))},L=(e,t)=>{if(!e)return g;const i=new B;e.state=i,i.strm=e,i.window=null,i.mode=E;const n=F(e,t);return n!==m&&(e.state=null),n};let M,H,j=!0;const K=e=>{if(j){M=new Int32Array(512),H=new Int32Array(32);let t=0;for(;t<144;)e.lens[t++]=8;for(;t<256;)e.lens[t++]=9;for(;t<280;)e.lens[t++]=7;for(;t<288;)e.lens[t++]=8;for(c(1,e.lens,0,288,M,0,e.work,{bits:9}),t=0;t<32;)e.lens[t++]=5;c(2,e.lens,0,32,H,0,e.work,{bits:5}),j=!1}e.lencode=M,e.lenbits=9,e.distcode=H,e.distbits=5},P=(e,t,i,n)=>{let a;const r=e.state;return null===r.window&&(r.wsize=1<<r.wbits,r.wnext=0,r.whave=0,r.window=new Uint8Array(r.wsize)),n>=r.wsize?(r.window.set(t.subarray(i-r.wsize,i),0),r.wnext=0,r.whave=r.wsize):(a=r.wsize-r.wnext,a>n&&(a=n),r.window.set(t.subarray(i-n,i-n+a),r.wnext),(n-=a)?(r.window.set(t.subarray(i-n,i),0),r.wnext=n,r.whave=r.wsize):(r.wnext+=a,r.wnext===r.wsize&&(r.wnext=0),r.whave<r.wsize&&(r.whave+=a))),0};var Y={inflateReset:z,inflateReset2:F,inflateResetKeep:C,inflateInit:e=>L(e,15),inflateInit2:L,inflate:(e,i)=>{let a,o,s,l,d,f,h,B,C,z,F,L,M,H,j,Y,G,X,W,q,J,Q,V=0;const $=new Uint8Array(4);let ee,te;const ie=new Uint8Array([16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15]);if(N(e)||!e.output||!e.input&&0!==e.avail_in)return g;a=e.state,a.mode===A&&(a.mode=Z),d=e.next_out,s=e.output,h=e.avail_out,l=e.next_in,o=e.input,f=e.avail_in,B=a.hold,C=a.bits,z=f,F=h,Q=m;e:for(;;)switch(a.mode){case E:if(0===a.wrap){a.mode=Z;break}for(;C<16;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}if(2&a.wrap&&35615===B){0===a.wbits&&(a.wbits=15),a.check=0,$[0]=255&B,$[1]=B>>>8&255,a.check=n(a.check,$,2,0),B=0,C=0,a.mode=16181;break}if(a.head&&(a.head.done=!1),!(1&a.wrap)||(((255&B)<<8)+(B>>8))%31){e.msg=\"incorrect header check\",a.mode=D;break}if((15&B)!==y){e.msg=\"unknown compression method\",a.mode=D;break}if(B>>>=4,C-=4,J=8+(15&B),0===a.wbits&&(a.wbits=J),J>15||J>a.wbits){e.msg=\"invalid window size\",a.mode=D;break}a.dmax=1<<a.wbits,a.flags=0,e.adler=a.check=1,a.mode=512&B?16189:A,B=0,C=0;break;case 16181:for(;C<16;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}if(a.flags=B,(255&a.flags)!==y){e.msg=\"unknown compression method\",a.mode=D;break}if(57344&a.flags){e.msg=\"unknown header flags set\",a.mode=D;break}a.head&&(a.head.text=B>>8&1),512&a.flags&&4&a.wrap&&($[0]=255&B,$[1]=B>>>8&255,a.check=n(a.check,$,2,0)),B=0,C=0,a.mode=16182;case 16182:for(;C<32;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}a.head&&(a.head.time=B),512&a.flags&&4&a.wrap&&($[0]=255&B,$[1]=B>>>8&255,$[2]=B>>>16&255,$[3]=B>>>24&255,a.check=n(a.check,$,4,0)),B=0,C=0,a.mode=16183;case 16183:for(;C<16;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}a.head&&(a.head.xflags=255&B,a.head.os=B>>8),512&a.flags&&4&a.wrap&&($[0]=255&B,$[1]=B>>>8&255,a.check=n(a.check,$,2,0)),B=0,C=0,a.mode=16184;case 16184:if(1024&a.flags){for(;C<16;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}a.length=B,a.head&&(a.head.extra_len=B),512&a.flags&&4&a.wrap&&($[0]=255&B,$[1]=B>>>8&255,a.check=n(a.check,$,2,0)),B=0,C=0}else a.head&&(a.head.extra=null);a.mode=16185;case 16185:if(1024&a.flags&&(L=a.length,L>f&&(L=f),L&&(a.head&&(J=a.head.extra_len-a.length,a.head.extra||(a.head.extra=new Uint8Array(a.head.extra_len)),a.head.extra.set(o.subarray(l,l+L),J)),512&a.flags&&4&a.wrap&&(a.check=n(a.check,o,L,l)),f-=L,l+=L,a.length-=L),a.length))break e;a.length=0,a.mode=16186;case 16186:if(2048&a.flags){if(0===f)break e;L=0;do{J=o[l+L++],a.head&&J&&a.length<65536&&(a.head.name+=String.fromCharCode(J))}while(J&&L<f);if(512&a.flags&&4&a.wrap&&(a.check=n(a.check,o,L,l)),f-=L,l+=L,J)break e}else a.head&&(a.head.name=null);a.length=0,a.mode=16187;case 16187:if(4096&a.flags){if(0===f)break e;L=0;do{J=o[l+L++],a.head&&J&&a.length<65536&&(a.head.comment+=String.fromCharCode(J))}while(J&&L<f);if(512&a.flags&&4&a.wrap&&(a.check=n(a.check,o,L,l)),f-=L,l+=L,J)break e}else a.head&&(a.head.comment=null);a.mode=16188;case 16188:if(512&a.flags){for(;C<16;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}if(4&a.wrap&&B!==(65535&a.check)){e.msg=\"header crc mismatch\",a.mode=D;break}B=0,C=0}a.head&&(a.head.hcrc=a.flags>>9&1,a.head.done=!0),e.adler=a.check=0,a.mode=A;break;case 16189:for(;C<32;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}e.adler=a.check=I(B),B=0,C=0,a.mode=R;case R:if(0===a.havedict)return e.next_out=d,e.avail_out=h,e.next_in=l,e.avail_in=f,a.hold=B,a.bits=C,_;e.adler=a.check=1,a.mode=A;case A:if(i===w||i===b)break e;case Z:if(a.last){B>>>=7&C,C-=7&C,a.mode=U;break}for(;C<3;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}switch(a.last=1&B,B>>>=1,C-=1,3&B){case 0:a.mode=16193;break;case 1:if(K(a),a.mode=T,i===b){B>>>=2,C-=2;break e}break;case 2:a.mode=16196;break;case 3:e.msg=\"invalid block type\",a.mode=D}B>>>=2,C-=2;break;case 16193:for(B>>>=7&C,C-=7&C;C<32;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}if((65535&B)!=(B>>>16^65535)){e.msg=\"invalid stored block lengths\",a.mode=D;break}if(a.length=65535&B,B=0,C=0,a.mode=S,i===b)break e;case S:a.mode=16195;case 16195:if(L=a.length,L){if(L>f&&(L=f),L>h&&(L=h),0===L)break e;s.set(o.subarray(l,l+L),d),f-=L,l+=L,h-=L,d+=L,a.length-=L;break}a.mode=A;break;case 16196:for(;C<14;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}if(a.nlen=257+(31&B),B>>>=5,C-=5,a.ndist=1+(31&B),B>>>=5,C-=5,a.ncode=4+(15&B),B>>>=4,C-=4,a.nlen>286||a.ndist>30){e.msg=\"too many length or distance symbols\",a.mode=D;break}a.have=0,a.mode=16197;case 16197:for(;a.have<a.ncode;){for(;C<3;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}a.lens[ie[a.have++]]=7&B,B>>>=3,C-=3}for(;a.have<19;)a.lens[ie[a.have++]]=0;if(a.lencode=a.lendyn,a.lenbits=7,ee={bits:a.lenbits},Q=c(0,a.lens,0,19,a.lencode,0,a.work,ee),a.lenbits=ee.bits,Q){e.msg=\"invalid code lengths set\",a.mode=D;break}a.have=0,a.mode=16198;case 16198:for(;a.have<a.nlen+a.ndist;){for(;V=a.lencode[B&(1<<a.lenbits)-1],j=V>>>24,Y=V>>>16&255,G=65535&V,!(j<=C);){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}if(G<16)B>>>=j,C-=j,a.lens[a.have++]=G;else{if(16===G){for(te=j+2;C<te;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}if(B>>>=j,C-=j,0===a.have){e.msg=\"invalid bit length repeat\",a.mode=D;break}J=a.lens[a.have-1],L=3+(3&B),B>>>=2,C-=2}else if(17===G){for(te=j+3;C<te;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}B>>>=j,C-=j,J=0,L=3+(7&B),B>>>=3,C-=3}else{for(te=j+7;C<te;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}B>>>=j,C-=j,J=0,L=11+(127&B),B>>>=7,C-=7}if(a.have+L>a.nlen+a.ndist){e.msg=\"invalid bit length repeat\",a.mode=D;break}for(;L--;)a.lens[a.have++]=J}}if(a.mode===D)break;if(0===a.lens[256]){e.msg=\"invalid code -- missing end-of-block\",a.mode=D;break}if(a.lenbits=9,ee={bits:a.lenbits},Q=c(1,a.lens,0,a.nlen,a.lencode,0,a.work,ee),a.lenbits=ee.bits,Q){e.msg=\"invalid literal/lengths set\",a.mode=D;break}if(a.distbits=6,a.distcode=a.distdyn,ee={bits:a.distbits},Q=c(2,a.lens,a.nlen,a.ndist,a.distcode,0,a.work,ee),a.distbits=ee.bits,Q){e.msg=\"invalid distances set\",a.mode=D;break}if(a.mode=T,i===b)break e;case T:a.mode=O;case O:if(f>=6&&h>=258){e.next_out=d,e.avail_out=h,e.next_in=l,e.avail_in=f,a.hold=B,a.bits=C,r(e,F),d=e.next_out,s=e.output,h=e.avail_out,l=e.next_in,o=e.input,f=e.avail_in,B=a.hold,C=a.bits,a.mode===A&&(a.back=-1);break}for(a.back=0;V=a.lencode[B&(1<<a.lenbits)-1],j=V>>>24,Y=V>>>16&255,G=65535&V,!(j<=C);){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}if(Y&&0==(240&Y)){for(X=j,W=Y,q=G;V=a.lencode[q+((B&(1<<X+W)-1)>>X)],j=V>>>24,Y=V>>>16&255,G=65535&V,!(X+j<=C);){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}B>>>=X,C-=X,a.back+=X}if(B>>>=j,C-=j,a.back+=j,a.length=G,0===Y){a.mode=16205;break}if(32&Y){a.back=-1,a.mode=A;break}if(64&Y){e.msg=\"invalid literal/length code\",a.mode=D;break}a.extra=15&Y,a.mode=16201;case 16201:if(a.extra){for(te=a.extra;C<te;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}a.length+=B&(1<<a.extra)-1,B>>>=a.extra,C-=a.extra,a.back+=a.extra}a.was=a.length,a.mode=16202;case 16202:for(;V=a.distcode[B&(1<<a.distbits)-1],j=V>>>24,Y=V>>>16&255,G=65535&V,!(j<=C);){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}if(0==(240&Y)){for(X=j,W=Y,q=G;V=a.distcode[q+((B&(1<<X+W)-1)>>X)],j=V>>>24,Y=V>>>16&255,G=65535&V,!(X+j<=C);){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}B>>>=X,C-=X,a.back+=X}if(B>>>=j,C-=j,a.back+=j,64&Y){e.msg=\"invalid distance code\",a.mode=D;break}a.offset=G,a.extra=15&Y,a.mode=16203;case 16203:if(a.extra){for(te=a.extra;C<te;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}a.offset+=B&(1<<a.extra)-1,B>>>=a.extra,C-=a.extra,a.back+=a.extra}if(a.offset>a.dmax){e.msg=\"invalid distance too far back\",a.mode=D;break}a.mode=16204;case 16204:if(0===h)break e;if(L=F-h,a.offset>L){if(L=a.offset-L,L>a.whave&&a.sane){e.msg=\"invalid distance too far back\",a.mode=D;break}L>a.wnext?(L-=a.wnext,M=a.wsize-L):M=a.wnext-L,L>a.length&&(L=a.length),H=a.window}else H=s,M=d-a.offset,L=a.length;L>h&&(L=h),h-=L,a.length-=L;do{s[d++]=H[M++]}while(--L);0===a.length&&(a.mode=O);break;case 16205:if(0===h)break e;s[d++]=a.length,h--,a.mode=O;break;case U:if(a.wrap){for(;C<32;){if(0===f)break e;f--,B|=o[l++]<<C,C+=8}if(F-=h,e.total_out+=F,a.total+=F,4&a.wrap&&F&&(e.adler=a.check=a.flags?n(a.check,s,F,d-F):t(a.check,s,F,d-F)),F=h,4&a.wrap&&(a.flags?B:I(B))!==a.check){e.msg=\"incorrect data check\",a.mode=D;break}B=0,C=0}a.mode=16207;case 16207:if(a.wrap&&a.flags){for(;C<32;){if(0===f)break e;f--,B+=o[l++]<<C,C+=8}if(4&a.wrap&&B!==(4294967295&a.total)){e.msg=\"incorrect length check\",a.mode=D;break}B=0,C=0}a.mode=16208;case 16208:Q=k;break e;case D:Q=p;break e;case 16210:return v;default:return g}return e.next_out=d,e.avail_out=h,e.next_in=l,e.avail_in=f,a.hold=B,a.bits=C,(a.wsize||F!==e.avail_out&&a.mode<D&&(a.mode<U||i!==u))&&P(e,e.output,e.next_out,F-e.avail_out),z-=e.avail_in,F-=e.avail_out,e.total_in+=z,e.total_out+=F,a.total+=F,4&a.wrap&&F&&(e.adler=a.check=a.flags?n(a.check,s,F,e.next_out-F):t(a.check,s,F,e.next_out-F)),e.data_type=a.bits+(a.last?64:0)+(a.mode===A?128:0)+(a.mode===T||a.mode===S?256:0),(0===z&&0===F||i===u)&&Q===m&&(Q=x),Q},inflateEnd:e=>{if(N(e))return g;let t=e.state;return t.window&&(t.window=null),e.state=null,m},inflateGetHeader:(e,t)=>{if(N(e))return g;const i=e.state;return 0==(2&i.wrap)?g:(i.head=t,t.done=!1,m)},inflateSetDictionary:(e,i)=>{const n=i.length;let a,r,o;return N(e)?g:(a=e.state,0!==a.wrap&&a.mode!==R?g:a.mode===R&&(r=1,r=t(r,i,n,0),r!==a.check)?p:(o=P(e,i,n,n),o?(a.mode=16210,v):(a.havedict=1,m)))},inflateInfo:\"pako inflate (from Nodeca project)\"};const G=(e,t)=>Object.prototype.hasOwnProperty.call(e,t);var X=function(e){const t=Array.prototype.slice.call(arguments,1);for(;t.length;){const i=t.shift();if(i){if(\"object\"!=typeof i)throw new TypeError(i+\"must be non-object\");for(const t in i)G(i,t)&&(e[t]=i[t])}}return e},W=e=>{let t=0;for(let i=0,n=e.length;i<n;i++)t+=e[i].length;const i=new Uint8Array(t);for(let t=0,n=0,a=e.length;t<a;t++){let a=e[t];i.set(a,n),n+=a.length}return i};let q=!0;try{String.fromCharCode.apply(null,new Uint8Array(1))}catch(e){q=!1}const J=new Uint8Array(256);for(let e=0;e<256;e++)J[e]=e>=252?6:e>=248?5:e>=240?4:e>=224?3:e>=192?2:1;J[254]=J[254]=1;var Q=e=>{if(\"function\"==typeof TextEncoder&&TextEncoder.prototype.encode)return(new TextEncoder).encode(e);let t,i,n,a,r,o=e.length,s=0;for(a=0;a<o;a++)i=e.charCodeAt(a),55296==(64512&i)&&a+1<o&&(n=e.charCodeAt(a+1),56320==(64512&n)&&(i=65536+(i-55296<<10)+(n-56320),a++)),s+=i<128?1:i<2048?2:i<65536?3:4;for(t=new Uint8Array(s),r=0,a=0;r<s;a++)i=e.charCodeAt(a),55296==(64512&i)&&a+1<o&&(n=e.charCodeAt(a+1),56320==(64512&n)&&(i=65536+(i-55296<<10)+(n-56320),a++)),i<128?t[r++]=i:i<2048?(t[r++]=192|i>>>6,t[r++]=128|63&i):i<65536?(t[r++]=224|i>>>12,t[r++]=128|i>>>6&63,t[r++]=128|63&i):(t[r++]=240|i>>>18,t[r++]=128|i>>>12&63,t[r++]=128|i>>>6&63,t[r++]=128|63&i);return t},V=(e,t)=>{const i=t||e.length;if(\"function\"==typeof TextDecoder&&TextDecoder.prototype.decode)return(new TextDecoder).decode(e.subarray(0,t));let n,a;const r=new Array(2*i);for(a=0,n=0;n<i;){let t=e[n++];if(t<128){r[a++]=t;continue}let o=J[t];if(o>4)r[a++]=65533,n+=o-1;else{for(t&=2===o?31:3===o?15:7;o>1&&n<i;)t=t<<6|63&e[n++],o--;o>1?r[a++]=65533:t<65536?r[a++]=t:(t-=65536,r[a++]=55296|t>>10&1023,r[a++]=56320|1023&t)}}return((e,t)=>{if(t<65534&&e.subarray&&q)return String.fromCharCode.apply(null,e.length===t?e:e.subarray(0,t));let i=\"\";for(let n=0;n<t;n++)i+=String.fromCharCode(e[n]);return i})(r,a)},$=(e,t)=>{(t=t||e.length)>e.length&&(t=e.length);let i=t-1;for(;i>=0&&128==(192&e[i]);)i--;return i<0||0===i?t:i+J[e[i]]>t?i:t},ee={2:\"need dictionary\",1:\"stream end\",0:\"\",\"-1\":\"file error\",\"-2\":\"stream error\",\"-3\":\"data error\",\"-4\":\"insufficient memory\",\"-5\":\"buffer error\",\"-6\":\"incompatible version\"};var te=function(){this.input=null,this.next_in=0,this.avail_in=0,this.total_in=0,this.output=null,this.next_out=0,this.avail_out=0,this.total_out=0,this.msg=\"\",this.state=null,this.data_type=2,this.adler=0};var ie=function(){this.text=0,this.time=0,this.xflags=0,this.os=0,this.extra=null,this.extra_len=0,this.name=\"\",this.comment=\"\",this.hcrc=0,this.done=!1};const ne=Object.prototype.toString,{Z_NO_FLUSH:ae,Z_FINISH:re,Z_OK:oe,Z_STREAM_END:se,Z_NEED_DICT:le,Z_STREAM_ERROR:de,Z_DATA_ERROR:fe,Z_MEM_ERROR:ce}=h;function he(e){this.options=X({chunkSize:65536,windowBits:15,to:\"\"},e||{});const t=this.options;t.raw&&t.windowBits>=0&&t.windowBits<16&&(t.windowBits=-t.windowBits,0===t.windowBits&&(t.windowBits=-15)),!(t.windowBits>=0&&t.windowBits<16)||e&&e.windowBits||(t.windowBits+=32),t.windowBits>15&&t.windowBits<48&&0==(15&t.windowBits)&&(t.windowBits|=15),this.err=0,this.msg=\"\",this.ended=!1,this.chunks=[],this.strm=new te,this.strm.avail_out=0;let i=Y.inflateInit2(this.strm,t.windowBits);if(i!==oe)throw new Error(ee[i]);if(this.header=new ie,Y.inflateGetHeader(this.strm,this.header),t.dictionary&&(\"string\"==typeof t.dictionary?t.dictionary=Q(t.dictionary):\"[object ArrayBuffer]\"===ne.call(t.dictionary)&&(t.dictionary=new Uint8Array(t.dictionary)),t.raw&&(i=Y.inflateSetDictionary(this.strm,t.dictionary),i!==oe)))throw new Error(ee[i])}function ue(e,t){const i=new he(t);if(i.push(e),i.err)throw i.msg||ee[i.err];return i.result}he.prototype.push=function(e,t){const i=this.strm,n=this.options.chunkSize,a=this.options.dictionary;let r,o,s;if(this.ended)return!1;for(o=t===~~t?t:!0===t?re:ae,\"[object ArrayBuffer]\"===ne.call(e)?i.input=new Uint8Array(e):i.input=e,i.next_in=0,i.avail_in=i.input.length;;){for(0===i.avail_out&&(i.output=new Uint8Array(n),i.next_out=0,i.avail_out=n),r=Y.inflate(i,o),r===le&&a&&(r=Y.inflateSetDictionary(i,a),r===oe?r=Y.inflate(i,o):r===fe&&(r=le));i.avail_in>0&&r===se&&i.state.wrap>0&&0!==e[i.next_in];)Y.inflateReset(i),r=Y.inflate(i,o);switch(r){case de:case fe:case le:case ce:return this.onEnd(r),this.ended=!0,!1}if(s=i.avail_out,i.next_out&&(0===i.avail_out||r===se))if(\"string\"===this.options.to){let e=$(i.output,i.next_out),t=i.next_out-e,a=V(i.output,e);i.next_out=t,i.avail_out=n-t,t&&i.output.set(i.output.subarray(e,e+t),0),this.onData(a)}else this.onData(i.output.length===i.next_out?i.output:i.output.subarray(0,i.next_out));if(r!==oe||0!==s){if(r===se)return r=Y.inflateEnd(this.strm),this.onEnd(r),this.ended=!0,!0;if(0===i.avail_in)break}}return!0},he.prototype.onData=function(e){this.chunks.push(e)},he.prototype.onEnd=function(e){e===oe&&(\"string\"===this.options.to?this.result=this.chunks.join(\"\"):this.result=W(this.chunks)),this.chunks=[],this.err=e,this.msg=this.strm.msg};var we=he,be=ue,me=function(e,t){return(t=t||{}).raw=!0,ue(e,t)},ke=ue,_e=h,ge={Inflate:we,inflate:be,inflateRaw:me,ungzip:ke,constants:_e};e.Inflate=we,e.constants=_e,e.default=ge,e.inflate=be,e.inflateRaw=me,e.ungzip=ke,Object.defineProperty(e,\"__esModule\",{value:!0})}));
+
+
+      /*
+
+      \ * Rule-Hub Bilibili local enhancement, 2026-10-24.
+
+      \ * New wire-level implementation; field layouts checked against Rule-Hub/Sparkle
+
+      \ * and Biliverse protobuf v1.1.0. SPDX-License-Identifier: GPL-3.0-or-later.
+
+      \ * Never guesses unknown message paths. Unknown bytes stay byte-for-byte intact.
+
+      \ */
+
+      (function () {
+
+      \  'use strict';
+
+      \  let options;
+
+      \  try { options = JSON.parse(String($argument)); } catch (_) { $done({}); return; }
+
+      \  if (!options || options.master_enabled !== true) { $done({}); return; }
+
+      \  const on = key => options[key] === true;
+
+      \  const path = String($request.url).replace(/^https?:\\/\\/[^/]+/, '').split('?')[0];
+
+      \  const limit = Number(options.decode_max_size) || 1048576;
+
+      \  const DROP = Symbol('drop');
+
+      \  const bytes = value => {
+
+      \    if (value instanceof Uint8Array) return value;
+
+      \    if (value instanceof ArrayBuffer) return new Uint8Array(value);
+
+      \    if (ArrayBuffer.isView(value)) return new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
+
+      \    throw new TypeError('Expected binary-mode Uint8Array');
+
+      \  };
+
+      \  const text = value => {
+
+      \    if (value.length > 131072) throw new RangeError('Text field too large');
+
+      \    if (typeof TextDecoder === 'function') return new TextDecoder('utf-8').decode(value);
+
+      \    let encoded = '';
+
+      \    for (let i = 0; i < value.length; i++) encoded += '%' + value[i].toString(16).padStart(2, '0');
+
+      \    try { return decodeURIComponent(encoded); } catch (_) { return ''; }
+
+      \  };
+
+      \  function varint(buffer, offset) {
+
+      \    let value = 0, multiplier = 1;
+
+      \    for (let count = 0; count < 10; count++) {
+
+      \      if (offset >= buffer.length) throw new RangeError('Truncated protobuf varint');
+
+      \      const part = buffer[offset++];
+
+      \      value += (part & 127) * multiplier;
+
+      \      if (part < 128) return {value, end:offset};
+
+      \      multiplier *= 128;
+
+      \    }
+
+      \    throw new RangeError('Invalid protobuf varint');
+
+      \  }
+
+      \  function fields(buffer, visit) {
+
+      \    let offset = 0;
+
+      \    while (offset < buffer.length) {
+
+      \      const start = offset, tag = varint(buffer, offset);
+
+      \      if (!Number.isSafeInteger(tag.value)) throw new RangeError('Invalid protobuf tag');
+
+      \      const number = Math.floor(tag.value / 8), wire = tag.value % 8;
+
+      \      if (number < 1) throw new RangeError('Invalid protobuf field');
+
+      \      offset = tag.end;
+
+      \      let begin = offset, value;
+
+      \      if (wire === 0) { const item = varint(buffer, offset); value = item.value; offset = item.end; }
+
+      \      else if (wire === 1) offset += 8;
+
+      \      else if (wire === 5) offset += 4;
+
+      \      else if (wire === 2) {
+
+      \        const length = varint(buffer, offset);
+
+      \        if (!Number.isSafeInteger(length.value) || length.value > limit) throw new RangeError('Protobuf length limit');
+
+      \        begin = length.end; offset = begin + length.value;
+
+      \      } else throw new RangeError('Unsupported protobuf wire type');
+
+      \      if (offset > buffer.length) throw new RangeError('Truncated protobuf field');
+
+      \      const field = {number, wire, value, start, begin, end:offset, data:buffer.subarray(begin, offset)};
+
+      \      if (visit(field) === false) return;
+
+      \    }
+
+      \  }
+
+      \  function encodeNumber(value) {
+
+      \    if (!Number.isSafeInteger(value) || value < 0) throw new RangeError('Unsafe protobuf number');
+
+      \    const out = [];
+
+      \    do { const part = value % 128; value = Math.floor(value / 128); out.push(part | (value ? 128 : 0)); } while (value);
+
+      \    return new Uint8Array(out);
+
+      \  }
+
+      \  function join(chunks) {
+
+      \    let size = 0;
+
+      \    for (const chunk of chunks) size += chunk.length;
+
+      \    if (size > limit) throw new RangeError('Output exceeds protobuf limit');
+
+      \    const out = new Uint8Array(size);
+
+      \    let offset = 0;
+
+      \    for (const chunk of chunks) { out.set(chunk, offset); offset += chunk.length; }
+
+      \    return out;
+
+      \  }
+
+      \  function fieldBytes(number, value) { return join([encodeNumber(number * 8 + 2), encodeNumber(value.length), value]); }
+
+      \  function fieldNumber(number, value) { return join([encodeNumber(number * 8), encodeNumber(value)]); }
+
+      \  function encodeText(value) {
+
+      \    if (typeof TextEncoder === 'function') return new TextEncoder().encode(String(value));
+
+      \    const encoded = unescape(encodeURIComponent(String(value))), out = new Uint8Array(encoded.length);
+
+      \    for (let i = 0; i < encoded.length; i++) out[i] = encoded.charCodeAt(i);
+
+      \    return out;
+
+      \  }
+
+      \  function edit(buffer, change) {
+
+      \    let chunks = null, cursor = 0;
+
+      \    fields(buffer, field => {
+
+      \      const result = change(field);
+
+      \      if (result === undefined || result === field.data) return;
+
+      \      if (result !== DROP && field.wire !== 2 && !(result instanceof Uint8Array)) throw new TypeError('Invalid field edit');
+
+      \      if (!chunks) chunks = [];
+
+      \      chunks.push(buffer.subarray(cursor, field.start));
+
+      \      if (result !== DROP) chunks.push(field.wire === 2 ? fieldBytes(field.number, result) : result);
+
+      \      cursor = field.end;
+
+      \    });
+
+      \    if (!chunks) return buffer;
+
+      \    chunks.push(buffer.subarray(cursor));
+
+      \    return join(chunks);
+
+      \  }
+
+      \  function find(buffer, number) { let result; fields(buffer, field => { if (field.number === number) { result = field; return false; } }); return result; }
+
+      \  function number(buffer, id) { const item = find(buffer, id); return item && item.wire === 0 ? item.value : 0; }
+
+      \  function string(buffer, id) { const item = find(buffer, id); return item && item.wire === 2 ? text(item.data) : ''; }
+
+      \  function present(buffer, id, nonempty) { const item = find(buffer, id); return !!item && item.wire === 2 && (!nonempty || item.data.length > 0); }
+
+      \  function nested(buffer, id, change) { return edit(buffer, field => field.number === id && field.wire === 2 ? change(field.data) : undefined); }
+
+      \  function dropIds(buffer, ids) { return edit(buffer, field => ids.includes(field.number) && field.wire === 2 ? DROP : undefined); }
+
+      \  function patchNumber(buffer, id, value) {
+
+      \    let found = false;
+
+      \    const out = edit(buffer, field => {
+
+      \      if (field.number !== id) return;
+
+      \      found = true;
+
+      \      return field.wire === 0 && field.value === value ? undefined : fieldNumber(id, value);
+
+      \    });
+
+      \    return found || !value ? out : join([out, fieldNumber(id, value)]);
+
+      \  }
+
+      \  function commercial(value) { return /https?:\\/\\/(?:b23\\.tv\\/(?:cm|mall)(?:[/?#]|$)|cm\\.bilibili\\.com\\/ad-showcase-h5)/i.test(value); }
+
+      \  function legacyAd(value) { return ['cm','game'].includes(string(value,7)) || present(value,28) || present(value,32,true); }
+
+      \  function unifiedAd(value) {
+
+      \    const basic = find(value,12);
+
+      \    return [4,5,11].includes(number(value,1)) || present(value,11,true) || !!(basic && string(basic.data,6));
+
+      \  }
+
+      \  function relates(buffer, unified) {
+
+      \    return edit(buffer, field => field.number === 1 && field.wire === 2 && (unified ? unifiedAd(field.data) : legacyAd(field.data)) ? DROP : undefined);
+
+      \  }
+
+      \  function module(buffer) {
+
+      \    const type = number(buffer,1);
+
+      \    if (on('view_banner') && ([18,29,30].includes(type) || present(buffer,23))) return DROP;
+
+      \    if (on('view_ad') && type === 55) return DROP;
+
+      \    if (on('view_modules') && [37,63].includes(type)) return DROP;
+
+      \    let out = buffer;
+
+      \    if (on('view_banner') && type === 3) out = nested(out,5, value => dropIds(value,[1]));
+
+      \    if (on('view_ad') && type === 28) out = nested(out,22, value => relates(value,true));
+
+      \    return out;
+
+      \  }
+
+      \  function modules(buffer, id) { return edit(buffer, field => field.number === id && field.wire === 2 ? module(field.data) : undefined); }
+
+      \  function legacyView(buffer) {
+
+      \    return edit(buffer, field => {
+
+      \      if (on('view_banner') && field.wire === 2 && [23,48].includes(field.number)) return DROP;
+
+      \      if (on('view_ad') && field.wire === 2 && [30,31,41].includes(field.number)) return DROP;
+
+      \      if (on('view_ad') && field.number === 10 && field.wire === 2 && legacyAd(field.data)) return DROP;
+
+      \      if (on('view_ad') && field.number === 32 && field.wire === 2 && (number(field.data,2) === 3 || present(field.data,11))) return DROP;
+
+      \      if (on('view_modules') && field.number === 50) return DROP;
+
+      \      if (on('remove_charge_button') && field.number === 4 && field.wire === 2) return dropIds(field.data,[9]);
+
+      \    });
+
+      \  }
+
+      \  function unifiedView(buffer) {
+
+      \    return edit(buffer, field => {
+
+      \      if (on('view_banner') && field.number === 7 && field.wire === 2) return DROP;
+
+      \      if (on('remove_charge_button') && field.number === 3 && field.wire === 2) return dropIds(field.data,[7]);
+
+      \      if (field.number === 5 && field.wire === 2) return nested(field.data,1, tab => nested(tab,2, intro => modules(intro,2)));
+
+      \      // Do not delete field 48 here: current unified protocol has no confirmed mapping.
+
+      \    });
+
+      \  }
+
+      \  function dynamic(buffer, personal, video) {
+
+      \    const filter = list => edit(list, field => field.number === 1 && field.wire === 2 && number(field.data,1) === 15 ? DROP : undefined);
+
+      \    if (personal) return on('dynamic_personal_ad') ? filter(buffer) : buffer;
+
+      \    return edit(buffer, field => {
+
+      \      if (field.number === 1 && field.wire === 2 && on('dynamic_ad')) return filter(field.data);
+
+      \      if (field.number === 3 && field.wire === 2 && !video && on('dynamic_topics')) return DROP;
+
+      \      if (field.number === 2 && field.wire === 2) {
+
+      \        if (on('dynamic_most_visited')) return DROP;
+
+      \        if (on('dynamic_live_only')) return edit(field.data, item => [2,10].includes(item.number) && item.wire === 2 && number(item.data,10) !== 1 ? DROP : undefined);
+
+      \      }
+
+      \    });
+
+      \  }
+
+      \  function arcConf(buffer, allowUnsupported) {
+
+      \    if ((!allowUnsupported && !number(buffer,1)) || (number(buffer,1) && !number(buffer,2))) return buffer;
+
+      \    let out = edit(buffer, field => [3,4].includes(field.number) ? DROP : undefined);
+
+      \    if (allowUnsupported) out = patchNumber(out,1,1);
+
+      \    return patchNumber(out,2,0);
+
+      \  }
+
+      \  function player(buffer) {
+
+      \    return edit(buffer, field => {
+
+      \      if (field.number === 9 && field.wire === 2 && on('view_banner')) return dropIds(field.data,[2]);
+
+      \      if (field.number === 10 && field.wire === 2 && on('view_ad')) return edit(field.data, video => {
+
+      \        const info = video.number === 1 && video.wire === 2 ? find(video.data,1) : null;
+
+      \        return info && number(info.data,3) === 1 ? DROP : undefined;
+
+      \      });
+
+      \      if (field.number === 2 && field.wire === 2 && (on('background_play') || on('cast_enabled'))) return nested(field.data,1, entry => {
+
+      \        const key = number(entry,1);
+
+      \        return (key === 9 && on('background_play')) || (key === 2 && on('cast_enabled')) ? nested(entry,2, value => arcConf(value,false)) : entry;
+
+      \      });
+
+      \    });
+
+      \  }
+
+      \  function progress(buffer, unified) {
+
+      \    let out = on('view_ad') ? dropIds(buffer,unified ? [1,4] : [1]) : buffer;
+
+      \    if (on('airborne')) out = nested(out,2, chronos => {
+
+      \      const current = string(chronos,1), agents = String($request.headers && ($request.headers['user-agent'] || $request.headers['User-Agent']) || '');
+
+      \      const mappings = {
+
+      \        '5bca6725b04c018358e69be749f0ee11':'106d21a147f49e9d4ef86e2e8523474f',
+
+      \        '45b564f5ba1fdd3746406937059addd8':'e5a968f1a5055bbe5c12e67b100a6dcb',
+
+      \        '325e7073ffc6fb5263682fecdcd1058f':'932002070dc1b51241198a074d2279fc',
+
+      \        '3a14beddd23328eaddfe9f0eb048d713':'8c3feda2e92bf60e8a7aeade1a231586'
+
+      \      };
+
+      \      const hash = mappings[current] || (agents.includes('bili-hd') ? 'e5a968f1a5055bbe5c12e67b100a6dcb' : agents.includes('bili-inter') ? '8c3feda2e92bf60e8a7aeade1a231586' : '106d21a147f49e9d4ef86e2e8523474f');
+
+      \      const base = dropIds(chronos,[1,2,3]);
+
+      \      return join([base,fieldBytes(1,encodeText(hash)),fieldBytes(2,encodeText('https://raw.githubusercontent.com/kokoryh/chronos/refs/heads/master/' + hash + '.zip'))]);
+
+      \    });
+
+      \    return out;
+
+      \  }
+
+      \  function isCommercialReply(buffer) {
+
+      \    const content = find(buffer,12);
+
+      \    if (!content) return false;
+
+      \    if (commercial(string(content.data,1))) return true;
+
+      \    let result = false;
+
+      \    fields(content.data, field => { if (field.number === 5 && field.wire === 2 && commercial(string(field.data,1))) { result = true; return false; } });
+
+      \    return result;
+
+      \  }
+
+      \  function reply(buffer) {
+
+      \    return edit(buffer, field => {
+
+      \      if (on('reply_ad') && [11,27].includes(field.number)) return DROP;
+
+      \      if (on('reply_ad') && field.number === 28 && field.wire === 2 && number(field.data,1) === 3) return DROP;
+
+      \      if (on('purify_comment') && field.number === 14 && field.wire === 2 && isCommercialReply(field.data)) return DROP;
+
+      \    });
+
+      \  }
+
+      \  function transform(buffer) {
+
+      \    if (/\\/bilibili\\.app\\.view\\.v1\\.View\\/View$/.test(path)) return legacyView(buffer);
+
+      \    if (/\\/bilibili\\.app\\.viewunite\\.v1\\.View\\/View$/.test(path)) return unifiedView(buffer);
+
+      \    if (/\\/bilibili\\.app\\.viewunite\\.v1\\.View\\/AIRelateAsync$/.test(path)) return edit(buffer, field => {
+
+      \      if (on('view_banner') && field.number === 1) return DROP;
+
+      \      if (field.number === 2 && field.wire === 2) return modules(field.data,1);
+
+      \    });
+
+      \    if (/\\/bilibili\\.app\\.view\\.v1\\.View\\/(?:RelatesFeed|PlayerRelates)$/.test(path)) return on('view_ad') ? relates(buffer,false) : buffer;
+
+      \    if (/\\/bilibili\\.app\\.viewunite\\.v1\\.View\\/RelatesFeed$/.test(path)) return on('view_ad') ? relates(buffer,true) : buffer;
+
+      \    if (/\\/bilibili\\.app\\.view(?:unite)?\\.v1\\.View\\/ViewProgress$/.test(path)) return progress(buffer,path.includes('viewunite'));
+
+      \    if (/\\/bilibili\\.app\\.playerunite\\.v1\\.Player\\/PlayViewUnite$/.test(path)) return player(buffer);
+
+      \    if (/\\/bilibili\\.app\\.playurl\\.v1\\.PlayURL\\/PlayView$/.test(path)) return nested(buffer,5, value => edit(value, field => {
+
+      \      if (field.wire === 2 && ((field.number === 1 && on('background_play')) || (field.number === 3 && on('cast_enabled')))) return arcConf(field.data,true);
+
+      \    }));
+
+      \    if (/\\/bilibili\\.app\\.dynamic\\.v2\\.Dynamic\\/Dyn(?:All|Video)(?:Personal)?$/.test(path)) return dynamic(buffer,path.endsWith('Personal'),path.includes('/DynVideo'));
+
+      \    if (/\\/bilibili\\.community\\.service\\.dm\\.v1\\.DM\\/DmView$/.test(path)) return dropIds(buffer,[...(on('dm_command') ? [22] : []),...(on('dm_watermark') ? [18] : [])]);
+
+      \    if (/\\/bilibili\\.community\\.service\\.dm\\.v1\\.DM\\/DmSegMobile$/.test(path)) return on('dm_colorful') ? nested(buffer,1, value => number(value,24) === 60001 ? edit(value, field => field.number === 24 && field.wire === 0 ? DROP : undefined) : value) : buffer;
+
+      \    if (/\\/bilibili\\.main\\.community\\.reply\\.v1\\.Reply\\/MainList$/.test(path)) return reply(buffer);
+
+      \    if (/\\/bilibili\\.polymer\\.app\\.search\\.v1\\.Search\\/SearchAll$/.test(path)) return on('search_ad') ? edit(buffer, field => field.number === 4 && field.wire === 2 && /_ad_?/.test(string(field.data,4)) ? DROP : undefined) : buffer;
+
+      \    if (/\\/bilibili\\.pgc\\.gateway\\.player\\.v2\\.PlayURL\\/PlayView$/.test(path)) {
+
+      \      let out = on('view_banner') ? nested(buffer,5, value => dropIds(value,[8])) : buffer;
+
+      \      if (on('pgc_player_tips')) out = nested(out,6, value => edit(value, field => field.number === 3 && field.wire === 2 ? new Uint8Array() : undefined));
+
+      \      return out;
+
+      \    }
+
+      \    if (/\\/bilibili\\.app\\.show\\.v1\\.Popular\\/Index$/.test(path) && on('popular_ad')) return edit(buffer, field => {
+
+      \      if (field.number !== 1 || field.wire !== 2) return;
+
+      \      if ([10,11,12].some(id => present(field.data,id))) return DROP;
+
+      \      const cover = find(field.data,1);
+
+      \      const base = cover && cover.wire === 2 ? find(cover.data,1) : null;
+
+      \      return base && base.wire === 2 && present(base.data,12,true) ? DROP : undefined;
+
+      \    });
+
+      \    return buffer;
+
+      \  }
+
+      \  function inflate(value) {
+
+      \    if (typeof pako === 'undefined' || !pako.Inflate) throw new Error('gzip decoder unavailable');
+
+      \    const inflater = new pako.Inflate({chunkSize:16384}), chunks = [];
+
+      \    let size = 0;
+
+      \    inflater.onData = chunk => { size += chunk.length; if (size > limit) throw new RangeError('Decompressed body exceeds limit'); chunks.push(chunk); };
+
+      \    inflater.push(value,true);
+
+      \    if (inflater.err) throw new Error('Invalid compressed gRPC');
+
+      \    return join(chunks);
+
+      \  }
+
+      \  try {
+
+      \    const original = bytes($response.body === undefined ? $response.bodyBytes : $response.body);
+
+      \    if (original.length > (Number(options.grpc_max_size) || 524288)) { $done({}); return; }
+
+      \    const chunks = []; let offset = 0, changed = false;
+
+      \    while (offset < original.length) {
+
+      \      if (offset + 5 > original.length) throw new RangeError('Truncated gRPC header');
+
+      \      const flag = original[offset], length = original[offset+1] * 16777216 + original[offset+2] * 65536 + original[offset+3] * 256 + original[offset+4];
+
+      \      const end = offset + 5 + length;
+
+      \      if (end > original.length) throw new RangeError('Truncated gRPC payload');
+
+      \      if (flag & 128) { chunks.push(original.subarray(offset,end)); offset = end; continue; }
+
+      \      if (flag !== 0 && flag !== 1) throw new RangeError('Unsupported gRPC compression');
+
+      \      const inflaterEncoding = String(($response.headers && ($response.headers['grpc-encoding'] || $response.headers['Grpc-Encoding'])) || 'gzip').toLowerCase();
+
+      \      if (flag === 1 && !['gzip','identity',''].includes(inflaterEncoding)) throw new Error('Unsupported grpc-encoding');
+
+      \      const raw = original.subarray(offset+5,end), decoded = flag ? inflate(raw) : raw;
+
+      \      if (decoded.length > limit) throw new RangeError('Decoded body limit');
+
+      \      const result = transform(decoded);
+
+      \      if (result === decoded) chunks.push(original.subarray(offset,end));
+
+      \      else {
+
+      \        changed = true;
+
+      \        const frame = new Uint8Array(result.length + 5);
+
+      \        frame[1] = result.length >>> 24; frame[2] = result.length >>> 16 & 255; frame[3] = result.length >>> 8 & 255; frame[4] = result.length & 255;
+
+      \        frame.set(result,5); chunks.push(frame);
+
+      \      }
+
+      \      offset = end;
+
+      \    }
+
+      \    if (!changed) { $done({}); return; }
+
+      \    const response = {body:join(chunks)};
+
+      \    if (changed) {
+
+      \      // If a response mixes compressed and uncompressed frames, do not relabel a compressed
+
+      \      // frame as identity; unchanged compressed frames keep their original flag and bytes.
+
+      \      const headers = Object.assign({},$response.headers);
+
+      \      for (const key of Object.keys(headers)) if (key.toLowerCase() === 'content-length') delete headers[key];
+
+      \      response.headers = headers;
+
+      \    }
+
+      \    $done(response);
+
+      \  } catch (error) {
+
+      \    if (String(options.log_level) !== '5') console.log('[RuleHub enhancement] 原样放行：' + error);
+
+      \    $done({});
+
+      \  }
+
+      })();\n"
+  'rulehub.bilibili.enhanced.json':
+    'payload': "/* Rule-Hub Bilibili JSON enhancement, 2026-10-24. SPDX-License-Identifier: GPL-3.0-or-later. */
+
+      (function () {
+
+      \  'use strict';
+
+      \  let options, body;
+
+      \  try { options = JSON.parse(String($argument)); body = JSON.parse($response.body); }
+
+      \  catch (_) { $done({}); return; }
+
+      \  if (options.master_enabled !== true) { $done({}); return; }
+
+      \  const on = key => options[key] === true;
+
+      \  const path = String($request.url).replace(/^https?:\\/\\/[^/]+/, '').split('?')[0];
+
+      \  const isLiveResponse = path.startsWith('/xlive/');
+
+      \  const tracking = new Set(['bsource','from_comid','from_source','from_spmid','from_trackid','live_from','msource','report_flow_data','search_from_source','seid','share_medium','share_plat','share_session_id','share_source','share_tag','spm_id_from','spmid','track_id','trackid','unique_k','vd_source']);
+
+      \  const linkFields = new Set(['appUrlSchema','app_url_schema','jumpUri','jumpUrl','jump_uri','jump_url','link','pcUrl','pc_url','uri','url']);
+
+      \  let touched = false, visited = 0;
+
+      \  const remove = (value, key) => { if (value && Object.prototype.hasOwnProperty.call(value,key)) { delete value[key]; touched = true; } };
+
+      \  function sanitize(value, preloadOnly) {
+
+      \    if (typeof value !== 'string') return value;
+
+      \    const hashAt = value.indexOf('#'), suffix = hashAt < 0 ? '' : value.slice(hashAt);
+
+      \    const base = hashAt < 0 ? value : value.slice(0,hashAt), at = base.indexOf('?');
+
+      \    if (at < 0) return value;
+
+      \    const pairs = base.slice(at+1).split('&').filter(part => {
+
+      \      let name = part.split('=')[0];
+
+      \      try { name = decodeURIComponent(name); } catch (_) {}
+
+      \      return preloadOnly ? name.toLowerCase() !== 'trackid' : !tracking.has(name.toLowerCase());
+
+      \    });
+
+      \    return base.slice(0,at) + (pairs.length ? '?' + pairs.join('&') : '') + suffix;
+
+      \  }
+
+      \  function clean(value, depth) {
+
+      \    if (!value || typeof value !== 'object' || depth > 18 || ++visited > 30000) return;
+
+      \    if (Array.isArray(value)) { for (const item of value) clean(item,depth+1); return; }
+
+      \    for (const key of Object.keys(value)) {
+
+      \      const child = value[key];
+
+      \      if (on('privacy_tracking') && ['trackid','track_id','report_flow_data'].includes(key)) { remove(value,key); continue; }
+
+      \      if (on('privacy_tracking') && linkFields.has(key) && typeof child === 'string') {
+
+      \        const next = sanitize(child,false); if (next !== child) { value[key] = next; touched = true; }
+
+      \      }
+
+      \      if (isLiveResponse && on('live_callbacks') && ['show_callback','click_callback'].includes(key)) { remove(value,key); continue; }
+
+      \      if (isLiveResponse && on('live_preload_tracking') && key === 'subtitle_style' && child && typeof child.link === 'string') {
+
+      \        const next = sanitize(child.link,true); if (next !== child.link) { child.link = next; touched = true; }
+
+      \      }
+
+      \      clean(child,depth+1);
+
+      \    }
+
+      \  }
+
+      \  const ad = item => !!item && (String(item.card_type || '').startsWith('cm_') || String(item.card_goto || '').startsWith('ad_') || item.goto === 'ad' || item.is_ad === true);
+
+      \  const liveAd = item => {
+
+      \    if (!item) return false;
+
+      \    const meta = item.ad_transparent_content;
+
+      \    const hasMeta = typeof meta === 'string' ? meta.trim().length > 0 : meta && typeof meta === 'object' ? Object.keys(meta).length > 0 : meta === true;
+
+      \    return [true,1,'1'].includes(item.is_ad) || [true,1,'1'].includes(item.show_ad_icon) || hasMeta;
+
+      \  };
+
+      \  const filter = (object,key,predicate) => {
+
+      \    if (!object || !Array.isArray(object[key])) return;
+
+      \    const before = object[key], after = before.filter(predicate);
+
+      \    if (after.length !== before.length) { object[key] = after; touched = true; }
+
+      \  };
+
+      \  const data = body.data;
+
+      \  try {
+
+      \    if (path.startsWith('/x/v2/splash/') && on('splash_ad') && data) {
+
+      \      for (const key of ['account','event_list','preload','show']) remove(data,key);
+
+      \      if (Array.isArray(data.list)) for (const item of data.list) { if (!item || typeof item !== 'object') continue; item.duration = 0; item.enable_pre_download = false; touched = true; }
+
+      \      data.max_time = 0; touched = true;
+
+      \    }
+
+      \    if (path === '/x/v2/feed/index' && data && Array.isArray(data.items)) {
+
+      \      const uids = new Set(String(options.feed_block_uids || '').split(/[,，;；\\s]+/).filter(value => /^\\d+$/.test(value)));
+
+      \      filter(data,'items',item => {
+
+      \        if (!item || typeof item !== 'object') return true;
+
+      \        if (on('feed_ad') && ad(item)) return false;
+
+      \        if (on('feed_activity') && ['banner_v8','banner_ipad_v8'].includes(item.card_type)) return false;
+
+      \        if (on('feed_vertical') && item.goto === 'vertical_av') return false;
+
+      \        if (on('feed_uid_filter') && item.card_goto === 'live' && uids.has(String(item.args && item.args.up_id))) return false;
+
+      \        if (on('feed_ad')) filter(item,'banner_item',banner => !['ad','ad_inline'].includes(banner && banner.type));
+
+      \        return true;
+
+      \      });
+
+      \    }
+
+      \    if (/^\\/x\\/v2\\/feed\\/index\\/(?:relate\\/)?story$/.test(path) && data && Array.isArray(data.items)) {
+
+      \      if (on('story_ad')) filter(data,'items',item => !ad(item) && !['vertical_ad_av','vertical_ad_picture','vertical_ad_live','vertical_pgc'].includes(item && item.card_goto));
+
+      \      if (on('story_commercial')) for (const item of data.items) {
+
+      \        if (!item || typeof item !== 'object') continue;
+
+      \        for (const key of ['story_cart_icon','free_flow_toast','course_info','game_info']) remove(item,key);
+
+      \        filter(item,'share_bottom_button',button => !(button && button.type === 20 && Array.isArray(button.button_metas) && button.button_metas.some(meta => meta && (meta.text === '助TA必火' || /cm\\.bilibili\\.com\\/fly-h5/.test(meta.link || '')))));
+
+      \      }
+
+      \    }
+
+      \    if (path === '/x/v2/search/square' && on('search_hot') && Array.isArray(body.data)) filter(body,'data',item => !item || item.type !== 'trending');
+
+      \    if (path === '/x/web-interface/wbi/index/top/feed/rcmd' && on('feed_ad')) filter(data,'item',item => !ad(item));
+
+      \    if (path === '/xlive/app-interface/v2/index/feed' && on('live_ad')) filter(data,'card_list',item => !['banner_v2','activity_card_v1'].includes(item && item.card_type) && !liveAd(item && item.card_data && item.card_data.small_card_v1));
+
+      \    if (path === '/xlive/app-interface/v2/room/recList' && on('live_ad')) filter(data,'list',item => !liveAd(item));
+
+      \    if (path === '/xlive/app-room/v1/index/getInfoByRoom' && data && on('live_ad')) {
+
+      \      for (const key of ['big_card_info','activity_banner_info','function_card']) remove(data,key);
+
+      \      if (data.shopping_info) { data.shopping_info.is_show = 0; touched = true; }
+
+      \      if (data.new_tab_info) filter(data.new_tab_info,'outer_list',item => item && item.biz_id !== 33);
+
+      \    }
+
+      \    if (/^\\/pgc\\/page\\/(?:bangumi|cinema\\/tab|channel)$/.test(path) && on('pgc_ad')) {
+
+      \      const root = body.result || body.data;
+
+      \      if (root && Array.isArray(root.modules)) {
+
+      \        filter(root,'modules',module => module && module.type !== 'TIP');
+
+      \        for (const module of root.modules) {
+
+      \          const holder = module.module_data || module;
+
+      \          if (String(module.style || module.type || '').toLowerCase().startsWith('banner')) filter(holder,'items',item => !item || !/bilibili\\.com\\/blackboard\\/era\\//.test(item.url || item.link || ''));
+
+      \        }
+
+      \      }
+
+      \    }
+
+      \    if (path === '/xlive/open-interface/v2/tracker/conf' && on('p2p_block') && data) { data.domains = ['wss://tracker.chat.bilibili.com']; touched = true; }
+
+      \    if (path === '/x/pd-proxy/tracker' && on('p2p_block') && Array.isArray(data)) for (const row of data) if (Array.isArray(row)) { for (let i=0;i<row.length;i++) row[i] = 'stun.chat.bilibili.com:3478'; touched = true; }
+
+      \    if (path === '/pgc/view/v2/app/season' && on('pgc_player_tips')) remove(data,'payment');
+
+      \    if (on('privacy_tracking') || on('live_callbacks') || on('live_preload_tracking')) clean(body,0);
+
+      \    $done(touched ? {body:JSON.stringify(body)} : {});
+
+      \  } catch (error) {
+
+      \    if (String(options.log_level) !== '5') console.log('[RuleHub JSON] 原样放行：' + error);
+
+      \    $done({});
+
+      \  }
+
+      })();\n"
+  'bilibili.protobuf.request':
+    'url': 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/dist/bilibili.protobuf.request.js?v=113'
+    'interval': 86400
+  'bilibili.json':
+    'url': 'https://raw.githubusercontent.com/kokoryh/Sparkle/refs/heads/master/dist/bilibili.json.js'
+    'interval': 86400
+  'bilibili.webpage':
+    'url': 'https://raw.githubusercontent.com/kokoryh/Sparkle/refs/heads/master/dist/webpage.bilibili.js'
+    'interval': 86400
+'date': '2026-10-24'
