@@ -18,6 +18,7 @@
 | :--- | :---: | :--- | :--- | :--- |
 | **YouTube 去广告** | **TF 3.7+** | 去除 YouTube 视频与信息流广告，支持可调参数（底栏 Shorts/上传按钮、字幕/歌词翻译等） | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube.stoverride) |
 | **哔哩哔哩去广告** | **iOS 15+** | 过滤广告/青少年模式弹窗/互动弹幕，解锁后台播放与投屏，支持空降助手跳过片中广告（可调参数） | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride) |
+| **哔哩哔哩 ADBlock（Biliverse 移植）** | **iOS/tvOS 3.7+** | 移植 Biliverse ADBlock v0.7.5，全部功能改为 Stash 原生参数表单（32 项），无需 BoxJS；已加响应体上限控制内存 | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
 | **红果短剧去广告** | 通用 | 裁剪域名拦截，不改动全局 IPv6/DNS | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
 
 ---
@@ -83,6 +84,33 @@
 
 ### ⚠️ 已知限制
 - 播放页下方的**通栏商业横幅**（`cm_under_player` 广告位）已通过 dist 补丁移除字段，但实测部分场景仍可能偶现——该广告位的数据通道疑似走 QUIC 或客户端广告库缓存，持续排查中；清一次 B 站「存储缓存」可缓解。
+
+---
+
+## 📖 哔哩哔哩 ADBlock（Biliverse 移植）使用说明
+
+> ⚠️ **与上面的 Sparkle 版二选一，不要同时启用**：两者都会拦截同一批 B 站接口，叠加启用会让请求被处理两遍（内存翻倍、行为叠加）。
+
+### 📦 来源与版本
+- 基于 [Biliverse/ADBlock](https://github.com/Biliverse/ADBlock) **v0.7.5** 官方覆写移植（原作者：ClydeTime / VirgilClyne / app2smile / RuCu6 / Maasea）。
+- 本仓库版本：`0.7.5-native.3`。与官方原版的**唯一结构差异**：官方原版的 31 项功能开关存在网页配置面板（BoxJS/PersistentStore），本移植版将其全部改为 **Stash 原生参数表单**（`arguments-version: 1`，32 项参数），在 Stash「覆写详情 → 参数」中直接开关，无需 BoxJS。
+- 6 条 URL 改写、1 条 gRPC Mock、16 条脚本规则、脚本资源 URL（固定 v0.7.5）与官方原版完全一致。
+
+### 🧠 内存说明（相对官方原版的差异）
+- 官方原版仅 1 条响应脚本有 `max-size`，其余 12 条 `require-body: true` 的规则**无上限**，会把整个响应体（推荐流/搜索/播放页 gRPC 动辄几百 KB 到几 MB）完整载入内存。
+- 本移植版为全部响应脚本补齐上限：**JSON 规则 1 MiB、gRPC 规则 256 KiB**。超过上限的响应会跳过脚本处理（该响应中的广告不去除），换取内存可控。
+- 若发现内存仍明显高于预期，请确认没有同时启用其他 B 站去广告覆写。
+
+### 📌 参数说明
+- **配置来源**：默认 `Argument`（本页参数优先）；若你之前用 BoxJS 配置过 ADBlock，可切到 `PersistentStore`（已有配置优先，本页作为后备）。
+- **[推荐] 屏蔽UP主直播推广**：仅支持**单个数字 UID**，填 `0` 表示不屏蔽。上游 v0.7.5 的多 UID（逗号分隔）存在类型缺陷（会触发脚本错误），故本版限制为单个 UID。
+- 功能开关默认值与官方推荐一致：开屏/推荐/首页/搜索/番剧/直播/动态/播放页/评论去广告默认开启；隐私严格模式、交互弹幕去除等默认关闭。
+
+### 📌 详细配置步骤：
+1. **安装并信任 MitM 证书**（必要前提，与 Sparkle 版相同）：Stash -> **设置** -> **MitM** 生成安装证书，并在 iOS 系统设置中完全信任。
+2. **导入覆写**：覆写页面 `+` → 从 URL 下载 → 填入上方 Raw 链接或 jsDelivr CDN 链接。
+3. **参数设置**：导入后点击覆写卡片 → 「参数」，按需开关 32 项功能 → 「保存并应用」。
+4. **生效与排错**：更新覆写后强制划掉哔哩哔哩 App 重新打开；去广告未生效时把「[调试] 日志等级」调到 `INFO` 后查看 Stash 脚本日志。
 
 ---
 
