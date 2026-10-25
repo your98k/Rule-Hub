@@ -24,3 +24,17 @@ http:
   - cm.bilibili.com
   - adtrack.qianwen.com
   - tkio-redirect.solar-engine.com
+  url-rewrite:
+  - ^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.Comic\/ListFlash - reject-dict
+  - ^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.Comic\/Flash - reject-dict
+  - ^https?:\/\/api\.vc\.bilibili\.com\/topic_svr\/v1\/topic_svr\/ - reject-dict
+  - ^https?:\/\/api\.vc\.bilibili\.com\/dynamic_svr\/v1\/dynamic_svr\/mix_uplist - reject-dict
+  - ^https?:\/\/api\.vc\.bilibili\.com\/search_svr\/v\d\/Search\/recommend_words - reject-dict
+  - ^https?:\/\/api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info\? - reject-dict
+  mock:
+  - match: ^https?:\/\/(grpc\.biliapi\.net|app\.biliapi\.net|app\.bilibili\.com|app\.biliapi\.com)\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$
+    base64: AAAAAAA=
+    status-code: 200
+    headers:
+      Content-Type: application/grpc
+      grpc-status: '0'
