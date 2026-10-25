@@ -1,1 +1,26 @@
-# Stash native arguments
+name: '📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)'
+desc: |-
+  哔哩哔哩：去广告
+  自定义去除APP内界面元素
+openUrl: http://boxjs.com/#/app/BiliBili.ADBlock
+author: ClydeTime[https://github.com/ClydeTime], VirgilClyne[https://github.com/VirgilClyne], RuCu6[https://github.com/RuCu6]
+homepage: https://biliverse.github.io/guide/ad-block
+icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bilibili_Letter.png
+category: Biliverse
+date: 2024-04-09 23:38:00
+version: 0.7.5-native.2
+http:
+  mitm:
+  - biliverse.github.io
+  - manga.bilibili.com
+  - api.live.bilibili.com
+  - api.vc.bilibili.com
+  - app.bilibili.com
+  - app.biliapi.net
+  - app.biliapi.com
+  - api.bilibili.com
+  - api.biliapi.net
+  - grpc.biliapi.net
+  - cm.bilibili.com
+  - adtrack.qianwen.com
+  - tkio-redirect.solar-engine.com
