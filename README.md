@@ -21,8 +21,17 @@
 | **哔哩哔哩 ADBlock（Biliverse 移植）** | **iOS/tvOS 3.7+** | 移植 Biliverse ADBlock v0.7.5，全部功能改为 Stash 原生参数表单（32 项），无需 BoxJS；已加响应体上限控制内存 | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
 | **红果短剧去广告** | 通用 | 裁剪域名拦截，不改动全局 IPv6/DNS | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
 | **Telegram 链接跳转** | 需 Stash MitM | 将 t.me、telegram.me、telegram.dog 链接 307 跳转至所选 Telegram 客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride) |
+| **京东去广告 + 慢慢买历史比价** | **iOS/tvOS 3.7+；macOS 4.4+** | 京东广告过滤与慢慢买历史价格；内置 Stash Cookie 采集修复，需启用并信任 MitM CA | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride) |
 
 ---
+
+## 📖 京东去广告与慢慢买历史比价
+
+- 需要 Stash iOS/tvOS 3.7+ 或 macOS 4.4+；启用 MitM，并在系统中完全信任 Stash CA 证书。
+- 导入后在覆写参数中保持「[京东比价]获取慢慢买Cookie」开启。
+- 保持 Stash 连接，打开慢慢买 App →「我的」并刷新；看到「获取ck成功」后返回京东查看历史价格。
+- 标题嵌入版、详情通知版、详情表格图和折线图可在参数中选择；通知版与嵌入版、表格图与折线图不要同时开启。
+- Cookie 采集脚本使用 Stash 内嵌实现，并兼容比价脚本所需的两种持久化键。若没有触发，请确认实际请求仍经过 Stash MitM；采集成功不保证慢慢买服务端比价接口始终可用。
 
 ## 📖 Telegram 链接跳转使用说明
 
