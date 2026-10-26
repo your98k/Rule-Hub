@@ -20,6 +20,18 @@
 | **哔哩哔哩去广告** | **iOS 15+** | 过滤广告/青少年模式弹窗/互动弹幕，解锁后台播放与投屏，支持空降助手跳过片中广告（可调参数） | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride) |
 | **哔哩哔哩 ADBlock（Biliverse 移植）** | **iOS/tvOS 3.7+** | 移植 Biliverse ADBlock v0.7.5，全部功能改为 Stash 原生参数表单（32 项），无需 BoxJS；已加响应体上限控制内存 | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
 | **红果短剧去广告** | 通用 | 裁剪域名拦截，不改动全局 IPv6/DNS | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
+| **Telegram 链接跳转** | 需 Stash MitM | 将 t.me、telegram.me、telegram.dog 链接 307 跳转至所选 Telegram 客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride) |
+
+---
+
+## 📖 Telegram 链接跳转使用说明
+
+> ⚠️ 本覆写通过 HTTPS MitM 检查 Telegram 短链接并返回 307 跳转。需安装并在系统中完全信任 Stash MitM CA 证书；未启用 MitM 或未信任证书时不会生效。
+
+### 📌 配置说明
+- 导入覆写后，在参数中选择要打开链接的客户端；默认是官方 Telegram，也可选 Swiftgram、Nagram、Turrit、iMe、Nicegram 或 Lingogram。
+- 「代理指向的策略」须填写当前 Stash 配置中已存在的策略组或节点名（如 `PROXY`、`🚀 节点选择`）；覆写会为所选第三方客户端的相关域名添加分流规则，并插入规则列表最前。
+- 在 Stash「覆写 (Overrides)」页面点击 `+` →「从 URL 下载」，导入上方 Raw 或 jsDelivr 链接后启用。
 
 ---
 
@@ -41,7 +53,7 @@
      - **歌词翻译语言**：针对 YouTube Music 歌词翻译。
      - **启用调试模式**：日常使用建议关闭以提升性能和减少日志。
 4. **生效与排错**：
-   - 首次启用或更新覆写后，请**强制划掉退出 YouTube App** 重新打开，并清除应用缓存以加载最新去广告策略。
+   - 首次启用或更新覆写后，请**强制划掉退出 YouTube App**重新打开，并清除应用缓存以加载最新去广告策略。
 
 ---
 
@@ -78,9 +90,9 @@
      - **过滤置顶评论广告**：移除评论区置顶的广告与带货链接（默认开启）。
      - **日志等级**：默认 `ERROR`，日常使用无需调整。
 4. **生效与排错**：
-   - 首次启用或更新覆写后，请**强制划掉退出哔哩哔哩 App** 重新打开。
+   - 首次启用或更新覆写后，请**强制划掉退出哔哩哔哩 App**重新打开。
    - **彻底关闭空降助手**：除关闭参数开关外，还需在覆写脚本中删除 `DmSegMobile` 匹配段（该请求脚本无法通过参数停用）。
-   - **关于"百年大会员"**：脚本会将本地页面显示的会员状态改为大会员样式（`role: 15`），仅客户端 UI 效果，**并非真实会员**，无任何服务器特权。
+   - **关于“百年大会员”**：脚本会将本地页面显示的会员状态改为大会员样式（`role: 15`），仅客户端 UI 效果，**并非真实会员**，无任何服务器特权。
 
 ### ⚠️ 已知限制
 - 播放页下方的**通栏商业横幅**（`cm_under_player` 广告位）已通过 dist 补丁移除字段，但实测部分场景仍可能偶现——该广告位的数据通道疑似走 QUIC 或客户端广告库缓存，持续排查中；清一次 B 站「存储缓存」可缓解。
