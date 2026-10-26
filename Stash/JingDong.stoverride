@@ -1,0 +1,528 @@
+# Stash 覆写：京东（去广告 + 慢慢买历史比价）
+# 适配自 Loon 插件 https://loon.103516.xyz/Plugin/JingDong.lpx （2026-10-02 12:00 版）
+# 映射说明：
+#   Loon reject(200)/reject_dict(200)/reject(404) → http.url-rewrite 的 reject-200/reject-dict/reject
+#   Loon response.body.replace / response.json.replace / response.json.delete → http.body-rewrite
+#   Loon [Script] 的 enable 开关 → 覆写参数 select 门控：开启=(?:)、关闭=(?!)，
+#     拼接在各比价脚本 match 的 ^ 之后（(?!) 永不匹配，从而等效关闭该脚本）
+name: '京东'
+desc: |-
+  1. 过滤京东广告；2. 历史比价信息，任选其一即可。
+  首次使用保持 Stash 连接，打开【慢慢买】APP →【我的】并刷新，提示【获取ck成功】后返回京东查看比价。
+  此插件仅支持京东标准模式。
+  ——
+  适配自 Loon 插件 JingDong.lpx（原作：RuCu6、Maasea、MuTu、苍井灰灰、mw418、可莉）。
+  需要 Stash iOS/tvOS 3.7+ 或 macOS 4.4+，并已在 Stash 内生成、安装并信任 CA 证书。
+  比价各版本在「覆写参数」中开关：通知版与嵌入版互斥、表格图与折线图互斥，请勿同时开启。
+openUrl: 'https://apps.apple.com/app/id414245413'
+author: 'RuCu6, Maasea, MuTu, 苍井灰灰, mw418, 可莉（Loon 插件原作）'
+homepage: 'https://loonlab.103516.xyz/Plugin/'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/JingDong.png'
+category: '去广告'
+date: '2026-10-26'
+version: '1.0.1'
+
+arguments-version: 1
+arguments:
+  manmanbuy_cookie:
+    type: select
+    title: '[京东比价]获取慢慢买Cookie'
+    description: '首次使用保持 Stash 连接，打开【慢慢买】APP →【我的】并刷新，提示【获取ck成功】后返回京东查看比价。'
+    default: '(?:)'
+    options:
+      - value: '(?:)'
+        label: 开启
+      - value: '(?!)'
+        label: 关闭
+  jdprice_title_embed:
+    type: select
+    title: '[京东比价]标题嵌入版'
+    description: '点击商品标题即可直接查看嵌入式历史价格'
+    default: '(?:)'
+    options:
+      - value: '(?:)'
+        label: 开启
+      - value: '(?!)'
+        label: 关闭
+  jdprice_detail_notify:
+    type: select
+    title: '[京东比价]详情通知版'
+    description: '点击商品详情页通过弹窗通知查看历史价格；与嵌入版互斥'
+    default: '(?!)'
+    options:
+      - value: '(?:)'
+        label: 开启
+      - value: '(?!)'
+        label: 关闭
+  jdprice_detail_table:
+    type: select
+    title: '[京东比价]详情嵌入版（表格图）'
+    description: '点击商品详情页即可直接查看嵌入式历史价格；与折线图、通知版互斥'
+    default: '(?:)'
+    options:
+      - value: '(?:)'
+        label: 开启
+      - value: '(?!)'
+        label: 关闭
+  jdprice_detail_line:
+    type: select
+    title: '[京东比价]详情嵌入版（折线图）'
+    description: '点击商品详情页即可直接查看嵌入式历史价格；与表格图、通知版互斥'
+    default: '(?!)'
+    options:
+      - value: '(?:)'
+        label: 开启
+      - value: '(?!)'
+        label: 关闭
+
+rules:
+  - 'URL-REGEX,^http:\/\/\w{32}\.jddebug\.com\/diagnose\?,REJECT'
+
+http:
+  mitm:
+    - api.m.jd.com
+    - in.m.jd.com
+    - apapia-sqk-weblogic.manmanbuy.com
+    - m.360buyimg.com
+  url-rewrite:
+    - '^https?:\/\/m\.360buyimg\.com\/mobilecms\/s1125x2436_jfs - reject-200'
+    - '^https?:\/\/api\.m\.jd\.com\/\?loginType=11 - reject-dict'
+    - '^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=getWidgetV1052 - reject'
+    - '^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=(?:cartCouponRecommendGoods|intelligentRecommendSku|obtainGrowingInfo|recommendShop|searchBoxWord|stationPullService|uniformRecommend) - reject-dict'
+  body-rewrite:
+    - '^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=lite_advertising response-replace-regex jdLiteAdvertisingVO sooyaaabo'
+    - '^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=basicConfig response-json-replace data.JDMessage.socketmonitor.isSocketEstablishedAhead 0'
+    - '^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=basicConfig response-json-replace data.JDMessage.socketmonitor.isSocketReport 0'
+    - '^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=basicConfig response-json-replace data.JDHttpToolKit.httpdns.httpdns 0'
+    - '^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=cart response-json-del cartLocationMap.loc_emptyCartFloor2'
+    - '^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=cart response-json-del emptyCartRecommendFloor'
+  script:
+    - name: jd-remove-ads
+      match: '^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=(?:deliverLayer|getTabHomeInfo|myOrderInfo|orderTrackBusiness|personinfoBusiness|start|welcomeHome)'
+      type: response
+      require-body: true
+      max-size: 2097152
+      timeout: 30
+    - name: jd-price-cookie
+      match: '^${args.manmanbuy_cookie}https?:\/\/apapia-sqk-weblogic\.manmanbuy\.com\/baoliao\/center\/menu\/?(?:\?.*)?$'
+      type: request
+      require-body: true
+      max-size: 1048576
+      timeout: 30
+    - name: jd-price-title-embed
+      match: '^${args.jdprice_title_embed}https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=(?:wareBusiness|serverConfig|basicConfig)'
+      type: response
+      require-body: true
+      max-size: 2097152
+      timeout: 60
+    - name: jd-price-detail-notify
+      match: '^${args.jdprice_detail_notify}https?:\/\/in\.m\.jd\.com\/product\/graphext\/\d+\.html'
+      type: request
+      timeout: 60
+    - name: jd-price-detail-embed-table
+      match: '^${args.jdprice_detail_table}https?:\/\/in\.m\.jd\.com\/product\/graphext\/\d+\.html'
+      type: response
+      require-body: true
+      max-size: 2097152
+      timeout: 60
+    - name: jd-price-detail-embed-line
+      match: '^${args.jdprice_detail_line}https?:\/\/in\.m\.jd\.com\/product\/graphext\/\d+\.html'
+      type: response
+      require-body: true
+      max-size: 2097152
+      timeout: 60
+
+script-providers:
+  jd-remove-ads:
+    url: 'https://rucu6.pages.dev/Scripts/jingdong.js'
+    interval: 86400
+    headers:
+      User-Agent: 'Loon/3.2.4'
+    payload: |
+      // 2025-05-19 23:40
+
+      const url = $request.url;
+      if (!$response.body) $done({});
+      let obj = JSON.parse($response.body);
+
+      if (url.includes("functionId=deliverLayer") || url.includes("functionId=orderTrackBusiness")) {
+        // 物流页面
+        if (obj?.bannerInfo) {
+          delete obj.bannerInfo; // 收货时寄快递享八折 享受条件苛刻 故移除
+        }
+        if (obj?.floors?.length > 0) {
+          // 运费八折
+          obj.floors = obj.floors.filter((i) => !["banner", "jdDeliveryBanner"].includes(i?.mId));
+        }
+      } else if (url.includes("functionId=getTabHomeInfo")) {
+        // 新品页面
+        if (obj?.result?.iconInfo) {
+          delete obj.result.iconInfo; // 新品页 悬浮动图
+        }
+        if (obj?.result?.roofTop) {
+          delete obj.result.roofTop; // 新品页 下拉二楼
+        }
+      } else if (url.includes("functionId=myOrderInfo")) {
+        // 订单页面
+        if (obj?.floors?.length > 0) {
+          let newFloors = [];
+          for (let floor of obj.floors) {
+            if (["bannerFloor", "bpDynamicFloor", "plusFloor"].includes(floor?.mId)) {
+              // bannerFloor满意度评分 bpDynamicFloor专属权益 plusFloor开通会员
+              continue;
+            } else {
+              if (floor?.mId === "virtualServiceCenter") {
+                // 服务中心
+                if (floor?.data?.virtualServiceCenters?.length > 0) {
+                  let newItems = [];
+                  for (let item of floor.data.virtualServiceCenters) {
+                    if (item?.serviceList?.length > 0) {
+                      let newCards = [];
+                      for (let card of item.serviceList) {
+                        if (card?.serviceTitle === "精选特惠") {
+                          continue;
+                        }
+                        newCards.push(card);
+                      }
+                      item.serviceList = newCards;
+                    }
+                    newItems.push(item);
+                  }
+                  floor.data.virtualServiceCenters = newItems;
+                }
+              }
+              if (floor?.mId === "customerServiceFloor") {
+                // 客户服务
+                if (floor?.data?.moreText) {
+                  // 点此获得更多服务
+                  if (floor?.data?.moreIcon) {
+                    delete floor.data.moreIcon;
+                  }
+                  if (floor?.data?.moreIcon_dark) {
+                    delete floor.data.moreIcon_dark;
+                  }
+                  if (floor?.data?.moreText) {
+                    floor.data.moreText = " ";
+                  }
+                }
+              }
+              newFloors.push(floor);
+            }
+          }
+          obj.floors = newFloors;
+        }
+      } else if (url.includes("functionId=personinfoBusiness")) {
+        // 个人页面
+        if (obj?.floors?.length > 0) {
+          let newFloors = [];
+          for (let floor of obj.floors) {
+            const items = [
+              "bigSaleFloor", // 双十一
+              "buyOften", // 常买常逛
+              // "iconToolFloor", // 底部工具栏
+              // "keyToolsFloor", // 浏览记录
+              "marketTNFloor", // 商业推广
+              "newAttentionCard", // 关注的频道
+              "newBigSaleFloor", // 双十一
+              "newStyleAttentionCard", // 新版关注的频道
+              // "newWalletIdFloor", // 我的钱包
+              "newsFloor", // 京东快讯
+              "noticeFloor", // 顶部横幅
+              // "orderIdFloor", // 我的订单
+              "recommendfloor" // 我的推荐
+            ];
+            if (items?.includes(floor?.mId)) {
+              continue;
+            } else {
+              if (floor?.mId === "basefloorinfo") {
+                // 弹窗
+                if (floor?.data?.commonPopup) {
+                  delete floor.data.commonPopup;
+                }
+                // 弹窗
+                if (floor?.data?.commonPopup_dynamic) {
+                  delete floor.data.commonPopup_dynamic;
+                }
+                // 底部会员续费横幅
+                if (floor?.data?.commonTips?.length > 0) {
+                  floor.data.commonTips = [];
+                }
+                // 弹窗
+                if (floor?.data?.commonWindows?.length > 0) {
+                  floor.data.commonWindows = [];
+                }
+                if (floor?.data?.floatLayer) {
+                  delete floor.data.floatLayer;
+                }
+              } else if (floor?.mId === "iconToolFloor") {
+                /*
+                // 底部工具栏
+                if (floor?.data?.nodes?.length > 0) {
+                  const sortLists = [
+                    "applezhushou", // apple助手 1-1-1
+                    "lingjindouxin", // 签到领豆 1-1-2
+                    "dongdongnongchangxin", // 京东农场 1-1-3
+                    "chongwangwang", // 宠汪汪 1-1-4
+                    "kehufuwu", // 客户服务 1-2-1
+                    "xianzhiguanjia", // 闲置换钱 1-2-2
+                    "wenyisheng", // 问医生 1-2-3
+                    "jijianfuwu", // 寄件服务 1-2-5
+                    "zhuanzuanhongbao", // 天天赚红包 2-2-1
+                    "huanletaojin" // 欢乐淘金 2-2-2
+                  ];
+                  let node = floor.data.nodes;
+                  if (node?.[0]?.length > 0) {
+                    // 第一组十个
+                    node[0] = node[0]
+                      .filter((i) => sortLists?.includes(i?.functionId))
+                      .sort((a, b) => sortLists.indexOf(a?.functionId) - sortLists.indexOf(b?.functionId));
+                  }
+                  if (node?.[1]?.length > 0) {
+                    // 第二组四个
+                    node[1] = node[1]
+                      .filter((i) => sortLists?.includes(i?.functionId))
+                      .sort((a, b) => sortLists.indexOf(a?.functionId) - sortLists.indexOf(b?.functionId));
+                  }
+                }
+                */
+              } else if (floor?.mId === "orderIdFloor") {
+                if (floor?.data?.commentRemindInfo?.infos?.length > 0) {
+                  // 发布评价的提醒
+                  floor.data.commentRemindInfo.infos = [];
+                }
+              } else if (floor?.mId === "userinfo") {
+                // 个人页 顶部背景图
+                // if (floor?.data?.bgImgInfo?.bgImg) {
+                //   delete floor.data.bgImgInfo.bgImg;
+                // }
+                // 开通plus会员卡片
+                if (floor?.data?.newPlusBlackCard) {
+                  delete floor.data.newPlusBlackCard;
+                }
+              }
+              newFloors.push(floor);
+            }
+          }
+          obj.floors = newFloors;
+        }
+        if (obj?.others?.floors?.length > 0) {
+          // 个人页面 2024-04-18 12.6.2新版本更改路径
+          let newFloors = [];
+          for (let floor of obj.others.floors) {
+            const items = [
+              "bigSaleFloor", // 双十一
+              "buyOften", // 常买常逛
+              // "iconToolFloor", // 底部工具栏
+              // "keyToolsFloor", // 浏览记录
+              "newAttentionCard", // 关注的频道
+              "newBigSaleFloor", // 双十一
+              "newStyleAttentionCard", // 新版关注的频道
+              // "newWalletIdFloor", // 我的钱包
+              "newsFloor", // 京东快讯
+              "noticeFloor", // 顶部横幅
+              // "orderIdFloor", // 我的订单
+              "recommendfloor" // 我的推荐
+              // "userinfo", // 用户信息
+            ];
+            if (items?.includes(floor?.mId)) {
+              continue;
+            } else {
+              if (floor?.mId === "basefloorinfo") {
+                // 弹窗
+                if (floor?.data?.commonPopup) {
+                  delete floor.data.commonPopup;
+                }
+                // 弹窗
+                if (floor?.data?.commonPopup_dynamic) {
+                  delete floor.data.commonPopup_dynamic;
+                }
+                // 底部会员续费横幅
+                if (floor?.data?.commonTips?.length > 0) {
+                  floor.data.commonTips = [];
+                }
+                // 弹窗
+                if (floor?.data?.commonWindows?.length > 0) {
+                  floor.data.commonWindows = [];
+                }
+                // 右下角动图
+                if (floor?.data?.floatLayer) {
+                  delete floor.data.floatLayer;
+                }
+              } else if (floor?.mId === "iconToolFloor") {
+                /*
+                // 底部工具栏
+                if (floor?.data?.nodes?.length > 0) {
+                  const sortLists = [
+                    "applezhushou", // apple助手 1-1-1
+                    "lingjindouxin", // 签到领豆 1-1-2
+                    "dongdongnongchangxin", // 京东农场 1-1-3
+                    "chongwangwang", // 宠汪汪 1-1-4
+                    "kehufuwu", // 客户服务 1-2-1
+                    "xianzhiguanjia", // 闲置换钱 1-2-2
+                    "wenyisheng", // 问医生 1-2-3
+                    "jijianfuwu", // 寄件服务 1-2-5
+                    "zhuanzuanhongbao", // 天天赚红包 2-2-1
+                    "huanletaojin" // 欢乐淘金 2-2-2
+                  ];
+                  let node = floor.data.nodes;
+                  if (node?.[0]?.length > 0) {
+                    // 第一组十个
+                    node[0] = node[0]
+                      .filter((i) => sortLists?.includes(i?.functionId))
+                      .sort((a, b) => sortLists.indexOf(a?.functionId) - sortLists.indexOf(b?.functionId));
+                  }
+                  if (node?.[1]?.length > 0) {
+                    // 第二组四个
+                    node[1] = node[1]
+                      .filter((i) => sortLists?.includes(i?.functionId))
+                      .sort((a, b) => sortLists.indexOf(a?.functionId) - sortLists.indexOf(b?.functionId));
+                  }
+                }
+                */
+              } else if (floor?.mId === "orderIdFloor") {
+                if (floor?.data?.commentRemindInfo?.infos?.length > 0) {
+                  // 发布评价的提醒
+                  floor.data.commentRemindInfo.infos = [];
+                }
+              } else if (floor?.mId === "userinfo") {
+                // 个人页 顶部背景图
+                // if (floor?.data?.bgImgInfo?.bgImg) {
+                //   delete floor.data.bgImgInfo.bgImg;
+                // }
+                // 开通plus会员卡片
+                if (floor?.data?.newPlusBlackCard) {
+                  delete floor.data.newPlusBlackCard;
+                }
+              }
+              newFloors.push(floor);
+            }
+          }
+          obj.others.floors = newFloors;
+        }
+      } else if (url.includes("functionId=start")) {
+        // 开屏广告
+        if (obj?.images?.length > 0) {
+          obj.images = [];
+        }
+        if (obj?.showTimesDaily) {
+          obj.showTimesDaily = 0;
+        }
+      } else if (url.includes("functionId=welcomeHome")) {
+        // 首页配置
+        if (obj?.floorList?.length > 0) {
+          const delItems = [
+            "bottomXview", // 底部悬浮通栏推广
+            "float", // 悬浮推广小圆图
+            "photoCeiling", // 顶部通栏动图推广
+            // "recommend", // 为你推荐
+            "ruleFloat", // 资质与规则
+            "searchIcon", // 右上角消费券
+            "topRotate", // 左上角logo
+            "tabBarAtmosphere" // 底部悬浮通栏推广
+          ];
+          // 首页 图层列表
+          obj.floorList = obj.floorList.filter((i) => !delItems?.includes(i?.type));
+        }
+        // 首页 顶部背景图
+        // if (obj?.topBgImgBig) {
+        //   delete obj.topBgImgBig;
+        // }  // 首页 下拉二楼
+        if (obj?.webViewFloorList?.length > 0) {
+          obj.webViewFloorList = [];
+        }
+      }
+
+      $done({ body: JSON.stringify(obj) });
+  jd-price-cookie: #!replace
+    # 仅替换此采集 provider，移除合并配置中可能残留的远程 URL。
+    # 仅使用内嵌脚本，防止远程更新覆盖修复。
+    payload: |
+      // 请求体凭据：manmanbuy_val；设备标识：慢慢买CK。
+      // 不依赖 URLSearchParams，不执行比价网络请求，不输出凭据。
+      (() => {
+        const notify = (subtitle, message) => {
+          try {
+            console.log("[慢慢买采集] " + subtitle + "：" + message);
+          } catch (e) {}
+          try {
+            $notification.post("京东比价", subtitle, message);
+          } catch (e) {}
+        };
+        const parseQuery = (text) => {
+          const result = Object.create(null);
+          if (typeof text !== "string") return result;
+          const decode = (value) => {
+            try {
+              return decodeURIComponent(value.replace(/\+/g, " "));
+            } catch (e) {
+              return value;
+            }
+          };
+          for (const pair of text.split("&")) {
+            if (!pair) continue;
+            const index = pair.indexOf("=");
+            const key = index < 0 ? pair : pair.slice(0, index);
+            const value = index < 0 ? "" : pair.slice(index + 1);
+            result[decode(key)] = decode(value);
+          }
+          return result;
+        };
+
+        try {
+          const request = $request;
+          const body = typeof request.body === "string" ? request.body : "";
+          const form = parseQuery(body);
+          let devId = form.c_mmbDevId;
+          if (!devId) {
+            const url = String(request.url || "");
+            const index = url.indexOf("?");
+            devId = parseQuery(index < 0 ? "" : url.slice(index + 1)).c_mmbDevId;
+          }
+          if (!devId) {
+            const headers = request.headers || {};
+            const key = Object.keys(headers).find(
+              (name) => name.toLowerCase() === "cookie"
+            );
+            const cookie = key && typeof headers[key] === "string" ? headers[key] : "";
+            for (const pair of cookie.split(";")) {
+              const value = parseQuery(pair.trim()).c_mmbDevId;
+              if (value) {
+                devId = value;
+                break;
+              }
+            }
+          }
+          if (typeof devId !== "string" || !devId.trim() || /^(null|undefined)$/i.test(devId)) {
+            notify("获取ck失败", "请求中未找到有效 c_mmbDevId，请进入慢慢买 App 的「我的」重试。旧凭据未改动。");
+            return;
+          }
+          const savedBody = form.c_mmbDevId
+            ? body
+            : "c_mmbDevId=" + encodeURIComponent(devId);
+          const savedFull = $persistentStore.write(savedBody, "manmanbuy_val");
+          const savedDev = $persistentStore.write(devId, "慢慢买CK");
+          if (savedFull === true && savedDev === true) {
+            notify("获取ck成功", "两种比价凭据均已保存，可返回京东查看历史价格。采集成功不代表比价接口一定可用。");
+          } else {
+            notify("获取ck失败", "凭据未全部写入 Stash，请重新进入「我的」采集。");
+          }
+        } catch (e) {
+          notify("获取ck失败", "采集或存储发生异常，请查看 Stash 脚本日志并重新采集。");
+        } finally {
+          $done({});
+        }
+      })();
+  jd-price-title-embed:
+    url: 'https://raw.githubusercontent.com/wf021325/qx/master/js/jd_price.js'
+    interval: 86400
+  jd-price-detail-notify:
+    url: 'https://raw.githubusercontent.com/mw418/Loon/main/script/jd_price.js'
+    interval: 86400
+  jd-price-detail-embed-table:
+    url: 'https://raw.githubusercontent.com/wf021325/qx/master/js/jd_price.js'
+    interval: 86400
+  jd-price-detail-embed-line:
+    url: 'https://loon.103516.xyz/Script/JingDong/JingDong.price.js'
+    interval: 86400
+    headers:
+      User-Agent: 'Loon/3.2.4'
