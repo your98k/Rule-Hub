@@ -20,7 +20,7 @@
 | **哔哩哔哩去广告** | **iOS 15+** | 过滤广告/青少年模式弹窗/互动弹幕，解锁后台播放与投屏，支持空降助手跳过片中广告（可调参数） | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride) |
 | **哔哩哔哩 ADBlock（Biliverse 移植）** | **iOS/tvOS 3.7+** | 移植 Biliverse ADBlock v0.7.5，全部功能改为 Stash 原生参数表单（32 项），无需 BoxJS；已加响应体上限控制内存 | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
 | **红果短剧去广告** | 通用 | 裁剪域名拦截，不改动全局 IPv6/DNS | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
-| **腾讯视频净化** | **iOS/tvOS 3.2.5+** | 开屏/播放前/暂停/播放页底部推荐广告过滤与页面净化；需 MITM，已加 QUIC 拦截防 UDP 443 绕过。首次使用前卸载并重新安装腾讯视频，之后冷启动 2–3 次 | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TxvideoAD.stoverride) |
+| **腾讯视频净化** | **iOS/tvOS 3.2.5+** | 开屏/播放前/暂停/播放页底部推荐广告过滤与页面净化；脚本每日自动同步上游；需 MITM，已加 QUIC 拦截防 UDP 443 绕过。首次使用前卸载并重新安装腾讯视频，之后冷启动 2–3 次 | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TxvideoAD.stoverride) |
 | **Telegram 链接跳转** | 需 Stash MitM | 将 t.me、telegram.me、telegram.dog 链接 307 跳转至所选 Telegram 客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride) |
 | **京东去广告 + 慢慢买历史比价** | **iOS/tvOS 3.7+；macOS 4.4+** | 京东广告过滤与慢慢买历史价格；内置 Stash Cookie 采集修复，需启用并信任 MitM CA | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride) |
 | **虎扑去广告（Stash 原生 jq）** | **iOS/tvOS 2.8+** | 保留原拦截规则，将 4 处 JS 响应改为原生 jq；需启用并信任 MitM CA。请勿与旧虎扑覆写叠加 | [Raw 订阅](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride) | [CDN 订阅](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HuPu.stoverride) |
@@ -41,7 +41,15 @@
 
 v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE `129196`）与播放页底部瀑布流合并推荐广告过滤。更新覆写后强制退出腾讯视频再打开即可生效，无需重新安装。
 
-本覆写内嵌的是上游脚本的 Stash 适配快照，不会自动跟随上游更新；过滤效果取决于腾讯视频当前版本。
+### 🔄 自动更新（v1.1.0+）
+
+- 脚本单独托管在 `Stash/txvideo-ad.stash.js`，覆写通过 `script-providers` 的 `url` + `interval: 86400` 每 24 小时自动拉取；内嵌 `payload` 仅作离线兜底。
+- 仓库内的 `.github/workflows/sync-txvideo.yml` 每天检查上游 `ZenmoFeiShi/Qx`，自动把 `bodyBytes` 适配为 Stash 的 `body`，运行开屏/暂停/瀑布流等回归测试，测试通过后才提交。
+- 若上游规则文件 `TxvideoAD.snippet` 变化，工作流会停止并等待人工确认，不会自动修改域名/MitM/规则。
+- 首次使用需在仓库 Actions 页面启用该 workflow；GitHub 可能暂停长期无提交的定时任务，脚本内置每月心跳提交以保持运行。
+- 若仓库保护规则禁止 Actions 直接 push，需要允许 `github-actions[bot]` 写入，或手动触发后自行合并。
+
+本覆写内嵌的 `payload` 是最近一次同步的离线快照；在线时由远程脚本覆盖，实际效果取决于腾讯视频当前版本。
 
 ---
 
