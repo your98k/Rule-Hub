@@ -1,0 +1,337 @@
+{
+  "generated_at": "2026-10-27 13:45",
+  "repo": "https://github.com/your98k/Rule-Hub",
+  "base": "https://your98k.github.io/Rule-Hub",
+  "plugins": [
+    {
+      "id": "bilibili-adblock-stash",
+      "name": "📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)",
+      "desc": "'哔哩哔哩：去广告",
+      "icon": "",
+      "date": "2026-10-27",
+      "version": "",
+      "tags": [
+        "Stash 覆写"
+      ],
+      "type": "stash",
+      "authors": [],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.ADBlock.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride"
+      }
+    },
+    {
+      "id": "bilibili-stash",
+      "name": "Bilibili",
+      "desc": "",
+      "icon": "",
+      "date": "2026-10-27",
+      "version": "",
+      "tags": [
+        "Stash 覆写"
+      ],
+      "type": "stash",
+      "authors": [],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride"
+      }
+    },
+    {
+      "id": "hupu-stash",
+      "name": "虎扑去广告（Stash 原生 jq）",
+      "desc": "保留原插件请求拦截，将 4 处 JS 响应处理改为 Stash 原生 jq。\n无远程脚本、无 JavaScript 引擎调用；异常字段按类型保护。\n需要 Stash iOS 2.8+，并已安装、信任 MitM 证书。\n启用前禁用原虎扑覆写及其他同类规则，避免叠加。\n已做本地语法和合成响应对照测试，实际去广告及启动速度需设备实测。",
+      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/HUPU.png",
+      "date": "2026-10-27",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "原规则：ZenmoFeiShi；Stash 适配：ChatGPT",
+          "url": ""
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "games.mobileapi.hupu.com",
+        "fairy.mobileapi.hupu.com",
+        "bbs.mobileapi.hupu.com",
+        "goblin.hupu.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HuPu.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/HuPu.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride"
+      }
+    },
+    {
+      "id": "txvideoad-stash",
+      "name": "腾讯视频净化（Stash）",
+      "desc": "适配 ZenmoFeiShi 的腾讯视频净化规则，保留开屏/播放前广告过滤、底栏精简及我的页面净化逻辑。\n单文件内嵌脚本，需要 Stash 3.2.5+；已适配 Stash 的二进制 body 接口。\n使用前请卸载腾讯视频后重新安装；安装后冷启动腾讯视频 2–3 次，使配置生效。\n已适配上游 2026-10-27 脚本更新：新增暂停广告（JCE 129196）与瀑布流合并广告过滤。\n已补 QUIC 拦截，防止开屏广告经 UDP 443 绕过 MitM。\n请启用 MITM，并安装、完全信任你自己生成的 CA 证书。\n脚本由 script-providers 每 24h 从 Stash/txvideo-ad.stash.js 自动更新；内嵌 payload 仅作离线兜底。实际效果取决于腾讯视频版本。",
+      "icon": "",
+      "date": "2026-10-27",
+      "version": "1.1.0",
+      "tags": [
+        "Stash 覆写"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "TG@ZenMoFiShi（原作者）",
+          "url": ""
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 8,
+      "mitmHosts": [
+        "i.video.qq.com",
+        "iacc.qq.com",
+        "config.ab.qq.com",
+        "rdelivery.qq.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TxvideoAD.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/TxvideoAD.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride"
+      }
+    },
+    {
+      "id": "youtube-stash",
+      "name": "YouTube 去广告 · 可调参数",
+      "desc": "沿用原 YouTube / YouTube Music 去广告脚本。\n支持手动设置上传按钮、Shorts 按钮、选段按钮、\n字幕翻译语言、歌词翻译语言和调试模式。\n使用前需启用 MITM，并安装、信任相应证书。",
+      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png",
+      "date": "2026-10-27",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "Maasea",
+          "url": "https://github.com/Maasea"
+        },
+        {
+          "name": ", VirgilClyne",
+          "url": "https://github.com/VirgilClyne"
+        },
+        {
+          "name": ", Choler",
+          "url": "https://github.com/Choler"
+        },
+        {
+          "name": ", DivineEngine",
+          "url": "https://github.com/DivineEngine"
+        },
+        {
+          "name": ", app2smile",
+          "url": "https://github.com/app2smile"
+        }
+      ],
+      "homepage": "https://hub.kelee.one",
+      "rulesCount": 2,
+      "mitmHosts": [
+        "*.googlevideo.com",
+        "youtubei.googleapis.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/YouTube.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride"
+      }
+    },
+    {
+      "id": "jingdong-stash",
+      "name": "京东",
+      "desc": "1. 过滤京东广告；2. 历史比价信息，任选其一即可。\n首次使用保持 Stash 连接，打开【慢慢买】APP →【我的】并刷新，提示【获取ck成功】后返回京东查看比价。\n此插件仅支持京东标准模式。\n——\n适配自 Loon 插件 JingDong.lpx（原作：RuCu6、Maasea、MuTu、苍井灰灰、mw418、可莉）。\n需要 Stash iOS/tvOS 3.7+ 或 macOS 4.4+，并已在 Stash 内生成、安装并信任 CA 证书。\n比价各版本在「覆写参数」中开关：通知版与嵌入版互斥、表格图与折线图互斥，请勿同时开启。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/JingDong.png",
+      "date": "2026-10-26",
+      "version": "1.0.1",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [],
+      "homepage": "https://loonlab.103516.xyz/Plugin/",
+      "rulesCount": 1,
+      "mitmHosts": [
+        "api.m.jd.com",
+        "in.m.jd.com",
+        "apapia-sqk-weblogic.manmanbuy.com",
+        "m.360buyimg.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/JingDong.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride"
+      }
+    },
+    {
+      "id": "telegram-stash",
+      "name": "Telegram 链接跳转",
+      "desc": "将 t.me / telegram.me / telegram.dog 外部链接 307 重定向到所选 Telegram 客户端，可选：Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram，默认跳转官方 Telegram。\n\n使用说明：\n· 需要安装并信任 Stash 的 MitM CA 证书\n· 「代理指向的策略」请填写当前配置文件中已存在的策略组或节点名（对应 Loon 插件中的 PROXY 设置）\n· 第三方客户端官方域名的分流规则将插入规则列表最前",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Telegram-01.png",
+      "date": "2026-10-26",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "功能增强"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "sooyaaabo (Loon 原作) / Stash 适配",
+          "url": ""
+        }
+      ],
+      "homepage": "https://loonlab.103516.xyz/Plugin/",
+      "rulesCount": 7,
+      "mitmHosts": [
+        "t.me",
+        "telegram.me",
+        "telegram.dog"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Telegram.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride"
+      }
+    },
+    {
+      "id": "hongguo-loon",
+      "name": "红果短剧广告拦截",
+      "desc": "红果短剧核心广告与穿山甲/字节系兜底拦截规则(已去重合并)。插件规则与主配置自动合并，不含 DNS 与 IPv6 设置。",
+      "icon": "https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png",
+      "date": "2026-10-20",
+      "version": "1.5.0",
+      "tags": [
+        "Loon 插件",
+        "去广告"
+      ],
+      "type": "loon",
+      "authors": [
+        {
+          "name": "Tartarus2014 & Customized",
+          "url": ""
+        }
+      ],
+      "homepage": "https://github.com/Tartarus2014/Loon-Script",
+      "rulesCount": 11,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/HongGuo.plugin",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/HongGuo.plugin",
+        "page": "https://your98k.github.io/Rule-Hub/files/Loon/HongGuo.plugin"
+      },
+      "install": {
+        "loon": "loon://import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Fyour98k%2FRule-Hub%2Fmain%2FLoon%2FHongGuo.plugin"
+      }
+    },
+    {
+      "id": "hongguo-stash",
+      "name": "红果短剧广告拦截",
+      "desc": "红果短剧核心广告与穿山甲/字节系兜底拦截规则（已去重合并）。\n采用默认前插合并，不改动现有 DNS 与 IPv6 全局设置。",
+      "icon": "https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png",
+      "date": "2026-10-20",
+      "version": "1.5.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "Tartarus2014 & Customized",
+          "url": ""
+        }
+      ],
+      "homepage": "https://github.com/Tartarus2014/Loon-Script",
+      "rulesCount": 11,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/HongGuo.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride"
+      }
+    },
+    {
+      "id": "blockads-stash",
+      "name": "广告拦截&净化合集",
+      "desc": "(支持约730款APP/小程序)针对部分APP和小程序广告进行拦截，某些APP要清除缓存或者重新安装拦截广告才会生效！规则明细可以查看本插件的注释",
+      "icon": "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/AdblockPlus.png",
+      "date": "2026-09-10 21:10:39",
+      "version": "1.0",
+      "tags": [
+        "Stash 覆写",
+        "奶思的模块"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "奶思",
+          "url": "https://github.com/fmz200"
+        }
+      ],
+      "homepage": "https://github.com/fmz200/wool_scripts",
+      "rulesCount": 2964,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/blockAds.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/blockAds.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/blockAds.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/blockAds.stoverride"
+      }
+    }
+  ]
+}

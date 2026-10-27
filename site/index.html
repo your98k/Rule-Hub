@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Rule-Hub · Loon 插件与 Stash 覆写仓库</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
+            mono: ['JetBrains Mono', 'SF Mono', 'Menlo', 'monospace'],
+          },
+          colors: {
+            ios: {
+              blue: '#0A84FF',
+              indigo: '#5E5CE6',
+              purple: '#BF5AF2',
+              cyan: '#64D2FF',
+              mint: '#00C7BE',
+              green: '#30D158',
+              orange: '#FF9F0A',
+              pink: '#FF375F',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root {
+      --bg-primary: #06070d;
+      --bg-card: rgba(24, 26, 40, 0.58);
+      --bg-card-hover: rgba(34, 38, 58, 0.75);
+      --border-glass: rgba(255, 255, 255, 0.11);
+      --border-highlight: rgba(255, 255, 255, 0.24);
+      --text-main: #f5f7ff;
+      --text-muted: #949ab8;
+      --glass-blur: 28px;
+      --spring-easing: cubic-bezier(0.22, 1, 0.36, 1);
+      --bounce-easing: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    html.light-mode {
+      --bg-primary: #eef2f9;
+      --bg-card: rgba(255, 255, 255, 0.72);
+      --bg-card-hover: rgba(255, 255, 255, 0.92);
+      --border-glass: rgba(15, 23, 42, 0.08);
+      --border-highlight: rgba(10, 132, 255, 0.35);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "PingFang SC", sans-serif;
+      overflow-x: hidden;
+      transition: background-color 0.5s var(--spring-easing), color 0.4s var(--spring-easing);
+      min-height: 100vh;
+    }
+
+    /* Ambient Mesh Aurora */
+    .ambient-mesh {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .aurora-orb {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(105px);
+      opacity: 0.45;
+      animation: floatOrb 18s infinite alternate ease-in-out;
+      will-change: transform;
+    }
+    html.light-mode .aurora-orb {
+      opacity: 0.28;
+      filter: blur(95px);
+    }
+    .orb-1 {
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle, #5E5CE6 0%, #0A84FF 60%, transparent 100%);
+      top: -12%;
+      left: -8%;
+    }
+    .orb-2 {
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, #BF5AF2 0%, #FF375F 65%, transparent 100%);
+      top: 15%;
+      right: -10%;
+      animation-delay: -6s;
+    }
+    .orb-3 {
+      width: 540px;
+      height: 540px;
+      background: radial-gradient(circle, #00C7BE 0%, #0A84FF 70%, transparent 100%);
+      bottom: -15%;
+      left: 25%;
+      animation-delay: -11s;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(35px, -30px, 0) scale(1.08); }
+      100% { transform: translate3d(-25px, 25px, 0) scale(0.95); }
+    }
+
+    /* Cyber Grid Overlay */
+    .cyber-grid {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse at 50% 30%, black 35%, transparent 85%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 35%, transparent 85%);
+      pointer-events: none;
+    }
+    html.light-mode .cyber-grid {
+      background-image: 
+        linear-gradient(to right, rgba(15,23,42,0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15,23,42,0.035) 1px, transparent 1px);
+    }
+
+    /* VisionOS Frosted Glass Surface */
+    .ios-glass {
+      background: var(--bg-card);
+      backdrop-filter: blur(var(--glass-blur)) saturate(190%);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(190%);
+      border: 1px solid var(--border-glass);
+      box-shadow: 
+        0 18px 40px -15px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
+      transition: 
+        transform 0.42s var(--spring-easing),
+        box-shadow 0.42s var(--spring-easing),
+        border-color 0.35s ease,
+        background-color 0.35s ease;
+    }
+    html.light-mode .ios-glass {
+      box-shadow: 
+        0 14px 34px -12px rgba(15, 23, 42, 0.08),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+    }
+
+    /* Plugin Card Interactive Tilt & Spotlight */
+    .plugin-card {
+      position: relative;
+      border-radius: 26px;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    .plugin-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(100, 210, 255, 0.14),
+        transparent 45%
+      );
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .plugin-card:hover::before {
+      opacity: 1;
+    }
+    .plugin-card:hover {
+      border-color: var(--border-highlight);
+      background: var(--bg-card-hover);
+      box-shadow: 
+        0 24px 48px -12px rgba(10, 132, 255, 0.22),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.28);
+    }
+
+    /* iOS Spring Button Press Physics */
+    .ios-btn {
+      transition: transform 0.28s var(--bounce-easing), background-color 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease;
+      user-select: none;
+    }
+    .ios-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* Dynamic Island */
+    #dynamic-island {
+      transition: 
+        width 0.48s var(--bounce-easing),
+        height 0.48s var(--bounce-easing),
+        border-radius 0.48s var(--bounce-easing),
+        transform 0.42s var(--spring-easing),
+        box-shadow 0.4s ease;
+      box-shadow: 
+        0 16px 36px rgba(0, 0, 0, 0.65),
+        0 0 0 1px rgba(255, 255, 255, 0.14),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    }
+    #dynamic-island.island-expanded {
+      box-shadow: 
+        0 24px 55px rgba(10, 132, 255, 0.4),
+        0 0 0 1.5px rgba(100, 210, 255, 0.45),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3);
+    }
+
+    /* Sliding Segmented Pill Indicator */
+    .segmented-control {
+      position: relative;
+      display: inline-flex;
+      padding: 4px;
+      border-radius: 9999px;
+      background: rgba(120, 120, 145, 0.16);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+    }
+    .segment-pill {
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #0A84FF 0%, #5E5CE6 100%);
+      box-shadow: 0 4px 14px rgba(10, 132, 255, 0.42);
+      transition: transform 0.38s var(--bounce-easing), width 0.38s var(--bounce-easing);
+      z-index: 0;
+    }
+
+    /* Squircle App Icons */
+    .ios-squircle {
+      border-radius: 24%;
+      box-shadow: 
+        0 8px 20px -4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.28);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.48);
+    }
+
+    /* Modal Sheet Spring Animation */
+    .ios-modal-backdrop {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.36s var(--spring-easing);
+    }
+    .ios-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .ios-sheet {
+      transform: translateY(42px) scale(0.94);
+      opacity: 0;
+      transition: transform 0.45s var(--bounce-easing), opacity 0.32s var(--spring-easing);
+    }
+    .ios-modal-backdrop.open .ios-sheet {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    /* Floating Bottom Dock Magnification */
+    .dock-item {
+      transition: transform 0.32s var(--bounce-easing), background-color 0.25s ease;
+    }
+    .dock-item:hover {
+      transform: translateY(-6px) scale(1.1);
+    }
+    .dock-item:active {
+      transform: translateY(-2px) scale(0.95);
+    }
+
+    /* Shimmering Badge */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.75; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.06); }
+    }
+    .pulse-badge {
+      animation: pulseGlow 2.6s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="selection:bg-ios-blue selection:text-white pb-32">
+
+  <!-- Background Aurora & Cyber Matrix -->
+  <div class="ambient-mesh">
+    <div class="aurora-orb orb-1"></div>
+    <div class="aurora-orb orb-2"></div>
+    <div class="aurora-orb orb-3"></div>
+  </div>
+  <div class="cyber-grid"></div>
+
+  <!-- iOS 18 Dynamic Island (Top Center Interactive Capsule) -->
+  <div class="fixed top-3 left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
+    <div id="dynamic-island" onclick="toggleIslandDetail()" class="pointer-events-auto cursor-pointer bg-black/90 text-white rounded-full w-[250px] h-[38px] flex items-center justify-between px-3.5 overflow-hidden select-none">
+      <!-- Compact State -->
+      <div id="island-compact" class="flex items-center justify-between w-full gap-2 text-xs font-medium">
+        <div class="flex items-center gap-2">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <span id="island-status-text" class="truncate tracking-tight text-slate-200">数据已同步</span>
+        </div>
+        <div class="flex items-center gap-1 text-[11px] font-mono text-cyan-400 bg-cyan-500/15 px-2 py-0.5 rounded-full">
+          <span id="island-count">-</span>
+        </div>
+      </div>
+
+      <!-- Expanded State Content (Injected dynamically on action) -->
+      <div id="island-expanded-content" class="hidden w-full flex-col justify-between py-2.5 px-1 text-left">
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5">
+            <div id="island-exp-icon" class="w-9 h-9 rounded-2xl bg-gradient-to-br from-ios-blue to-ios-purple flex items-center justify-center text-lg shadow-md">
+              ⚡
+            </div>
+            <div>
+              <div id="island-exp-title" class="text-xs font-semibold text-white leading-tight">已复制插件订阅链接</div>
+              <div id="island-exp-sub" class="text-[11px] text-slate-400 font-mono truncate max-w-[210px]">loon://import?plugin=...</div>
+            </div>
+          </div>
+          <span id="island-exp-badge" class="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+            Ready
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 pt-14 pb-3 px-4 sm:px-8 backdrop-blur-xl bg-transparent">
+    <div class="max-w-7xl mx-auto ios-glass rounded-3xl px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-4">
+      <!-- Brand Identity -->
+      <div class="flex items-center gap-3.5">
+        <div class="relative group cursor-pointer" onclick="triggerIslandNotification('Rule-Hub 插件画廊', '数据每次 push 自动重新生成', '🧩', 'Ready')">
+          <div class="w-12 h-12 rounded-[14px] bg-gradient-to-br from-ios-cyan to-ios-blue flex items-center justify-center text-lg font-extrabold text-white shadow-lg ring-1 ring-white/25 group-hover:scale-105 transition-transform duration-300">RH</div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-cyan-300 dark:from-white dark:to-cyan-300">
+              Rule-Hub 插件仓库
+            </h1>
+            <span class="hidden sm:inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-ios-blue/15 text-ios-cyan border border-ios-cyan/25">
+              iOS 18 Fluid UI
+            </span>
+          </div>
+          <p class="text-xs text-[var(--text-muted)] mt-0.5">
+            Loon 插件与 Stash 覆写合集 · 一键安装 · 数据自动同步
+          </p>
+        </div>
+      </div>
+
+      <!-- Target Client Global Mode Selector & Quick Utilities -->
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <!-- Default Target App Selector -->
+        <div class="hidden md:flex items-center bg-black/25 dark:bg-white/5 border border-white/10 rounded-full p-1 text-xs">
+          <span class="px-2.5 text-[var(--text-muted)] text-[11px]">默认客户端:</span>
+          <button onclick="setPreferredClient('Loon')" id="client-btn-Loon" class="ios-btn px-3 py-1 rounded-full font-medium bg-ios-blue text-white shadow-sm">Loon</button>
+          <button onclick="setPreferredClient('Stash')" id="client-btn-Stash" class="ios-btn px-3 py-1 rounded-full font-medium text-[var(--text-muted)] hover:text-white">Stash</button>
+        </div>
+
+        <!-- Sound Haptics Toggle -->
+        <button id="sound-toggle-btn" onclick="toggleSoundHaptics()" title="iOS 拟真声效与触感反馈" class="ios-btn ios-glass w-10 h-10 rounded-2xl flex items-center justify-center text-sm hover:border-ios-cyan/50">
+          <span id="sound-icon">🔊</span>
+        </button>
+
+        <!-- Theme Mode Toggle (Cyber Dark / Crystal Light) -->
+        <button id="theme-toggle-btn" onclick="toggleThemeMode()" title="切换深空暗黑 / 冰晶浅色" class="ios-btn ios-glass w-10 h-10 rounded-2xl flex items-center justify-center text-sm hover:border-ios-cyan/50">
+          <span id="theme-icon">🌙</span>
+        </button>
+
+        <!-- Community Links -->
+        <a href="https://github.com/your98k/Rule-Hub" target="_blank" rel="noopener noreferrer" class="ios-btn ios-glass px-3.5 h-10 rounded-2xl flex items-center gap-1.5 text-xs font-medium hover:border-purple-400/50">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          <span class="hidden sm:inline">GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-8 pt-2">
+
+    <!-- Collapsible iOS Notification Banner (Disclaimer & Live Telemetry) -->
+    <div id="disclaimer-banner" class="ios-glass rounded-3xl p-4 mb-6 border-l-4 border-l-amber-400 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all duration-300">
+      <div class="flex items-start sm:items-center gap-3">
+        <div class="w-9 h-9 rounded-2xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 shrink-0 text-base">
+          ⚠️
+        </div>
+        <div class="text-xs leading-relaxed text-[var(--text-muted)]">
+          <span class="font-semibold text-amber-300">独立维护声明：</span>
+          本站为个人维护的 Loon 与 Stash 插件仓库，所有规则与覆写来自公开仓库的整合适配，仅供学习与个人使用；禁止在中华人民共和国境内平台公开传播或用于商业用途。
+        </div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+        <button onclick="openConverterModal()" class="ios-btn text-xs px-3 py-1.5 rounded-full bg-ios-indigo/20 text-indigo-300 border border-indigo-400/30 hover:bg-ios-indigo/30 font-medium">
+          ⚡ 链接转换器
+        </button>
+        <button onclick="dismissBanner()" class="ios-btn text-xs px-2.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-[var(--text-muted)]">
+          收起
+        </button>
+      </div>
+    </div>
+
+    <!-- Hero Bento Telemetry Strip -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-7">
+      <div class="ios-glass rounded-3xl p-4 flex items-center justify-between">
+        <div>
+          <p class="text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-medium">收录插件总数</p>
+          <div class="flex items-baseline gap-2 mt-1">
+            <span id="stat-total-plugins" class="text-2xl sm:text-3xl font-extrabold tracking-tight">-</span>
+            <span class="text-xs text-emerald-400 font-medium">● 数据同步</span>
+          </div>
+        </div>
+        <div class="w-11 h-11 rounded-2xl bg-ios-blue/15 border border-ios-blue/30 flex items-center justify-center text-xl">
+          🧩
+        </div>
+      </div>
+
+      <div class="ios-glass rounded-3xl p-4 flex items-center justify-between">
+        <div>
+          <p class="text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-medium">Stash 覆写 / Loon 插件</p>
+          <div class="flex items-baseline gap-2 mt-1">
+            <span id="stat-stash-count" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-amber-400">-</span>
+            <span class="text-xs text-[var(--text-muted)] font-mono">/ <span id="stat-loon-count">-</span></span>
+          </div>
+        </div>
+        <div class="w-11 h-11 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-xl">
+          📦
+        </div>
+      </div>
+
+      <div class="ios-glass rounded-3xl p-4 flex items-center justify-between cursor-pointer hover:border-ios-cyan/50" onclick="filterByCategory('我的收藏')">
+        <div>
+          <p class="text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-medium">已收藏 / 组合包</p>
+          <div class="flex items-baseline gap-2 mt-1">
+            <span id="stat-fav-count" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-pink-400">0</span>
+            <span id="stat-bundle-count" class="text-xs text-cyan-400 font-medium">点击卡片查看详情</span>
+          </div>
+        </div>
+        <div class="w-11 h-11 rounded-2xl bg-pink-500/15 border border-pink-500/30 flex items-center justify-center text-xl">
+          ❤️
+        </div>
+      </div>
+
+      <div class="ios-glass rounded-3xl p-4 flex items-center justify-between cursor-pointer hover:border-ios-purple/50" onclick="openConverterModal()">
+        <div>
+          <p class="text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-medium">一键配置工作台</p>
+          <div class="flex items-baseline gap-1.5 mt-1">
+            <span class="text-sm sm:text-base font-bold text-purple-300">生成专属 .conf</span>
+            <span class="text-xs text-[var(--text-muted)]">→</span>
+          </div>
+        </div>
+        <div class="w-11 h-11 rounded-2xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-xl">
+          🛠️
+        </div>
+      </div>
+    </section>
+
+    <!-- Spotlight Search & iOS Segmented Controls Bar -->
+    <section class="ios-glass rounded-[28px] p-4 sm:p-5 mb-7 sticky top-[84px] z-30">
+      <div class="flex flex-col lg:flex-row gap-3.5 items-stretch lg:items-center justify-between">
+        
+        <!-- iOS Spotlight Search Input -->
+        <div class="relative flex-1">
+          <svg class="w-4 h-4 text-[var(--text-muted)] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 10.5a7.5 7.5 0 0013.15 6.15z"/>
+          </svg>
+          <input
+            id="search-input"
+            type="text"
+            oninput="handleSearchInput(this.value)"
+            placeholder="搜索插件名称、域名、作者或标签 (按 ⌘K 快速聚焦)..."
+            class="w-full pl-11 pr-24 py-3 rounded-2xl bg-black/25 dark:bg-black/35 light:bg-slate-100 border border-white/10 focus:border-ios-blue focus:outline-none focus:ring-2 focus:ring-ios-blue/30 text-sm transition-all"
+          />
+          <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+            <button id="clear-search-btn" onclick="clearSearch()" class="hidden text-xs px-2 py-0.5 rounded-full bg-white/10 hover:bg-white/20 text-[var(--text-muted)]">
+              清除
+            </button>
+            <kbd class="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/10 text-[var(--text-muted)] border border-white/10">⌘K</kbd>
+          </div>
+        </div>
+
+        <!-- iOS Sliding Segmented Sort Control -->
+        <div class="flex items-center justify-between sm:justify-end gap-3">
+          <div class="segmented-control" role="tablist" aria-label="排序方式">
+            <div id="sort-pill" class="segment-pill" style="width: 88px; transform: translateX(0px);"></div>
+            <button onclick="setSortMode('default', 0)" id="sort-btn-default" class="relative z-10 px-4 py-1.5 text-xs font-semibold rounded-full transition-colors text-white">
+              默认排序
+            </button>
+            <button onclick="setSortMode('name', 1)" id="sort-btn-name" class="relative z-10 px-4 py-1.5 text-xs font-semibold rounded-full transition-colors text-[var(--text-muted)]">
+              名称排序
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills & Counter -->
+      <div class="mt-4 pt-3.5 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+        <div id="category-pills" class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+          <!-- Dynamically populated category pills -->
+        </div>
+
+        <div class="flex items-center gap-2 text-xs text-[var(--text-muted)] font-medium shrink-0">
+          <span class="inline-block w-2 h-2 rounded-full bg-ios-cyan animate-pulse"></span>
+          <span id="plugin-counter-label">全部 · 24 个核心插件模块</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Plugin Cards Responsive Grid -->
+    <section id="plugin-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Dynamically rendered by JS -->
+    </section>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden ios-glass rounded-3xl p-12 text-center my-8 max-w-lg mx-auto">
+      <div class="text-5xl mb-3">🛸</div>
+      <h3 class="text-lg font-bold">未找到匹配的插件模块</h3>
+      <p class="text-xs text-[var(--text-muted)] mt-1 mb-5">尝试更换关键词、清除筛选标签，或者使用 Script-Hub 转换外部模块链接。</p>
+      <button onclick="resetAllFilters()" class="ios-btn px-5 py-2.5 rounded-full bg-gradient-to-r from-ios-blue to-ios-indigo text-white text-xs font-semibold shadow-lg">
+        重置所有筛选条件
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-14 mb-6 text-center text-xs text-[var(--text-muted)] space-y-2">
+      <div class="flex items-center justify-center gap-3 flex-wrap">
+        <span>🧩 Rule-Hub 插件仓库</span>
+        <span>·</span>
+        <span>数据更新：<span id="footer-sync-time" class="font-mono text-ios-cyan">-</span></span>
+        <span>·</span>
+        <a href="https://github.com/your98k/Rule-Hub" target="_blank" rel="noopener noreferrer" class="hover:text-ios-cyan">your98k/Rule-Hub</a>
+      </div>
+      <p class="text-[11px] opacity-75">点击任意卡片空白处可预览插件源码、MITM 域名与规则统计；规则仅供学习与个人使用</p>
+    </footer>
+  </main>
+
+  <!-- iOS VisionOS Floating Bottom Dock -->
+  <nav aria-label="快捷程序坞" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 max-w-[95vw]">
+    <div class="ios-glass rounded-full px-3 sm:px-5 py-2 flex items-center gap-2 sm:gap-3 shadow-2xl border border-white/20">
+      <button onclick="resetAllFilters()" class="dock-item flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/10 hover:bg-ios-blue/25 text-xs font-medium">
+        <span>🏠</span>
+        <span class="hidden sm:inline">全部模块</span>
+      </button>
+      <button onclick="filterByCategory('去广告')" class="dock-item flex items-center gap-1.5 px-3 py-2 rounded-full hover:bg-white/10 text-xs font-medium">
+        <span>🛡️</span>
+        <span class="hidden sm:inline">净化去广</span>
+      </button>
+      <button onclick="openConverterModal()" class="dock-item flex items-center gap-1.5 px-3 py-2 rounded-full hover:bg-white/10 text-xs font-medium">
+        <span>🔄</span>
+        <span class="hidden sm:inline">链接转换</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MODAL 1: Plugin Inspector & Live Source Sheet -->
+  <div id="inspector-modal" class="ios-modal-backdrop fixed inset-0 z-50 bg-black/65 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="closeInspectorOnBackdrop(event)">
+    <div class="ios-sheet ios-glass w-full sm:max-w-2xl rounded-t-[32px] sm:rounded-[32px] p-5 sm:p-7 max-h-[88vh] overflow-y-auto border border-white/20">
+      <!-- Drag Handle for Mobile -->
+      <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-4 sm:hidden"></div>
+      
+      <div id="inspector-content">
+        <!-- Populated dynamically when a card is inspected -->
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL 3: Script-Hub Cross-Client Converter -->
+  <div id="converter-modal" class="ios-modal-backdrop fixed inset-0 z-50 bg-black/65 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="closeConverterOnBackdrop(event)">
+    <div class="ios-sheet ios-glass w-full sm:max-w-xl rounded-t-[32px] sm:rounded-[32px] p-5 sm:p-7 border border-white/20">
+      <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-4 sm:hidden"></div>
+      <div class="flex items-center justify-between pb-4 border-b border-white/10">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center text-xl">
+            🔄
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-bold">Script-Hub 跨端模块转换引擎</h3>
+            <p class="text-xs text-[var(--text-muted)]">将 Loon `.plugin` 实时转换为 Egern `.yaml`、Surge `.sgmodule` 或 Shadowrocket</p>
+          </div>
+        </div>
+        <button onclick="closeConverterModal()" class="ios-btn w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm">✕</button>
+      </div>
+
+      <div class="space-y-4 mt-4">
+        <div>
+          <label class="block text-xs text-[var(--text-muted)] mb-1.5">源文件 URL（.plugin / .stoverride 链接）</label>
+          <input id="converter-input-url" type="text" oninput="updateConvertedUrl()" value="https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride" class="w-full px-3.5 py-2.5 rounded-xl bg-black/35 border border-white/15 text-xs font-mono focus:outline-none focus:border-ios-cyan" />
+        </div>
+
+        <div class="grid grid-cols-4 gap-2">
+          <button onclick="setConverterTarget('stash')" id="conv-target-stash" class="ios-btn py-2 rounded-xl text-xs font-semibold bg-ios-blue text-white">
+            Stash
+          </button>
+          <button onclick="setConverterTarget('loon')" id="conv-target-loon" class="ios-btn py-2 rounded-xl text-xs font-semibold bg-white/10 text-[var(--text-muted)]">
+            Loon
+          </button>
+          <button onclick="setConverterTarget('surge')" id="conv-target-surge" class="ios-btn py-2 rounded-xl text-xs font-semibold bg-white/10 text-[var(--text-muted)]">
+            Surge (.sgmodule)
+          </button>
+          <button onclick="setConverterTarget('qx')" id="conv-target-qx" class="ios-btn py-2 rounded-xl text-xs font-semibold bg-white/10 text-[var(--text-muted)]">
+            Quantumult X
+          </button>
+        </div>
+
+        <div>
+          <label class="block text-xs text-[var(--text-muted)] mb-1.5">转换后订阅地址 / URI Scheme</label>
+          <div class="p-3 rounded-xl bg-black/55 border border-white/10 font-mono text-xs text-cyan-300 break-all" id="converter-output-url">
+            https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2.5 pt-2">
+          <button onclick="copyConvertedUrl()" class="ios-btn px-4 py-2.5 rounded-xl bg-gradient-to-r from-ios-blue to-ios-purple text-white text-xs font-semibold">
+            复制转换链接
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. PLUGIN DATA - 从 plugins.json 动态加载，失败回退内嵌 window.__PLUGINS_DATA__
+    // =========================================================================
+    window.__PLUGINS_DATA__={"generated_at":"2026-10-27 13:45","repo":"https://github.com/your98k/Rule-Hub","base":"https://your98k.github.io/Rule-Hub","plugins":[{"id":"bilibili-adblock-stash","name":"📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)","desc":"'哔哩哔哩：去广告","icon":"","date":"2026-10-27","version":"","tags":["Stash 覆写"],"type":"stash","authors":[],"homepage":"","rulesCount":0,"mitmHosts":[],"needsMitm":false,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.ADBlock.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride"}},{"id":"bilibili-stash","name":"Bilibili","desc":"","icon":"","date":"2026-10-27","version":"","tags":["Stash 覆写"],"type":"stash","authors":[],"homepage":"","rulesCount":0,"mitmHosts":[],"needsMitm":false,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride"}},{"id":"hupu-stash","name":"虎扑去广告（Stash 原生 jq）","desc":"保留原插件请求拦截，将 4 处 JS 响应处理改为 Stash 原生 jq。\n无远程脚本、无 JavaScript 引擎调用；异常字段按类型保护。\n需要 Stash iOS 2.8+，并已安装、信任 MitM 证书。\n启用前禁用原虎扑覆写及其他同类规则，避免叠加。\n已做本地语法和合成响应对照测试，实际去广告及启动速度需设备实测。","icon":"https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/HUPU.png","date":"2026-10-27","version":"1.0.0","tags":["Stash 覆写","去广告"],"type":"stash","authors":[{"name":"原规则：ZenmoFeiShi；Stash 适配：ChatGPT","url":""}],"homepage":"","rulesCount":0,"mitmHosts":["games.mobileapi.hupu.com","fairy.mobileapi.hupu.com","bbs.mobileapi.hupu.com","goblin.hupu.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HuPu.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/HuPu.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride"}},{"id":"txvideoad-stash","name":"腾讯视频净化（Stash）","desc":"适配 ZenmoFeiShi 的腾讯视频净化规则，保留开屏/播放前广告过滤、底栏精简及我的页面净化逻辑。\n单文件内嵌脚本，需要 Stash 3.2.5+；已适配 Stash 的二进制 body 接口。\n使用前请卸载腾讯视频后重新安装；安装后冷启动腾讯视频 2–3 次，使配置生效。\n已适配上游 2026-10-27 脚本更新：新增暂停广告（JCE 129196）与瀑布流合并广告过滤。\n已补 QUIC 拦截，防止开屏广告经 UDP 443 绕过 MitM。\n请启用 MITM，并安装、完全信任你自己生成的 CA 证书。\n脚本由 script-providers 每 24h 从 Stash/txvideo-ad.stash.js 自动更新；内嵌 payload 仅作离线兜底。实际效果取决于腾讯视频版本。","icon":"","date":"2026-10-27","version":"1.1.0","tags":["Stash 覆写"],"type":"stash","authors":[{"name":"TG@ZenMoFiShi（原作者）","url":""}],"homepage":"","rulesCount":8,"mitmHosts":["i.video.qq.com","iacc.qq.com","config.ab.qq.com","rdelivery.qq.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TxvideoAD.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/TxvideoAD.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride"}},{"id":"youtube-stash","name":"YouTube 去广告 · 可调参数","desc":"沿用原 YouTube / YouTube Music 去广告脚本。\n支持手动设置上传按钮、Shorts 按钮、选段按钮、\n字幕翻译语言、歌词翻译语言和调试模式。\n使用前需启用 MITM，并安装、信任相应证书。","icon":"https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png","date":"2026-10-27","version":"1.0.0","tags":["Stash 覆写","去广告"],"type":"stash","authors":[{"name":"Maasea","url":"https://github.com/Maasea"},{"name":", VirgilClyne","url":"https://github.com/VirgilClyne"},{"name":", Choler","url":"https://github.com/Choler"},{"name":", DivineEngine","url":"https://github.com/DivineEngine"},{"name":", app2smile","url":"https://github.com/app2smile"}],"homepage":"https://hub.kelee.one","rulesCount":2,"mitmHosts":["*.googlevideo.com","youtubei.googleapis.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/YouTube.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride"}},{"id":"jingdong-stash","name":"京东","desc":"1. 过滤京东广告；2. 历史比价信息，任选其一即可。\n首次使用保持 Stash 连接，打开【慢慢买】APP →【我的】并刷新，提示【获取ck成功】后返回京东查看比价。\n此插件仅支持京东标准模式。\n——\n适配自 Loon 插件 JingDong.lpx（原作：RuCu6、Maasea、MuTu、苍井灰灰、mw418、可莉）。\n需要 Stash iOS/tvOS 3.7+ 或 macOS 4.4+，并已在 Stash 内生成、安装并信任 CA 证书。\n比价各版本在「覆写参数」中开关：通知版与嵌入版互斥、表格图与折线图互斥，请勿同时开启。","icon":"https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/JingDong.png","date":"2026-10-26","version":"1.0.1","tags":["Stash 覆写","去广告"],"type":"stash","authors":[],"homepage":"https://loonlab.103516.xyz/Plugin/","rulesCount":1,"mitmHosts":["api.m.jd.com","in.m.jd.com","apapia-sqk-weblogic.manmanbuy.com","m.360buyimg.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/JingDong.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride"}},{"id":"telegram-stash","name":"Telegram 链接跳转","desc":"将 t.me / telegram.me / telegram.dog 外部链接 307 重定向到所选 Telegram 客户端，可选：Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram，默认跳转官方 Telegram。\n\n使用说明：\n· 需要安装并信任 Stash 的 MitM CA 证书\n· 「代理指向的策略」请填写当前配置文件中已存在的策略组或节点名（对应 Loon 插件中的 PROXY 设置）\n· 第三方客户端官方域名的分流规则将插入规则列表最前","icon":"https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Telegram-01.png","date":"2026-10-26","version":"1.0.0","tags":["Stash 覆写","功能增强"],"type":"stash","authors":[{"name":"sooyaaabo (Loon 原作) / Stash 适配","url":""}],"homepage":"https://loonlab.103516.xyz/Plugin/","rulesCount":7,"mitmHosts":["t.me","telegram.me","telegram.dog"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/Telegram.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride"}},{"id":"hongguo-loon","name":"红果短剧广告拦截","desc":"红果短剧核心广告与穿山甲/字节系兜底拦截规则(已去重合并)。插件规则与主配置自动合并，不含 DNS 与 IPv6 设置。","icon":"https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png","date":"2026-10-20","version":"1.5.0","tags":["Loon 插件","去广告"],"type":"loon","authors":[{"name":"Tartarus2014 & Customized","url":""}],"homepage":"https://github.com/Tartarus2014/Loon-Script","rulesCount":11,"mitmHosts":[],"needsMitm":false,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/HongGuo.plugin","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/HongGuo.plugin","page":"https://your98k.github.io/Rule-Hub/files/Loon/HongGuo.plugin"},"install":{"loon":"loon://import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Fyour98k%2FRule-Hub%2Fmain%2FLoon%2FHongGuo.plugin"}},{"id":"hongguo-stash","name":"红果短剧广告拦截","desc":"红果短剧核心广告与穿山甲/字节系兜底拦截规则（已去重合并）。\n采用默认前插合并，不改动现有 DNS 与 IPv6 全局设置。","icon":"https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png","date":"2026-10-20","version":"1.5.0","tags":["Stash 覆写","去广告"],"type":"stash","authors":[{"name":"Tartarus2014 & Customized","url":""}],"homepage":"https://github.com/Tartarus2014/Loon-Script","rulesCount":11,"mitmHosts":[],"needsMitm":false,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/HongGuo.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride"}},{"id":"blockads-stash","name":"广告拦截&净化合集","desc":"(支持约730款APP/小程序)针对部分APP和小程序广告进行拦截，某些APP要清除缓存或者重新安装拦截广告才会生效！规则明细可以查看本插件的注释","icon":"https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/AdblockPlus.png","date":"2026-09-10 21:10:39","version":"1.0","tags":["Stash 覆写","奶思的模块"],"type":"stash","authors":[{"name":"奶思","url":"https://github.com/fmz200"}],"homepage":"https://github.com/fmz200/wool_scripts","rulesCount":2964,"mitmHosts":[],"needsMitm":false,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/blockAds.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/blockAds.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/blockAds.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/blockAds.stoverride"}}]};
+
+    let PLUGINS = [];
+
+    function deriveCategories() {
+      const tags = new Set(["全部"]);
+      PLUGINS.forEach(p => (p.tags || []).forEach(t => tags.add(t)));
+      return [...tags];
+    }
+
+    function normalizePlugin(raw, i) {
+      const inst = raw.install || {};
+      const type = raw.type || (inst.stash ? "stash" : "loon");
+      const gradients = [
+        "from-blue-500 via-sky-500 to-cyan-400",
+        "from-pink-500 via-rose-500 to-fuchsia-600",
+        "from-emerald-500 via-green-500 to-teal-600",
+        "from-indigo-500 via-blue-600 to-violet-600",
+        "from-amber-500 via-orange-500 to-red-500",
+        "from-cyan-500 via-blue-500 to-indigo-500",
+        "from-violet-600 via-purple-600 to-indigo-600",
+        "from-rose-600 via-red-500 to-pink-500",
+        "from-teal-400 via-cyan-500 to-blue-600",
+        "from-orange-500 via-amber-500 to-yellow-500"
+      ];
+      const tagIcons = { "去广告": "🛡️", "功能增强": "⚡", "解锁会员": "👑", "定时任务": "⏰" };
+      const firstTag = (raw.tags || []).find(t => tagIcons[t]);
+      return {
+        id: raw.id || ("plugin-" + i),
+        name: raw.name || "未命名插件",
+        icon: firstTag ? tagIcons[firstTag] : (type === "stash" ? "📦" : "🎈"),
+        imageUrl: raw.icon || "",
+        gradient: gradients[i % gradients.length],
+        category: (raw.tags || [])[1] || (type === "stash" ? "Stash 覆写" : "Loon 插件"),
+        tags: raw.tags || [],
+        updatedAt: raw.date || "",
+        authors: (raw.authors || []).map(a => a.name),
+        authorUrls: (raw.authors || []).map(a => a.url || ""),
+        desc: raw.desc || "",
+        hostname: (raw.mitmHosts || []).join(", "),
+        needsMitm: !!raw.needsMitm,
+        rulesCount: raw.rulesCount || 0,
+        version: raw.version || "",
+        type: type,
+        url: (raw.urls && raw.urls.raw) || "",
+        cdnUrl: (raw.urls && raw.urls.cdn) || "",
+        installStash: inst.stash || "",
+        installLoon: inst.loon || ""
+      };
+    }
+
+
+    // =========================================================================
+    // 2. STATE & PERSISTENCE
+    // =========================================================================
+    let state = {
+      searchQuery: "",
+      activeCategory: "全部",
+      sortMode: "default", // 'default'（时间倒序） | 'name'
+      preferredClient: "Loon", // 'Loon' | 'Egern' | 'Surge'
+      soundEnabled: true,
+      darkMode: true,
+      favorites: new Set(),
+      converterTarget: "stash",
+      islandTimer: null
+    };
+
+    try {
+      const savedFavs = localStorage.getItem("loonlab_favs");
+      if (savedFavs) state.favorites = new Set(JSON.parse(savedFavs));
+    } catch (e) {}
+
+    // =========================================================================
+    // 3. WEB AUDIO API - iOS TAPTIC & GLASS SOUND SYNTHESIZER
+    // =========================================================================
+    let audioCtx = null;
+    function playTapticSound(type = "tap") {
+      if (!state.soundEnabled) return;
+      try {
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === "suspended") audioCtx.resume();
+
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === "tap") {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(520, now);
+          osc.frequency.exponentialRampToValueAtTime(180, now + 0.035);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+          osc.start(now);
+          osc.stop(now + 0.04);
+        } else if (type === "success") {
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(587.33, now); // D5
+          osc.frequency.setValueAtTime(880, now + 0.07); // A5
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+          osc.start(now);
+          osc.stop(now + 0.23);
+        } else if (type === "switch") {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(340, now);
+          osc.frequency.exponentialRampToValueAtTime(640, now + 0.05);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+          osc.start(now);
+          osc.stop(now + 0.06);
+        }
+      } catch (e) {}
+    }
+
+    // =========================================================================
+    // 4. DYNAMIC ISLAND CONTROLLER
+    // =========================================================================
+    function triggerIslandNotification(title, subtitle, icon = "⚡", badge = "Synced") {
+      playTapticSound("success");
+      const island = document.getElementById("dynamic-island");
+      const compact = document.getElementById("island-compact");
+      const expanded = document.getElementById("island-expanded-content");
+
+      document.getElementById("island-exp-title").textContent = title;
+      document.getElementById("island-exp-sub").textContent = subtitle;
+      document.getElementById("island-exp-icon").textContent = icon;
+      document.getElementById("island-exp-badge").textContent = badge;
+
+      island.style.width = "370px";
+      island.style.height = "66px";
+      island.style.borderRadius = "28px";
+      island.classList.add("island-expanded");
+
+      compact.classList.add("hidden");
+      expanded.classList.remove("hidden");
+      expanded.classList.add("flex");
+
+      if (state.islandTimer) clearTimeout(state.islandTimer);
+      state.islandTimer = setTimeout(() => {
+        collapseIsland();
+      }, 3100);
+    }
+
+    function collapseIsland() {
+      const island = document.getElementById("dynamic-island");
+      const compact = document.getElementById("island-compact");
+      const expanded = document.getElementById("island-expanded-content");
+
+      island.style.width = "250px";
+      island.style.height = "38px";
+      island.style.borderRadius = "9999px";
+      island.classList.remove("island-expanded");
+
+      expanded.classList.add("hidden");
+      expanded.classList.remove("flex");
+      compact.classList.remove("hidden");
+    }
+
+    function toggleIslandDetail() {
+      const island = document.getElementById("dynamic-island");
+      if (island.classList.contains("island-expanded")) {
+        collapseIsland();
+      } else {
+        triggerIslandNotification(
+          `当前默认客户端: ${state.preferredClient}`,
+          `共收录 ${PLUGINS.length} 个插件模块 · 点击安装按钮唤起客户端`,
+          "🛰️",
+          "Ready"
+        );
+      }
+    }
+
+    // =========================================================================
+    // 5. FILTERING, SORTING & RENDERING
+    // =========================================================================
+    function getFilteredPlugins() {
+      const q = state.searchQuery.trim().toLowerCase();
+      let list = PLUGINS.filter(item => {
+        if (state.activeCategory === "我的收藏") {
+          if (!state.favorites.has(item.id)) return false;
+        } else if (state.activeCategory !== "全部") {
+          if (item.category !== state.activeCategory && !item.tags.includes(state.activeCategory)) {
+            return false;
+          }
+        }
+        if (!q) return true;
+        return (
+          item.name.toLowerCase().includes(q) ||
+          item.desc.toLowerCase().includes(q) ||
+          item.hostname.toLowerCase().includes(q) ||
+          item.tags.some(t => t.toLowerCase().includes(q)) ||
+          item.authors.some(a => a.toLowerCase().includes(q))
+        );
+      });
+
+      if (state.sortMode === "name") {
+        list.sort((a, b) => a.name.localeCompare(b.name, "zh-CN"));
+      } else {
+        // 默认：更新时间倒序
+        list.sort((a, b) => (b.updatedAt || "").localeCompare(a.updatedAt || ""));
+      }
+      return list;
+    }
+
+    function renderCategoryPills() {
+      const container = document.getElementById("category-pills");
+      container.innerHTML = deriveCategories().map(cat => {
+        const isActive = state.activeCategory === cat;
+        const count = cat === "全部"
+          ? PLUGINS.length
+          : cat === "我的收藏"
+          ? state.favorites.size
+          : PLUGINS.filter(p => p.category === cat || p.tags.includes(cat)).length;
+
+        return `
+          <button
+            onclick="filterByCategory('${cat}')"
+            class="ios-btn shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              isActive
+                ? "bg-gradient-to-r from-ios-blue to-ios-indigo text-white shadow-md shadow-ios-blue/30"
+                : "bg-white/5 hover:bg-white/10 text-[var(--text-muted)] border border-white/10"
+            }"
+          >
+            <span>${cat === "我的收藏" ? "❤️ " + cat : cat}</span>
+            <span class="text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? "bg-white/25 text-white" : "bg-white/10"}">${count}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function renderPluginGrid() {
+      const filtered = getFilteredPlugins();
+      const grid = document.getElementById("plugin-grid");
+      const empty = document.getElementById("empty-state");
+      const counter = document.getElementById("plugin-counter-label");
+
+      counter.textContent = `${state.activeCategory} · 显示 ${filtered.length} / ${PLUGINS.length} 个插件模块`;
+      document.getElementById("stat-fav-count").textContent = state.favorites.size;
+      document.getElementById("stat-total-plugins").textContent = PLUGINS.length;
+      document.getElementById("stat-stash-count").textContent = PLUGINS.filter(p => p.type === "stash").length;
+      document.getElementById("stat-loon-count").textContent = PLUGINS.filter(p => p.type === "loon").length;
+      document.getElementById("island-count").textContent = PLUGINS.length + " 模块";
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        empty.classList.remove("hidden");
+        return;
+      }
+      empty.classList.add("hidden");
+
+      grid.innerHTML = filtered.map(plugin => {
+        const isFav = state.favorites.has(plugin.id);
+
+        return `
+          <article
+            data-id="${plugin.id}"
+            onmousemove="handleCardMouseMove(event, this)"
+            onmouseleave="handleCardMouseLeave(this)"
+            onclick="openInspector('${plugin.id}', event)"
+            class="plugin-card ios-glass p-5 flex flex-col justify-between cursor-pointer group"
+          >
+            <div class="relative z-10">
+              <!-- Card Top Header -->
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-3.5">
+                  <div class="w-13 h-13 w-[52px] h-[52px] ios-squircle bg-gradient-to-br ${plugin.gradient} flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                    ${plugin.imageUrl
+                      ? `<img src="${plugin.imageUrl}" alt="" loading="lazy" class="w-full h-full object-cover" onerror="this.remove()" />`
+                      : plugin.icon}
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-1.5">
+                      <h2 class="font-bold text-base leading-snug group-hover:text-ios-cyan transition-colors">
+                        ${plugin.name}
+                      </h2>
+                    </div>
+                    <!-- Maintainer Avatars & Type Pill -->
+                    <div class="flex items-center gap-2 mt-1">
+                      <div class="flex -space-x-1.5">
+                        ${plugin.authors.slice(0, 3).map(author => `
+                          <span title="维护者: @${author}" class="inline-flex items-center justify-center w-5 h-5 rounded-full text-[9px] font-bold bg-gradient-to-tr from-slate-700 to-slate-600 text-white ring-1 ring-white/25">
+                            ${author.slice(0, 2).toUpperCase()}
+                          </span>
+                        `).join("")}
+                      </div>
+                      ${plugin.authors[0] ? `<span class="text-[11px] text-[var(--text-muted)]">@${plugin.authors[0]}</span>` : ""}
+                      <span class="text-[10px] font-mono px-1.5 py-0.2 rounded ${plugin.type === "stash" ? "bg-cyan-500/15 text-cyan-300 border border-cyan-400/25" : "bg-orange-500/15 text-orange-300 border border-orange-400/25"}">${plugin.type === "stash" ? "Stash" : "Loon"}</span>
+                      ${plugin.needsMitm ? `<span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-400/25">MITM</span>` : ""}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Badges: Version + Favorite -->
+                <div class="flex items-center gap-1.5 shrink-0" onclick="event.stopPropagation()">
+                  ${plugin.version ? `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-white/5 text-[var(--text-muted)] border border-white/10 font-mono">v${plugin.version}</span>` : ""}
+                  <button
+                    onclick="toggleFavorite('${plugin.id}')"
+                    title="${isFav ? '取消收藏' : '加入收藏'}"
+                    class="ios-btn w-8 h-8 rounded-full flex items-center justify-center text-xs border ${
+                      isFav
+                        ? "bg-pink-500/25 border-pink-400/40 text-pink-400"
+                        : "bg-white/5 border-white/10 text-[var(--text-muted)] hover:text-white"
+                    }"
+                  >
+                    ${isFav ? "❤️" : "🤍"}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Body Description -->
+              <p class="text-xs text-[var(--text-muted)] leading-relaxed mt-3.5 line-clamp-2">
+                ${plugin.desc}
+              </p>
+
+              <!-- Tags & Timestamp Row -->
+              <div class="flex items-center justify-between gap-2 mt-4 pt-3 border-t border-white/10">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  ${plugin.tags.map(tag => `
+                    <span
+                      onclick="event.stopPropagation(); filterByCategory('${tag}')"
+                      class="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-400/15 text-amber-300 border border-amber-400/25 hover:bg-amber-400/25 transition-colors"
+                    >
+                      ${tag}
+                    </span>
+                  `).join("")}
+                </div>
+                <span class="text-[11px] font-mono text-[var(--text-muted)] shrink-0">
+                  ${plugin.updatedAt}
+                </span>
+              </div>
+            </div>
+
+            <!-- Action Buttons Row (Bottom) -->
+            <div class="relative z-10 grid grid-cols-3 gap-2 mt-4 pt-1" onclick="event.stopPropagation()">
+              <button
+                onclick="copyPluginUrl('${plugin.id}')"
+                class="ios-btn py-2 px-3 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-semibold flex items-center justify-center gap-1.5"
+              >
+                <span>📋</span>
+                <span>CopyURL</span>
+              </button>
+              ${plugin.installLoon ? `
+              <button
+                onclick="installToClient('${plugin.id}', 'Loon')"
+                class="ios-btn py-2 px-3 rounded-2xl bg-gradient-to-r from-ios-blue to-ios-indigo hover:brightness-110 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-md shadow-ios-blue/25"
+              >
+                <span>🎈</span>
+                <span>Loon</span>
+              </button>` : ""}
+              ${plugin.installStash ? `
+              <button
+                onclick="installToClient('${plugin.id}', 'Stash')"
+                class="ios-btn py-2 px-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-ios-blue hover:brightness-110 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-md shadow-cyan-500/25"
+              >
+                <span>⚡</span>
+                <span>Stash</span>
+              </button>` : ""}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    // =========================================================================
+    // 6. 3D SPATIAL CARD TILT & SPOTLIGHT GLOW
+    // =========================================================================
+    function handleCardMouseMove(e, card) {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty("--mouse-x", `${x}px`);
+      card.style.setProperty("--mouse-y", `${y}px`);
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -3.5;
+      const rotateY = ((x - centerX) / centerX) * 3.5;
+      card.style.transform = `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-3px)`;
+    }
+
+    function handleCardMouseLeave(card) {
+      card.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0px)";
+    }
+
+    // =========================================================================
+    // 7. USER INTERACTIONS & CLIPBOARD HELPERS
+    // =========================================================================
+    function safeCopyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    function copyPluginUrl(pluginId) {
+      const p = PLUGINS.find(item => item.id === pluginId);
+      if (!p) return;
+      safeCopyText(p.url);
+      triggerIslandNotification(
+        `已复制 「${p.name}」 链接`,
+        p.url,
+        "📋",
+        "Copied"
+      );
+    }
+
+    function installToClient(pluginId, client) {
+      const p = PLUGINS.find(item => item.id === pluginId);
+      if (!p) return;
+
+      let schemeUrl = "";
+      if (client === "Loon") {
+        schemeUrl = p.installLoon || `loon://import?plugin=${encodeURIComponent(p.url)}`;
+      } else if (client === "Stash") {
+        // 通用链接（https）+ URL Scheme 兜底
+        schemeUrl = p.installStash || `stash://install-override?url=${encodeURIComponent(p.url)}`;
+      }
+
+      safeCopyText(schemeUrl);
+      if (client === "Stash") {
+        // link.stash.ws 是 https 通用链接，直接跳转即可唤起 Stash
+        window.location.href = schemeUrl;
+      } else {
+        window.location.href = schemeUrl;
+      }
+      triggerIslandNotification(
+        `正在唤起 ${client} 导入 「${p.name}」`,
+        schemeUrl,
+        client === "Loon" ? "🎈" : "⚡",
+        client
+      );
+    }
+
+    function toggleFavorite(pluginId) {
+      playTapticSound("tap");
+      const p = PLUGINS.find(item => item.id === pluginId);
+      if (state.favorites.has(pluginId)) {
+        state.favorites.delete(pluginId);
+        triggerIslandNotification(`已移出收藏夹`, p ? p.name : pluginId, "💔", "Removed");
+      } else {
+        state.favorites.add(pluginId);
+        triggerIslandNotification(`已加入我的收藏`, p ? p.name : pluginId, "❤️", "Saved");
+      }
+      try {
+        localStorage.setItem("loonlab_favs", JSON.stringify([...state.favorites]));
+      } catch (e) {}
+      renderCategoryPills();
+      renderPluginGrid();
+    }
+
+    function handleSearchInput(val) {
+      state.searchQuery = val;
+      const clearBtn = document.getElementById("clear-search-btn");
+      if (val.trim().length > 0) {
+        clearBtn.classList.remove("hidden");
+      } else {
+        clearBtn.classList.add("hidden");
+      }
+      renderPluginGrid();
+    }
+
+    function clearSearch() {
+      playTapticSound("tap");
+      const input = document.getElementById("search-input");
+      input.value = "";
+      handleSearchInput("");
+      input.focus();
+    }
+
+    function filterByCategory(cat) {
+      playTapticSound("switch");
+      state.activeCategory = cat;
+      renderCategoryPills();
+      renderPluginGrid();
+    }
+
+    function setSortMode(mode, index) {
+      playTapticSound("switch");
+      state.sortMode = mode;
+      const pill = document.getElementById("sort-pill");
+      const btns = [
+        document.getElementById("sort-btn-default"),
+        document.getElementById("sort-btn-name")
+      ];
+      const targetBtn = btns[index];
+      if (targetBtn && pill) {
+        pill.style.width = `${targetBtn.offsetWidth}px`;
+        pill.style.transform = `translateX(${targetBtn.offsetLeft - 4}px)`;
+      }
+      btns.forEach((b, idx) => {
+        if (idx === index) {
+          b.classList.remove("text-[var(--text-muted)]");
+          b.classList.add("text-white");
+        } else {
+          b.classList.add("text-[var(--text-muted)]");
+          b.classList.remove("text-white");
+        }
+      });
+      renderPluginGrid();
+    }
+
+    function resetAllFilters() {
+      playTapticSound("switch");
+      state.searchQuery = "";
+      state.activeCategory = "全部";
+      document.getElementById("search-input").value = "";
+      document.getElementById("clear-search-btn").classList.add("hidden");
+      setSortMode("default", 0);
+      renderCategoryPills();
+      renderPluginGrid();
+      triggerIslandNotification("视图已重置", "展示全部核心 Loon & Egern 模块", "🏠", "All");
+    }
+
+    function setPreferredClient(client) {
+      playTapticSound("switch");
+      state.preferredClient = client;
+      ["Loon", "Egern", "Surge"].forEach(c => {
+        const btn = document.getElementById(`client-btn-${c}`);
+        if (!btn) return;
+        if (c === client) {
+          btn.className = "ios-btn px-3 py-1 rounded-full font-medium bg-ios-blue text-white shadow-sm";
+        } else {
+          btn.className = "ios-btn px-3 py-1 rounded-full font-medium text-[var(--text-muted)] hover:text-white";
+        }
+      });
+      triggerIslandNotification(`默认客户端已切换为 ${client}`, "点击卡片安装将优先生成对应 URI", "⚙️", client);
+    }
+
+    function toggleSoundHaptics() {
+      state.soundEnabled = !state.soundEnabled;
+      document.getElementById("sound-icon").textContent = state.soundEnabled ? "🔊" : "🔇";
+      if (state.soundEnabled) playTapticSound("success");
+      triggerIslandNotification(
+        state.soundEnabled ? "iOS 空间声效已开启" : "已切换为静音模式",
+        "Web Audio 合成引擎反馈",
+        state.soundEnabled ? "🔊" : "🔇",
+        state.soundEnabled ? "Audio ON" : "Muted"
+      );
+    }
+
+    function toggleThemeMode() {
+      playTapticSound("switch");
+      state.darkMode = !state.darkMode;
+      const htmlEl = document.documentElement;
+      if (state.darkMode) {
+        htmlEl.classList.remove("light-mode");
+        document.getElementById("theme-icon").textContent = "🌙";
+      } else {
+        htmlEl.classList.add("light-mode");
+        document.getElementById("theme-icon").textContent = "☀️";
+      }
+      triggerIslandNotification(
+        state.darkMode ? "已切换至深空暗黑模式" : "已切换至冰晶浅色模式",
+        "VisionOS 自适应毛玻璃光影已更新",
+        state.darkMode ? "🌙" : "☀️",
+        state.darkMode ? "Dark" : "Light"
+      );
+    }
+
+    function dismissBanner() {
+      playTapticSound("tap");
+      document.getElementById("disclaimer-banner").classList.add("hidden");
+    }
+
+    // =========================================================================
+    // 8. PLUGIN INSPECTOR SHEET (Live Source Preview, 抓取真实插件文件)
+    // =========================================================================
+    let inspectorSourceCache = {};
+
+    function fetchPluginSource(p, el) {
+      if (inspectorSourceCache[p.id]) {
+        el.textContent = inspectorSourceCache[p.id];
+        return;
+      }
+      el.textContent = "# 正在加载插件源码...";
+      fetch(p.url, { cache: "no-cache" })
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+        .then(text => {
+          inspectorSourceCache[p.id] = text;
+          el.textContent = text;
+        })
+        .catch(() => {
+          // raw.githubusercontent 不可达时回退 jsDelivr CDN
+          if (p.cdnUrl && p.cdnUrl !== p.url) {
+            fetch(p.cdnUrl, { cache: "no-cache" })
+              .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+              .then(text => {
+                inspectorSourceCache[p.id] = text;
+                el.textContent = text;
+              })
+              .catch(() => { el.textContent = "# 源码加载失败\n# 可直接访问：" + p.url; });
+          } else {
+            el.textContent = "# 源码加载失败\n# 可直接访问：" + p.url;
+          }
+        });
+    }
+function openInspector(pluginId, event) {
+      playTapticSound("tap");
+      const p = PLUGINS.find(item => item.id === pluginId);
+      if (!p) return;
+
+      const container = document.getElementById("inspector-content");
+      container.innerHTML = `
+        <div class="flex items-start justify-between gap-4 pb-4 border-b border-white/10">
+          <div class="flex items-center gap-3.5">
+            <div class="w-14 h-14 ios-squircle bg-gradient-to-br ${p.gradient} flex items-center justify-center text-3xl shrink-0 overflow-hidden">
+              ${p.imageUrl ? `<img src="${p.imageUrl}" alt="" class="w-full h-full object-cover" onerror="this.remove()" />` : p.icon}
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="text-lg font-bold">${p.name}</h3>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold ${p.type === "stash" ? "bg-cyan-500/15 text-cyan-300" : "bg-orange-500/15 text-orange-300"}">${p.type === "stash" ? "Stash 覆写" : "Loon 插件"}</span>
+                ${p.version ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-mono bg-white/5 text-[var(--text-muted)] border border-white/10">v${p.version}</span>` : ""}
+              </div>
+              <p class="text-xs text-[var(--text-muted)] mt-1">${p.authors.length ? "作者: " + p.authors.map(a => "@" + a).join(" · ") + " · " : ""}更新于 ${p.updatedAt || "未知"}</p>
+            </div>
+          </div>
+          <button onclick="closeInspector()" class="ios-btn w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm">✕</button>
+        </div>
+
+        <p class="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed my-4 whitespace-pre-line">
+          ${p.desc}
+        </p>
+
+        <!-- Technical Specs Grid -->
+        <div class="grid grid-cols-2 gap-2.5 my-4">
+          <div class="p-3 rounded-2xl bg-black/30 border border-white/10">
+            <div class="text-[10px] text-[var(--text-muted)] uppercase">分流与拦截规则</div>
+            <div class="text-base font-bold text-ios-cyan mt-0.5">${p.rulesCount} 条规则</div>
+          </div>
+          <div class="p-3 rounded-2xl bg-black/30 border border-white/10">
+            <div class="text-[10px] text-[var(--text-muted)] uppercase">MITM 证书解密</div>
+            <div class="text-base font-bold text-emerald-400 mt-0.5">${p.needsMitm ? "需要开启" : "无需 MITM"}</div>
+          </div>
+        </div>
+
+        ${p.needsMitm ? `
+        <!-- MITM Hostname Box -->
+        <div class="mb-4">
+          <div class="text-xs text-[var(--text-muted)] mb-1 font-medium">MITM 解密主机名 (Hostname):</div>
+          <div class="p-2.5 rounded-xl bg-black/45 border border-white/10 font-mono text-xs text-amber-300 break-all">
+            ${p.hostname}
+          </div>
+        </div>` : ""}
+
+        <!-- Source Preview -->
+        <div>
+          <div class="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1.5">
+            <span>插件源码预览 <span class="font-mono">(${p.type === "stash" ? ".stoverride" : ".plugin"})</span>:</span>
+            <button id="copy-source-btn" class="text-ios-cyan hover:underline">复制完整源码</button>
+          </div>
+          <pre id="inspector-source" class="p-3.5 rounded-2xl bg-black/65 border border-white/10 text-[11px] font-mono text-slate-200 overflow-x-auto leading-relaxed max-h-56"></pre>
+        </div>
+
+        <!-- Bottom Action Bar -->
+        <div class="mt-5 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-2.5">
+          <button onclick="openConverterWithPlugin('${p.id}')" class="ios-btn px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/15 text-xs font-semibold">
+            🔄 转换为其他客户端格式
+          </button>
+          <div class="flex items-center gap-2 flex-wrap">
+            <button onclick="copyPluginUrl('${p.id}')" class="ios-btn px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/15 text-xs font-semibold">
+              📋 复制订阅链接
+            </button>
+            ${p.installLoon ? `<button onclick="installToClient('${p.id}', 'Loon')" class="ios-btn px-4 py-2.5 rounded-2xl bg-gradient-to-r from-ios-blue to-ios-indigo text-white text-xs font-semibold">
+              🎈 导入 Loon
+            </button>` : ""}
+            ${p.installStash ? `<button onclick="installToClient('${p.id}', 'Stash')" class="ios-btn px-4 py-2.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-ios-blue text-white text-xs font-semibold">
+              ⚡ 导入 Stash
+            </button>` : ""}
+          </div>
+        </div>
+      `;
+
+      const sourceEl = document.getElementById("inspector-source");
+      fetchPluginSource(p, sourceEl);
+      document.getElementById("copy-source-btn").addEventListener("click", () => {
+        const text = sourceEl.textContent;
+        safeCopyText(text);
+        triggerIslandNotification("已复制插件源码", p.name, "📄", "Source");
+      });
+
+      document.getElementById("inspector-modal").classList.add("open");
+    }
+
+    function closeInspector() {
+      document.getElementById("inspector-modal").classList.remove("open");
+    }
+
+    function closeInspectorOnBackdrop(e) {
+      if (e.target.id === "inspector-modal") closeInspector();
+    }
+
+    // =========================================================================
+    // 10. SCRIPT-HUB CONVERTER MODAL
+    // =========================================================================
+    function openConverterModal() {
+      playTapticSound("tap");
+      updateConvertedUrl();
+      document.getElementById("converter-modal").classList.add("open");
+    }
+
+    function openConverterWithPlugin(pluginId) {
+      const p = PLUGINS.find(item => item.id === pluginId);
+      if (p) {
+        document.getElementById("converter-input-url").value = p.url;
+      }
+      closeInspector();
+      openConverterModal();
+    }
+
+    function closeConverterModal() {
+      document.getElementById("converter-modal").classList.remove("open");
+    }
+
+    function closeConverterOnBackdrop(e) {
+      if (e.target.id === "converter-modal") closeConverterModal();
+    }
+
+    function setConverterTarget(target) {
+      playTapticSound("switch");
+      state.converterTarget = target;
+      ["stash", "loon", "surge", "qx"].forEach(t => {
+        const btn = document.getElementById(`conv-target-${t}`);
+        if (t === target) {
+          btn.className = "ios-btn py-2 rounded-xl text-xs font-semibold bg-ios-blue text-white";
+        } else {
+          btn.className = "ios-btn py-2 rounded-xl text-xs font-semibold bg-white/10 text-[var(--text-muted)]";
+        }
+      });
+      updateConvertedUrl();
+    }
+
+    function updateConvertedUrl() {
+      const rawUrl = document.getElementById("converter-input-url").value.trim();
+      const outEl = document.getElementById("converter-output-url");
+      const nameMatch = rawUrl.split("/").pop().replace(/\.(plugin|stoverride|sgmodule|conf)$/, "") || "Module";
+
+      if (state.converterTarget === "stash") {
+        const m = rawUrl.replace(/^https?:\/\//, "");
+        outEl.textContent = `https://link.stash.ws/install-override/${m}`;
+      } else if (state.converterTarget === "loon") {
+        outEl.textContent = `loon://import?plugin=${encodeURIComponent(rawUrl)}`;
+      } else if (state.converterTarget === "surge") {
+        outEl.textContent = `https://script.hub/file/_start_/${rawUrl}/_end_/${nameMatch}.sgmodule?type=loon-plugin&target=surge-module`;
+      } else {
+        outEl.textContent = `https://script.hub/file/_start_/${rawUrl}/_end_/${nameMatch}.conf?type=loon-plugin&target=qx-rewrite`;
+      }
+    }
+
+    function copyConvertedUrl() {
+      const out = document.getElementById("converter-output-url").textContent.trim();
+      safeCopyText(out);
+      triggerIslandNotification("已复制转换后模块链接", out, "🔄", state.converterTarget.toUpperCase());
+      closeConverterModal();
+    }
+
+    // =========================================================================
+    // 11. KEYBOARD SHORTCUTS & INITIALIZATION
+    // =========================================================================
+    window.addEventListener("keydown", e => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        document.getElementById("search-input").focus();
+      } else if (e.key === "Escape") {
+        closeInspector();
+        closeConverterModal();
+      }
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const boot = () => {
+        renderCategoryPills();
+        renderPluginGrid();
+        setTimeout(() => setSortMode("default", 0), 60);
+      };
+
+      // 优先 fetch ./plugins.json，失败回退内嵌数据（file:// 或本地预览）
+      fetch("./plugins.json", { cache: "no-cache" })
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(data => {
+          if (!data || !Array.isArray(data.plugins)) throw new Error("bad data");
+          PLUGINS = data.plugins.map(normalizePlugin);
+          document.getElementById("footer-sync-time").textContent = data.generated_at || "-";
+          boot();
+        })
+        .catch(() => {
+          const embedded = window.__PLUGINS_DATA__;
+          if (embedded && Array.isArray(embedded.plugins) && embedded.plugins.length) {
+            PLUGINS = embedded.plugins.map(normalizePlugin);
+            document.getElementById("footer-sync-time").textContent = embedded.generated_at || "-";
+          }
+          boot();
+        });
+    });
+  </script>
+</body>
+</html>

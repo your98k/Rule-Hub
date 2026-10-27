@@ -1,0 +1,94 @@
+name: 虎扑去广告（Stash 原生 jq）
+desc: |-
+  保留原插件请求拦截，将 4 处 JS 响应处理改为 Stash 原生 jq。
+  无远程脚本、无 JavaScript 引擎调用；异常字段按类型保护。
+  需要 Stash iOS 2.8+，并已安装、信任 MitM 证书。
+  启用前禁用原虎扑覆写及其他同类规则，避免叠加。
+  已做本地语法和合成响应对照测试，实际去广告及启动速度需设备实测。
+author: '原规则：ZenmoFeiShi；Stash 适配：ChatGPT'
+icon: https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/HUPU.png
+category: 去广告
+version: '1.0.0'
+date: '2026-10-27'
+
+# 原始来源：https://kelee.one/Tool/Loon/Lpx/HUPU_remove_ads.lpx
+# 原 JS：https://kelee.one/Resource/JavaScript/HUPU/HUPU_remove_ads.js
+# 原脚本注明参考：https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/HP.js
+# Stash 语法：https://stash.wiki/http-engine/rewrite
+# 仅适配虎扑；不覆盖其他覆写的 MITM、规则或脚本。
+http:
+  mitm:
+    - games.mobileapi.hupu.com
+    - fairy.mobileapi.hupu.com
+    - bbs.mobileapi.hupu.com
+    - goblin.hupu.com
+
+  # 原样保留 8 条本地响应规则：reject-dict = HTTP 200 + {}。
+  # 不改为 REJECT-DROP，不伪造未经确认的业务成功结构。
+  url-rewrite:
+    - >-
+      (?i)^https:\/\/games\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/bplapi\/reddot\/v1\/app\/getReddot - reject-dict
+    - >-
+      (?i)^https:\/\/bbs\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/(bbsallapi\/tag\/v1\/heatTag|bbsrankapi\/v1\/rating\/list) - reject-dict
+    - >-
+      (?i)^https:\/\/games\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/search\/v2\/(hintkeylist|hotkeylist) - reject-dict
+    - >-
+      (?i)^https:\/\/goblin\.hupu\.com\/\d\/\d\.\d\.\d+\/interfaceAd\/getOther\/v\d - reject-dict
+    - >-
+      (?i)^https:\/\/goblin\.hupu\.com\/\d\/\d\.\d\.\d+\/interfaceAd\/getOther\/batch - reject-dict
+    - >-
+      (?i)^https:\/\/fairy\.mobileapi\.hupu\.com\/gallery\/getmod2 - reject-200
+    - >-
+      (?i)^https:\/\/games\.mobileapi\.hupu\.com\/3\/8\.0\.86\/bplcommentapi\/bpl\/score_tab\/groups - reject-dict
+    - >-
+      (?i)^https:\/\/games\.mobileapi\.hupu\.com\/3\/8\.0\.86\/bplapi\/banner\/getLocationBanners - reject-dict
+
+  # Stash 2.8+ 原生响应正文处理，不需要 script-providers。
+  # 仍需取得服务器响应；不会把整个业务接口短路为空响应。
+  body-rewrite:
+    # 横幅：与原 JS 一样移除 data，保留其他响应字段。
+    - >-
+      (?i)^https:\/\/fairy\.mobileapi\.hupu\.com\/mang\/preview\/banners response-jq
+      if type == "object" then del(.data) else . end
+
+    # 我的页面：清理原脚本指定的入口和“我的应用”卡片，保留正常入口。
+    - >-
+      (?i)^https:\/\/bbs\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/bbsallapi\/lego\/data response-jq
+      if type == "object" and (.data | type) == "object" and (.data.cards | type) == "array" then
+        .data.cards |= map(
+          (if type == "object" and .code == "multiIcon" and (.components | type) == "array" then
+            .components |= map(select(
+              (try .data.title catch null) as $title |
+              ["个性换肤", "专家预测", "邀请好友", "版主中心", "JRs战术板", "草稿箱", "58同城"] |
+              index($title) | not
+            ))
+          else . end) |
+          select(if type == "object" and (.components | type) == "array" then
+            all(.components[]; (try .data.title catch null) != "我的应用")
+          else true end)
+        )
+      else . end
+
+    # 热榜：只删顶部横幅，不丢弃热榜数据；保留原脚本的通用卡片清理。
+    - >-
+      (?i)^https:\/\/games\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/buffer\/hotList response-jq
+      if type == "object" then
+        (if (.result | type) == "object" then del(.result.topBanner) else . end) |
+        (if (.data | type) == "object" and (.data.cards | type) == "array" then
+          .data.cards |= map(select(if type == "object" and (.components | type) == "array" then
+            all(.components[]; (try .data.title catch null) != "我的应用")
+          else true end))
+        else . end)
+      else . end
+
+    # 个人页：移除 vipInfo 推广，不修改用户资料和其他业务字段。
+    - >-
+      (?i)^https:\/\/games\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/bplapi\/user\/v1\/more response-jq
+      if type == "object" then
+        (if (.result | type) == "object" then del(.result.vipInfo) else . end) |
+        (if (.data | type) == "object" and (.data.cards | type) == "array" then
+          .data.cards |= map(select(if type == "object" and (.components | type) == "array" then
+            all(.components[]; (try .data.title catch null) != "我的应用")
+          else true end))
+        else . end)
+      else . end

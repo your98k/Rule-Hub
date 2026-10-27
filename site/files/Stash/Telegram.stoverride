@@ -1,0 +1,88 @@
+name: 'Telegram 链接跳转'
+desc: |-
+  将 t.me / telegram.me / telegram.dog 外部链接 307 重定向到所选 Telegram 客户端，可选：Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram，默认跳转官方 Telegram。
+
+  使用说明：
+  · 需要安装并信任 Stash 的 MitM CA 证书
+  · 「代理指向的策略」请填写当前配置文件中已存在的策略组或节点名（对应 Loon 插件中的 PROXY 设置）
+  · 第三方客户端官方域名的分流规则将插入规则列表最前
+
+openUrl: 'https://apps.apple.com/app/id686449807'
+author: 'sooyaaabo (Loon 原作) / Stash 适配'
+homepage: 'https://loonlab.103516.xyz/Plugin/'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Telegram-01.png'
+category: '功能增强'
+date: '2026-10-26'
+version: '1.0.0'
+
+arguments-version: 1
+arguments:
+  tgapp:
+    type: select
+    title: 跳转至对应客户端
+    description: t.me 外部链接将 307 跳转到所选客户端的 URL Scheme
+    default: Telegram
+    options:
+      - value: Telegram
+      - value: Swiftgram
+      - value: Nagram
+      - value: Turrit
+      - value: iMe
+      - value: Nicegram
+      - value: Lingogram
+  proxy_policy:
+    type: input
+    title: 代理指向的策略
+    description: 分流规则使用的策略，须为当前配置文件中已存在的策略组或节点名，如 PROXY、🚀 节点选择
+    default: 'PROXY'
+    required: true
+
+rules:
+  - 'DOMAIN-SUFFIX,nagram.app,${args.proxy_policy}'
+  - 'DOMAIN-SUFFIX,swiftgram.app,${args.proxy_policy}'
+  - 'DOMAIN-SUFFIX,iturrit.com,${args.proxy_policy}'
+  - 'DOMAIN-SUFFIX,imem.app,${args.proxy_policy}'
+  - 'DOMAIN-SUFFIX,nicegram.app,${args.proxy_policy}'
+  - 'DOMAIN-SUFFIX,nicegram.cloud,${args.proxy_policy}'
+  - 'DOMAIN-SUFFIX,intentchat.app,${args.proxy_policy}'
+
+http:
+  mitm:
+    - t.me
+    - telegram.me
+    - telegram.dog
+  script:
+    - name: Telegram.Redirect
+      match: '^https?:\/\/(t\.me|telegram\.me|telegram\.dog)\/'
+      type: request
+      argument: '${args.tgapp}'
+
+script-providers:
+  Telegram.Redirect:
+    payload: |
+      // Adapted from sooyaaabo's Loon plugin script (Telegram.redirect.js)
+      var MAPPING = {
+        'Telegram': 'tg',
+        'Swiftgram': 'sg',
+        'Nagram': 'na',
+        'Turrit': 'turrit',
+        'iMe': 'ime',
+        'Nicegram': 'ng',
+        'Lingogram': 'lingo'
+      };
+
+      var scheme = MAPPING[$argument] || 'tg';
+      var m = $request.url.match(/^(?:https?:\/\/)?(?:t\.me|telegram\.(?:me|dog))\/(.+)$/);
+
+      if (m) {
+        $done({
+          response: {
+            status: 307,
+            headers: {
+              'Location': scheme + '://resolve?domain=' + m[1]
+            }
+          }
+        });
+      } else {
+        $done({});
+      }
