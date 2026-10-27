@@ -1,58 +1,8 @@
 {
-  "generated_at": "2026-10-27 13:45",
+  "generated_at": "2026-10-27 13:56",
   "repo": "https://github.com/your98k/Rule-Hub",
   "base": "https://your98k.github.io/Rule-Hub",
   "plugins": [
-    {
-      "id": "bilibili-adblock-stash",
-      "name": "📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)",
-      "desc": "'哔哩哔哩：去广告",
-      "icon": "",
-      "date": "2026-10-27",
-      "version": "",
-      "tags": [
-        "Stash 覆写"
-      ],
-      "type": "stash",
-      "authors": [],
-      "homepage": "",
-      "rulesCount": 0,
-      "mitmHosts": [],
-      "needsMitm": false,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.ADBlock.stoverride"
-      },
-      "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride"
-      }
-    },
-    {
-      "id": "bilibili-stash",
-      "name": "Bilibili",
-      "desc": "",
-      "icon": "",
-      "date": "2026-10-27",
-      "version": "",
-      "tags": [
-        "Stash 覆写"
-      ],
-      "type": "stash",
-      "authors": [],
-      "homepage": "",
-      "rulesCount": 0,
-      "mitmHosts": [],
-      "needsMitm": false,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.stoverride"
-      },
-      "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride"
-      }
-    },
     {
       "id": "hupu-stash",
       "name": "虎扑去广告（Stash 原生 jq）",
@@ -125,53 +75,53 @@
       }
     },
     {
-      "id": "youtube-stash",
-      "name": "YouTube 去广告 · 可调参数",
-      "desc": "沿用原 YouTube / YouTube Music 去广告脚本。\n支持手动设置上传按钮、Shorts 按钮、选段按钮、\n字幕翻译语言、歌词翻译语言和调试模式。\n使用前需启用 MITM，并安装、信任相应证书。",
-      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png",
-      "date": "2026-10-27",
-      "version": "1.0.0",
+      "id": "bilibili-adblock-stash",
+      "name": "📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)",
+      "desc": "'哔哩哔哩：去广告",
+      "icon": "",
+      "date": "2026-10-26",
+      "version": "",
       "tags": [
-        "Stash 覆写",
-        "去广告"
+        "Stash 覆写"
       ],
       "type": "stash",
-      "authors": [
-        {
-          "name": "Maasea",
-          "url": "https://github.com/Maasea"
-        },
-        {
-          "name": ", VirgilClyne",
-          "url": "https://github.com/VirgilClyne"
-        },
-        {
-          "name": ", Choler",
-          "url": "https://github.com/Choler"
-        },
-        {
-          "name": ", DivineEngine",
-          "url": "https://github.com/DivineEngine"
-        },
-        {
-          "name": ", app2smile",
-          "url": "https://github.com/app2smile"
-        }
-      ],
-      "homepage": "https://hub.kelee.one",
-      "rulesCount": 2,
-      "mitmHosts": [
-        "*.googlevideo.com",
-        "youtubei.googleapis.com"
-      ],
-      "needsMitm": true,
+      "authors": [],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [],
+      "needsMitm": false,
       "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/YouTube.stoverride"
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.ADBlock.stoverride"
       },
       "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride"
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride"
+      }
+    },
+    {
+      "id": "bilibili-stash",
+      "name": "Bilibili",
+      "desc": "",
+      "icon": "",
+      "date": "2026-10-26",
+      "version": "",
+      "tags": [
+        "Stash 覆写"
+      ],
+      "type": "stash",
+      "authors": [],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride"
       }
     },
     {
@@ -300,6 +250,56 @@
       },
       "install": {
         "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride"
+      }
+    },
+    {
+      "id": "youtube-stash",
+      "name": "YouTube 去广告 · 可调参数",
+      "desc": "沿用原 YouTube / YouTube Music 去广告脚本。\n支持手动设置上传按钮、Shorts 按钮、选段按钮、\n字幕翻译语言、歌词翻译语言和调试模式。\n使用前需启用 MITM，并安装、信任相应证书。",
+      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png",
+      "date": "2026-10-20",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "Maasea",
+          "url": "https://github.com/Maasea"
+        },
+        {
+          "name": ", VirgilClyne",
+          "url": "https://github.com/VirgilClyne"
+        },
+        {
+          "name": ", Choler",
+          "url": "https://github.com/Choler"
+        },
+        {
+          "name": ", DivineEngine",
+          "url": "https://github.com/DivineEngine"
+        },
+        {
+          "name": ", app2smile",
+          "url": "https://github.com/app2smile"
+        }
+      ],
+      "homepage": "https://hub.kelee.one",
+      "rulesCount": 2,
+      "mitmHosts": [
+        "*.googlevideo.com",
+        "youtubei.googleapis.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/YouTube.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride"
       }
     },
     {
