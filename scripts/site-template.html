@@ -9,21 +9,26 @@
   <style>
     :root {
       --bg-primary: #06070d;
-      --bg-card: rgba(20, 22, 34, 0.9);
-      --bg-card-hover: rgba(32, 36, 54, 0.96);
+      --card-alpha: 0.9;
+      --bg-card: rgba(20, 22, 34, var(--card-alpha));
+      --bg-card-hover: rgba(32, 36, 54, calc(var(--card-alpha) + 0.06));
       --border-glass: rgba(255, 255, 255, 0.11);
       --border-highlight: rgba(255, 255, 255, 0.24);
       --text-main: #f5f7ff;
       --text-muted: #949ab8;
-      --glass-blur: 28px;
+      --glass-blur: 0px;
+      --orb-opacity: 0.38;
+      --orb-blur: 80px;
+      --orb-duration: 18s;
       --spring-easing: cubic-bezier(0.22, 1, 0.36, 1);
       --bounce-easing: cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     html.light-mode {
       --bg-primary: #eef2f9;
-      --bg-card: rgba(255, 255, 255, 0.93);
-      --bg-card-hover: rgba(255, 255, 255, 0.98);
+      --card-alpha: 0.93;
+      --bg-card: rgba(255, 255, 255, var(--card-alpha));
+      --bg-card-hover: rgba(255, 255, 255, calc(var(--card-alpha) + 0.04));
       --border-glass: rgba(15, 23, 42, 0.08);
       --border-highlight: rgba(10, 132, 255, 0.35);
       --text-main: #0f172a;
@@ -51,18 +56,27 @@
       z-index: -1;
       overflow: hidden;
       pointer-events: none;
+      opacity: var(--orb-opacity);
+      transition: opacity 0.25s ease;
     }
     .aurora-orb {
       position: absolute;
       border-radius: 9999px;
-      filter: blur(80px);
-      opacity: 0.38;
-      /* 静态光斑：不再无限动画，避免持续合成与重绘 */
+      filter: blur(var(--orb-blur));
     }
-    html.light-mode .aurora-orb {
-      opacity: 0.24;
-      filter: blur(70px);
+    /* 用户开启「流动」后才加动画，默认静态 */
+    html.orbs-animated .aurora-orb {
+      animation: floatOrb var(--orb-duration) infinite alternate ease-in-out;
+      will-change: transform;
     }
+    @keyframes floatOrb {
+      0% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(35px, -30px, 0) scale(1.08); }
+      100% { transform: translate3d(-25px, 25px, 0) scale(0.95); }
+    }
+    /* 滑块控制光斑显隐（移动端默认隐藏，需要时用 orbs-on 强制显示） */
+    html.orbs-on .ambient-mesh { display: block !important; }
+    html.orbs-off .ambient-mesh { display: none !important; }
     .orb-1 {
       width: 520px;
       height: 520px;
@@ -123,6 +137,11 @@
       box-shadow: 
         0 14px 34px -12px rgba(15, 23, 42, 0.08),
         inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+    }
+    /* 只有用户把「毛玻璃模糊」调到 > 0 时才启用 backdrop-filter */
+    html.glass-on .ios-glass {
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(190%);
+      backdrop-filter: blur(var(--glass-blur)) saturate(190%);
     }
 
     /* Plugin Card Interactive Tilt & Spotlight */
@@ -270,6 +289,45 @@
       animation: pulseGlow 2.6s infinite ease-in-out;
     }
 
+    /* iOS 风格滑块（外观设置） */
+    input[type="range"].ios-range {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 26px;
+      background: transparent;
+      outline: none;
+    }
+    input[type="range"].ios-range::-webkit-slider-runnable-track {
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #0A84FF, #5E5CE6);
+      opacity: 0.85;
+    }
+    input[type="range"].ios-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      margin-top: -8px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+    }
+    input[type="range"].ios-range::-moz-range-track {
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #0A84FF, #5E5CE6);
+      opacity: 0.85;
+    }
+    input[type="range"].ios-range::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
     /* 移动端/低性能设备进一步减负 */
     @media (max-width: 767px) {
       /* 大尺寸模糊光斑在手机上很吃 GPU：直接隐藏，用廉价渐变替代 */
@@ -296,6 +354,36 @@
       .pulse-badge { animation: none; }
     }
   </style>
+  <!-- 外观设置：在首屏渲染前应用，避免闪烁 -->
+  <script>
+    (function () {
+      try {
+        var raw = localStorage.getItem("rulehub_appearance_v1");
+        if (!raw) return;
+        var s = JSON.parse(raw) || {};
+        var d = document.documentElement;
+        if (typeof s.glass === "number") {
+          d.style.setProperty("--glass-blur", s.glass + "px");
+          d.classList.toggle("glass-on", s.glass > 0);
+        }
+        if (typeof s.alpha === "number") {
+          d.style.setProperty("--card-alpha", (s.alpha / 100).toFixed(3));
+        }
+        if (typeof s.orb === "number") {
+          d.style.setProperty("--orb-opacity", (s.orb / 100).toFixed(3));
+          d.classList.toggle("orbs-on", s.orb > 0);
+          d.classList.toggle("orbs-off", s.orb <= 0);
+        }
+        if (typeof s.orbBlur === "number") {
+          d.style.setProperty("--orb-blur", s.orbBlur + "px");
+        }
+        if (typeof s.orbSpeed === "number") {
+          d.style.setProperty("--orb-duration", (s.orbSpeed || 18) + "s");
+          d.classList.toggle("orbs-animated", s.orbSpeed > 0);
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body class="selection:bg-ios-blue selection:text-white pb-32">
 
@@ -378,6 +466,11 @@
         <!-- Sound Haptics Toggle -->
         <button id="sound-toggle-btn" onclick="toggleSoundHaptics()" title="iOS 拟真声效与触感反馈" class="ios-btn ios-glass w-10 h-10 rounded-2xl flex items-center justify-center text-sm hover:border-ios-cyan/50">
           <span id="sound-icon">🔊</span>
+        </button>
+
+        <!-- Appearance & Performance Settings -->
+        <button id="appearance-btn" onclick="openAppearanceModal()" title="外观与性能设置" class="ios-btn ios-glass w-10 h-10 rounded-2xl flex items-center justify-center text-sm hover:border-ios-cyan/50">
+          <span>🎛️</span>
         </button>
 
         <!-- Theme Mode Toggle (Cyber Dark / Crystal Light) -->
@@ -570,8 +663,82 @@
     </div>
   </nav>
 
+  <!-- MODAL 0: Appearance & Performance Settings -->
+  <div id="appearance-modal" class="ios-modal-backdrop fixed inset-0 z-50 bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="closeAppearanceOnBackdrop(event)">
+    <div class="ios-sheet ios-glass w-full sm:max-w-lg rounded-t-[32px] sm:rounded-[32px] p-5 sm:p-7 max-h-[88vh] overflow-y-auto border border-white/20">
+      <div class="flex items-start justify-between gap-3 mb-4">
+        <div>
+          <h3 class="text-base sm:text-lg font-bold">外观与性能</h3>
+          <p class="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
+            毛玻璃与光斑越强，滚动越耗电。默认「流畅」模式；所有设置只保存在本机。
+          </p>
+        </div>
+        <button onclick="closeAppearanceModal()" class="ios-btn w-8 h-8 shrink-0 rounded-full bg-white/10 flex items-center justify-center text-sm">✕</button>
+      </div>
+
+      <!-- Presets -->
+      <div class="grid grid-cols-4 gap-2 mb-5">
+        <button onclick="applyAppearancePreset('smooth')" class="ios-btn py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/15">流畅</button>
+        <button onclick="applyAppearancePreset('balanced')" class="ios-btn py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/15">均衡</button>
+        <button onclick="applyAppearancePreset('visual')" class="ios-btn py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/15">视觉</button>
+        <button onclick="applyAppearancePreset('reset')" class="ios-btn py-2 rounded-xl text-xs font-semibold bg-ios-blue/20 text-ios-cyan border border-ios-cyan/25">默认</button>
+      </div>
+
+      <div class="space-y-4">
+        <label class="block">
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span>毛玻璃模糊</span>
+            <span id="val-glass" class="font-mono text-ios-cyan">0 px</span>
+          </div>
+          <input id="set-glass" type="range" min="0" max="30" step="1" value="0" oninput="onAppearanceInput('glass', this.value)" class="ios-range">
+          <div class="flex justify-between text-[10px] text-[var(--text-muted)] opacity-70"><span>关闭（最流畅）</span><span>30 px</span></div>
+        </label>
+
+        <label class="block">
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span>卡片不透明度</span>
+            <span id="val-alpha" class="font-mono text-ios-cyan">90%</span>
+          </div>
+          <input id="set-alpha" type="range" min="55" max="100" step="1" value="90" oninput="onAppearanceInput('alpha', this.value)" class="ios-range">
+          <div class="flex justify-between text-[10px] text-[var(--text-muted)] opacity-70"><span>更透（毛玻璃更明显）</span><span>100%</span></div>
+        </label>
+
+        <label class="block">
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span>光斑强度</span>
+            <span id="val-orb" class="font-mono text-ios-cyan">0%</span>
+          </div>
+          <input id="set-orb" type="range" min="0" max="100" step="1" value="0" oninput="onAppearanceInput('orb', this.value)" class="ios-range">
+          <div class="flex justify-between text-[10px] text-[var(--text-muted)] opacity-70"><span>关闭</span><span>100%</span></div>
+        </label>
+
+        <label class="block">
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span>光斑模糊</span>
+            <span id="val-orb-blur" class="font-mono text-ios-cyan">80 px</span>
+          </div>
+          <input id="set-orb-blur" type="range" min="20" max="120" step="2" value="80" oninput="onAppearanceInput('orbBlur', this.value)" class="ios-range">
+          <div class="flex justify-between text-[10px] text-[var(--text-muted)] opacity-70"><span>清晰</span><span>柔和</span></div>
+        </label>
+
+        <label class="block">
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span>光斑流动周期</span>
+            <span id="val-orb-speed" class="font-mono text-ios-cyan">关闭</span>
+          </div>
+          <input id="set-orb-speed" type="range" min="0" max="40" step="1" value="0" oninput="onAppearanceInput('orbSpeed', this.value)" class="ios-range">
+          <div class="flex justify-between text-[10px] text-[var(--text-muted)] opacity-70"><span>静止（0）</span><span>40 秒/周期</span></div>
+        </label>
+      </div>
+
+      <div class="mt-5 pt-4 border-t border-white/10 text-[11px] text-[var(--text-muted)] leading-relaxed">
+        提示：毛玻璃模糊超过 12px、光斑同时开启流动时，老设备可能出现滚动掉帧。调低或关闭即可恢复流畅。
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL 1: Plugin Inspector & Live Source Sheet -->
-  <div id="inspector-modal" class="ios-modal-backdrop fixed inset-0 z-50 bg-black/65 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="closeInspectorOnBackdrop(event)">
+  <div id="inspector-modal" class="ios-modal-backdrop fixed inset-0 z-50 bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="closeInspectorOnBackdrop(event)">
     <div class="ios-sheet ios-glass w-full sm:max-w-2xl rounded-t-[32px] sm:rounded-[32px] p-5 sm:p-7 max-h-[88vh] overflow-y-auto border border-white/20">
       <!-- Drag Handle for Mobile -->
       <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-4 sm:hidden"></div>
@@ -584,7 +751,7 @@
 
 
   <!-- MODAL 3: Script-Hub Cross-Client Converter -->
-  <div id="converter-modal" class="ios-modal-backdrop fixed inset-0 z-50 bg-black/65 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="closeConverterOnBackdrop(event)">
+  <div id="converter-modal" class="ios-modal-backdrop fixed inset-0 z-50 bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="closeConverterOnBackdrop(event)">
     <div class="ios-sheet ios-glass w-full sm:max-w-xl rounded-t-[32px] sm:rounded-[32px] p-5 sm:p-7 border border-white/20">
       <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-4 sm:hidden"></div>
       <div class="flex items-center justify-between pb-4 border-b border-white/10">
@@ -1231,6 +1398,110 @@
       );
     }
 
+    // =========================================================================
+    // 7.5 APPEARANCE & PERFORMANCE SETTINGS
+    // =========================================================================
+    const APPEARANCE_KEY = "rulehub_appearance_v1";
+    const APPEARANCE_DEFAULTS = {
+      glass: 0,
+      alpha: 90,
+      orb: window.matchMedia("(max-width: 767px)").matches ? 0 : 38,
+      orbBlur: 80,
+      orbSpeed: 0
+    };
+    const APPEARANCE_PRESETS = {
+      smooth: { glass: 0, alpha: 90, orb: 0, orbBlur: 80, orbSpeed: 0 },
+      balanced: { glass: 8, alpha: 85, orb: 24, orbBlur: 72, orbSpeed: 28 },
+      visual: { glass: 20, alpha: 68, orb: 46, orbBlur: 92, orbSpeed: 16 }
+    };
+    let appearance = { ...APPEARANCE_DEFAULTS };
+    try {
+      const saved = JSON.parse(localStorage.getItem(APPEARANCE_KEY) || "null");
+      if (saved && typeof saved === "object") appearance = { ...appearance, ...saved };
+    } catch (e) {}
+    let appearanceSaveTimer = null;
+
+    function clampNumber(v, min, max, fallback) {
+      const n = Number(v);
+      if (!Number.isFinite(n)) return fallback;
+      return Math.min(max, Math.max(min, n));
+    }
+
+    function applyAppearance(patch, persist = true) {
+      if (patch) appearance = { ...appearance, ...patch };
+      appearance.glass = clampNumber(appearance.glass, 0, 30, 0);
+      appearance.alpha = clampNumber(appearance.alpha, 55, 100, 90);
+      appearance.orb = clampNumber(appearance.orb, 0, 100, 0);
+      appearance.orbBlur = clampNumber(appearance.orbBlur, 20, 120, 80);
+      appearance.orbSpeed = clampNumber(appearance.orbSpeed, 0, 40, 0);
+
+      const d = document.documentElement;
+      d.style.setProperty("--glass-blur", appearance.glass + "px");
+      d.classList.toggle("glass-on", appearance.glass > 0);
+      d.style.setProperty("--card-alpha", (appearance.alpha / 100).toFixed(3));
+      d.style.setProperty("--orb-opacity", (appearance.orb / 100).toFixed(3));
+      d.classList.toggle("orbs-on", appearance.orb > 0);
+      d.classList.toggle("orbs-off", appearance.orb <= 0);
+      d.style.setProperty("--orb-blur", appearance.orbBlur + "px");
+      d.style.setProperty("--orb-duration", (appearance.orbSpeed || 18) + "s");
+      d.classList.toggle("orbs-animated", appearance.orbSpeed > 0);
+
+      updateAppearanceLabels();
+      if (persist) {
+        clearTimeout(appearanceSaveTimer);
+        appearanceSaveTimer = setTimeout(() => {
+          try { localStorage.setItem(APPEARANCE_KEY, JSON.stringify(appearance)); } catch (e) {}
+        }, 150);
+      }
+    }
+
+    function updateAppearanceLabels() {
+      const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+      set("val-glass", appearance.glass + " px");
+      set("val-alpha", appearance.alpha + "%");
+      set("val-orb", appearance.orb + "%");
+      set("val-orb-blur", appearance.orbBlur + " px");
+      set("val-orb-speed", appearance.orbSpeed === 0 ? "关闭" : appearance.orbSpeed + " 秒/周期");
+    }
+
+    function syncAppearanceControls() {
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+      set("set-glass", appearance.glass);
+      set("set-alpha", appearance.alpha);
+      set("set-orb", appearance.orb);
+      set("set-orb-blur", appearance.orbBlur);
+      set("set-orb-speed", appearance.orbSpeed);
+      updateAppearanceLabels();
+    }
+
+    function onAppearanceInput(key, value) {
+      const patch = {};
+      patch[key] = Number(value);
+      applyAppearance(patch);
+    }
+
+    function applyAppearancePreset(name) {
+      playTapticSound("tap");
+      const preset = name === "reset" ? APPEARANCE_DEFAULTS : APPEARANCE_PRESETS[name];
+      if (!preset) return;
+      applyAppearance({ ...preset });
+      syncAppearanceControls();
+    }
+
+    function openAppearanceModal() {
+      playTapticSound("tap");
+      syncAppearanceControls();
+      document.getElementById("appearance-modal").classList.add("open");
+    }
+
+    function closeAppearanceModal() {
+      document.getElementById("appearance-modal").classList.remove("open");
+    }
+
+    function closeAppearanceOnBackdrop(e) {
+      if (e.target.id === "appearance-modal") closeAppearanceModal();
+    }
+
     function dismissBanner() {
       playTapticSound("tap");
       document.getElementById("disclaimer-banner").classList.add("hidden");
@@ -1438,11 +1709,14 @@ function openInspector(pluginId, event) {
       } else if (e.key === "Escape") {
         closeInspector();
         closeConverterModal();
+        closeAppearanceModal();
       }
     });
 
     window.addEventListener("DOMContentLoaded", () => {
       const boot = () => {
+        applyAppearance(null, false);
+        syncAppearanceControls();
         renderCategoryPills();
         renderPluginGrid();
         setTimeout(() => setSortMode("default", 0), 60);
