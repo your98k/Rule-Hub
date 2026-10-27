@@ -1,0 +1,44 @@
+name: Sync Tencent Video Stash script
+
+on:
+  schedule:
+    - cron: '23 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: txvideo-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Sync upstream script
+        run: node scripts/sync-txvideo.cjs
+
+      - name: Run regression tests
+        run: node scripts/test-txvideo.cjs
+
+      - name: Commit changes
+        run: |
+          if git diff --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Stash/txvideo-ad.stash.js Stash/TxvideoAD.stoverride upstream/Txvideoad.js upstream/TxvideoAD.snippet upstream/.sync-state.json
+          git commit -m "Sync Tencent Video upstream script"
+          git push
