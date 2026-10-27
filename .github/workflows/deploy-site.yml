@@ -35,20 +35,13 @@ jobs:
         with:
           node-version: 20
 
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - name: Generate site
         run: node scripts/generate-site.cjs --base https://your98k.github.io/Rule-Hub
-
-      - name: Commit regenerated site data
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if ! git diff --quiet -- site/plugins.json site/index.html; then
-            git add site/plugins.json site/index.html
-            git commit -m "chore(site): regenerate plugins.json [skip ci]"
-            git push
-          else
-            echo "site data unchanged"
-          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
