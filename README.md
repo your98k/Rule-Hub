@@ -20,9 +20,24 @@
 | **哔哩哔哩去广告** | **iOS 15+** | 过滤广告/青少年模式弹窗/互动弹幕，解锁后台播放与投屏，支持空降助手跳过片中广告（可调参数） | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride) |
 | **哔哩哔哩 ADBlock（Biliverse 移植）** | **iOS/tvOS 3.7+** | 移植 Biliverse ADBlock v0.7.5，全部功能改为 Stash 原生参数表单（32 项），无需 BoxJS；已加响应体上限控制内存 | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
 | **红果短剧去广告** | 通用 | 裁剪域名拦截，不改动全局 IPv6/DNS | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
+| **腾讯视频净化** | **iOS/tvOS 3.2.5+** | 开屏/播放前广告与页面净化；需 MITM。首次使用前卸载并重新安装腾讯视频，之后冷启动 2–3 次 | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TxvideoAD.stoverride) |
 | **Telegram 链接跳转** | 需 Stash MitM | 将 t.me、telegram.me、telegram.dog 链接 307 跳转至所选 Telegram 客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride) |
 | **京东去广告 + 慢慢买历史比价** | **iOS/tvOS 3.7+；macOS 4.4+** | 京东广告过滤与慢慢买历史价格；内置 Stash Cookie 采集修复，需启用并信任 MitM CA | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride) |
 | **虎扑去广告（Stash 原生 jq）** | **iOS/tvOS 2.8+** | 保留原拦截规则，将 4 处 JS 响应改为原生 jq；需启用并信任 MitM CA。请勿与旧虎扑覆写叠加 | [Raw 订阅](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride) | [CDN 订阅](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HuPu.stoverride) |
+
+---
+
+## 📖 腾讯视频净化使用说明
+
+> ⚠️ 需要 Stash iOS/tvOS 3.2.5 或更新版本，并启用 MitM、安装 Stash 生成的 CA 证书且在系统中完全信任。请勿使用他人提供的 CA 证书。
+
+### 安装与首次生效
+1. 在 Stash「覆写 (Overrides)」页面点击 `+` →「从 URL 下载」，导入上方腾讯视频覆写并启用。
+2. 按此规则要求，先卸载腾讯视频，再从 App Store 重新安装。
+3. 安装后冷启动腾讯视频 2–3 次（彻底退出 App 后再打开），等待规则生效。
+4. 保持 Stash 运行并确认腾讯视频流量经过 Stash；若未生效，检查 MitM CA 是否已完全信任，以及旧规则是否与本覆写冲突。
+
+本覆写内嵌的是上游脚本的 Stash 适配快照，不会自动跟随上游更新；过滤效果取决于腾讯视频当前版本。
 
 ---
 
