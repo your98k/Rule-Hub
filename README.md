@@ -22,6 +22,26 @@
 | **红果短剧去广告** | 通用 | 裁剪域名拦截，不改动全局 IPv6/DNS | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
 | **Telegram 链接跳转** | 需 Stash MitM | 将 t.me、telegram.me、telegram.dog 链接 307 跳转至所选 Telegram 客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride) |
 | **京东去广告 + 慢慢买历史比价** | **iOS/tvOS 3.7+；macOS 4.4+** | 京东广告过滤与慢慢买历史价格；内置 Stash Cookie 采集修复，需启用并信任 MitM CA | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride) |
+| **虎扑去广告（Stash 原生 jq）** | **iOS/tvOS 2.8+** | 保留原拦截规则，将 4 处 JS 响应改为原生 jq；需启用并信任 MitM CA。请勿与旧虎扑覆写叠加 | [Raw 订阅](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride) | [CDN 订阅](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HuPu.stoverride) |
+
+---
+
+## 📖 虎扑去广告（Stash 原生 jq）使用说明
+
+> ⚠️ 需要 Stash iOS/tvOS 2.8 或更新版本，且需启用 MitM、安装并在系统中完全信任 Stash CA 证书。本覆写使用 Stash 原生 `body-rewrite`/`response-jq`，不依赖远程 JavaScript 脚本。
+
+### 📌 导入与配置
+1. 在 Stash「覆写 (Overrides)」页面点 `+` →「从 URL 下载」。
+2. 粘贴上方 **Raw 订阅**或 **CDN 订阅**链接，保存并启用。
+3. 在 Stash「设置」→「MitM」启用 MitM 并生成、安装 CA；再到 iOS「设置」→「通用」→「关于本机」→「证书信任设置」中完全信任该证书。
+4. **禁用旧的虎扑插件/覆写及其他重复的虎扑去广告规则**，避免同一请求被多次处理。
+5. 应用配置后，彻底退出虎扑再重新打开。
+
+### 🔧 处理范围与说明
+- 保留原规则的 8 条定向接口拦截，4 个响应接口改为 Stash 原生 jq：移除横幅、热榜顶部横幅、个人页推广字段，以及指定的「我的」页推广入口。
+- 响应处理增加了字段类型保护。无需额外的脚本订阅或脚本引擎。
+- 如果导入后虎扑无法正常加载或部分页面异常，先禁用本覆写确认，再检查 Stash MitM 证书信任及旧规则是否仍启用。
+- 该版本减少了对 JS 响应脚本的依赖，但没有在 README 中承诺启动速度改善；实际效果取决于设备、Stash 版本和虎扑当前接口，请以实测为准。
 
 ---
 
