@@ -4,40 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Rule-Hub · Loon 插件与 Stash 覆写仓库</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
-            mono: ['JetBrains Mono', 'SF Mono', 'Menlo', 'monospace'],
-          },
-          colors: {
-            ios: {
-              blue: '#0A84FF',
-              indigo: '#5E5CE6',
-              purple: '#BF5AF2',
-              cyan: '#64D2FF',
-              mint: '#00C7BE',
-              green: '#30D158',
-              orange: '#FF9F0A',
-              pink: '#FF375F',
-            }
-          }
-        }
-      }
-    };
-  </script>
+  <!-- Tailwind 已预编译为静态 CSS，避免运行时 JIT 编译带来的卡顿 -->
+  <link rel="stylesheet" href="./assets/tailwind.css">
   <style>
     :root {
       --bg-primary: #06070d;
-      --bg-card: rgba(24, 26, 40, 0.58);
-      --bg-card-hover: rgba(34, 38, 58, 0.75);
+      --bg-card: rgba(20, 22, 34, 0.9);
+      --bg-card-hover: rgba(32, 36, 54, 0.96);
       --border-glass: rgba(255, 255, 255, 0.11);
       --border-highlight: rgba(255, 255, 255, 0.24);
       --text-main: #f5f7ff;
@@ -49,8 +22,8 @@
 
     html.light-mode {
       --bg-primary: #eef2f9;
-      --bg-card: rgba(255, 255, 255, 0.72);
-      --bg-card-hover: rgba(255, 255, 255, 0.92);
+      --bg-card: rgba(255, 255, 255, 0.93);
+      --bg-card-hover: rgba(255, 255, 255, 0.98);
       --border-glass: rgba(15, 23, 42, 0.08);
       --border-highlight: rgba(10, 132, 255, 0.35);
       --text-main: #0f172a;
@@ -82,14 +55,13 @@
     .aurora-orb {
       position: absolute;
       border-radius: 9999px;
-      filter: blur(105px);
-      opacity: 0.45;
-      animation: floatOrb 18s infinite alternate ease-in-out;
-      will-change: transform;
+      filter: blur(80px);
+      opacity: 0.38;
+      /* 静态光斑：不再无限动画，避免持续合成与重绘 */
     }
     html.light-mode .aurora-orb {
-      opacity: 0.28;
-      filter: blur(95px);
+      opacity: 0.24;
+      filter: blur(70px);
     }
     .orb-1 {
       width: 520px;
@@ -115,12 +87,6 @@
       animation-delay: -11s;
     }
 
-    @keyframes floatOrb {
-      0% { transform: translate3d(0, 0, 0) scale(1); }
-      50% { transform: translate3d(35px, -30px, 0) scale(1.08); }
-      100% { transform: translate3d(-25px, 25px, 0) scale(0.95); }
-    }
-
     /* Cyber Grid Overlay */
     .cyber-grid {
       position: fixed;
@@ -143,12 +109,10 @@
     /* VisionOS Frosted Glass Surface */
     .ios-glass {
       background: var(--bg-card);
-      backdrop-filter: blur(var(--glass-blur)) saturate(190%);
-      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(190%);
       border: 1px solid var(--border-glass);
       box-shadow: 
-        0 18px 40px -15px rgba(0, 0, 0, 0.45),
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
+        0 10px 26px -14px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.14);
       transition: 
         transform 0.42s var(--spring-easing),
         box-shadow 0.42s var(--spring-easing),
@@ -166,8 +130,7 @@
       position: relative;
       border-radius: 26px;
       overflow: hidden;
-      transform-style: preserve-3d;
-      will-change: transform;
+      /* 去掉 will-change / preserve-3d，避免每张卡片都常驻合成层 */
     }
     .plugin-card::before {
       content: "";
@@ -229,8 +192,7 @@
       display: inline-flex;
       padding: 4px;
       border-radius: 9999px;
-      background: rgba(120, 120, 145, 0.16);
-      backdrop-filter: blur(20px);
+      background: rgba(120, 120, 145, 0.22);
       border: 1px solid var(--border-glass);
     }
     .segment-pill {
@@ -307,6 +269,31 @@
     .pulse-badge {
       animation: pulseGlow 2.6s infinite ease-in-out;
     }
+
+    /* 移动端/低性能设备进一步减负 */
+    @media (max-width: 767px) {
+      /* 大尺寸模糊光斑在手机上很吃 GPU：直接隐藏，用廉价渐变替代 */
+      .ambient-mesh { display: none; }
+      body {
+        background-image:
+          radial-gradient(700px circle at 15% 0%, rgba(94, 92, 230, 0.16), transparent 60%),
+          radial-gradient(620px circle at 95% 28%, rgba(191, 90, 242, 0.10), transparent 60%);
+      }
+      html.light-mode body {
+        background-image:
+          radial-gradient(700px circle at 15% 0%, rgba(10, 132, 255, 0.10), transparent 60%),
+          radial-gradient(620px circle at 95% 28%, rgba(191, 90, 242, 0.08), transparent 60%);
+      }
+      .plugin-card::before { display: none; } /* 去掉触摸端的聚光层 */
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .pulse-badge { animation: none; }
+    }
   </style>
 </head>
 <body class="selection:bg-ios-blue selection:text-white pb-32">
@@ -326,8 +313,7 @@
       <div id="island-compact" class="flex items-center justify-between w-full gap-2 text-xs font-medium">
         <div class="flex items-center gap-2">
           <span class="relative flex h-2.5 w-2.5">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]"></span>
           </span>
           <span id="island-status-text" class="truncate tracking-tight text-slate-200">数据已同步</span>
         </div>
@@ -531,7 +517,7 @@
         </div>
 
         <div class="flex items-center gap-2 text-xs text-[var(--text-muted)] font-medium shrink-0">
-          <span class="inline-block w-2 h-2 rounded-full bg-ios-cyan animate-pulse"></span>
+          <span class="inline-block w-2 h-2 rounded-full bg-ios-cyan"></span>
           <span id="plugin-counter-label">全部 · 24 个核心插件模块</span>
         </div>
       </div>
@@ -1025,21 +1011,31 @@
     // =========================================================================
     // 6. 3D SPATIAL CARD TILT & SPOTLIGHT GLOW
     // =========================================================================
+    // 仅精确指针（鼠标/触控板）启用 3D 倾斜；触摸设备直接跳过
+    const supportsTilt = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    let tiltRaf = null;
+
     function handleCardMouseMove(e, card) {
+      if (!supportsTilt) return;
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      card.style.setProperty("--mouse-x", `${x}px`);
-      card.style.setProperty("--mouse-y", `${y}px`);
 
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = ((y - centerY) / centerY) * -3.5;
-      const rotateY = ((x - centerX) / centerX) * 3.5;
-      card.style.transform = `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-3px)`;
+      if (tiltRaf) cancelAnimationFrame(tiltRaf);
+      tiltRaf = requestAnimationFrame(() => {
+        card.style.setProperty("--mouse-x", `${x}px`);
+        card.style.setProperty("--mouse-y", `${y}px`);
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -3.5;
+        const rotateY = ((x - centerX) / centerX) * 3.5;
+        card.style.transform = `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-3px)`;
+      });
     }
 
     function handleCardMouseLeave(card) {
+      if (!supportsTilt) return;
+      if (tiltRaf) { cancelAnimationFrame(tiltRaf); tiltRaf = null; }
       card.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0px)";
     }
 
@@ -1121,6 +1117,8 @@
       renderPluginGrid();
     }
 
+    let searchRenderTimer = null;
+
     function handleSearchInput(val) {
       state.searchQuery = val;
       const clearBtn = document.getElementById("clear-search-btn");
@@ -1129,7 +1127,9 @@
       } else {
         clearBtn.classList.add("hidden");
       }
-      renderPluginGrid();
+      // 防抖：连续输入时避免每个字符都重建整个卡片列表
+      clearTimeout(searchRenderTimer);
+      searchRenderTimer = setTimeout(renderPluginGrid, 90);
     }
 
     function clearSearch() {

@@ -9,6 +9,10 @@
  *   2. 生成 site/plugins.json
  *   3. 复制插件文件到 site/files/<原路径>
  *   4. 把数据内嵌进 site/index.html（window.__PLUGINS_DATA__，离线兜底）
+ *   5. 复制预编译的 scripts/tailwind.css 到 site/assets/
+ *
+ * 注意：修改 site-template.html 里的 Tailwind class 后，需要重新编译 CSS：
+ *   npx tailwindcss -c scripts/tailwind.config.js -i scripts/tailwind.input.css -o scripts/tailwind.css --minify
  */
 const fs = require('fs');
 const path = require('path');
@@ -234,6 +238,15 @@ function collect(dir, fileKind) {
 function main() {
   fs.rmSync(SITE, { recursive: true, force: true });
   fs.mkdirSync(path.join(SITE, 'files'), { recursive: true });
+
+  // 复制预编译的 Tailwind CSS（避免运行时 CDN JIT）
+  const cssSrc = path.join(__dirname, 'tailwind.css');
+  if (fs.existsSync(cssSrc)) {
+    fs.mkdirSync(path.join(SITE, 'assets'), { recursive: true });
+    fs.copyFileSync(cssSrc, path.join(SITE, 'assets', 'tailwind.css'));
+  } else {
+    console.warn('WARN: scripts/tailwind.css 不存在，页面样式会缺失');
+  }
 
   const plugins = [
     ...collect('Loon', 'loon'),
