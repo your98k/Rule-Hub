@@ -3,15 +3,17 @@ desc: |-
   适配 ZenmoFeiShi 的腾讯视频净化规则，保留开屏/播放前广告过滤、底栏精简及我的页面净化逻辑。
   单文件内嵌脚本，需要 Stash 3.2.5+；已适配 Stash 的二进制 body 接口。
   使用前请卸载腾讯视频后重新安装；安装后冷启动腾讯视频 2–3 次，使配置生效。
+  已适配上游 2026-10-27 脚本更新：新增暂停广告（JCE 129196）与瀑布流合并广告过滤。
   已补 QUIC 拦截，防止开屏广告经 UDP 443 绕过 MitM。
   请启用 MITM，并安装、完全信任你自己生成的 CA 证书。
   内嵌脚本为 2026-10-27 快照，不会自动跟随上游更新；实际效果取决于腾讯视频版本。
 author: TG@ZenMoFiShi（原作者）
 date: '2026-10-27'
-version: '1.0.1'
+version: '1.0.2'
 
 # 原始规则：https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TxvideoAD.snippet
 # 原始脚本：https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/Txvideoad.js
+# 2026-10-27 上游更新：新增 JCE 暂停广告 129196、瀑布流合并广告过滤。
 # Stash 适配：将 bodyBytes 输入/输出改为二进制 body；文本接口单独关闭 binary-mode。
 # 不覆盖现有 CA、代理组或其他 MITM 域名；数组按 Stash 覆写规则合并。
 rules:
@@ -72,6 +74,7 @@ script-providers:
         const AD_ANY = ["AdResponseInfo", "InnerAdPromotionEventList", "InnerAdCommonPromotionEventActivityList", "LoadingConfig", "PreloadResourceInfo", "AdFeedInfo"];
         const DROP_MODULES = ["user_center_more_function"];
         const AD_MODULE_IDS = ["outerPaster"];
+        const FEED_MODULE_TAGS = ["waterfall_feeds_module_mergeid"];
         const MARKERS = ["AdFeedInfo", "AdResponseInfo", "InnerAd", "LoadingConfig", "PreloadResourceInfo", "GetTabListRsp", "_ad", "teenager_popup_ctrl"].concat(DROP_MODULES);
         const BLOCK_FUNCS = [
           "/trpc.business_splash.ad_ssp_splash.splashService/GetSplashPreload",
@@ -93,9 +96,12 @@ script-providers:
         ];
         const JCE_TEEN_CONFIG = 89738;
         const JCE_PLAY_TIPS = 126577;
+        // 播放器贴片广告(前贴/中插)，body tag2 为广告单列表
         const JCE_ROLL_ADS = [129278, 130273];
+        // 暂停广告，body tag1.tag1 为包着广告单列表的 simple list
+        const JCE_PAUSE_AD = 129196;
         const DROP = {};
-
+      
         function utf8(s) {
           const e = encodeURIComponent(s), a = [];
           for (let i = 0; i < e.length; i++) {
@@ -141,7 +147,7 @@ script-providers:
           if (ArrayBuffer.isView(x)) return new Uint8Array(x.buffer, x.byteOffset, x.byteLength);
           return null;
         }
-
+      
         const LB = [3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31, 35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258];
         const LE = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0];
         const DB = [1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193, 257, 385, 513, 769, 1025, 1537, 2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577];
@@ -280,7 +286,7 @@ script-providers:
           o[p++] = z & 255; o[p++] = (z >>> 8) & 255; o[p++] = (z >>> 16) & 255; o[p++] = z >>> 24;
           return o;
         }
-
+      
         let VP = 0;
         function rv(b, p, e) {
           let x = 0, m = 1, c;
@@ -344,7 +350,7 @@ script-providers:
           parts.push(b.subarray(last, e));
           return concat(parts);
         }
-
+      
         const TYPE = utf8("type.googleapis.com/");
         let ANYV = 0;
         function anyName(b, s, e) {
@@ -358,7 +364,7 @@ script-providers:
           ANYV = p + l;
           return t.slice(Math.max(t.lastIndexOf("."), t.lastIndexOf("/")) + 1);
         }
-
+      
         let MARK = {}, ALL = [];
         function indexMarkers(b, s, e) {
           MARK = {}; ALL = [];
@@ -376,22 +382,27 @@ script-providers:
           return lo < arr.length && arr[lo] < e;
         }
         function has(m, s, e) { return inRange(m ? MARK[m] || [] : ALL, s, e); }
-
+      
         function kidsOf(b, recs, f) {
           const r = [];
           for (const x of recs) if (x.f === f && x.w === 2) { const k = parse(b, x.vs, x.e); if (k) r.push(k); }
           return r;
         }
-        function adAtPath(b, kids) {
+        function blocksAt(b, kids) {
           let level = [kids];
           for (const f of [2, 5, 1]) {
             const next = [];
             for (const k of level) for (const c of kidsOf(b, k, f)) next.push(c);
             level = next;
-            if (!level.length) return false;
+            if (!level.length) break;
           }
-          for (const k of level) for (const x of k) if (x.f === 4 && x.w === 2 && anyName(b, x.vs, x.e) === "AdFeedInfo") return true;
-          return false;
+          return level;
+        }
+        function adBlock(b, k) { return k.some(x => x.f === 4 && x.w === 2 && anyName(b, x.vs, x.e) === "AdFeedInfo"); }
+        function adAtPath(b, kids) { return blocksAt(b, kids).some(k => adBlock(b, k)); }
+        function adOnlyAtPath(b, kids) {
+          const l = blocksAt(b, kids);
+          return l.length > 0 && l.every(k => adBlock(b, k));
         }
         function wrapsAny(b, k) {
           if (anyName(b, k.vs, k.e)) return true;
@@ -412,6 +423,8 @@ script-providers:
             if (t && id !== null && /^[a-z0-9_]+$/.test(t) && /(^ad_|_ad_|_ad$)/.test(t) && (id === "" || /\.\d+\.\d+$/.test(id))) return true;
           }
           if ((!f1 || f1.e === f1.vs || AD_MODULE_IDS.indexOf(ascii(b, f1.vs, f1.e)) >= 0) && has("AdFeedInfo", x.vs, x.e) && adAtPath(b, kids)) return true;
+          const f6 = kids.find(k => k.f === 6 && k.w === 2);
+          if (f6 && FEED_MODULE_TAGS.indexOf(ascii(b, f6.vs, f6.e)) >= 0 && has("AdFeedInfo", x.vs, x.e) && adOnlyAtPath(b, kids)) return true;
           return false;
         }
         function tabFix(b, x) {
@@ -524,7 +537,7 @@ script-providers:
           for (let p = fr.hs; (p = find(out, nb, p, fr.he)) >= 0; p += nb.length) out[p] = out[p] === 0x58 ? 0x59 : 0x58;
           return gz ? gzip(out) : out;
         }
-
+      
         function jHead(b, p) {
           const c = b[p];
           let tag = c >> 4;
@@ -667,11 +680,28 @@ script-providers:
           edits.set(l, concat([new Uint8Array(jHeadEnc(2, 9)), jIntEnc(0, 0)]));
           return jRebuild(b, s, e, fs, edits);
         }
+        function fixPauseAd(b, s, e) {
+          const fs = jFields(b, s, e), w = fs.find(x => x.tag === 1 && x.t === 10);
+          if (!w || b[w.e - 1] !== 0x0b) return null;
+          const ws = jFields(b, w.vs, w.e - 1), l = ws.find(x => x.tag === 1 && x.t === 13);
+          if (!l) return null;
+          jHead(b, l.vs);
+          const n = jInt(b, VP), ds = VP;
+          if (ds + n !== l.e) return null;
+          const inner = jFields(b, ds, l.e), list = inner.find(x => x.tag === 0 && x.t === 9);
+          if (!list || jInt(b, list.vs) <= 0 || find(b, utf8("livemsg"), list.vs, list.e) < 0) return null;
+          const le = new Map();
+          le.set(l, jSimpleList(1, concat([new Uint8Array(jHeadEnc(0, 9)), jIntEnc(0, 0)])));
+          const nw = concat([b.subarray(w.s, w.vs), jRebuild(b, w.vs, w.e - 1, ws, le), new Uint8Array([0x0b])]);
+          const edits = new Map();
+          edits.set(w, nw);
+          return jRebuild(b, s, e, fs, edits);
+        }
         function onJce(raw) {
           const b = raw, n = b.length;
           if (n < 100 || b[0] !== 0x13 || u32(b, 1) !== n || b[n - 1] !== 0x03) return null;
           const cmd = (b[8] << 16) | (b[9] << 8) | b[10];
-          const fix = cmd === JCE_TEEN_CONFIG ? fixTeenConfig : cmd === JCE_PLAY_TIPS ? fixPlayTips : JCE_ROLL_ADS.indexOf(cmd) >= 0 ? fixRollAds : null;
+          const fix = cmd === JCE_TEEN_CONFIG ? fixTeenConfig : cmd === JCE_PLAY_TIPS ? fixPlayTips : JCE_ROLL_ADS.indexOf(cmd) >= 0 ? fixRollAds : cmd === JCE_PAUSE_AD ? fixPauseAd : null;
           if (!fix) return null;
           const gz = find(b, new Uint8Array([0x1f, 0x8b, 0x08]), 60, Math.min(n, 140));
           if (gz < 4) return null;
@@ -693,7 +723,7 @@ script-providers:
           put32(out, 1, out.length);
           return out;
         }
-
+      
         const SIMPLE_KEY = "simple_mode_config";
         function patchSimpleMode(js) {
           let o;
@@ -708,7 +738,7 @@ script-providers:
           o.feature_config = fc;
           return JSON.stringify(o);
         }
-
+      
         function simpleModeJson() {
           return JSON.stringify({ enable: 1, launch_config: { enable: 1, delay_create_tab_enable: 1, delay_create_tab_whitelist: "" }, feature_config: { enable: 1, tab_bar_cut_enable: 1, tab_bar_cut_whitelist: TAB_CUT_WHITELIST } });
         }
@@ -735,7 +765,7 @@ script-providers:
           o.enableHdns = false;
           return JSON.stringify(o);
         }
-        const AB_PATCH = { simple_mode_config: patchSimpleMode, ios_nx_netframework_compatible: patchNoQuic, ios_nx_netframework_compatible_bbtf: patchNoQuic, network_resolve_config: patchNoPreResolve };
+         const AB_PATCH = { simple_mode_config: patchSimpleMode, ios_nx_netframework_compatible: patchNoQuic, ios_nx_netframework_compatible_bbtf: patchNoQuic, network_resolve_config: patchNoPreResolve };
         const AB_NEEDLES = [utf8(SIMPLE_KEY), utf8("ios_nx_netframework_compatible"), utf8("network_resolve_config")];
         function onAbConfig(raw) {
           let u8 = raw, gz = false;
@@ -767,7 +797,7 @@ script-providers:
           if (!out) return null;
           return gz ? gzip(out) : out;
         }
-
+      
         function main() {
           const url = $request.url || "", host = (url.split("/")[2] || "").split(":")[0];
           const isResp = typeof $response !== "undefined" && $response !== null;
