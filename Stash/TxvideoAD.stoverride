@@ -6,10 +6,10 @@ desc: |-
   已适配上游 2026-10-27 脚本更新：新增暂停广告（JCE 129196）与瀑布流合并广告过滤。
   已补 QUIC 拦截，防止开屏广告经 UDP 443 绕过 MitM。
   请启用 MITM，并安装、完全信任你自己生成的 CA 证书。
-  内嵌脚本为 2026-10-27 快照，不会自动跟随上游更新；实际效果取决于腾讯视频版本。
+  脚本由 script-providers 每 24h 从 Stash/txvideo-ad.stash.js 自动更新；内嵌 payload 仅作离线兜底。实际效果取决于腾讯视频版本。
 author: TG@ZenMoFiShi（原作者）
 date: '2026-10-27'
-version: '1.0.2'
+version: '1.1.0'
 
 # 原始规则：https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TxvideoAD.snippet
 # 原始脚本：https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/Txvideoad.js
@@ -64,9 +64,16 @@ http:
       binary-mode: false
       timeout: 10
 
+# 自动更新：Stash 每 24h 从 Stash/txvideo-ad.stash.js 拉取；payload 仅作离线兜底。
 script-providers:
   txvideo-ad-clean-stash-20261027:
+    url: https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/txvideo-ad.stash.js
+    interval: 86400
     payload: |
+      // Stash adaptation of ZenmoFeiShi/Qx Txvideoad.js
+      // Upstream SHA256: 2c56bc7622a28cfc97ea4790536417e405fde95e757a4f4caf65ff894550e2e9
+      // Synced at: 2026-10-27T10:02:12Z
+      
       (() => {
         const TAB_DROP_KEYS = ["smallvideo_entrance", "goods_entrance"];
         const TAB_DROP_TITLES = ["短剧", "好物"];
