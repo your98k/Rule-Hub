@@ -163,8 +163,20 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
 
 ### 📦 来源与版本
 - 基于 [Biliverse/ADBlock](https://github.com/Biliverse/ADBlock) **v0.7.5** 官方覆写移植（原作者：ClydeTime / VirgilClyne / app2smile / RuCu6 / Maasea）。
-- 本仓库版本：`0.7.5-native.3`。与官方原版的**唯一结构差异**：官方原版的 31 项功能开关存在网页配置面板（BoxJS/PersistentStore），本移植版将其全部改为 **Stash 原生参数表单**（`arguments-version: 1`，32 项参数），在 Stash「覆写详情 → 参数」中直接开关，无需 BoxJS。
+- 本仓库版本：`0.7.5-native.4`。与官方原版的**唯一结构差异**：官方原版的 31 项功能开关存在网页配置面板（BoxJS/PersistentStore），本移植版将其全部改为 **Stash 原生参数表单**（`arguments-version: 1`，32 项参数），在 Stash「覆写详情 → 参数」中直接开关，无需 BoxJS。
 - 6 条 URL 改写、1 条 gRPC Mock、16 条脚本规则、脚本资源 URL（固定 v0.7.5）与官方原版完全一致。
+
+### 🚦 QUIC 拦截（native.4 新增）
+- 官方原版**没有**拦截 QUIC。B 站部分接口（尤其开屏）若走 UDP/443，会完全绕过 MitM，脚本看不到请求，表现为「其他广告正常、只有开屏广告回来了」。
+- native.4 在覆写里加了 8 条规则（与仓库 Sparkle 版一致）：
+  ```yaml
+  rules:
+  - 'AND,((DOMAIN-SUFFIX,bilibili.com),(PROTOCOL,QUIC)),REJECT'
+  # biliapi.net / biliapi.com / biligame.com / bilivideo.com / bilivideo.cn / hdslb.com / b23.tv 同理
+  ```
+- 作用：阻断这些域名的 UDP/443，强制回落 TCP，使开屏等请求进入 MitM 被脚本处理。
+- 代价：B 站视频/图片的 QUIC 也会回落 TCP（Sparkle 版一直如此）。不需要可整段删除 `rules:`。
+- 若加上后开屏仍出现，请把参数「[调试] 日志等级」调为 **INFO**，复现一次开屏后提供 `__BiliBili.ADBlock.response.json-*.log`（开屏由**响应**脚本处理，请求脚本日志看不到）。
 
 ### 🧠 内存说明（相对官方原版的差异）
 - 官方原版仅 1 条响应脚本有 `max-size`，其余 12 条 `require-body: true` 的规则**无上限**，会把整个响应体（推荐流/搜索/播放页 gRPC 动辄几百 KB 到几 MB）完整载入内存。
