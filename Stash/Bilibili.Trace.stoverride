@@ -1,0 +1,39 @@
+name: '🔍 BiliBili Trace（临时诊断，只记录不修改）'
+desc: |-
+  仅为定位开屏广告间歇出现而临时启用。
+  它不会修改任何请求/响应，只把 B 站 HTTP 请求的 时间、方法、完整 URL 写入脚本日志。
+  复现 3–5 次后，把 Stash 脚本日志里以 BiliBili.Trace 开头的那份发出来即可停用删除。
+version: '0.0.1'
+category: 'Diagnostics'
+author: 'Rule-Hub'
+
+http:
+  mitm:
+    - app.bilibili.com
+    - app.biliapi.net
+    - app.biliapi.com
+    - api.bilibili.com
+    - api.biliapi.net
+    - api.vc.bilibili.com
+    - api.live.bilibili.com
+    - grpc.biliapi.net
+  script:
+    - match: '^https?://(app|api|grpc)\.bili(bili\.com|api\.net|api\.com)?'
+      name: 'BiliBili.Trace.request'
+      type: request
+      require-body: false
+
+script-providers:
+  BiliBili.Trace.request:
+    payload: |-
+      (() => {
+        try {
+          const t = $script && $script.startTime ? new Date($script.startTime).toISOString() : new Date().toISOString();
+          const m = $request && $request.method ? $request.method : 'GET';
+          const u = $request && $request.url ? $request.url : '';
+          console.log('[TRACE] ' + t + ' ' + m + ' ' + u);
+        } catch (e) {
+          console.log('[TRACE] error ' + (e && e.message));
+        }
+        $done({});
+      })();
