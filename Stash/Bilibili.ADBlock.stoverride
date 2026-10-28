@@ -18,7 +18,7 @@ homepage: https://biliverse.github.io/guide/ad-block
 icon: https://github.com/Biliverse/ADBlock/raw/main/src/assets/icon_rounded.png
 category: 🪐 Biliverse
 date: '2026-10-17 17:08:28'
-version: 0.7.5-native.4
+version: 0.7.5-native.5
 http:
   mitm:
   - biliverse.github.io
@@ -63,7 +63,13 @@ http:
     type: request
     require-body: false
     argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
-  - match: ^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/(splash\/(brand\/list|event\/list2|list|show)|feed\/index(\/(relate\/)?story)?|search\/square)
+  - match: ^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/splash\/(brand\/list|event\/list2|list|show)
+    name: 📺 BiliBili.ADBlock.response.json
+    type: response
+    require-body: true
+    argument: 'Storage=${args.Storage}&Splash=${args.Splash}&Feed.AD=${args.Feed_AD}&Feed.Activity=${args.Feed_Activity}&Feed.Vertical=${args.Feed_Vertical}&Feed.BlockUpLiveList=${args.Feed_BlockUpLiveList}&Feed.Story=${args.Feed_Story}&Feed.StoryCommercial=${args.Feed_StoryCommercial}&Search.AD=${args.Search_AD}&Search.Tracking=${args.Search_Tracking}&Search.HotSearch=${args.Search_HotSearch}&PGC.AD=${args.PGC_AD}&Xlive.AD=${args.Xlive_AD}&Xlive.RemoveTrackingCallbacks=${args.Xlive_RemoveTrackingCallbacks}&Xlive.RemovePreloadTracking=${args.Xlive_RemovePreloadTracking}&Dynamic.HotTopics=${args.Dynamic_HotTopics}&Dynamic.MostVisited=${args.Dynamic_MostVisited}&Dynamic.MostVisitedLiveOnly=${args.Dynamic_MostVisitedLiveOnly}&Dynamic.AdCard=${args.Dynamic_AdCard}&Dynamic.PersonalAdCard=${args.Dynamic_PersonalAdCard}&View.AD=${args.View_AD}&DM.Command=${args.DM_Command}&DM.Colorful=${args.DM_Colorful}&DM.Airborne=${args.DM_Airborne}&Reply.AD=${args.Reply_AD}&Reply.CommercialLinks=${args.Reply_CommercialLinks}&Reply.SubjectDescriptionCommercial=${args.Reply_SubjectDescriptionCommercial}&Privacy.Tracking=${args.Privacy_Tracking}&Privacy.BlockBiliCommercial=${args.Privacy_BlockBiliCommercial}&Privacy.BlockThirdParty=${args.Privacy_BlockThirdParty}&Privacy.Strict=${args.Privacy_Strict}&LogLevel=${args.LogLevel}'
+    max-size: 4194304
+  - match: ^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/(feed\/index(\/(relate\/)?story)?|search\/square)
     name: 📺 BiliBili.ADBlock.response.json
     type: response
     require-body: true
