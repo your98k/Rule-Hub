@@ -1,7 +1,9 @@
 name: '📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)'
 desc: '哔哩哔哩：去广告
 
-  自定义去除APP内界面元素'
+  自定义去除APP内界面元素
+
+  已内置 B 站全系 QUIC(UDP/443) 拦截，避免开屏等接口绕过 MitM；不需要可在覆写里删除 rules 段。'
 openUrl: http://boxjs.com/#/app/BiliBili.ADBlock
 author: 'ClydeTime[https://github.com/ClydeTime]
 
@@ -16,7 +18,7 @@ homepage: https://biliverse.github.io/guide/ad-block
 icon: https://github.com/Biliverse/ADBlock/raw/main/src/assets/icon_rounded.png
 category: 🪐 Biliverse
 date: '2026-10-17 17:08:28'
-version: 0.7.5-native.3
+version: 0.7.5-native.4
 http:
   mitm:
   - biliverse.github.io
@@ -345,3 +347,12 @@ arguments:
       label: 调试
     - value: ALL
       label: 全部
+rules:
+- AND,((DOMAIN-SUFFIX,bilibili.com),(PROTOCOL,QUIC)),REJECT
+- AND,((DOMAIN-SUFFIX,biliapi.net),(PROTOCOL,QUIC)),REJECT
+- AND,((DOMAIN-SUFFIX,biliapi.com),(PROTOCOL,QUIC)),REJECT
+- AND,((DOMAIN-SUFFIX,biligame.com),(PROTOCOL,QUIC)),REJECT
+- AND,((DOMAIN-SUFFIX,bilivideo.com),(PROTOCOL,QUIC)),REJECT
+- AND,((DOMAIN-SUFFIX,bilivideo.cn),(PROTOCOL,QUIC)),REJECT
+- AND,((DOMAIN-SUFFIX,hdslb.com),(PROTOCOL,QUIC)),REJECT
+- AND,((DOMAIN-SUFFIX,b23.tv),(PROTOCOL,QUIC)),REJECT
