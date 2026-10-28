@@ -1,0 +1,17 @@
+name: '🧪 BiliBili QUIC 诊断（临时，用完停用）'
+desc: |-
+  仅用于判断「开屏广告是否走了 QUIC 绕过 MitM」，不修改 IPv6、DNS 或现有覆写。
+  启用后重启哔哩哔哩：若开屏广告消失，说明之前确实走了 QUIC；
+  若仍然出现，说明问题不在 QUIC，请停用本覆写并在 Stash「连接」页确认开屏请求的协议与域名。
+  测完请务必停用，否则所有 App 的 QUIC 都会回落 TCP。
+version: '0.0.1'
+category: 'Diagnostics'
+author: 'Rule-Hub'
+
+# 全局阻断 UDP/443（QUIC），强制回落 TCP，让 MitM 能看到请求。
+# 若只想作用于 B 站，可把下面一行换成注释里的窄规则。
+rules:
+  - 'AND,((NETWORK,udp),(DST-PORT,443)),REJECT'
+  # - 'AND,((DOMAIN-SUFFIX,bilibili.com),(NETWORK,udp),(DST-PORT,443)),REJECT'
+  # - 'AND,((DOMAIN-SUFFIX,biliapi.net),(NETWORK,udp),(DST-PORT,443)),REJECT'
+  # - 'AND,((DOMAIN-SUFFIX,biliapi.com),(NETWORK,udp),(DST-PORT,443)),REJECT'
