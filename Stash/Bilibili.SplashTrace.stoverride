@@ -1,0 +1,50 @@
+name: '🔬 BiliBili Splash Trace（临时诊断，只记录不修改）'
+desc: |-
+  仅用于定位开屏广告为何在 MitM 已生效时仍然出现。
+  不修改任何响应，只把开屏接口响应的结构（长度、code、data 字段名、show/list 状态）写入脚本日志。
+  复现 2–3 次后把 BiliBili.SplashTrace 的脚本日志发出来，即可停用删除。
+version: '0.0.1'
+category: 'Diagnostics'
+author: 'Rule-Hub'
+
+http:
+  mitm:
+    - app.bilibili.com
+    - app.biliapi.net
+    - app.biliapi.com
+  script:
+    - match: '^https?://app\.bili(bili\.com|api\.net|api\.com)/x/v2/splash/(show|list|brand/list|event/list2)'
+      name: 'BiliBili.SplashTrace.response'
+      type: response
+      require-body: true
+      max-size: 2097152
+
+script-providers:
+  BiliBili.SplashTrace.response:
+    payload: |-
+      (() => {
+        try {
+          const url = ($request && $request.url) || '';
+          const path = url.replace(/^https?:\/\/[^/]+/, '').split('?')[0];
+          const body = ($response && $response.body) || '';
+          let obj = null;
+          try { obj = JSON.parse(body); } catch (e) {}
+          const data = obj && obj.data && typeof obj.data === 'object' ? obj.data : null;
+          const keys = data ? Object.keys(data) : [];
+          const describe = v => {
+            if (Array.isArray(v)) return 'array(' + v.length + ')';
+            if (v === null) return 'null';
+            return typeof v;
+          };
+          const flags = ['show', 'list', 'account', 'event_list', 'preload', 'splash']
+            .filter(k => data && k in data)
+            .map(k => k + '=' + describe(data[k]));
+          console.log('[SPLASH] ' + path + ' status=' + (($response && $response.status) || '?') +
+            ' bytes=' + body.length +
+            ' code=' + (obj ? obj.code : 'n/a') +
+            ' keys=[' + keys.join(',') + '] ' + flags.join(' '));
+        } catch (e) {
+          console.log('[SPLASH] error ' + (e && e.message));
+        }
+        $done({});
+      })();
