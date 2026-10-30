@@ -18,7 +18,8 @@
 
 | 覆写名称 | 版本要求 | 说明 | 订阅链接 (GitHub Raw) | 国内加速 (jsDelivr CDN) |
 | :--- | :---: | :--- | :--- | :--- |
-| **YouTube 去广告** | **TF 3.7+** | 去除 YouTube 视频与信息流广告，支持可调参数（底栏 Shorts/上传按钮、字幕/歌词翻译等） | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube.stoverride) |
+| **YouTube 去广告（旧版）** | **TF 3.7+** | 去除 YouTube 视频与信息流广告，支持可调参数（底栏 Shorts/上传按钮、字幕/歌词翻译等） | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube.stoverride) |
+| **YouTube 去广告增强版** | **TF 3.7+** | 基于 Maasea/RuCu6 插件，10 项开关（含首页 Sponsored 补强、画质、隐藏项）；内嵌脚本，无需远程订阅。**与旧版二选一** | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube-ADBlock-Enhanced.stoverride) |
 | **哔哩哔哩去广告** | **iOS 15+** | 过滤广告/青少年模式弹窗/互动弹幕，解锁后台播放与投屏，支持空降助手跳过片中广告（可调参数） | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride) |
 | **哔哩哔哩 ADBlock（Biliverse 移植）** | **iOS/tvOS 3.7+** | 移植 Biliverse ADBlock v0.7.5，全部功能改为 Stash 原生参数表单（32 项），无需 BoxJS；已加响应体上限控制内存 | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
 | **红果短剧去广告** | 通用 | 裁剪域名拦截，不改动全局 IPv6/DNS | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
@@ -26,6 +27,8 @@
 | **Telegram 链接跳转** | 需 Stash MitM | 将 t.me、telegram.me、telegram.dog 链接 307 跳转至所选 Telegram 客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride) |
 | **京东去广告 + 慢慢买历史比价** | **iOS/tvOS 3.7+；macOS 4.4+** | 京东广告过滤与慢慢买历史价格；内置 Stash Cookie 采集修复，需启用并信任 MitM CA | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride) |
 | **虎扑去广告（Stash 原生 jq）** | **iOS/tvOS 2.8+** | 保留原拦截规则，将 4 处 JS 响应改为原生 jq；需启用并信任 MitM CA。请勿与旧虎扑覆写叠加 | [Raw 订阅](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride) | [CDN 订阅](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HuPu.stoverride) |
+
+> 两个 YouTube 覆写功能有重叠，请只启用一个：旧版保留字幕/歌词翻译；增强版提供 10 项开关和首页 Sponsored 补强。
 
 ---
 
@@ -93,7 +96,9 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
 
 ---
 
-## 📖 YouTube 去广告使用特别说明
+## 📖 YouTube 去广告（旧版）使用说明
+
+> 本节为旧版；增强版见下一节。两者二选一，不要同时启用。
 
 > ⚠️ **前置版本要求**：本覆写使用了 Stash 最新的二进制响应体处理与高级参数系统，**必须使用 Stash TestFlight 3.7 及以上版本**，低版本可能无法生效或抛出脚本执行错误。
 
@@ -103,7 +108,7 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
    - 生成并安装 CA 证书到系统，并在 iOS **系统设置** -> **通用** -> **关于本机** -> **证书信任设置** 中完全信任该证书。
 2. **导入覆写**：
    - 在 Stash **覆写 (Overrides)** 页面点击右上角 `+`，选择「从 URL 下载」。
-   - 填入上方 YouTube 覆写的 Raw 链接或 jsDelivr CDN 链接。
+   - 填入上方「YouTube 去广告（旧版）」的 Raw 链接或 jsDelivr CDN 链接。
 3. **参数个性化配置**（可选）：
    - 导入后点击该覆写卡片，可直接调整参数：
      - **隐藏上传按钮 / Shorts 按钮**：自定义是否隐藏 YouTube 底部多余 Tab。
@@ -112,6 +117,49 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
      - **启用调试模式**：日常使用建议关闭以提升性能和减少日志。
 4. **生效与排错**：
    - 首次启用或更新覆写后，请**强制划掉退出 YouTube App**重新打开，并清除应用缓存以加载最新去广告策略。
+
+---
+
+## 📖 YouTube 去广告增强版（10 项参数 + 首页补强）
+
+> ⚠️ 需要 Stash TestFlight 3.7+；启用 MitM 并完全信任 Stash CA。**请与上方「YouTube 去广告（旧版）」二选一，不要同时启用**：两者都会改写同一批 YouTube 接口，叠加会让响应被重复处理。旧版保留字幕/歌词翻译；增强版侧重视频/首页广告与界面开关。
+>
+> 已在本机 Stash 实机导入测试通过（2026-10-30）。
+
+### 📌 参数
+
+| 参数 | 默认 | 说明 |
+| :--- | :---: | :--- |
+| 自动最高画质 | 关 | 自动选择 YouTube 最高画质 |
+| 隐藏智能助手 | 关 | 隐藏 YouTube 智能助手入口 |
+| 隐藏内置游戏 | 关 | 隐藏 YouTube 游戏服务 |
+| 隐藏短片按钮 | 关 | 隐藏底栏 Shorts 按钮 |
+| 隐藏商品橱窗 | 关 | 隐藏视频下方及 YouTuber 主页商品推广 |
+| 隐藏上传按钮 | 关 | 隐藏底栏上传按钮 |
+| 隐藏竖屏直播 | 关 | 隐藏主页竖屏直播 |
+| 开启精彩跳转 | 关 | 解锁 Premium Jump Ahead 入口；仅客户端 UI，不改变账号权益 |
+| 开启通勤模式 | 关 | 解锁 Premium On-the-go 入口；仅客户端 UI，不改变账号权益 |
+| 首页信息流补强 | **开** | 额外清理首页 Sponsored 卡片、空壳和相邻分隔线；误删正常卡片时关闭 |
+
+### 📌 导入与配置
+1. Stash → **设置** → **MitM**：生成/安装 CA，并在 iOS「设置 → 通用 → 关于本机 → 证书信任设置」中完全信任。
+2. 「覆写」页面 `+` →「从 URL 下载」，粘贴上方 Raw 或 jsDelivr 链接，保存并启用。
+3. 点击覆写卡片 →「参数」，按需调整 10 个开关 →「保存并应用」。
+4. 强制划掉退出 YouTube 后重开；首页下拉刷新。
+
+### 🔧 处理范围
+- **请求**：`/youtubei/v1/player/ad_break`、`/youtubei/v1/log_event`、googlevideo `initplayback`、`videoplayback`（后者仅开启自动画质时处理）。
+- **响应**：`browse`、`next`、`player`、`search`、`reel/reel_watch_sequence`、`guide`、`account/get_setting`、`get_watch`；另有 `config`/`log_event` 密钥捕获和 `initplayback` UMP 处理。
+- 首页补强仅处理 `/youtubei/v1/browse` 的 `49399797` 容器下 field 1/32；按 `aboutthisad`、pagead 标记、空壳和分隔线做启发式清理，不能保证每个广告位都命中。
+- 已阻断 `youtubei.googleapis.com` 的 QUIC；保留 `s.youtube.com/api/stats/ads`、`www.youtube.com/(pagead|pcs)` 的 404 拒绝。
+- 4 段脚本内嵌在覆写中（约 310KB），不依赖远程脚本订阅；更新时重新导入/更新覆写即可。首次导入或配置重载可能稍慢。
+
+### ⚠️ 已知限制
+- 实际效果受 YouTube 版本、地区、灰度实验和账号状态影响，不承诺所有广告位都消失。
+- 增强版**不包含**旧版的字幕/歌词翻译；需要翻译请继续使用旧版。
+- 「精彩跳转」「通勤模式」仅解锁客户端入口，不代表真实 Premium 权益。
+- 如果首页出现正常卡片缺失、灰框或布局异常，先关闭「首页信息流补强」；仍有问题则停用本覆写，并确认没有同时启用旧版 YouTube 覆写。
+- 本项目仅供学习研究与个人自用，请勿商用。
 
 ---
 
@@ -214,6 +262,7 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
 
 ## 📌 鸣谢与声明
 - **YouTube 去广告** 原作者群：Maasea, VirgilClyne, Choler, DivineEngine, app2smile
+- **YouTube 去广告增强版**：基于 Maasea、gholts、RuCu6 的 Loon 插件；首页补强参考 [Hey-sayiwanna/YouTube-ADBlock-on-Feed](https://github.com/Hey-sayiwanna/YouTube-ADBlock-on-Feed)。
 - **哔哩哔哩去广告** 原作者：kokoryh（[Sparkle](https://github.com/kokoryh/Sparkle)），脚本由 `script-providers` 直接引用其官方 dist
 - **红果短剧** 原始规则：Tartarus2014
 - 本项目规则仅供学习研究与个人自用，请勿商用。
