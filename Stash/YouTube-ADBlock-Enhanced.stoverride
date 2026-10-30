@@ -1,16 +1,17 @@
 name: 'YouTube 去广告增强版'
 desc: |-
-  YouTube 去广告、隐藏界面元素、画质与播放增强，10 项开关均可在 Stash 覆写参数中调整。
+  YouTube 去广告、隐藏界面元素、画质与播放增强，12 项参数（10 个开关 + 2 个翻译语言）均可在 Stash 覆写参数中调整。
   首页信息流补强默认开启，用于清理 Sponsored 广告卡片、空壳与相邻分隔线；如遇误删可关闭。
+  字幕翻译使用 YouTube 自带翻译轨；歌词翻译默认开启并调用 Google Translate。
   已阻断 youtubei.googleapis.com 的 QUIC，确保 MITM 能截获接口请求；请信任 Stash 的 MitM 证书。
-  移植自 Maasea、gholts、RuCu6 的 Loon 插件；首页补强参考 Hey-sayiwanna/YouTube-ADBlock-on-Feed。
-author: 'Maasea[https://github.com/Maasea] gholts[https://github.com/gholts] RuCu6[https://github.com/RuCu6] Hey-sayiwanna[https://github.com/Hey-sayiwanna]'
+  移植自 Maasea、gholts、RuCu6 的 Loon 插件；翻译逻辑参考 Maasea/VirgilClyne；首页补强参考 Hey-sayiwanna/YouTube-ADBlock-on-Feed。
+author: 'Maasea[https://github.com/Maasea] gholts[https://github.com/gholts] RuCu6[https://github.com/RuCu6] VirgilClyne[https://github.com/VirgilClyne] Hey-sayiwanna[https://github.com/Hey-sayiwanna]'
 homepage: 'https://github.com/your98k/Rule-Hub'
 openUrl: 'https://apps.apple.com/app/id544007664'
 icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png'
 category: 'ad'
 date: '2026-10-30'
-version: '1.0.0'
+version: '1.1.0'
 arguments-version: 1
 arguments:
   autoHd:
@@ -63,6 +64,42 @@ arguments:
     title: 首页信息流补强
     description: 额外清理首页 Sponsored 广告、空壳与分隔线；如遇误删可关闭
     default: true
+  captionLang:
+    type: select
+    title: 字幕翻译语言
+    description: 使用 YouTube 自带翻译字幕；关闭则不新增翻译轨
+    default: 'zh-Hans'
+    options:
+      - value: 'off'
+        label: '关闭翻译'
+      - value: 'zh-Hans'
+        label: '简体中文'
+      - value: 'zh-Hant'
+        label: '繁體中文'
+      - value: 'en'
+        label: '英语'
+      - value: 'ja'
+        label: '日语'
+      - value: 'ko'
+        label: '韩语'
+  lyricLang:
+    type: select
+    title: 歌词翻译语言
+    description: YouTube Music 歌词逐行翻译；调用 Google Translate，关闭则不发送歌词
+    default: 'zh-Hans'
+    options:
+      - value: 'off'
+        label: '关闭翻译'
+      - value: 'zh-Hans'
+        label: '简体中文'
+      - value: 'zh-Hant'
+        label: '繁體中文'
+      - value: 'en'
+        label: '英语'
+      - value: 'ja'
+        label: '日语'
+      - value: 'ko'
+        label: '韩语'
 rules:
   - AND,((DOMAIN,youtubei.googleapis.com),(PROTOCOL,QUIC)),REJECT
 http:
@@ -83,7 +120,7 @@ http:
       max-size: 0
       timeout: 15
       engine: webkit
-      argument: '{"autoHd":${args.autoHd|json},"blockAi":${args.blockAi|json},"blockGames":${args.blockGames|json},"blockShorts":${args.blockShorts|json},"blockStore":${args.blockStore|json},"blockUpload":${args.blockUpload|json},"blockVerticalLive":${args.blockVerticalLive|json},"jumpAhead":${args.jumpAhead|json},"onTheGo":${args.onTheGo|json},"homeFeedPatch":${args.homeFeedPatch|json}}'
+      argument: '{"autoHd":${args.autoHd|json},"blockAi":${args.blockAi|json},"blockGames":${args.blockGames|json},"blockShorts":${args.blockShorts|json},"blockStore":${args.blockStore|json},"blockUpload":${args.blockUpload|json},"blockVerticalLive":${args.blockVerticalLive|json},"jumpAhead":${args.jumpAhead|json},"onTheGo":${args.onTheGo|json},"homeFeedPatch":${args.homeFeedPatch|json},"captionLang":${args.captionLang|json},"lyricLang":${args.lyricLang|json}}'
     - name: YouTube.Stash.response
       match: '^https?://youtubei\.googleapis\.com/youtubei/v1/(?:navigation/resolve_url|browse|next|player|search|reel/reel_watch_sequence|guide|account/get_setting|get_watch)(?:\?.*)?$'
       type: response
@@ -92,7 +129,7 @@ http:
       max-size: 0
       timeout: 30
       engine: webkit
-      argument: '{"autoHd":${args.autoHd|json},"blockAi":${args.blockAi|json},"blockGames":${args.blockGames|json},"blockShorts":${args.blockShorts|json},"blockStore":${args.blockStore|json},"blockUpload":${args.blockUpload|json},"blockVerticalLive":${args.blockVerticalLive|json},"jumpAhead":${args.jumpAhead|json},"onTheGo":${args.onTheGo|json},"homeFeedPatch":${args.homeFeedPatch|json}}'
+      argument: '{"autoHd":${args.autoHd|json},"blockAi":${args.blockAi|json},"blockGames":${args.blockGames|json},"blockShorts":${args.blockShorts|json},"blockStore":${args.blockStore|json},"blockUpload":${args.blockUpload|json},"blockVerticalLive":${args.blockVerticalLive|json},"jumpAhead":${args.jumpAhead|json},"onTheGo":${args.onTheGo|json},"homeFeedPatch":${args.homeFeedPatch|json},"captionLang":${args.captionLang|json},"lyricLang":${args.lyricLang|json}}'
     - name: YouTube.Stash.key
       match: '^https?://youtubei\.googleapis\.com/youtubei/v1/(?:config|log_event)(?:\?.*)?$'
       type: response
@@ -101,7 +138,7 @@ http:
       max-size: 0
       timeout: 20
       engine: webkit
-      argument: '{"autoHd":${args.autoHd|json},"blockAi":${args.blockAi|json},"blockGames":${args.blockGames|json},"blockShorts":${args.blockShorts|json},"blockStore":${args.blockStore|json},"blockUpload":${args.blockUpload|json},"blockVerticalLive":${args.blockVerticalLive|json},"jumpAhead":${args.jumpAhead|json},"onTheGo":${args.onTheGo|json},"homeFeedPatch":${args.homeFeedPatch|json}}'
+      argument: '{"autoHd":${args.autoHd|json},"blockAi":${args.blockAi|json},"blockGames":${args.blockGames|json},"blockShorts":${args.blockShorts|json},"blockStore":${args.blockStore|json},"blockUpload":${args.blockUpload|json},"blockVerticalLive":${args.blockVerticalLive|json},"jumpAhead":${args.jumpAhead|json},"onTheGo":${args.onTheGo|json},"homeFeedPatch":${args.homeFeedPatch|json},"captionLang":${args.captionLang|json},"lyricLang":${args.lyricLang|json}}'
     - name: YouTube.Stash.ump
       match: '^https?://[A-Za-z0-9_-]+\.googlevideo\.com/initplayback(?:\?.*)?$'
       type: response
@@ -110,7 +147,7 @@ http:
       max-size: 0
       timeout: 30
       engine: webkit
-      argument: '{"autoHd":${args.autoHd|json},"blockAi":${args.blockAi|json},"blockGames":${args.blockGames|json},"blockShorts":${args.blockShorts|json},"blockStore":${args.blockStore|json},"blockUpload":${args.blockUpload|json},"blockVerticalLive":${args.blockVerticalLive|json},"jumpAhead":${args.jumpAhead|json},"onTheGo":${args.onTheGo|json},"homeFeedPatch":${args.homeFeedPatch|json}}'
+      argument: '{"autoHd":${args.autoHd|json},"blockAi":${args.blockAi|json},"blockGames":${args.blockGames|json},"blockShorts":${args.blockShorts|json},"blockStore":${args.blockStore|json},"blockUpload":${args.blockUpload|json},"blockVerticalLive":${args.blockVerticalLive|json},"jumpAhead":${args.jumpAhead|json},"onTheGo":${args.onTheGo|json},"homeFeedPatch":${args.homeFeedPatch|json},"captionLang":${args.captionLang|json},"lyricLang":${args.lyricLang|json}}'
 script-providers:
   YouTube.Stash.request:
     payload: |
@@ -642,6 +679,19 @@ script-providers:
           if (typeof value === "string") return !/^(?:false|0|off|no)$/i.test(value.trim());
           return Boolean(value);
         }
+        function __stashStringOption(name, fallback) {
+          var parsed = null;
+          try {
+            parsed = typeof __stashArgument === "string" ? JSON.parse(__stashArgument) : __stashArgument;
+          } catch (error) {
+            parsed = null;
+          }
+          if (!parsed || typeof parsed !== "object") return fallback;
+          var value = parsed[name];
+          if (typeof value !== "string") return fallback;
+          value = value.trim();
+          return value || fallback;
+        }
 
         function __stashPatch(bytes) {
           var output = null;
@@ -685,7 +735,782 @@ script-providers:
           var patched = __stashBytes(output);
           return patched || bytes;
         }
-        function __stashFinal(value) {
+      /* Stash translation pass: YouTube translated captions + YouTube Music lyrics. */
+      var __stashTrEncoder = new TextEncoder();
+      var __stashTrDecoder = new TextDecoder("utf-8", { fatal: false });
+      var __stashTrLanguages = [
+        ["de", "Deutsch"],
+        ["ru", "Русский"],
+        ["fr", "Français"],
+        ["fil", "Filipino"],
+        ["ko", "한국어"],
+        ["ja", "日本語"],
+        ["en", "English"],
+        ["vi", "Tiếng Việt"],
+        ["zh-Hant", "中文（繁體）"],
+        ["zh-Hans", "中文（简体）"],
+        ["und", "@VirgilClyne"]
+      ];
+
+      function __stashTrReadVarint(bytes, index, end) {
+        var value = 0;
+        var shift = 0;
+        while (index < end && shift < 56) {
+          var byte = bytes[index++];
+          value += (byte & 127) * Math.pow(2, shift);
+          if (!(byte & 128)) return [value, index];
+          shift += 7;
+        }
+        return null;
+      }
+
+      function __stashTrWriteVarint(value) {
+        var output = [];
+        do {
+          var byte = value % 128;
+          value = Math.floor(value / 128);
+          output.push(byte | (value ? 128 : 0));
+        } while (value);
+        return new Uint8Array(output);
+      }
+
+      function __stashTrConcat(chunks) {
+        var length = 0;
+        for (var i = 0; i < chunks.length; i++) length += chunks[i].length;
+        var output = new Uint8Array(length);
+        var offset = 0;
+        for (var j = 0; j < chunks.length; j++) {
+          output.set(chunks[j], offset);
+          offset += chunks[j].length;
+        }
+        return output;
+      }
+
+      function __stashTrParse(bytes, start, end) {
+        var fields = [];
+        var index = start;
+        while (index < end) {
+          var fieldStart = index;
+          var keyPair = __stashTrReadVarint(bytes, index, end);
+          if (!keyPair) return null;
+          var key = keyPair[0];
+          index = keyPair[1];
+          var number = Math.floor(key / 8);
+          var wire = key & 7;
+          if (!number) return null;
+          var dataStart;
+          var dataEnd;
+          var fieldEnd;
+          var value;
+          if (wire === 0) {
+            var valuePair = __stashTrReadVarint(bytes, index, end);
+            if (!valuePair) return null;
+            value = valuePair[0];
+            dataStart = index;
+            dataEnd = fieldEnd = valuePair[1];
+          } else if (wire === 1) {
+            dataStart = index;
+            dataEnd = fieldEnd = index + 8;
+          } else if (wire === 2) {
+            var lengthPair = __stashTrReadVarint(bytes, index, end);
+            if (!lengthPair) return null;
+            dataStart = lengthPair[1];
+            dataEnd = dataStart + lengthPair[0];
+            fieldEnd = dataEnd;
+          } else if (wire === 5) {
+            dataStart = index;
+            dataEnd = fieldEnd = index + 4;
+          } else {
+            return null;
+          }
+          if (fieldEnd > end) return null;
+          fields.push({
+            no: number,
+            wire: wire,
+            start: fieldStart,
+            keyEnd: index,
+            dataStart: dataStart,
+            dataEnd: dataEnd,
+            end: fieldEnd,
+            raw: bytes.subarray(fieldStart, fieldEnd),
+            value: value
+          });
+          index = fieldEnd;
+        }
+        return fields;
+      }
+
+      function __stashTrField(number, payload) {
+        var tag = __stashTrWriteVarint(number * 8 + 2);
+        var length = __stashTrWriteVarint(payload.length);
+        var output = new Uint8Array(tag.length + length.length + payload.length);
+        output.set(tag, 0);
+        output.set(length, tag.length);
+        output.set(payload, tag.length + length.length);
+        return output;
+      }
+
+      function __stashTrVarintField(number, value) {
+        var tag = __stashTrWriteVarint(number * 8);
+        var payload = __stashTrWriteVarint(value);
+        var output = new Uint8Array(tag.length + payload.length);
+        output.set(tag, 0);
+        output.set(payload, tag.length);
+        return output;
+      }
+
+      function __stashTrEncode(text) {
+        return __stashTrEncoder.encode(String(text));
+      }
+
+      function __stashTrStringField(number, text) {
+        return __stashTrField(number, __stashTrEncode(text));
+      }
+
+      function __stashTrStringOf(message, field) {
+        return __stashTrDecoder.decode(message.subarray(field.dataStart, field.dataEnd));
+      }
+
+      function __stashTrTextMessage(text) {
+        return __stashTrField(1, __stashTrStringField(1, text));
+      }
+
+      function __stashTrSame(left, right) {
+        if (left === right) return true;
+        if (!left || !right || left.length !== right.length) return false;
+        for (var i = 0; i < left.length; i++) if (left[i] !== right[i]) return false;
+        return true;
+      }
+
+      function __stashTrSetVarint(message, number, value) {
+        var fields = __stashTrParse(message, 0, message.length);
+        if (!fields) return null;
+        var output = [];
+        var done = false;
+        for (var i = 0; i < fields.length; i++) {
+          var field = fields[i];
+          if (field.no === number && field.wire === 0) {
+            if (!done) {
+              output.push(__stashTrVarintField(number, value));
+              done = true;
+            }
+          } else {
+            output.push(field.raw);
+          }
+        }
+        if (!done) output.push(__stashTrVarintField(number, value));
+        return __stashTrConcat(output);
+      }
+
+      function __stashTrSetString(message, number, value) {
+        var fields = __stashTrParse(message, 0, message.length);
+        if (!fields) return null;
+        var output = [];
+        var done = false;
+        for (var i = 0; i < fields.length; i++) {
+          var field = fields[i];
+          if (field.no === number && field.wire === 2) {
+            if (!done) {
+              output.push(__stashTrStringField(number, value));
+              done = true;
+            }
+          } else {
+            output.push(field.raw);
+          }
+        }
+        if (!done) output.push(__stashTrStringField(number, value));
+        return __stashTrConcat(output);
+      }
+
+      function __stashTrAppendVarint(message, number, value) {
+        var fields = __stashTrParse(message, 0, message.length);
+        if (!fields) return null;
+        var output = fields.map(function (field) { return field.raw; });
+        output.push(__stashTrVarintField(number, value));
+        return __stashTrConcat(output);
+      }
+
+      function __stashTrAppendText(message, suffix) {
+        var fields = __stashTrParse(message, 0, message.length);
+        if (!fields) return message;
+        var firstRun = null;
+        for (var i = 0; i < fields.length; i++) {
+          if (fields[i].no === 1 && fields[i].wire === 2) {
+            firstRun = fields[i];
+            break;
+          }
+        }
+        if (!firstRun) return message;
+        var run = message.subarray(firstRun.dataStart, firstRun.dataEnd);
+        var oldText = "";
+        var runFields = __stashTrParse(run, 0, run.length);
+        if (!runFields) return message;
+        for (var j = 0; j < runFields.length; j++) {
+          if (runFields[j].no === 1 && runFields[j].wire === 2) {
+            oldText = __stashTrStringOf(run, runFields[j]);
+            break;
+          }
+        }
+        var updatedRun = __stashTrSetString(run, 1, oldText + suffix);
+        if (!updatedRun) return message;
+        var output = [];
+        var replaced = false;
+        for (var k = 0; k < fields.length; k++) {
+          if (fields[k].no === 1 && fields[k].wire === 2 && !replaced) {
+            output.push(__stashTrField(1, updatedRun));
+            replaced = true;
+          } else {
+            output.push(fields[k].raw);
+          }
+        }
+        return __stashTrConcat(output);
+      }
+
+      function __stashTrCaptionTrack(baseUrl, language) {
+        return __stashTrConcat([
+          __stashTrStringField(1, baseUrl + "&tlang=" + encodeURIComponent(language)),
+          __stashTrField(2, __stashTrTextMessage("@Enhance (" + language + ")")),
+          __stashTrStringField(3, "." + language),
+          __stashTrStringField(4, language),
+          __stashTrVarintField(7, 1)
+        ]);
+      }
+
+      function __stashTrAudioTrack(message, chosen) {
+        var fields = __stashTrParse(message, 0, message.length);
+        if (!fields) return message;
+        var indices = [];
+        for (var i = 0; i < fields.length; i++) {
+          var field = fields[i];
+          if (field.no !== 2) continue;
+          if (field.wire === 0) {
+            indices.push(field.value);
+          } else if (field.wire === 2) {
+            var index = field.dataStart;
+            while (index < field.dataEnd) {
+              var pair = __stashTrReadVarint(message, index, field.dataEnd);
+              if (!pair) break;
+              indices.push(pair[0]);
+              index = pair[1];
+            }
+          }
+        }
+        var output = message;
+        if (indices.indexOf(chosen) < 0) {
+          output = __stashTrAppendVarint(output, 2, chosen) || output;
+        }
+        output = __stashTrSetVarint(output, 3, chosen) || output;
+        output = __stashTrSetVarint(output, 11, 3) || output;
+        return output;
+      }
+
+      function __stashTrCaptions(renderer, language) {
+        var fields = __stashTrParse(renderer, 0, renderer.length);
+        if (!fields) return null;
+        var trackFields = [];
+        var audioFields = [];
+        for (var i = 0; i < fields.length; i++) {
+          if (fields[i].no === 1 && fields[i].wire === 2) trackFields.push(fields[i]);
+          else if (fields[i].no === 2 && fields[i].wire === 2) audioFields.push(fields[i]);
+        }
+        if (!trackFields.length) return null;
+        var tracks = [];
+        var chosen = -1;
+        var bestScore = -1;
+        for (var t = 0; t < trackFields.length; t++) {
+          var trackField = trackFields[t];
+          var track = renderer.subarray(trackField.dataStart, trackField.dataEnd);
+          var trackParts = __stashTrParse(track, 0, track.length);
+          var baseUrl = "";
+          var languageCode = "";
+          if (trackParts) {
+            for (var p = 0; p < trackParts.length; p++) {
+              if (trackParts[p].no === 1 && trackParts[p].wire === 2) baseUrl = __stashTrStringOf(track, trackParts[p]);
+              else if (trackParts[p].no === 4 && trackParts[p].wire === 2) languageCode = __stashTrStringOf(track, trackParts[p]);
+            }
+          }
+          var updatedTrack = __stashTrSetVarint(track, 7, 1) || track;
+          tracks.push({ data: updatedTrack, baseUrl: baseUrl, languageCode: languageCode });
+          var score = languageCode === language ? 2 : languageCode === "en" ? 1 : 0;
+          if (score > bestScore) {
+            bestScore = score;
+            chosen = t;
+          }
+        }
+        if (chosen < 0) return null;
+        if (!tracks[chosen].baseUrl) {
+          for (var b = 0; b < tracks.length; b++) {
+            if (tracks[b].baseUrl) {
+              chosen = b;
+              break;
+            }
+          }
+        }
+        if (!tracks[chosen].baseUrl) return null;
+        if (bestScore !== 2) {
+          tracks.push({ data: __stashTrCaptionTrack(tracks[chosen].baseUrl, language), baseUrl: "", languageCode: language });
+          chosen = tracks.length - 1;
+        }
+        var audioData = [];
+        for (var a = 0; a < audioFields.length; a++) {
+          var audio = renderer.subarray(audioFields[a].dataStart, audioFields[a].dataEnd);
+          audioData.push(__stashTrAudioTrack(audio, chosen));
+        }
+        var output = [];
+        var trackIndex = 0;
+        var audioIndex = 0;
+        for (var f = 0; f < fields.length; f++) {
+          var field = fields[f];
+          if (field.no === 1 && field.wire === 2) {
+            if (trackIndex < tracks.length) output.push(__stashTrField(1, tracks[trackIndex++].data));
+          } else if (field.no === 2 && field.wire === 2) {
+            if (audioIndex < audioData.length) output.push(__stashTrField(2, audioData[audioIndex++]));
+          } else if (field.no === 3 && field.wire === 2) {
+            /* Replace the translation language list below. */
+          } else {
+            output.push(field.raw);
+          }
+        }
+        while (trackIndex < tracks.length) output.push(__stashTrField(1, tracks[trackIndex++].data));
+        for (var l = 0; l < __stashTrLanguages.length; l++) {
+          var item = __stashTrLanguages[l];
+          output.push(__stashTrField(3, __stashTrConcat([
+            __stashTrStringField(1, item[0]),
+            __stashTrField(2, __stashTrTextMessage(item[1]))
+          ])));
+        }
+        var result = __stashTrConcat(output);
+        return __stashTrSetVarint(result, 6, chosen) || result;
+      }
+
+      function __stashTrSameLanguage(source, target) {
+        var base = String(target || "").split("-")[0].toLowerCase();
+        return !!base && String(source || "").toLowerCase().indexOf(base) >= 0;
+      }
+
+      function __stashTrSplit(text, size) {
+        var lines = String(text).split("\n");
+        var chunks = [];
+        var current = "";
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i];
+          var candidate = current ? current + "\n" + line : line;
+          if (candidate.length > size && current) {
+            chunks.push(current);
+            current = line;
+          } else {
+            current = candidate;
+          }
+          while (current.length > size) {
+            chunks.push(current.slice(0, size));
+            current = current.slice(size);
+          }
+        }
+        if (current) chunks.push(current);
+        return chunks.length ? chunks : [String(text)];
+      }
+
+      function __stashTrShift(value, magic) {
+        var alpha = "a";
+        var plus = "+";
+        var delta;
+        for (var i = 0; i < magic.length - 2; i += 3) {
+          delta = magic.charAt(i + 2);
+          delta = delta >= alpha ? delta.charCodeAt(0) - 87 : Number(delta);
+          delta = magic.charAt(i + 1) === plus ? value >>> delta : value << delta;
+          value = magic.charAt(i) === plus ? (value + delta) & 4294967295 : value ^ delta;
+        }
+        return value;
+      }
+
+      function __stashTrToken(text) {
+        var bytes = [];
+        for (var i = 0, j = 0; i < text.length; i++) {
+          var code = text.charCodeAt(i);
+          if (code < 128) {
+            bytes[j++] = code;
+          } else if (code < 2048) {
+            bytes[j++] = (code >> 6) | 192;
+            bytes[j++] = (code & 63) | 128;
+          } else if ((code & 64512) === 55296 && i + 1 < text.length && (text.charCodeAt(i + 1) & 64512) === 56320) {
+            code = 65536 + ((code & 1023) << 10) + (text.charCodeAt(++i) & 1023);
+            bytes[j++] = (code >> 18) | 240;
+            bytes[j++] = ((code >> 12) & 63) | 128;
+            bytes[j++] = ((code >> 6) & 63) | 128;
+            bytes[j++] = (code & 63) | 128;
+          } else {
+            bytes[j++] = (code >> 12) | 224;
+            bytes[j++] = ((code >> 6) & 63) | 128;
+            bytes[j++] = (code & 63) | 128;
+          }
+        }
+        var value = 406644;
+        for (var k = 0; k < bytes.length; k++) value = __stashTrShift(value + bytes[k], "+-a^+6");
+        value = __stashTrShift(value, "+-3^+b+-f");
+        value ^= 3293161072;
+        if (value < 0) value = (value & 2147483647) + 2147483648;
+        value %= 1000000;
+        return value.toString() + "." + (value ^ 406644);
+      }
+
+      function __stashTrTranslateUrl(text, language) {
+        var target = language === "zh-Hans" ? "zh-CN" : language === "zh-Hant" ? "zh-TW" : language;
+        return "https://translate.google.com/translate_a/single?client=gtx&sl=auto&tl=" +
+          encodeURIComponent(target) +
+          "&hl=zh-CN&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&source=bh&ssel=0&tsel=0&kc=1&tk=" +
+          __stashTrToken(text) + "&q=" + encodeURIComponent(text);
+      }
+
+      function __stashTrHttpGet(url, httpClient) {
+        return new Promise(function (resolve) {
+          if (!httpClient || typeof httpClient.get !== "function") return resolve(null);
+          var settled = false;
+          var timer = setTimeout(function () {
+            if (!settled) {
+              settled = true;
+              resolve(null);
+            }
+          }, 9000);
+          try {
+            httpClient.get({
+              url: url,
+              headers: {
+                "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+                "Accept": "*/*"
+              },
+              timeout: 8
+            }, function (error, response, data) {
+              if (settled) return;
+              settled = true;
+              clearTimeout(timer);
+              if (error || !response || Number(response.status) !== 200) return resolve(null);
+              if (typeof data === "string") return resolve(data);
+              if (data && typeof data === "object") {
+                if (typeof data.body === "string") return resolve(data.body);
+                if (typeof data.body !== "undefined" && data.body && typeof data.body.length === "number") {
+                  try {
+                    return resolve(__stashTrDecoder.decode(data.body));
+                  } catch (decodeError) {}
+                }
+              }
+              resolve(data ? String(data) : null);
+            });
+          } catch (error) {
+            if (!settled) {
+              settled = true;
+              clearTimeout(timer);
+              resolve(null);
+            }
+          }
+        });
+      }
+
+      async function __stashTrTranslateText(text, language, httpClient, logger) {
+        if (!httpClient || !text || !text.trim()) return null;
+        var chunks = __stashTrSplit(text, 1800);
+        var segments = [];
+        var source = "";
+        var started = Date.now();
+        for (var i = 0; i < chunks.length; i++) {
+          if (Date.now() - started > 20000) return null;
+          var body = await __stashTrHttpGet(__stashTrTranslateUrl(chunks[i], language), httpClient);
+          if (!body) return null;
+          var data;
+          try {
+            data = JSON.parse(body);
+          } catch (error) {
+            if (logger && logger.log) logger.log("YouTube Stash translate: invalid response");
+            return null;
+          }
+          if (!data || !Array.isArray(data[0])) return null;
+          for (var j = 0; j < data[0].length; j++) {
+            var part = data[0][j];
+            segments.push(Array.isArray(part) && typeof part[0] === "string" ? part[0] : "");
+          }
+          if (!source && typeof data[2] === "string") source = data[2];
+        }
+        if (!segments.length) return null;
+        return { segments: segments, source: source };
+      }
+
+      async function __stashTrTimedLyrics(renderer, language, httpClient, logger) {
+        var fields = __stashTrParse(renderer, 0, renderer.length);
+        if (!fields) return null;
+        var contentField = null;
+        for (var i = 0; i < fields.length; i++) {
+          if (fields[i].no === 4 && fields[i].wire === 2) contentField = fields[i];
+        }
+        if (!contentField) return null;
+        var content = renderer.subarray(contentField.dataStart, contentField.dataEnd);
+        var contentFields = __stashTrParse(content, 0, content.length);
+        if (!contentFields) return null;
+        var runFields = [];
+        for (var r = 0; r < contentFields.length; r++) {
+          if (contentFields[r].no === 1 && contentFields[r].wire === 2) runFields.push(contentFields[r]);
+        }
+        if (!runFields.length) return null;
+        var runs = [];
+        var original = [];
+        for (var q = 0; q < runFields.length; q++) {
+          var run = content.subarray(runFields[q].dataStart, runFields[q].dataEnd);
+          var runParts = __stashTrParse(run, 0, run.length);
+          if (!runParts) return null;
+          var runText = "";
+          for (var p = 0; p < runParts.length; p++) {
+            if (runParts[p].no === 1 && runParts[p].wire === 2) {
+              runText = __stashTrStringOf(run, runParts[p]);
+              break;
+            }
+          }
+          runs.push({ data: run, text: runText });
+          original.push(runText);
+        }
+        var text = original.join("\n");
+        if (!text.trim()) return null;
+        var translated = await __stashTrTranslateText(text, language, httpClient, logger);
+        if (!translated || translated.segments.length < runs.length) return null;
+        var same = __stashTrSameLanguage(translated.source, language);
+        var changed = false;
+        var updatedRuns = [];
+        for (var u = 0; u < runs.length; u++) {
+          var segment = translated.segments[u];
+          if (!segment) {
+            updatedRuns.push(runs[u].data);
+            continue;
+          }
+          var newText = same ? segment : runs[u].text + "\n" + segment;
+          if (newText !== runs[u].text) {
+            var updated = __stashTrSetString(runs[u].data, 1, newText);
+            if (updated) {
+              updatedRuns.push(updated);
+              changed = true;
+              continue;
+            }
+          }
+          updatedRuns.push(runs[u].data);
+        }
+        if (!changed) return null;
+        var output = [];
+        var runIndex = 0;
+        for (var c = 0; c < contentFields.length; c++) {
+          if (contentFields[c].no === 1 && contentFields[c].wire === 2) {
+            output.push(__stashTrField(1, updatedRuns[runIndex++]));
+          } else {
+            output.push(contentFields[c].raw);
+          }
+        }
+        var newContent = __stashTrConcat(output);
+        var footer = "";
+        for (var f = 0; f < contentFields.length; f++) {
+          if (contentFields[f].no === 2 && contentFields[f].wire === 2) {
+            footer = __stashTrStringOf(content, contentFields[f]);
+            break;
+          }
+        }
+        newContent = __stashTrSetString(newContent, 2, footer + " & Translated by Google") || newContent;
+        var outputRenderer = [];
+        for (var g = 0; g < fields.length; g++) {
+          if (fields[g].no === 4 && fields[g].wire === 2) {
+            outputRenderer.push(__stashTrField(4, newContent));
+          } else {
+            outputRenderer.push(fields[g].raw);
+          }
+        }
+        return __stashTrConcat(outputRenderer);
+      }
+
+      async function __stashTrDescription(renderer, language, httpClient, logger) {
+        var fields = __stashTrParse(renderer, 0, renderer.length);
+        if (!fields) return null;
+        var descriptionField = null;
+        for (var i = 0; i < fields.length; i++) {
+          if (fields[i].no === 3 && fields[i].wire === 2) descriptionField = fields[i];
+        }
+        if (!descriptionField) return null;
+        var description = renderer.subarray(descriptionField.dataStart, descriptionField.dataEnd);
+        var descriptionFields = __stashTrParse(description, 0, description.length);
+        if (!descriptionFields) return null;
+        var runFields = [];
+        for (var r = 0; r < descriptionFields.length; r++) {
+          if (descriptionFields[r].no === 1 && descriptionFields[r].wire === 2) runFields.push(descriptionFields[r]);
+        }
+        if (!runFields.length) return null;
+        var runs = [];
+        var original = [];
+        for (var q = 0; q < runFields.length; q++) {
+          var run = description.subarray(runFields[q].dataStart, runFields[q].dataEnd);
+          var runParts = __stashTrParse(run, 0, run.length);
+          if (!runParts) return null;
+          var runText = "";
+          for (var p = 0; p < runParts.length; p++) {
+            if (runParts[p].no === 1 && runParts[p].wire === 2) {
+              runText = __stashTrStringOf(run, runParts[p]);
+              break;
+            }
+          }
+          runs.push({ data: run, text: runText });
+          original.push(runText);
+        }
+        var text = original.join("\n");
+        if (!text.trim()) return null;
+        var translated = await __stashTrTranslateText(text, language, httpClient, logger);
+        if (!translated || translated.segments.length < runs.length) return null;
+        var same = __stashTrSameLanguage(translated.source, language);
+        var changed = false;
+        var updatedRuns = [];
+        for (var u = 0; u < runs.length; u++) {
+          var segment = translated.segments[u];
+          if (!segment) {
+            updatedRuns.push(runs[u].data);
+            continue;
+          }
+          var newText = same ? segment : runs[u].text + "\n" + segment;
+          if (newText !== runs[u].text) {
+            var updated = __stashTrSetString(runs[u].data, 1, newText);
+            if (updated) {
+              updatedRuns.push(updated);
+              changed = true;
+              continue;
+            }
+          }
+          updatedRuns.push(runs[u].data);
+        }
+        if (!changed) return null;
+        var outputDescription = [];
+        var runIndex = 0;
+        for (var c = 0; c < descriptionFields.length; c++) {
+          if (descriptionFields[c].no === 1 && descriptionFields[c].wire === 2) {
+            outputDescription.push(__stashTrField(1, updatedRuns[runIndex++]));
+          } else {
+            outputDescription.push(descriptionFields[c].raw);
+          }
+        }
+        var newDescription = __stashTrConcat(outputDescription);
+        var output = [];
+        var footerDone = false;
+        for (var f = 0; f < fields.length; f++) {
+          if (fields[f].no === 3 && fields[f].wire === 2) {
+            output.push(__stashTrField(3, newDescription));
+          } else if (fields[f].no === 10 && fields[f].wire === 2) {
+            if (!footerDone) {
+              output.push(__stashTrField(10, __stashTrAppendText(renderer.subarray(fields[f].dataStart, fields[f].dataEnd), " & Translated by Google")));
+              footerDone = true;
+            }
+          } else {
+            output.push(fields[f].raw);
+          }
+        }
+        if (!footerDone) output.push(__stashTrField(10, __stashTrTextMessage(" & Translated by Google")));
+        return __stashTrConcat(output);
+      }
+
+      function __stashTrRewriteSync(bytes, target, transform, depth, maxDepth) {
+        var fields = __stashTrParse(bytes, 0, bytes.length);
+        if (!fields) return { bytes: bytes, changed: false };
+        var changed = false;
+        for (var i = 0; i < fields.length; i++) {
+          var field = fields[i];
+          if (field.wire !== 2) continue;
+          var payload = bytes.subarray(field.dataStart, field.dataEnd);
+          if (field.no === target) {
+            var output = null;
+            try {
+              output = transform(payload);
+            } catch (error) {}
+            if (output && !__stashTrSame(output, payload)) {
+              field.raw = __stashTrField(field.no, output);
+              changed = true;
+            }
+          } else if (depth < maxDepth) {
+            var nested = __stashTrRewriteSync(payload, target, transform, depth + 1, maxDepth);
+            if (nested.changed) {
+              field.raw = __stashTrField(field.no, nested.bytes);
+              changed = true;
+            }
+          }
+        }
+        return {
+          bytes: changed ? __stashTrConcat(fields.map(function (field) { return field.raw; })) : bytes,
+          changed: changed
+        };
+      }
+
+      async function __stashTrRewriteAsync(bytes, target, transform, depth, maxDepth) {
+        var fields = __stashTrParse(bytes, 0, bytes.length);
+        if (!fields) return { bytes: bytes, changed: false };
+        var changed = false;
+        for (var i = 0; i < fields.length; i++) {
+          var field = fields[i];
+          if (field.wire !== 2) continue;
+          var payload = bytes.subarray(field.dataStart, field.dataEnd);
+          if (field.no === target) {
+            var output = null;
+            try {
+              output = await transform(payload);
+            } catch (error) {}
+            if (output && !__stashTrSame(output, payload)) {
+              field.raw = __stashTrField(field.no, output);
+              changed = true;
+            }
+          } else if (depth < maxDepth) {
+            var nested = await __stashTrRewriteAsync(payload, target, transform, depth + 1, maxDepth);
+            if (nested.changed) {
+              field.raw = __stashTrField(field.no, nested.bytes);
+              changed = true;
+            }
+          }
+        }
+        return {
+          bytes: changed ? __stashTrConcat(fields.map(function (field) { return field.raw; })) : bytes,
+          changed: changed
+        };
+      }
+
+      function __stashTrContainsAscii(bytes, text) {
+        var needle = __stashTrEncode(text);
+        if (!needle.length) return true;
+        var limit = bytes.length - needle.length;
+        outer: for (var i = 0; i <= limit; i++) {
+          for (var j = 0; j < needle.length; j++) {
+            if (bytes[i + j] !== needle[j]) continue outer;
+          }
+          return true;
+        }
+        return false;
+      }
+
+      async function __stashTranslateBody(bytes, options, url, httpClient, logger) {
+        if (!(bytes instanceof Uint8Array) || !bytes.length) return bytes;
+        var captionLanguage = String((options && options.captionLang) || "off").trim();
+        var lyricLanguage = String((options && options.lyricLang) || "off").trim();
+        var output = bytes;
+        try {
+          if (captionLanguage && captionLanguage !== "off" && /\/(?:player|next|get_watch)(?:\?|$)/.test(url)) {
+            var captions = __stashTrRewriteSync(output, 51621377, function (payload) {
+              return __stashTrCaptions(payload, captionLanguage);
+            }, 0, 12);
+            if (captions.changed) output = captions.bytes;
+          }
+          if (lyricLanguage && lyricLanguage !== "off" && /\/browse(?:\?|$)/.test(url) && __stashTrContainsAscii(output, "MPLYt")) {
+            var lyrics = await __stashTrRewriteAsync(output, 465160965, function (payload) {
+              return __stashTrTimedLyrics(payload, lyricLanguage, httpClient, logger);
+            }, 0, 12);
+            if (lyrics.changed) {
+              output = lyrics.bytes;
+            } else {
+              var description = await __stashTrRewriteAsync(output, 221496734, function (payload) {
+                return __stashTrDescription(payload, lyricLanguage, httpClient, logger);
+              }, 0, 12);
+              if (description.changed) output = description.bytes;
+            }
+          }
+        } catch (error) {
+          if (logger && logger.log) logger.log("YouTube Stash translate: " + error);
+        }
+        return output;
+      }
+
+        async function __stashFinal(value) {
           if (__stashFinished) return;
           __stashFinished = true;
           var result = value && typeof value === "object" ? value : {};
@@ -702,7 +1527,30 @@ script-providers:
           } catch (error) {
             __stashRealConsole.log("YouTube Stash response wrapper: " + error);
           }
-          __stashRealDone(value === undefined ? {} : result);
+          try {
+            var translateUrl = (__stashRequest && __stashRequest.url) || "";
+            var captionLanguage = __stashStringOption("captionLang", "off");
+            var lyricLanguage = __stashStringOption("lyricLang", "off");
+            if (captionLanguage !== "off" || lyricLanguage !== "off") {
+              var translateBody = __stashBytes(result.body) || __stashBytes(__stashResponse && __stashResponse.body);
+              var translateStatus = __stashResponse ? Number(__stashResponse.status) : 200;
+              if (translateBody && !(translateStatus >= 300)) {
+                var translated = await __stashTranslateBody(
+                  translateBody,
+                  { captionLang: captionLanguage, lyricLang: lyricLanguage },
+                  translateUrl,
+                  typeof $httpClient === "undefined" ? null : $httpClient,
+                  __stashRealConsole
+                );
+                if (translated && translated !== translateBody) {
+                  result = Object.assign({}, result, { body: translated });
+                }
+              }
+            }
+          } catch (error) {
+            __stashRealConsole.log("YouTube Stash translation wrapper: " + error);
+          }
+          __stashRealDone(result);
         }
         try {
           (function ($done, $argument, $request, $response, $persistentStore, console) {
