@@ -11,7 +11,7 @@ openUrl: 'https://apps.apple.com/app/id544007664'
 icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png'
 category: 'ad'
 date: '2026-10-30'
-version: '1.1.0'
+version: '1.2.0'
 arguments-version: 1
 arguments:
   autoHd:
@@ -1164,13 +1164,19 @@ script-providers:
       function __stashTrHttpGet(url, httpClient) {
         return new Promise(function (resolve) {
           if (!httpClient || typeof httpClient.get !== "function") return resolve(null);
+          var isStash = typeof $environment !== "undefined" && $environment && $environment["stash-version"];
+          var isLoon = !isStash && typeof $loon === "string";
+          var requestTimeout = isLoon ? 8000 : 8;
           var settled = false;
-          var timer = setTimeout(function () {
-            if (!settled) {
-              settled = true;
-              resolve(null);
-            }
-          }, 9000);
+          var timer = 0;
+          if (typeof setTimeout === "function") {
+            timer = setTimeout(function () {
+              if (!settled) {
+                settled = true;
+                resolve(null);
+              }
+            }, 9000);
+          }
           try {
             httpClient.get({
               url: url,
@@ -1178,11 +1184,11 @@ script-providers:
                 "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
                 "Accept": "*/*"
               },
-              timeout: 8
+              timeout: requestTimeout
             }, function (error, response, data) {
               if (settled) return;
               settled = true;
-              clearTimeout(timer);
+              if (timer && typeof clearTimeout === "function") clearTimeout(timer);
               if (error || !response || Number(response.status) !== 200) return resolve(null);
               if (typeof data === "string") return resolve(data);
               if (data && typeof data === "object") {
@@ -1198,7 +1204,7 @@ script-providers:
           } catch (error) {
             if (!settled) {
               settled = true;
-              clearTimeout(timer);
+              if (timer && typeof clearTimeout === "function") clearTimeout(timer);
               resolve(null);
             }
           }
@@ -1479,10 +1485,36 @@ script-providers:
         return false;
       }
 
+      function __stashTrNormalizeLanguage(value) {
+        var text = String(value == null ? "" : value).trim();
+        var map = {
+          "关闭翻译": "off",
+          "关闭": "off",
+          "off": "off",
+          "简体中文": "zh-Hans",
+          "简中": "zh-Hans",
+          "zh-Hans": "zh-Hans",
+          "繁體中文": "zh-Hant",
+          "繁体中文": "zh-Hant",
+          "繁中": "zh-Hant",
+          "zh-Hant": "zh-Hant",
+          "英语": "en",
+          "英文": "en",
+          "en": "en",
+          "日语": "ja",
+          "日文": "ja",
+          "ja": "ja",
+          "韩语": "ko",
+          "韩文": "ko",
+          "ko": "ko"
+        };
+        return map[text] || text || "off";
+      }
+
       async function __stashTranslateBody(bytes, options, url, httpClient, logger) {
         if (!(bytes instanceof Uint8Array) || !bytes.length) return bytes;
-        var captionLanguage = String((options && options.captionLang) || "off").trim();
-        var lyricLanguage = String((options && options.lyricLang) || "off").trim();
+        var captionLanguage = __stashTrNormalizeLanguage(options && options.captionLang);
+        var lyricLanguage = __stashTrNormalizeLanguage(options && options.lyricLang);
         var output = bytes;
         try {
           if (captionLanguage && captionLanguage !== "off" && /\/(?:player|next|get_watch)(?:\?|$)/.test(url)) {

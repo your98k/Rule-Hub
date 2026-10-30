@@ -13,6 +13,7 @@
 | 插件名称 | 说明 | 订阅链接 (GitHub Raw) | 国内加速 (jsDelivr CDN) |
 | :--- | :--- | :--- | :--- |
 | **红果短剧去广告** | 拦截开屏与信息流广告（已裁剪影响抖音的宽泛规则） | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/HongGuo.plugin) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/HongGuo.plugin) |
+| **YouTube 去广告增强版** | 基于 Maasea/RuCu6，12 项参数（10 个开关 + 字幕/歌词翻译），首页 Sponsored 补强；脚本托管于本仓库，与 Stash 版同源 | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/YouTube-ADBlock-Enhanced.plugin) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/YouTube-ADBlock-Enhanced.plugin) |
 
 ### 2. Stash 覆写
 
@@ -28,7 +29,7 @@
 | **京东去广告 + 慢慢买历史比价** | **iOS/tvOS 3.7+；macOS 4.4+** | 京东广告过滤与慢慢买历史价格；内置 Stash Cookie 采集修复，需启用并信任 MitM CA | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride) |
 | **虎扑去广告（Stash 原生 jq）** | **iOS/tvOS 2.8+** | 保留原拦截规则，将 4 处 JS 响应改为原生 jq；需启用并信任 MitM CA。请勿与旧虎扑覆写叠加 | [Raw 订阅](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride) | [CDN 订阅](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HuPu.stoverride) |
 
-> 两个 YouTube 覆写功能有重叠，请只启用一个：旧版和增强版都支持字幕/歌词翻译；增强版提供 12 项参数和首页 Sponsored 补强。
+> Stash 的两个 YouTube 覆写功能有重叠，请只启用一个：旧版和增强版都支持字幕/歌词翻译；增强版提供 12 项参数和首页 Sponsored 补强。Loon 用户请使用上面的 Loon 版插件。
 
 ---
 
@@ -124,7 +125,9 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
 
 > ⚠️ 需要 Stash TestFlight 3.7+；启用 MitM 并完全信任 Stash CA。**请与上方「YouTube 去广告（旧版）」二选一，不要同时启用**：两者都会改写同一批 YouTube 接口，叠加会让响应被重复处理。旧版和增强版都支持字幕/歌词翻译；增强版另有 10 个界面/播放开关和首页补强。
 >
-> 1.0.0 已在本机 Stash 实机导入测试通过（2026-10-30）；1.1.0 翻译功能已通过 Node 行为测试和 Google 接口连通测试，建议导入后先试一首歌/一集视频确认。
+> 1.0.0 已在本机 Stash 实机导入测试通过（2026-10-30）；1.1.0/1.2.0 翻译功能已通过 Node 行为测试和 Google 接口连通测试，建议导入后先试一首歌/一集视频确认。
+>
+> Loon 用户请使用上方 Loon 插件列表中的同源版本；本节仅针对 Stash。
 
 ### 📌 参数
 
@@ -169,6 +172,28 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
 - 「精彩跳转」「通勤模式」仅解锁客户端入口，不代表真实 Premium 权益。
 - 如果首页出现正常卡片缺失、灰框或布局异常，先关闭「首页信息流补强」；仍有问题则停用本覆写，并确认没有同时启用旧版 YouTube 覆写。
 - 本项目仅供学习研究与个人自用，请勿商用。
+
+---
+
+## 📖 YouTube 去广告增强版（Loon）
+
+> 需要 Loon 3.5.1(978)+；启用 Rewrite 与 MitM，并安装/信任 Loon 证书。请与旧 YouTube Loon 插件二选一，不要同时启用。
+
+### 📌 安装与参数
+1. Loon → **插件** → `+` →「从 URL 添加」，粘贴上方 Loon 列表中的 Raw 或 jsDelivr 链接。
+2. 打开插件参数，按需调整 12 项；字幕/歌词翻译默认简体中文。
+3. 强制退出 YouTube 重开；首页下拉刷新。
+
+### 🔧 与 Stash 版的关系
+- 与 Stash 增强版同源、同参数：10 个开关 + 2 个翻译语言 + 首页补强。
+- 字幕使用 YouTube 自带 `tlang` 翻译轨；歌词调用 Google Translate；关闭歌词翻译则不上传歌词文本。
+- 脚本托管在 `Script/Youtube/`，由 Loon 远程加载；更新插件或脚本后重开 YouTube。
+- Loon 版沿用原 Loon 插件结构，未额外添加 QUIC 规则；如果接口没有经过 MitM，检查 Loon 的 Rewrite/MitM 与证书。
+- 12 项参数及翻译说明见上方 Stash 增强版章节；Loon 插件参数使用中文选项。
+
+### ⚠️ 验证边界
+- Loon 版 1.2.0 为新适配，**尚未在 Loon 实机导入验证**；脚本已通过 Node 行为测试和 Google 接口连通测试，建议先试一首歌/一集视频。
+- 翻译质量与可用性由 YouTube/Google 决定，失败时保留原文；与旧版或其他 YouTube 去广告插件不要叠加。
 
 ---
 
