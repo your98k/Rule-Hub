@@ -1,0 +1,118 @@
+name: "高德地图"
+desc: "过滤高德地图广告；部分广告需卸载重装或清除缓存后才会彻底消失。需要开启 MITM 并信任 Stash 证书。"
+author: "原 Loon 插件：树先生（ishowshu）；Stash 适配：your98k"
+homepage: "https://github.com/ishowshu/loon"
+icon: "https://github.com/ishowshu/loon/raw/refs/heads/main/icon/gaode.png"
+category: "去广告"
+date: "2026-09-19 11:41"
+version: "1.0.0"
+
+# =====================================================================
+# 说明
+# 1. 本文件由 Loon 插件 Amap.lpx 适配为 Stash Override。
+# 2. Loon 的 response-body-json-jq 已转为 Stash 的 http.body-rewrite /
+#    response-jq；Loon 的 http-response 脚本已转为 http.script。
+# 3. 需要 Stash 开启 MITM，并安装、信任 Stash 根证书。
+# 4. 高德部分开屏/缓存广告写入本地后，可能需要卸载重装高德才会清空。
+# =====================================================================
+
+rules:
+  # 高德 iPhone 客户端的部分 HTTP 广告调度接口
+  - 'AND,((URL-REGEX,"^http://.+/amdc/mobileDispatch"),(USER-AGENT,"AMapiPhone*")),REJECT'
+
+http:
+  mitm:
+    - "m5.amap.com"
+    - "amap-aos-info-nogw.amap.com"
+    - "m5-zb.amap.com"
+    - "info.amap.com"
+    - "ai.amap.com"
+    - "render.amap.com"
+
+  url-rewrite:
+    # 开屏广告
+    - '^https://amap-aos-info-nogw\.amap\.com/ws/aos/alimama/splash_screen_rt - reject-dict'
+    # 打车页面底部推广
+    - '^https://m5-zb\.amap\.com/ws/promotion-web/resource/home - reject-dict'
+    # 首页底部 AI、探索 AI 分析
+    - '^https://ai\.amap\.com/v1/ai_rec/home_qs - reject-dict'
+    # 订单页详情底部目的地附近好店推荐
+    - '^https://m5\.amap\.com/ws/info_bff/rankingCard - reject-dict'
+    # 订单页详情打车服务评价
+    - '^https://m5-zb\.amap\.com/ws/boss/order/car/remark/satisfactionConf - reject-dict'
+    # 订单页详情底部支付宝推广横幅
+    - '^https://m5-zb\.amap\.com/ws/boss/pay/web/paySuccess/info/request - reject-dict'
+    # 订单页详情底部问题反馈
+    - '^https://m5-zb\.amap\.com/ws/boss/order/car/feedback/get_card_questions - reject-dict'
+    # 搜索某地点结果列表广告（麦当劳关键词等）
+    - '^https://m5\.amap\.com/ws/shield/search_business/process/marketingOperationStructured - reject-dict'
+    # 首页地图定位标识路线建议
+    - '^https://render\.amap\.com/ws/render/api/data - reject-dict'
+    # 搜索结果建议
+    - '^https://m5\.amap\.com/ws/shield/search_poi/tips_adv - reject-dict'
+    # 打车广告
+    - '^https://m5-zb\.amap\.com/ws/fluorite/resource - reject-dict'
+    # 导航路线详情页底部签到推荐
+    - '^https://m5\.amap\.com/ws/aos/activity/bus/sign/task - reject-dict'
+    # 导航路线打车推广
+    - '^https://m5-zb\.amap\.com/ws/boss/transportation/diversion/resource/driving - reject-dict'
+    - '^https://m5\.amap\.com/ws/aos_public_travel/recommend_plan - reject-dict'
+    # 导航路线详情底部的附近推荐
+    - '^https://ai\.amap\.com/v1/ai_rec/nav_start - reject-dict'
+    # 导航路线列表的顺风车推广
+    - '^https://m5-zb\.amap\.com/ws/boss/transportation/diversion/resource/bus_only_refresh - reject-dict'
+    # 首页地图顶部横幅通知过滤
+    - '^https://m5\.amap\.com/ws/faas/amap-navigation/main-page-assets - reject-dict'
+    # 打车页右上角悬浮广告
+    # 注：原插件此条与下方 promotion-web/resource 的 body-rewrite 重复，
+    # 保留原逻辑；reject-dict 会先返回空对象，下方 body 改写实际不会改变结果。
+    - '^https://m5-zb\.amap\.com/ws/promotion-web/resource - reject-dict'
+
+  body-rewrite:
+    # 订单页详情底部广告
+    - '^https://m5-zb\.amap\.com/ws/promotion-web/resource response-jq del(.data.banner, .data.popup)'
+    # 首页搜索框提示
+    - '^https://m5\.amap\.com/ws/shield/scene/recommend response-jq .data.shadingWords = {}'
+    # 开屏广告（把展示时长与投放时间置零/置为远期）
+    - '^https://m5\.amap\.com/ws/valueadded/alimama/splash_screen response-jq .data.ad |= map(.set.setting.display_time = 0 | .creative |= map(.start_time = 3818332800 | .end_time = 3818419199))'
+    # 我的页面精简
+    - '^https://m5\.amap\.com/ws/shield/dsp/profile/index/nodefaasv3 response-jq .data.cardList |= map(select(.dataKey == (["MineNewFootprintCard","MineNewBEntranceCardV4","MineNewBEntranceCardV3"][])))'
+    # 首页地图图层推广
+    - '^https://m5\.amap\.com/ws/faas/amap-navigation/main-page-aiqs response-jq .data.mapBizList |= map(select(.dataKey as $k | ["UserAssetsVirtualCard","FootPrintNewCityDialog","PoiRecommendVirtualCard","PersonalRecommendVirtualCard"] | index($k) | not))'
+    # 原插件中“首页地图顶部横幅通知过滤”的 response-jq 规则本身是注释状态，故不启用。
+
+  script:
+    # 打车页面图标菜单
+    - name: "amap-new"
+      match: '^https://m5-zb\.amap\.com/ws/boss/car/order/content_info'
+      type: response
+      require-body: true
+      timeout: 10
+      max-size: 10485760
+    # 搜索打开目的地详情的广告
+    - name: "amap-new"
+      match: '^https://info\.amap\.com/ws/shield/search/poi/detail'
+      type: response
+      require-body: true
+      timeout: 10
+      max-size: 10485760
+    # 搜索结果列表
+    - name: "amap-new"
+      match: '^https://m5\.amap\.com/ws/shield/search_poi/search/sp'
+      type: response
+      require-body: true
+      timeout: 10
+      max-size: 10485760
+    # 酒店页面广告
+    - name: "amap-new"
+      match: '^https://m5\.amap\.com/ws/info_bff/tradeUnionPortal'
+      type: response
+      require-body: true
+      timeout: 10
+      max-size: 10485760
+
+script-providers:
+  amap-new:
+    # 原插件脚本。若 GitHub Raw 不可达，可替换为可访问的镜像地址。
+    url: "https://raw.githubusercontent.com/ishowshu/qx/main/script/amap-new.js"
+    interval: 86400
