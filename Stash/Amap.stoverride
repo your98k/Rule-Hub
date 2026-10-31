@@ -22,12 +22,12 @@ rules:
 
 http:
   mitm:
-    - "m5.amap.com"
-    - "amap-aos-info-nogw.amap.com"
-    - "m5-zb.amap.com"
-    - "info.amap.com"
-    - "ai.amap.com"
-    - "render.amap.com"
+    - m5.amap.com
+    - amap-aos-info-nogw.amap.com
+    - m5-zb.amap.com
+    - info.amap.com
+    - ai.amap.com
+    - render.amap.com
 
   url-rewrite:
     # 开屏广告
