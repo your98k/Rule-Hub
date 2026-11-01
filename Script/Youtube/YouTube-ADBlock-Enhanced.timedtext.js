@@ -163,9 +163,10 @@
     return value.toString() + "." + (value ^ 406644);
   }
 
-  function translateUrl(text, language) {
+  function translateUrl(text, language, base) {
     var target = language === "zh-Hans" ? "zh-CN" : language === "zh-Hant" ? "zh-TW" : language;
-    return "https://translate.google.com/translate_a/single?client=gtx&sl=auto&tl=" +
+    var host = base || "https://translate.google.com";
+    return host + "/translate_a/single?client=gtx&sl=auto&tl=" +
       encodeURIComponent(target) +
       "&hl=zh-CN&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&source=bh&ssel=0&tsel=0&kc=1&tk=" +
       token(text) + "&q=" + encodeURIComponent(text);
@@ -176,7 +177,7 @@
       if (!httpClient || typeof httpClient.get !== "function") return resolve(null);
       var isStash = typeof $environment !== "undefined" && $environment && $environment["stash-version"];
       var isLoon = !isStash && typeof $loon === "string";
-      var requestTimeout = isLoon ? 8000 : 8;
+      var requestTimeout = isLoon ? 8000 : 6;
       var settled = false;
       var timer = 0;
       if (typeof setTimeout === "function") {
@@ -199,7 +200,12 @@
           if (settled) return;
           settled = true;
           if (timer && typeof clearTimeout === "function") clearTimeout(timer);
-          if (error || !response || Number(response.status) !== 200) return resolve(null);
+          if (error || !response || Number(response.status) !== 200) {
+            if (typeof console !== "undefined") {
+              console.log(TAG + " google_status=" + (response ? String(response.status) : "error"));
+            }
+            return resolve(null);
+          }
           if (typeof data === "string") return resolve(data);
           if (data && typeof data === "object" && data.body !== undefined) return resolve(textOfBody(data.body));
           resolve(data ? String(data) : null);
@@ -221,7 +227,11 @@
     var started = Date.now();
     for (var i = 0; i < chunks.length; i++) {
       if (Date.now() - started > 20000) return null;
-      var raw = await httpGet(translateUrl(chunks[i], language), httpClient);
+      var bases = ["https://translate.googleapis.com", "https://translate.google.com", "https://translate.google.cn"];
+      var raw = null;
+      for (var b = 0; b < bases.length && !raw; b++) {
+        raw = await httpGet(translateUrl(chunks[i], language, bases[b]), httpClient);
+      }
       if (!raw) return null;
       var data;
       try {
@@ -643,6 +653,7 @@
       var argumentObject = parseArgument();
       var language = normalizeLanguage(argumentObject.captionLang);
       var responseBody = $response && $response.body;
+      var originalBody = responseBody;
       var httpClient = typeof $httpClient === "undefined" ? null : $httpClient;
       var rawBytes = bytesOf(responseBody);
       var originalLength = rawBytes ? rawBytes.length : (typeof responseBody === "string" ? responseBody.length : -1);
@@ -681,7 +692,7 @@
           " lines=0 translated=0 changed=0 bodyLen=" + originalLength +
           " bodyType=" + typeOf(responseBody) + " ct=" + safeText(contentType) +
           " ce=" + safeText(contentEncoding) + " gz=" + gz + " head=" + headHex(responseBody) + "|done");
-        return done({});
+        return done(originalBody !== undefined ? { body: originalBody } : {});
       }
       var result = null;
       if (format === "json") result = await translateJson(body, language, httpClient);
@@ -708,7 +719,7 @@
           " changed=0 bodyLen=" + originalLength +
           " bodyType=" + typeOf(responseBody) + " ct=" + safeText(contentType) +
           " ce=" + safeText(contentEncoding) + " gz=" + gz + " head=" + headHex(responseBody) + "|done");
-        return done({});
+        return done(originalBody !== undefined ? { body: originalBody } : {});
       }
       var outputBody = typeof result.body === "string" ? textEncoder.encode(result.body) : result.body;
       realConsole.log(TAG + " script=timedtext endpoint=timedtext target=" + language +
@@ -720,7 +731,7 @@
       done({ body: outputBody });
     } catch (error) {
       realConsole.log(TAG + " script=timedtext endpoint=timedtext error");
-      done({});
+      done(originalBody !== undefined ? { body: originalBody } : {});
     }
   })();
 })();
