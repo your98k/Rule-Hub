@@ -5,11 +5,11 @@ desc: |-
   匹配请求无需等待该接口的上游响应；无 JS、无 jq、无远程脚本。
   需启用 MitM，并安装、完全信任 Stash CA 证书。
   测试前禁用原虎扑覆写及其他重复规则，不要叠加。
-  尚未实机验证，不保证移除所有广告或解决全部启动等待。
+  已在本地实测生效；仍不保证覆盖全部广告位或消除所有启动等待。
 author: '群友投稿（未署名）；Stash 适配：ChatGPT'
 category: 去广告
-version: '0.1.0'
-date: '2026-10-29'
+version: '0.1.1'
+date: '2026-11-01'
 icon: https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/HUPU.png
 # 独立测试版，不包含旧版的个人页、热榜等净化规则。
 # 保留投稿的定向直连；未命中 Mock 的同域请求仍按正常业务处理。
