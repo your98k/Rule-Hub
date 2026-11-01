@@ -126,7 +126,7 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
 
 > ⚠️ 需要 Stash TestFlight 3.7+；启用 MitM 并完全信任 Stash CA。**请与上方「YouTube 去广告（旧版）」二选一，不要同时启用**：两者都会改写同一批 YouTube 接口，叠加会让响应被重复处理。旧版和增强版都支持字幕/歌词翻译；增强版另有 10 个界面/播放开关和首页补强。
 >
-> 1.0.0 已在本机 Stash 实机导入测试通过（2026-10-30）；1.3.3 将字幕翻译改为 `timedtext` 响应翻译，已完成 XML/JSON/protobuf 合成测试，建议导入后先试一集有字幕的视频。
+> 1.0.0 已在本机 Stash 实机导入测试通过（2026-10-30）；1.3.4 修复了 timedtext 响应体改写：保留原 XML、字符串 body、删除旧 Content-Length/Content-Encoding，Google 翻译已在 Stash 实机验证；建议导入后先试一集有字幕的视频。
 >
 > Loon 用户请使用上方 Loon 插件列表中的同源版本；本节仅针对 Stash。
 
@@ -148,7 +148,7 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
 | 歌词翻译语言 | **简中** | YouTube Music 歌词逐行翻译；调用 Google Translate，关闭则不发送歌词 |
 
 ### 🌐 翻译说明
-- **字幕翻译**：拦截 `timedtext` 响应，按 XML/JSON/VTT/protobuf 文本节点翻译后返回；不修改请求 URL/签名。字幕文本会发送到 Google Translate，关闭即不发送。
+- **字幕翻译**：Stash 1.3.4 拦截 iOS App 的 XML `timedtext` 响应，只替换文本节点后返回字符串 body，并删除旧 `Content-Length`/`Content-Encoding`；不修改请求 URL/签名。字幕文本会发送到 Google Translate，关闭即不发送。
 - **歌词翻译**：仅在 YouTube Music 歌词页（`MPLYt...`）处理，定位逐行歌词或描述歌词，把歌词文本发送到 Google Translate 公开接口，按行追加译文；失败时保留原文。
 - 支持关闭、简体中文、繁體中文、英语、日语、韩语；两项默认均为简体中文。只想去广告或介意字幕/歌词外发，可在参数中设为「关闭翻译」。
 - 字幕和歌词翻译依赖 Google 服务与网络，可能受地区、限流或接口变更影响；失败时保留原文。
@@ -165,11 +165,11 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
 - **翻译**：字幕翻译处理 `timedtext` 响应；歌词翻译仅处理 `browse` 的 `MPLYt...` 歌词页。
 - 首页补强仅处理 `/youtubei/v1/browse` 的 `49399797` 容器下 field 1/32；按 `aboutthisad`、pagead 标记、空壳和分隔线做启发式清理，不能保证每个广告位都命中。
 - 已阻断 `youtubei.googleapis.com` 的 QUIC；保留 `s.youtube.com/api/stats/ads`、`www.youtube.com/(pagead|pcs)` 的 404 拒绝。
-- 5 段脚本内嵌在覆写中（约 373KB），不依赖远程脚本订阅；更新时重新导入/更新覆写即可。首次导入或配置重载可能稍慢。
+- 5 段脚本内嵌在覆写中（约 363KB），不依赖远程脚本订阅；更新时重新导入/更新覆写即可。首次导入或配置重载可能稍慢。
 
 ### ⚠️ 已知限制
 - 实际效果受 YouTube 版本、地区、灰度实验和账号状态影响，不承诺所有广告位都消失。
-- 字幕翻译依赖 `timedtext` 返回的可解析文本（XML/JSON/VTT/protobuf）；格式或接口变化会失败并保留原文。字幕与歌词会访问 Google Translate，受网络/地区/限流/接口变更影响，翻译质量由服务提供方决定。
+- 字幕翻译依赖 `timedtext` 返回的 XML；格式或接口变化会失败并保留原文。字幕与歌词会访问 Google Translate，受网络/地区/限流/接口变更影响，翻译质量由服务提供方决定。Loon 1.3.3 仍支持 XML/JSON/VTT/protobuf，Stash 1.3.4 只处理 iOS App 的 XML timedtext。
 - 「精彩跳转」「通勤模式」仅解锁客户端入口，不代表真实 Premium 权益。
 - 如果首页出现正常卡片缺失、灰框或布局异常，先关闭「首页信息流补强」；仍有问题则停用本覆写，并确认没有同时启用旧版 YouTube 覆写。
 - 本项目仅供学习研究与个人自用，请勿商用。

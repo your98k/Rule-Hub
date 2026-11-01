@@ -2,16 +2,16 @@ name: 'YouTube 去广告增强版'
 desc: |-
   YouTube 去广告、隐藏界面元素、画质与播放增强，12 项参数（10 个开关 + 2 个翻译语言）均可在 Stash 覆写参数中调整。
   首页信息流补强默认开启，用于清理 Sponsored 广告卡片、空壳与相邻分隔线；如遇误删可关闭。
-  字幕翻译使用 timedtext 响应翻译，不改请求 URL；歌词翻译默认开启并调用 Google Translate。
-  已阻断 youtubei.googleapis.com 的 QUIC，确保 MITM 能截获接口请求；请信任 Stash 的 MitM 证书。
+  字幕翻译使用 Google Translate 翻译 timedtext 响应；保留原 XML 结构，返回字符串 body 并清理 Content-Length/Content-Encoding，按缓存逐步补齐。
+  歌词翻译可选，仍调用 Google Translate，默认关闭。请信任 Stash 的 MitM 证书。
   移植自 Maasea、gholts、RuCu6 的 Loon 插件；翻译逻辑参考 Maasea/VirgilClyne；首页补强参考 Hey-sayiwanna/YouTube-ADBlock-on-Feed。
 author: 'Maasea[https://github.com/Maasea] gholts[https://github.com/gholts] RuCu6[https://github.com/RuCu6] VirgilClyne[https://github.com/VirgilClyne] Hey-sayiwanna[https://github.com/Hey-sayiwanna]'
 homepage: 'https://github.com/your98k/Rule-Hub'
 openUrl: 'https://apps.apple.com/app/id544007664'
 icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png'
 category: 'ad'
-date: '2026-10-30'
-version: '1.3.3'
+date: '2026-11-01'
+version: '1.3.4'
 arguments-version: 1
 arguments:
   autoHd:
@@ -67,7 +67,7 @@ arguments:
   captionLang:
     type: select
     title: 字幕翻译语言
-    description: 翻译 timedtext 字幕响应；关闭则保留原文
+    description: 通过 YouTube 原生 tlang 参数请求已翻译字幕；关闭则保留原文
     default: 'zh-Hans'
     options:
       - value: 'off'
@@ -85,8 +85,8 @@ arguments:
   lyricLang:
     type: select
     title: 歌词翻译语言
-    description: YouTube Music 歌词逐行翻译；调用 Google Translate，关闭则不发送歌词
-    default: 'zh-Hans'
+    description: YouTube Music 歌词逐行翻译（可选，仍调用 Google Translate）；默认关闭，避免额外请求
+    default: 'off'
     options:
       - value: 'off'
         label: '关闭翻译'
@@ -149,7 +149,7 @@ http:
       engine: webkit
       argument: '{"autoHd":${args.autoHd|json},"blockAi":${args.blockAi|json},"blockGames":${args.blockGames|json},"blockShorts":${args.blockShorts|json},"blockStore":${args.blockStore|json},"blockUpload":${args.blockUpload|json},"blockVerticalLive":${args.blockVerticalLive|json},"jumpAhead":${args.jumpAhead|json},"onTheGo":${args.onTheGo|json},"homeFeedPatch":${args.homeFeedPatch|json},"captionLang":${args.captionLang|json},"lyricLang":${args.lyricLang|json}}'
     - name: YouTube.Stash.timedtext
-      match: '^https?://[^/]+\.youtube\.com/api/timedtext'
+      match: '^https?://(?:www\.|m\.|music\.)?youtube\.com/api/timedtext(?:\?.*)?$'
       type: response
       require-body: true
       binary-mode: true
@@ -623,7 +623,6 @@ script-providers:
           __stashDone({});
         }
       })();
-
   YouTube.Stash.response:
     payload: |
       /* Stash compatibility prelude: Base64 helpers used by the upstream scripts. */
@@ -3303,7 +3302,6 @@ script-providers:
           __stashFinal({});
         }
       })();
-
   YouTube.Stash.key:
     payload: |
       /* Stash compatibility prelude: Base64 helpers used by the upstream scripts. */
@@ -3520,7 +3518,6 @@ script-providers:
           __stashDone({});
         }
       })();
-
   YouTube.Stash.ump:
     payload: |
       /* Stash compatibility prelude: Base64 helpers used by the upstream scripts. */
@@ -5672,16 +5669,22 @@ script-providers:
           __stashDone({});
         }
       })();
-
   YouTube.Stash.timedtext:
     payload: |
-      /* Temporary timedtext response translator: keeps the signed request untouched. */
+      /* YouTube timedtext XML -> Google Translate (translate_a/t) subtitle translator.
+       * Stash response script.
+       *
+       * Uses the same response strategy that the device diagnostics proved safe:
+       * keep the original srv3 XML structure, replace text nodes in place, return a
+       * string body, and remove the stale Content-Length/Content-Encoding headers.
+       * Translations are cached per source line; a bounded response budget fills
+       * the remaining lines on later caption loads.
+       */
       (function () {
+        var TAG = "[YTGT-X-3f7a]";
         var realDone = $done;
         var realConsole = console;
-        var TAG = "[YTTR-3f91]";
         var finished = false;
-        var argument = typeof $argument === "undefined" ? "" : $argument;
 
         function done(value) {
           if (finished) return;
@@ -5689,9 +5692,17 @@ script-providers:
           realDone(value === undefined ? {} : value);
         }
 
+        function log(message) {
+          try { realConsole.log(TAG + " " + message); } catch (error) {}
+        }
+
+        function safe(value) {
+          return String(value == null ? "" : value).replace(/[^A-Za-z0-9_.\/;=+,-]/g, "_").slice(0, 100);
+        }
+
         function parseArgument() {
           try {
-            return typeof argument === "string" ? JSON.parse(argument) : (argument || {});
+            return typeof $argument === "string" ? JSON.parse($argument) : ($argument || {});
           } catch (error) {
             return {};
           }
@@ -5700,55 +5711,72 @@ script-providers:
         function normalizeLanguage(value) {
           var text = String(value == null ? "" : value).trim();
           var map = {
-            "关闭翻译": "off",
-            "关闭": "off",
-            "off": "off",
-            "简体中文": "zh-Hans",
-            "简中": "zh-Hans",
-            "zh-Hans": "zh-Hans",
-            "繁體中文": "zh-Hant",
-            "繁体中文": "zh-Hant",
-            "繁中": "zh-Hant",
-            "zh-Hant": "zh-Hant",
-            "英语": "en",
-            "英文": "en",
-            "en": "en",
-            "日语": "ja",
-            "日文": "ja",
-            "ja": "ja",
-            "韩语": "ko",
-            "韩文": "ko",
-            "ko": "ko"
+            "关闭翻译": "off", "关闭": "off", "off": "off",
+            "简体中文": "zh-Hans", "简中": "zh-Hans", "zh-Hans": "zh-Hans", "zh-CN": "zh-Hans",
+            "繁體中文": "zh-Hant", "繁体中文": "zh-Hant", "繁中": "zh-Hant", "zh-Hant": "zh-Hant", "zh-TW": "zh-Hant",
+            "英语": "en", "英文": "en", "en": "en",
+            "日语": "ja", "日文": "ja", "ja": "ja",
+            "韩语": "ko", "韩文": "ko", "ko": "ko"
           };
           return map[text] || text || "off";
         }
 
-        function typeOf(value) {
-          if (value === undefined || value === null) return "none";
-          if (value instanceof Uint8Array) return "u8";
-          if (typeof ArrayBuffer !== "undefined" && ArrayBuffer.isView(value)) return "view";
-          if (typeof ArrayBuffer !== "undefined" && value instanceof ArrayBuffer) return "ab";
-          if (typeof value === "string") return "string";
-          return typeof value;
+        function targetCode(language) {
+          if (language === "zh-Hans") return "zh-CN";
+          if (language === "zh-Hant") return "zh-TW";
+          return language || "zh-CN";
         }
 
-        function textOfBody(value) {
+        var encoder = new TextEncoder();
+        var decoder = new TextDecoder("utf-8", { fatal: false });
+
+        function textOf(value) {
           if (typeof value === "string") return value;
-          if (value instanceof Uint8Array) {
-            try {
-              return new TextDecoder("utf-8", { fatal: false }).decode(value);
-            } catch (error) {
-              return null;
+          if (!value) return null;
+          try {
+            if (value instanceof Uint8Array) return decoder.decode(value);
+            if (typeof ArrayBuffer !== "undefined" && ArrayBuffer.isView(value)) {
+              return decoder.decode(new Uint8Array(value.buffer, value.byteOffset, value.byteLength));
             }
-          }
-          if (typeof ArrayBuffer !== "undefined" && ArrayBuffer.isView(value)) {
-            try {
-              return new TextDecoder("utf-8", { fatal: false }).decode(new Uint8Array(value.buffer, value.byteOffset, value.byteLength));
-            } catch (error) {
-              return null;
+            if (typeof ArrayBuffer !== "undefined" && value instanceof ArrayBuffer) {
+              return decoder.decode(new Uint8Array(value));
             }
-          }
+          } catch (error) {}
           return null;
+        }
+
+        function header(headers, name) {
+          if (!headers) return "";
+          var lower = String(name).toLowerCase();
+          for (var key in headers) {
+            if (!Object.prototype.hasOwnProperty.call(headers, key)) continue;
+            if (String(key).toLowerCase() === lower) {
+              return String(headers[key] == null ? "" : headers[key]);
+            }
+          }
+          return "";
+        }
+
+        function cleanHeaders() {
+          var headers = ($response && $response.headers) || {};
+          var out = {};
+          for (var key in headers) {
+            if (!Object.prototype.hasOwnProperty.call(headers, key)) continue;
+            var lower = String(key).toLowerCase();
+            if (
+              lower === "content-length" ||
+              lower === "content-encoding" ||
+              lower === "transfer-encoding" ||
+              lower === "connection" ||
+              lower === "content-md5" ||
+              lower === "digest" ||
+              lower === "etag"
+            ) continue;
+            var value = headers[key];
+            if (value === undefined || value === null) continue;
+            out[key] = String(value);
+          }
+          return out;
         }
 
         function xmlDecode(text) {
@@ -5763,486 +5791,18 @@ script-providers:
             .replace(/&#(\d+);/g, function (all, decimal) {
               try { return String.fromCodePoint(parseInt(decimal, 10)); } catch (error) { return all; }
             })
+            .replace(/&nbsp;/g, " ")
             .replace(/&amp;/g, "&");
         }
 
         function xmlEscape(text) {
           return String(text)
+            .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#39;");
-        }
-
-        function splitText(text, size) {
-          var rows = String(text).split("\n");
-          var chunks = [];
-          var current = "";
-          for (var i = 0; i < rows.length; i++) {
-            var row = rows[i];
-            var candidate = current ? current + "\n" + row : row;
-            if (candidate.length > size && current) {
-              chunks.push(current);
-              current = row;
-            } else {
-              current = candidate;
-            }
-            while (current.length > size) {
-              chunks.push(current.slice(0, size));
-              current = current.slice(size);
-            }
-          }
-          if (current) chunks.push(current);
-          return chunks.length ? chunks : [String(text)];
-        }
-
-        function shift(value, magic) {
-          var alpha = "a";
-          var plus = "+";
-          var delta;
-          for (var i = 0; i < magic.length - 2; i += 3) {
-            delta = magic.charAt(i + 2);
-            delta = delta >= alpha ? delta.charCodeAt(0) - 87 : Number(delta);
-            delta = magic.charAt(i + 1) === plus ? value >>> delta : value << delta;
-            value = magic.charAt(i) === plus ? (value + delta) & 4294967295 : value ^ delta;
-          }
-          return value;
-        }
-
-        function token(text) {
-          var bytes = [];
-          for (var i = 0, j = 0; i < text.length; i++) {
-            var code = text.charCodeAt(i);
-            if (code < 128) {
-              bytes[j++] = code;
-            } else if (code < 2048) {
-              bytes[j++] = (code >> 6) | 192;
-              bytes[j++] = (code & 63) | 128;
-            } else if ((code & 64512) === 55296 && i + 1 < text.length && (text.charCodeAt(i + 1) & 64512) === 56320) {
-              code = 65536 + ((code & 1023) << 10) + (text.charCodeAt(++i) & 1023);
-              bytes[j++] = (code >> 18) | 240;
-              bytes[j++] = ((code >> 12) & 63) | 128;
-              bytes[j++] = ((code >> 6) & 63) | 128;
-              bytes[j++] = (code & 63) | 128;
-            } else {
-              bytes[j++] = (code >> 12) | 224;
-              bytes[j++] = ((code >> 6) & 63) | 128;
-              bytes[j++] = (code & 63) | 128;
-            }
-          }
-          var value = 406644;
-          for (var k = 0; k < bytes.length; k++) value = shift(value + bytes[k], "+-a^+6");
-          value = shift(value, "+-3^+b+-f");
-          value ^= 3293161072;
-          if (value < 0) value = (value & 2147483647) + 2147483648;
-          value %= 1000000;
-          return value.toString() + "." + (value ^ 406644);
-        }
-
-        function translateUrl(text, language, base) {
-          var target = language === "zh-Hans" ? "zh-CN" : language === "zh-Hant" ? "zh-TW" : language;
-          var host = base || "https://translate.google.com";
-          return host + "/translate_a/single?client=gtx&sl=auto&tl=" +
-            encodeURIComponent(target) +
-            "&hl=zh-CN&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&source=bh&ssel=0&tsel=0&kc=1&tk=" +
-            token(text) + "&q=" + encodeURIComponent(text);
-        }
-
-        function httpGet(url, httpClient) {
-          return new Promise(function (resolve) {
-            if (!httpClient || typeof httpClient.get !== "function") return resolve(null);
-            var isStash = typeof $environment !== "undefined" && $environment && $environment["stash-version"];
-            var isLoon = !isStash && typeof $loon === "string";
-            var requestTimeout = isLoon ? 8000 : 6;
-            var settled = false;
-            var timer = 0;
-            if (typeof setTimeout === "function") {
-              timer = setTimeout(function () {
-                if (!settled) {
-                  settled = true;
-                  resolve(null);
-                }
-              }, 9000);
-            }
-            try {
-              httpClient.get({
-                url: url,
-                headers: {
-                  "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
-                  "Accept": "*/*"
-                },
-                timeout: requestTimeout
-              }, function (error, response, data) {
-                if (settled) return;
-                settled = true;
-                if (timer && typeof clearTimeout === "function") clearTimeout(timer);
-                if (error || !response || Number(response.status) !== 200) {
-                  if (typeof console !== "undefined") {
-                    console.log(TAG + " google_status=" + (response ? String(response.status) : "error"));
-                  }
-                  return resolve(null);
-                }
-                if (typeof data === "string") return resolve(data);
-                if (data && typeof data === "object" && data.body !== undefined) return resolve(textOfBody(data.body));
-                resolve(data ? String(data) : null);
-              });
-            } catch (error) {
-              if (!settled) {
-                settled = true;
-                if (timer && typeof clearTimeout === "function") clearTimeout(timer);
-                resolve(null);
-              }
-            }
-          });
-        }
-
-        async function translateText(text, language, httpClient) {
-          if (!httpClient || !text || !text.trim()) return null;
-          var chunks = splitText(text, 1800);
-          var segments = [];
-          var started = Date.now();
-          for (var i = 0; i < chunks.length; i++) {
-            if (Date.now() - started > 20000) return null;
-            var bases = ["https://translate.googleapis.com", "https://translate.google.com", "https://translate.google.cn"];
-            var raw = null;
-            for (var b = 0; b < bases.length && !raw; b++) {
-              raw = await httpGet(translateUrl(chunks[i], language, bases[b]), httpClient);
-            }
-            if (!raw) return null;
-            var data;
-            try {
-              data = JSON.parse(raw);
-            } catch (error) {
-              return null;
-            }
-            if (!data || !Array.isArray(data[0])) return null;
-            for (var j = 0; j < data[0].length; j++) {
-              var part = data[0][j];
-              segments.push(Array.isArray(part) && typeof part[0] === "string" ? part[0] : "");
-            }
-          }
-          return segments.length ? segments : null;
-        }
-
-        async function translateLines(lines, language, httpClient) {
-          if (!lines.length) return null;
-          var translated = await translateText(lines.join("\n"), language, httpClient);
-          if (!translated) return null;
-          if (translated.length >= lines.length) return translated.slice(0, lines.length);
-          var joined = translated.join("").split("\n");
-          return joined.length >= lines.length ? joined.slice(0, lines.length) : null;
-        }
-
-        async function translateMany(lines, language, httpClient) {
-          if (!lines.length) return null;
-          var output = lines.slice();
-          var groupSize = 6;
-          var groups = [];
-          for (var i = 0; i < lines.length; i += groupSize) {
-            groups.push({ start: i, items: lines.slice(i, i + groupSize) });
-          }
-          var cursor = 0;
-          var started = Date.now();
-          async function worker() {
-            while (true) {
-              if (Date.now() - started > 20000) return;
-              var group = groups[cursor++];
-              if (!group) return;
-              var result = null;
-              try {
-                result = await translateText(group.items.join("\n"), language, httpClient);
-              } catch (error) {}
-              if (!result) continue;
-              var mapped = null;
-              if (result.length >= group.items.length) {
-                mapped = result.slice(0, group.items.length);
-              } else {
-                var joined = result.join("").split("\n");
-                if (joined.length >= group.items.length) mapped = joined.slice(0, group.items.length);
-              }
-              if (!mapped) continue;
-              for (var j = 0; j < group.items.length; j++) {
-                var replacement = mapped[j];
-                if (replacement && replacement !== group.items[j]) output[group.start + j] = replacement;
-              }
-            }
-          }
-          var workers = [];
-          var count = Math.min(8, groups.length);
-          for (var k = 0; k < count; k++) workers.push(worker());
-          await Promise.all(workers);
-          return output;
-        }
-
-        async function translateXml(body, language, httpClient) {
-          var pattern = />([^<]+)</g;
-          var refs = [];
-          var lines = [];
-          var match;
-          var textNodes = 0;
-          var tags = {};
-          var tagPattern = /<([A-Za-z][\w:.-]*)\b/g;
-          var tagMatch;
-          while ((tagMatch = tagPattern.exec(body))) {
-            tags[tagMatch[1]] = (tags[tagMatch[1]] || 0) + 1;
-          }
-          while ((match = pattern.exec(body))) {
-            textNodes++;
-            var text = xmlDecode(match[1]);
-            if (!looksLikeXmlText(text)) continue;
-            refs.push(match);
-            lines.push(text);
-          }
-          if (!refs.length) return { body: body, lines: 0, nodes: textNodes, translated: 0, tags: tags };
-          var translated = await translateMany(lines, language, httpClient);
-          if (!translated) return { body: body, lines: lines.length, nodes: textNodes, translated: 0, tags: tags };
-          var index = 0;
-          var translatedCount = 0;
-          var output = body.replace(/>([^<]+)</g, function (all, inner) {
-            var text = xmlDecode(inner);
-            if (!looksLikeXmlText(text)) return all;
-            var replacement = translated[index++];
-            if (replacement && replacement !== text) {
-              translatedCount++;
-              return ">" + xmlEscape(replacement) + "<";
-            }
-            return all;
-          });
-          return { body: output, lines: lines.length, nodes: textNodes, translated: translatedCount, tags: tags };
-        }
-
-        async function translateJson(body, language, httpClient) {
-          var data;
-          try {
-            data = JSON.parse(body);
-          } catch (error) {
-            return null;
-          }
-          var events = data && data.events;
-          if (!Array.isArray(events)) return null;
-          var refs = [];
-          var lines = [];
-          for (var i = 0; i < events.length; i++) {
-            var event = events[i];
-            if (!event || !Array.isArray(event.segs)) continue;
-            var text = event.segs.map(function (seg) { return seg && typeof seg.utf8 === "string" ? seg.utf8 : ""; }).join("");
-            if (!text) continue;
-            refs.push(event);
-            lines.push(text);
-          }
-          if (!refs.length) return null;
-          var translated = await translateLines(lines, language, httpClient);
-          if (!translated) return null;
-          for (var j = 0; j < refs.length; j++) refs[j].segs = [{ utf8: translated[j] }];
-          return { body: JSON.stringify(data), lines: lines.length };
-        }
-
-        async function translateVtt(body, language, httpClient) {
-          var blocks = body.split(/\r?\n\r?\n/);
-          var refs = [];
-          var lines = [];
-          for (var i = 0; i < blocks.length; i++) {
-            var rows = blocks[i].split(/\r?\n/);
-            var timing = -1;
-            for (var j = 0; j < rows.length; j++) if (rows[j].indexOf("-->") >= 0) { timing = j; break; }
-            if (timing < 0) continue;
-            var textRows = rows.slice(timing + 1);
-            if (!textRows.length) continue;
-            refs.push({ blockIndex: i, rows: rows, timing: timing });
-            lines.push(textRows.join("\n"));
-          }
-          if (!refs.length) return null;
-          var translated = await translateLines(lines, language, httpClient);
-          if (!translated) return null;
-          for (var k = 0; k < refs.length; k++) {
-            var ref = refs[k];
-            blocks[ref.blockIndex] = ref.rows.slice(0, ref.timing + 1).concat([translated[k]]).join("\n");
-          }
-          return { body: blocks.join("\n\n"), lines: lines.length };
-        }
-
-        var textEncoder = new TextEncoder();
-
-        function concatBytes(chunks) {
-          var length = 0;
-          for (var i = 0; i < chunks.length; i++) length += chunks[i].length;
-          var output = new Uint8Array(length);
-          var offset = 0;
-          for (var j = 0; j < chunks.length; j++) {
-            output.set(chunks[j], offset);
-            offset += chunks[j].length;
-          }
-          return output;
-        }
-
-        function bytesOf(value) {
-          if (!value) return null;
-          if (value instanceof Uint8Array) return value;
-          if (typeof ArrayBuffer !== "undefined" && ArrayBuffer.isView(value)) {
-            return new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
-          }
-          if (typeof ArrayBuffer !== "undefined" && value instanceof ArrayBuffer) return new Uint8Array(value);
-          if (typeof value === "string") return textEncoder.encode(value);
-          return null;
-        }
-
-        function headHex(value) {
-          var bytes = bytesOf(value);
-          if (!bytes) return "none";
-          var output = "";
-          for (var i = 0; i < Math.min(16, bytes.length); i++) {
-            output += (bytes[i] < 16 ? "0" : "") + bytes[i].toString(16);
-          }
-          return output || "empty";
-        }
-
-        function header(name) {
-          var headers = $response && $response.headers;
-          if (!headers) return "";
-          for (var key in headers) {
-            if (key.toLowerCase() === name.toLowerCase()) return String(headers[key] || "");
-          }
-          return "";
-        }
-
-        function looksBase64(text) {
-          var clean = String(text).replace(/\s/g, "");
-          if (clean.length < 100 || clean.length % 4 !== 0 || !/^[A-Za-z0-9+/]+={0,2}$/.test(clean)) return null;
-          try {
-            var binary = atob(clean);
-            var output = new Uint8Array(binary.length);
-            for (var i = 0; i < binary.length; i++) output[i] = binary.charCodeAt(i);
-            return output;
-          } catch (error) {
-            return null;
-          }
-        }
-
-        async function gunzip(bytes) {
-          if (typeof DecompressionStream === "undefined") return null;
-          try {
-            var stream = new DecompressionStream("gzip");
-            var writer = stream.writable.getWriter();
-            await writer.write(bytes);
-            await writer.close();
-            var reader = stream.readable.getReader();
-            var chunks = [];
-            var total = 0;
-            while (true) {
-              var result = await reader.read();
-              if (result.done) break;
-              if (result.value) {
-                chunks.push(result.value);
-                total += result.value.length;
-                if (total > 16 * 1024 * 1024) return null;
-              }
-            }
-            var output = new Uint8Array(total);
-            var offset = 0;
-            for (var i = 0; i < chunks.length; i++) {
-              output.set(chunks[i], offset);
-              offset += chunks[i].length;
-            }
-            return output;
-          } catch (error) {
-            return null;
-          }
-        }
-
-        function varint(value) {
-          var bytes = [];
-          do {
-            bytes.push((value % 128) | (value > 127 ? 128 : 0));
-            value = Math.floor(value / 128);
-          } while (value);
-          return new Uint8Array(bytes);
-        }
-
-        function readVarint(bytes, index, end) {
-          var value = 0;
-          var shift = 0;
-          while (index < end && shift < 56) {
-            var byte = bytes[index++];
-            value += (byte & 127) * Math.pow(2, shift);
-            if (!(byte & 128)) return [value, index];
-            shift += 7;
-          }
-          return null;
-        }
-
-        function parseFields(bytes, start, end) {
-          var fields = [];
-          var index = start;
-          while (index < end) {
-            var fieldStart = index;
-            var key = readVarint(bytes, index, end);
-            if (!key) return null;
-            index = key[1];
-            var number = Math.floor(key[0] / 8);
-            var wire = key[0] & 7;
-            if (!number) return null;
-            var dataStart;
-            var dataEnd;
-            var fieldEnd;
-            if (wire === 0) {
-              var value = readVarint(bytes, index, end);
-              if (!value) return null;
-              dataStart = index;
-              dataEnd = fieldEnd = value[1];
-            } else if (wire === 1) {
-              dataStart = index;
-              dataEnd = fieldEnd = index + 8;
-            } else if (wire === 2) {
-              var size = readVarint(bytes, index, end);
-              if (!size) return null;
-              dataStart = size[1];
-              dataEnd = dataStart + size[0];
-              fieldEnd = dataEnd;
-            } else if (wire === 5) {
-              dataStart = index;
-              dataEnd = fieldEnd = index + 4;
-            } else {
-              return null;
-            }
-            if (fieldEnd > end) return null;
-            fields.push({
-              no: number,
-              wire: wire,
-              dataStart: dataStart,
-              dataEnd: dataEnd,
-              raw: bytes.subarray(fieldStart, fieldEnd)
-            });
-            index = fieldEnd;
-          }
-          return fields;
-        }
-
-        function encodeField(number, payload) {
-          var tag = varint(number * 8 + 2);
-          var length = varint(payload.length);
-          var output = new Uint8Array(tag.length + length.length + payload.length);
-          output.set(tag, 0);
-          output.set(length, tag.length);
-          output.set(payload, tag.length + length.length);
-          return output;
-        }
-
-        function looksLikeText(bytes) {
-          var text;
-          try {
-            text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
-          } catch (error) {
-            return "";
-          }
-          if (!text || text.length < 2) return "";
-          if (/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(text)) return "";
-          if (text.indexOf("://") >= 0) return "";
-          if (/^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/i.test(text)) return "";
-          if (!/[A-Za-z\u4e00-\u9fff]/.test(text)) return "";
-          if (/^[A-Za-z0-9+/=_-]+$/.test(text) && text.length > 20) return "";
-          if (/^[\d\s.,:;!?-]+$/.test(text)) return "";
-          return text;
         }
 
         function looksLikeXmlText(text) {
@@ -6253,163 +5813,276 @@ script-providers:
           return true;
         }
 
-        function collectTexts(bytes, depth, entries) {
-          if (depth > 16) return;
-          var fields = parseFields(bytes, 0, bytes.length);
-          if (!fields) return;
-          for (var i = 0; i < fields.length; i++) {
-            var field = fields[i];
-            if (field.wire !== 2) continue;
-            var payload = bytes.subarray(field.dataStart, field.dataEnd);
-            var text = looksLikeText(payload);
-            if (text) entries.push(text);
-            else collectTexts(payload, depth + 1, entries);
-          }
+        function postForm(url, headers, body, timeoutSeconds) {
+          var httpClient = typeof $httpClient === "undefined" ? null : $httpClient;
+          return new Promise(function (resolve) {
+            if (!httpClient || typeof httpClient.post !== "function") return resolve({ ok: false, reason: "no-http" });
+            var settled = false;
+            var timer = 0;
+            if (typeof setTimeout === "function") {
+              timer = setTimeout(function () {
+                if (settled) return;
+                settled = true;
+                resolve({ ok: false, reason: "timeout" });
+              }, (timeoutSeconds + 2) * 1000);
+            }
+            try {
+              httpClient.post({
+                url: url,
+                headers: headers,
+                body: body,
+                timeout: timeoutSeconds
+              }, function (error, httpResponse, data) {
+                if (settled) return;
+                settled = true;
+                if (timer && typeof clearTimeout === "function") clearTimeout(timer);
+                var code = httpResponse ? Number(httpResponse.status || httpResponse.statusCode || 200) : 200;
+                if (error) return resolve({ ok: false, reason: "error", status: code });
+                if (code < 200 || code >= 300) return resolve({ ok: false, reason: "status", status: code });
+                var text = null;
+                if (typeof data === "string") text = data;
+                else if (data && typeof data === "object" && data.body !== undefined) text = textOf(data.body);
+                else if (data && typeof data === "object") {
+                  try { text = JSON.stringify(data); } catch (jsonError) { text = null; }
+                }
+                if (!text) return resolve({ ok: false, reason: "empty", status: code });
+                resolve({ ok: true, status: code, text: text });
+              });
+            } catch (error) {
+              if (settled) return;
+              settled = true;
+              if (timer && typeof clearTimeout === "function") clearTimeout(timer);
+              resolve({ ok: false, reason: "exception" });
+            }
+          });
         }
 
-        function replaceTexts(bytes, depth, state) {
-          if (depth > 16) return { bytes: bytes, changed: false };
-          var fields = parseFields(bytes, 0, bytes.length);
-          if (!fields) return { bytes: bytes, changed: false };
-          var changed = false;
-          for (var i = 0; i < fields.length; i++) {
-            var field = fields[i];
-            if (field.wire !== 2) continue;
-            var payload = bytes.subarray(field.dataStart, field.dataEnd);
-            var text = looksLikeText(payload);
-            if (text) {
-              var index = state.index++;
-              var replacement = state.translated[index];
-              if (replacement && replacement !== text) {
-                field.raw = encodeField(field.no, textEncoder.encode(replacement));
-                changed = true;
-              }
-            } else {
-              var child = replaceTexts(payload, depth + 1, state);
-              if (child.changed) {
-                field.raw = encodeField(field.no, child.bytes);
-                changed = true;
+        function parseGoogle(text, lines) {
+          var data;
+          try { data = JSON.parse(text); } catch (error) { return null; }
+          if (typeof data === "string") data = [data];
+          if (!Array.isArray(data) || data.length !== lines.length) return null;
+          var out = [];
+          for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            var value = "";
+            if (typeof item === "string") value = item;
+            else if (Array.isArray(item) && typeof item[0] === "string") value = item[0];
+            value = String(value).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "");
+            if (!value && lines[i].replace(/^\s+|\s+$/g, "")) return null;
+            out.push(value);
+          }
+          return out;
+        }
+
+        function requestGoogle(lines, config, stats) {
+          var body = lines.map(function (line) { return "q=" + encodeURIComponent(line); }).join("&");
+          var url = config.endpoint + "?client=gtx&sl=auto&tl=" + encodeURIComponent(config.targetCode);
+          return postForm(url, config.headers, body, config.timeout).then(function (result) {
+            if (!result.ok) {
+              stats.fail++;
+              stats.lastStatus = result.status || result.reason;
+              return null;
+            }
+            var parsed = parseGoogle(result.text, lines);
+            if (!parsed) {
+              stats.bad++;
+              return null;
+            }
+            stats.ok++;
+            return parsed;
+          });
+        }
+
+        async function mapLimit(items, limit, worker) {
+          var results = new Array(items.length);
+          var next = 0;
+          async function runner() {
+            while (true) {
+              var index = next++;
+              if (index >= items.length) return;
+              results[index] = await worker(items[index], index);
+            }
+          }
+          var runners = [];
+          var count = Math.min(limit, items.length);
+          for (var i = 0; i < count; i++) runners.push(runner());
+          await Promise.all(runners);
+          return results;
+        }
+
+        async function translateMisses(lines, config, stats) {
+          if (!lines.length) return [];
+          var batches = [];
+          for (var i = 0; i < lines.length; i += config.batchSize) {
+            batches.push({ offset: i, lines: lines.slice(i, i + config.batchSize) });
+          }
+          var results = await mapLimit(batches, config.concurrency, async function (batch) {
+            if (Date.now() > config.deadline) {
+              stats.skipped++;
+              return null;
+            }
+            return await requestGoogle(batch.lines, config, stats);
+          });
+          var output = new Array(lines.length);
+          for (var j = 0; j < batches.length; j++) {
+            var batch = batches[j];
+            var translated = results[j];
+            if (!translated || translated.length !== batch.lines.length) continue;
+            for (var k = 0; k < batch.lines.length; k++) {
+              if (typeof translated[k] === "string" && translated[k].replace(/^\s+|\s+$/g, "")) {
+                output[batch.offset + k] = translated[k];
               }
             }
           }
-          return {
-            bytes: changed ? concatBytes(fields.map(function (field) { return field.raw; })) : bytes,
-            changed: changed
-          };
+          return output;
         }
 
-        async function translateProtobuf(bytes, language, httpClient) {
-          var entries = [];
-          collectTexts(bytes, 0, entries);
-          if (!entries.length) return null;
-          var translated = await translateLines(entries, language, httpClient);
-          if (!translated) return null;
-          var result = replaceTexts(bytes, 0, { index: 0, translated: translated });
-          if (!result.changed) return null;
-          return { body: result.bytes, lines: entries.length };
+        var CACHE_PREFIX = "YouTube.Stash.google.xml.v1.";
+        var CACHE_MAX = 3000;
+
+        function loadCache(key) {
+          if (typeof $persistentStore === "undefined" || !$persistentStore) return {};
+          try {
+            var raw = $persistentStore.read(key);
+            if (!raw) return {};
+            var parsed = JSON.parse(raw);
+            return parsed && typeof parsed === "object" ? parsed : {};
+          } catch (error) {
+            return {};
+          }
         }
 
-        function detectFormat(body) {
-          var trimmed = String(body).replace(/^\s+/, "");
-          if (trimmed.charAt(0) === "{" || trimmed.charAt(0) === "[") return "json";
-          if (/^WEBVTT/i.test(trimmed)) return "vtt";
-          if (/^<\?xml/i.test(trimmed) || /<(?:text|p|transcript|tt|timedtext)\b/i.test(trimmed)) return "xml";
-          return "unknown";
+        function saveCache(key, cache) {
+          if (typeof $persistentStore === "undefined" || !$persistentStore) return;
+          try {
+            var keys = Object.keys(cache);
+            if (keys.length > CACHE_MAX) {
+              for (var i = 0; i < keys.length - CACHE_MAX; i++) delete cache[keys[i]];
+            }
+            $persistentStore.write(JSON.stringify(cache), key);
+          } catch (error) {}
+        }
+
+        async function translateXml(body, config, stats, cache) {
+          var refs = [];
+          var texts = [];
+          var pattern = />([^<]+)</g;
+          var match;
+          while ((match = pattern.exec(body))) {
+            var text = xmlDecode(match[1]);
+            if (!looksLikeXmlText(text)) continue;
+            refs.push(match);
+            texts.push(text);
+          }
+          if (!texts.length) return { body: body, lines: 0, translated: 0, cacheHits: 0, misses: 0 };
+
+          var mapped = new Array(texts.length);
+          var missIndexes = [];
+          var missTexts = [];
+          for (var i = 0; i < texts.length; i++) {
+            if (/[\u4e00-\u9fff]/.test(texts[i])) {
+              mapped[i] = texts[i];
+              continue;
+            }
+            var cached = Object.prototype.hasOwnProperty.call(cache, texts[i]) ? cache[texts[i]] : undefined;
+            if (typeof cached === "string" && cached && cached !== texts[i]) {
+              mapped[i] = cached;
+              stats.cacheHits++;
+            } else {
+              missIndexes.push(i);
+              missTexts.push(texts[i]);
+            }
+          }
+          stats.misses = missTexts.length;
+
+          if (missTexts.length) {
+            var translated = await translateMisses(missTexts, config, stats);
+            for (var j = 0; j < missTexts.length; j++) {
+              if (translated[j] && translated[j] !== missTexts[j]) {
+                mapped[missIndexes[j]] = translated[j];
+                cache[missTexts[j]] = translated[j];
+              }
+            }
+            saveCache(config.cacheKey, cache);
+          }
+
+          var index = 0;
+          var changed = 0;
+          var output = body.replace(/>([^<]+)</g, function (all, inner) {
+            var text = xmlDecode(inner);
+            if (!looksLikeXmlText(text)) return all;
+            var replacement = mapped[index++];
+            if (replacement && replacement !== text) {
+              changed++;
+              return ">" + xmlEscape(replacement) + "<";
+            }
+            return all;
+          });
+          return { body: output, lines: texts.length, translated: changed, cacheHits: stats.cacheHits, misses: missTexts.length };
         }
 
         (async function main() {
+          var started = Date.now();
+          var stats = { ok: 0, fail: 0, bad: 0, skipped: 0, lastStatus: "", cacheHits: 0, misses: 0 };
+          var options = parseArgument();
+          var target = normalizeLanguage(options.captionLang);
+          var response = typeof $response === "undefined" ? {} : ($response || {});
+          var originalBody = response.body;
+          var body = textOf(originalBody);
+          var contentType = header(response.headers || {}, "content-type");
+          var contentEncoding = header(response.headers || {}, "content-encoding");
+          var originalLength = body ? encoder.encode(body).length : -1;
+
+          if (target === "off" || !body || !body.replace(/^\s+|\s+$/g, "")) {
+            log("script=timedtext target=" + target + " result=pass reason=" + (target === "off" ? "off" : "empty") + " bodyLen=" + originalLength + "|done");
+            return done({});
+          }
+
+          var config = {
+            endpoint: "https://translate.googleapis.com/translate_a/t",
+            targetCode: targetCode(target),
+            batchSize: 80,
+            concurrency: 3,
+            timeout: 8,
+            deadline: started + 18000,
+            cacheKey: CACHE_PREFIX + target,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "User-Agent": "Mozilla/5.0"
+            }
+          };
+
           try {
-            function safeText(value) {
-              return String(value || "").replace(/[^A-Za-z0-9_.\/;=+,-]/g, "_").slice(0, 80);
-            }
-            function tagSummary(tags) {
-              var parts = [];
-              if (tags) for (var key in tags) parts.push(key + ":" + tags[key]);
-              return parts.slice(0, 10).join(",");
-            }
-            var argumentObject = parseArgument();
-            var language = normalizeLanguage(argumentObject.captionLang);
-            var responseBody = $response && $response.body;
-            var originalBody = responseBody;
-            var httpClient = typeof $httpClient === "undefined" ? null : $httpClient;
-            var rawBytes = bytesOf(responseBody);
-            var originalLength = rawBytes ? rawBytes.length : (typeof responseBody === "string" ? responseBody.length : -1);
-            var body = textOfBody(responseBody);
-            var contentType = header("content-type");
-            var contentEncoding = header("content-encoding");
-            var gz = 0;
-            if (rawBytes && rawBytes.length > 1 && rawBytes[0] === 0x1f && rawBytes[1] === 0x8b) {
-              var unzipped = await gunzip(rawBytes);
-              if (unzipped) {
-                rawBytes = unzipped;
-                body = textOfBody(unzipped);
-                gz = 1;
-              }
-            }
-            if (!body || !body.trim()) {
-              realConsole.log(TAG + " script=timedtext endpoint=timedtext target=" + language +
-                " format=none lines=0 translated=0 changed=0 bodyLen=" + originalLength +
-                " bodyType=" + typeOf(responseBody) + " ct=" + safeText(contentType) +
-                " ce=" + safeText(contentEncoding) + " gz=" + gz + " head=" + headHex(responseBody) + "|done");
+            var cache = loadCache(config.cacheKey);
+            var result = await translateXml(body, config, stats, cache);
+            if (!result || !result.translated || !result.body || result.body === body) {
+              log(
+                "script=timedtext target=" + target + " result=pass reason=nochange" +
+                " lines=" + (result ? result.lines : 0) +
+                " translated=" + (result ? result.translated : 0) +
+                " cache_hit=" + stats.cacheHits + " cache_miss=" + stats.misses +
+                " gt_ok=" + stats.ok + " gt_fail=" + stats.fail + " gt_bad=" + stats.bad +
+                " gt_skip=" + stats.skipped + " gt_status=" + safe(stats.lastStatus) +
+                " bodyLen=" + originalLength + "|done"
+              );
               return done({});
             }
-            var format = detectFormat(body);
-            if (format === "unknown") {
-              var decoded = looksBase64(body);
-              if (decoded) {
-                rawBytes = decoded;
-                body = textOfBody(decoded);
-                format = detectFormat(body);
-              }
-            }
-            realConsole.log(TAG + " script=timedtext endpoint=timedtext target=" + language +
-              " format=" + format + "|entry");
-            if (language === "off") {
-              realConsole.log(TAG + " script=timedtext endpoint=timedtext target=off format=" + format +
-                " lines=0 translated=0 changed=0 bodyLen=" + originalLength +
-                " bodyType=" + typeOf(responseBody) + " ct=" + safeText(contentType) +
-                " ce=" + safeText(contentEncoding) + " gz=" + gz + " head=" + headHex(responseBody) + "|done");
-              return done(originalBody !== undefined ? { body: originalBody } : {});
-            }
-            var result = null;
-            if (format === "json") result = await translateJson(body, language, httpClient);
-            else if (format === "vtt") result = await translateVtt(body, language, httpClient);
-            else if (format === "xml") result = await translateXml(body, language, httpClient);
-            else {
-              if (!rawBytes) rawBytes = bytesOf(body);
-              if (rawBytes) {
-                var protobuf = await translateProtobuf(rawBytes, language, httpClient);
-                if (protobuf) {
-                  result = { body: protobuf.body, lines: protobuf.lines };
-                  format = "protobuf";
-                }
-              }
-            }
-            var changed = result && (typeof result.body === "string" ? result.body !== body : true);
-            var xmlNodes = result && typeof result.nodes === "number" ? result.nodes : 0;
-            var xmlLines = result && typeof result.lines === "number" ? result.lines : 0;
-            var translatedCount = result && typeof result.translated === "number" ? result.translated : (result ? result.lines : 0);
-            if (!result || !changed) {
-              realConsole.log(TAG + " script=timedtext endpoint=timedtext target=" + language +
-                " format=" + format + " lines=" + xmlLines + " translated=" + translatedCount +
-                " xmlNodes=" + xmlNodes + " xmlTags=" + tagSummary(result && result.tags) +
-                " changed=0 bodyLen=" + originalLength +
-                " bodyType=" + typeOf(responseBody) + " ct=" + safeText(contentType) +
-                " ce=" + safeText(contentEncoding) + " gz=" + gz + " head=" + headHex(responseBody) + "|done");
-              return done(originalBody !== undefined ? { body: originalBody } : {});
-            }
-            var outputBody = typeof result.body === "string" ? textEncoder.encode(result.body) : result.body;
-            realConsole.log(TAG + " script=timedtext endpoint=timedtext target=" + language +
-              " format=" + format + " lines=" + xmlLines + " translated=" + translatedCount +
-              " xmlNodes=" + xmlNodes + " xmlTags=" + tagSummary(result && result.tags) +
-              " changed=1 bodyLen=" + originalLength + " bodyType=" + typeOf(responseBody) +
-              " ct=" + safeText(contentType) + " ce=" + safeText(contentEncoding) +
-              " gz=" + gz + " head=" + headHex(responseBody) + "|done");
-            done({ body: outputBody });
+            var outputBytes = encoder.encode(result.body);
+            log(
+              "script=timedtext target=" + target + " result=ok format=xml" +
+              " lines=" + result.lines + " translated=" + result.translated +
+              " cache_hit=" + stats.cacheHits + " cache_miss=" + stats.misses +
+              " gt_ok=" + stats.ok + " gt_fail=" + stats.fail + " gt_bad=" + stats.bad +
+              " gt_skip=" + stats.skipped + " gt_status=" + safe(stats.lastStatus) +
+              " bodyLen=" + originalLength + " outLen=" + outputBytes.length +
+              " cl=removed ct=" + safe(contentType) + " ce=" + safe(contentEncoding) +
+              " ms=" + (Date.now() - started) + "|done"
+            );
+            done({ body: result.body, headers: cleanHeaders() });
           } catch (error) {
-            realConsole.log(TAG + " script=timedtext endpoint=timedtext error");
-            done(originalBody !== undefined ? { body: originalBody } : {});
+            log("script=timedtext target=" + target + " result=pass reason=error detail=" + safe(error && error.message ? error.message : error) + "|done");
+            done({});
           }
         })();
       })();
-
