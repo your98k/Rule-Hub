@@ -247,12 +247,45 @@
     return joined.length >= lines.length ? joined.slice(0, lines.length) : null;
   }
 
+  async function translateMany(lines, language, httpClient) {
+    if (!lines.length) return null;
+    var output = new Array(lines.length);
+    var cursor = 0;
+    async function worker() {
+      while (true) {
+        var index = cursor++;
+        if (index >= lines.length) return;
+        var text = lines[index];
+        if (!text || !text.trim()) {
+          output[index] = text;
+          continue;
+        }
+        var result = null;
+        try {
+          result = await translateText(text, language, httpClient);
+        } catch (error) {}
+        output[index] = result && result[0] ? result[0] : text;
+      }
+    }
+    var workers = [];
+    var count = Math.min(8, lines.length);
+    for (var i = 0; i < count; i++) workers.push(worker());
+    await Promise.all(workers);
+    return output;
+  }
+
   async function translateXml(body, language, httpClient) {
     var pattern = />([^<]+)</g;
     var refs = [];
     var lines = [];
     var match;
     var textNodes = 0;
+    var tags = {};
+    var tagPattern = /<([A-Za-z][\w:.-]*)\b/g;
+    var tagMatch;
+    while ((tagMatch = tagPattern.exec(body))) {
+      tags[tagMatch[1]] = (tags[tagMatch[1]] || 0) + 1;
+    }
     while ((match = pattern.exec(body))) {
       textNodes++;
       var text = xmlDecode(match[1]);
@@ -260,17 +293,22 @@
       refs.push(match);
       lines.push(text);
     }
-    if (!refs.length) return { body: body, lines: 0, nodes: textNodes };
-    var translated = await translateLines(lines, language, httpClient);
-    if (!translated) return { body: body, lines: 0, nodes: textNodes };
+    if (!refs.length) return { body: body, lines: 0, nodes: textNodes, translated: 0, tags: tags };
+    var translated = await translateMany(lines, language, httpClient);
+    if (!translated) return { body: body, lines: lines.length, nodes: textNodes, translated: 0, tags: tags };
     var index = 0;
+    var translatedCount = 0;
     var output = body.replace(/>([^<]+)</g, function (all, inner) {
       var text = xmlDecode(inner);
       if (!looksLikeXmlText(text)) return all;
       var replacement = translated[index++];
-      return replacement ? ">" + xmlEscape(replacement) + "<" : all;
+      if (replacement && replacement !== text) {
+        translatedCount++;
+        return ">" + xmlEscape(replacement) + "<";
+      }
+      return all;
     });
-    return { body: output, lines: lines.length, nodes: textNodes };
+    return { body: output, lines: lines.length, nodes: textNodes, translated: translatedCount, tags: tags };
   }
 
   async function translateJson(body, language, httpClient) {
@@ -583,6 +621,11 @@
       function safeText(value) {
         return String(value || "").replace(/[^A-Za-z0-9_.\/;=+,-]/g, "_").slice(0, 80);
       }
+      function tagSummary(tags) {
+        var parts = [];
+        if (tags) for (var key in tags) parts.push(key + ":" + tags[key]);
+        return parts.slice(0, 10).join(",");
+      }
       var argumentObject = parseArgument();
       var language = normalizeLanguage(argumentObject.captionLang);
       var responseBody = $response && $response.body;
@@ -640,17 +683,21 @@
       }
       var changed = result && (typeof result.body === "string" ? result.body !== body : true);
       var xmlNodes = result && typeof result.nodes === "number" ? result.nodes : 0;
+      var xmlLines = result && typeof result.lines === "number" ? result.lines : 0;
+      var translatedCount = result && typeof result.translated === "number" ? result.translated : (result ? result.lines : 0);
       if (!result || !changed) {
         realConsole.log(TAG + " script=timedtext endpoint=timedtext target=" + language +
-          " format=" + format + " lines=0 translated=0 xmlNodes=" + xmlNodes + " changed=0 bodyLen=" + originalLength +
+          " format=" + format + " lines=" + xmlLines + " translated=" + translatedCount +
+          " xmlNodes=" + xmlNodes + " xmlTags=" + tagSummary(result && result.tags) +
+          " changed=0 bodyLen=" + originalLength +
           " bodyType=" + typeOf(responseBody) + " ct=" + safeText(contentType) +
           " ce=" + safeText(contentEncoding) + " gz=" + gz + " head=" + headHex(responseBody) + "|done");
         return done({});
       }
       var outputBody = typeof result.body === "string" ? textEncoder.encode(result.body) : result.body;
       realConsole.log(TAG + " script=timedtext endpoint=timedtext target=" + language +
-        " format=" + format + " lines=" + result.lines + " translated=" + result.lines +
-        " xmlNodes=" + xmlNodes +
+        " format=" + format + " lines=" + xmlLines + " translated=" + translatedCount +
+        " xmlNodes=" + xmlNodes + " xmlTags=" + tagSummary(result && result.tags) +
         " changed=1 bodyLen=" + originalLength + " bodyType=" + typeOf(responseBody) +
         " ct=" + safeText(contentType) + " ce=" + safeText(contentEncoding) +
         " gz=" + gz + " head=" + headHex(responseBody) + "|done");
