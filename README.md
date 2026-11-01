@@ -28,7 +28,6 @@
 | **Telegram 链接跳转** | 需 Stash MitM | 将 t.me、telegram.me、telegram.dog 链接 307 跳转至所选 Telegram 客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride) |
 | **京东去广告 + 慢慢买历史比价** | **iOS/tvOS 3.7+；macOS 4.4+** | 京东广告过滤与慢慢买历史价格；内置 Stash Cookie 采集修复，需启用并信任 MitM CA | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride) |
 | **虎扑去广告（Stash 原生 jq）** | **iOS/tvOS 2.8+** | 保留原拦截规则，将 4 处 JS 响应改为原生 jq；需启用并信任 MitM CA。请勿与旧虎扑覆写叠加 | [Raw 订阅](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride) | [CDN 订阅](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HuPu.stoverride) |
-| **百度地图去广告** | **iOS/tvOS 2.8+** | 移植 kelee.one 官方 Loon 插件（2026-10-02 版）：移除开屏、出行页、周边页、打车页推广并精简「我的」页面；补齐了上游漏配的 `maphotel.baidu.com`。需 MitM 与去 SSL Pinning 的签名 IPA，App Store 原版无效 | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BaiduMap_remove_ads.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/BaiduMap_remove_ads.stoverride) |
 
 > Stash 的两个 YouTube 覆写功能有重叠，请只启用一个：旧版和增强版都支持字幕/歌词翻译；增强版提供 12 项参数和首页 Sponsored 补强。Loon 用户请使用上面的 Loon 版插件。
 
@@ -126,7 +125,7 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
 
 > ⚠️ 需要 Stash TestFlight 3.7+；启用 MitM 并完全信任 Stash CA。**请与上方「YouTube 去广告（旧版）」二选一，不要同时启用**：两者都会改写同一批 YouTube 接口，叠加会让响应被重复处理。旧版和增强版都支持字幕/歌词翻译；增强版另有 10 个界面/播放开关和首页补强。
 >
-> 1.0.0 已在本机 Stash 实机导入测试通过（2026-10-30）；1.1.0/1.2.0 翻译功能已通过 Node 行为测试和 Google 接口连通测试，建议导入后先试一首歌/一集视频确认。
+> 1.0.0 已在本机 Stash 实机导入测试通过（2026-10-30）；1.3.0 将字幕翻译改为 `timedtext` 响应翻译，已完成 XML/JSON/protobuf 合成测试，建议导入后先试一集有字幕的视频。
 >
 > Loon 用户请使用上方 Loon 插件列表中的同源版本；本节仅针对 Stash。
 
@@ -144,14 +143,14 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
 | 开启精彩跳转 | 关 | 解锁 Premium Jump Ahead 入口；仅客户端 UI，不改变账号权益 |
 | 开启通勤模式 | 关 | 解锁 Premium On-the-go 入口；仅客户端 UI，不改变账号权益 |
 | 首页信息流补强 | **开** | 额外清理首页 Sponsored 卡片、空壳和相邻分隔线；误删正常卡片时关闭 |
-| 字幕翻译语言 | **简中** | 使用 YouTube 自带翻译轨；关闭则不新增翻译轨 |
+| 字幕翻译语言 | **简中** | 翻译 `timedtext` 字幕响应；关闭则保留原文 |
 | 歌词翻译语言 | **简中** | YouTube Music 歌词逐行翻译；调用 Google Translate，关闭则不发送歌词 |
 
 ### 🌐 翻译说明
-- **字幕翻译**：在 `player`/`next`/`get_watch` 响应中注入一条带 `&tlang=目标语言` 的 `@Enhance` 字幕轨，并把默认字幕指向它；使用 YouTube 自带翻译，不额外上传字幕文本。
+- **字幕翻译**：拦截 `timedtext` 响应，按 XML/JSON/VTT/protobuf 文本节点翻译后返回；不修改请求 URL/签名。字幕文本会发送到 Google Translate，关闭即不发送。
 - **歌词翻译**：仅在 YouTube Music 歌词页（`MPLYt...`）处理，定位逐行歌词或描述歌词，把歌词文本发送到 Google Translate 公开接口，按行追加译文；失败时保留原文。
-- 支持关闭、简体中文、繁體中文、英语、日语、韩语；两项默认均为简体中文。只想去广告或介意歌词外发，可在参数中设为「关闭翻译」。
-- 歌词翻译依赖 Google 服务与网络，可能受地区、限流或接口变更影响；字幕翻译依赖视频本身提供可翻译字幕轨。
+- 支持关闭、简体中文、繁體中文、英语、日语、韩语；两项默认均为简体中文。只想去广告或介意字幕/歌词外发，可在参数中设为「关闭翻译」。
+- 字幕和歌词翻译依赖 Google 服务与网络，可能受地区、限流或接口变更影响；失败时保留原文。
 
 ### 📌 导入与配置
 1. Stash → **设置** → **MitM**：生成/安装 CA，并在 iOS「设置 → 通用 → 关于本机 → 证书信任设置」中完全信任。
@@ -162,14 +161,14 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
 ### 🔧 处理范围
 - **请求**：`/youtubei/v1/player/ad_break`、`/youtubei/v1/log_event`、googlevideo `initplayback`、`videoplayback`（后者仅开启自动画质时处理）。
 - **响应**：`browse`、`next`、`player`、`search`、`reel/reel_watch_sequence`、`guide`、`account/get_setting`、`get_watch`；另有 `config`/`log_event` 密钥捕获和 `initplayback` UMP 处理。
-- **翻译**：字幕翻译处理 `player`/`next`/`get_watch` 的字幕轨；歌词翻译仅处理 `browse` 的 `MPLYt...` 歌词页。
+- **翻译**：字幕翻译处理 `timedtext` 响应；歌词翻译仅处理 `browse` 的 `MPLYt...` 歌词页。
 - 首页补强仅处理 `/youtubei/v1/browse` 的 `49399797` 容器下 field 1/32；按 `aboutthisad`、pagead 标记、空壳和分隔线做启发式清理，不能保证每个广告位都命中。
 - 已阻断 `youtubei.googleapis.com` 的 QUIC；保留 `s.youtube.com/api/stats/ads`、`www.youtube.com/(pagead|pcs)` 的 404 拒绝。
-- 4 段脚本内嵌在覆写中（约 345KB），不依赖远程脚本订阅；更新时重新导入/更新覆写即可。首次导入或配置重载可能稍慢。
+- 5 段脚本内嵌在覆写中（约 373KB），不依赖远程脚本订阅；更新时重新导入/更新覆写即可。首次导入或配置重载可能稍慢。
 
 ### ⚠️ 已知限制
 - 实际效果受 YouTube 版本、地区、灰度实验和账号状态影响，不承诺所有广告位都消失。
-- 字幕翻译依赖视频提供可翻译字幕轨；歌词翻译会访问 Google Translate，受网络/地区/限流/接口变更影响，失败时保留原文，翻译质量由服务提供方决定。
+- 字幕翻译依赖 `timedtext` 返回的可解析文本（XML/JSON/VTT/protobuf）；格式或接口变化会失败并保留原文。字幕与歌词会访问 Google Translate，受网络/地区/限流/接口变更影响，翻译质量由服务提供方决定。
 - 「精彩跳转」「通勤模式」仅解锁客户端入口，不代表真实 Premium 权益。
 - 如果首页出现正常卡片缺失、灰框或布局异常，先关闭「首页信息流补强」；仍有问题则停用本覆写，并确认没有同时启用旧版 YouTube 覆写。
 - 本项目仅供学习研究与个人自用，请勿商用。
@@ -187,13 +186,13 @@ v1.0.2 起同步上游 2026-10-27 脚本更新：新增播放暂停广告（JCE 
 
 ### 🔧 与 Stash 版的关系
 - 与 Stash 增强版同源、同参数：10 个开关 + 2 个翻译语言 + 首页补强。
-- 字幕使用 YouTube 自带 `tlang` 翻译轨；歌词调用 Google Translate；关闭歌词翻译则不上传歌词文本。
+- 字幕使用 `timedtext` 响应翻译；歌词调用 Google Translate；关闭字幕/歌词翻译则不上传相应文本。
 - 脚本托管在 `Script/Youtube/`，由 Loon 远程加载；更新插件或脚本后重开 YouTube。
 - Loon 版沿用原 Loon 插件结构，未额外添加 QUIC 规则；如果接口没有经过 MitM，检查 Loon 的 Rewrite/MitM 与证书。
 - 12 项参数及翻译说明见上方 Stash 增强版章节；Loon 插件参数使用中文选项。
 
 ### ⚠️ 验证边界
-- Loon 版 1.2.0 为新适配，**尚未在 Loon 实机导入验证**；脚本已通过 Node 行为测试和 Google 接口连通测试，建议先试一首歌/一集视频。
+- Loon 版 1.3.0 为新适配，**尚未在 Loon 实机导入验证**；脚本已通过 Node 行为测试和 Google 接口连通测试，建议先试一首歌/一集视频。
 - 翻译质量与可用性由 YouTube/Google 决定，失败时保留原文；与旧版或其他 YouTube 去广告插件不要叠加。
 
 ---

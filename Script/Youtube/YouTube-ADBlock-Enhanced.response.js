@@ -898,12 +898,7 @@ async function __stashTranslateBody(bytes, options, url, httpClient, logger) {
   var lyricLanguage = __stashTrNormalizeLanguage(options && options.lyricLang);
   var output = bytes;
   try {
-    if (captionLanguage && captionLanguage !== "off" && /\/(?:player|next|get_watch)(?:\?|$)/.test(url)) {
-      var captions = __stashTrRewriteSync(output, 51621377, function (payload) {
-        return __stashTrCaptions(payload, captionLanguage);
-      }, 0, 12);
-      if (captions.changed) output = captions.bytes;
-    }
+    /* Caption translation is handled by the timedtext response translator. */
     if (lyricLanguage && lyricLanguage !== "off" && /\/browse(?:\?|$)/.test(url) && __stashTrContainsAscii(output, "MPLYt")) {
       var lyrics = await __stashTrRewriteAsync(output, 465160965, function (payload) {
         return __stashTrTimedLyrics(payload, lyricLanguage, httpClient, logger);
