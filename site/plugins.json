@@ -1,65 +1,15 @@
 {
-  "generated_at": "2026-10-27 15:50",
+  "generated_at": "2026-11-01 14:29",
   "repo": "https://github.com/your98k/Rule-Hub",
   "base": "https://your98k.github.io/Rule-Hub",
   "plugins": [
     {
-      "id": "bilibili-adblock-stash",
-      "name": "📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)",
-      "desc": "'哔哩哔哩：去广告",
-      "icon": "",
-      "date": "2026-10-27",
-      "version": "",
-      "tags": [
-        "Stash 覆写"
-      ],
-      "type": "stash",
-      "authors": [],
-      "homepage": "",
-      "rulesCount": 0,
-      "mitmHosts": [],
-      "needsMitm": false,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.ADBlock.stoverride"
-      },
-      "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride"
-      }
-    },
-    {
-      "id": "bilibili-stash",
-      "name": "Bilibili",
-      "desc": "",
-      "icon": "",
-      "date": "2026-10-27",
-      "version": "",
-      "tags": [
-        "Stash 覆写"
-      ],
-      "type": "stash",
-      "authors": [],
-      "homepage": "",
-      "rulesCount": 0,
-      "mitmHosts": [],
-      "needsMitm": false,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.stoverride"
-      },
-      "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride"
-      }
-    },
-    {
       "id": "hupu-stash",
-      "name": "虎扑去广告（Stash 原生 jq）",
-      "desc": "保留原插件请求拦截，将 4 处 JS 响应处理改为 Stash 原生 jq。\n无远程脚本、无 JavaScript 引擎调用；异常字段按类型保护。\n需要 Stash iOS 2.8+，并已安装、信任 MitM 证书。\n启用前禁用原虎扑覆写及其他同类规则，避免叠加。\n已做本地语法和合成响应对照测试，实际去广告及启动速度需设备实测。",
+      "name": "虎扑去广告",
+      "desc": "将群友提供的 getOther 广告接口方案适配为 Stash 原生 Mock。\n仅处理 goblin.hupu.com 的 interfaceAd/getOther 接口，本地返回无广告 JSON。\n匹配请求无需等待该接口的上游响应；无 JS、无 jq、无远程脚本。\n需启用 MitM，并安装、完全信任 Stash CA 证书。\n测试前禁用原虎扑覆写及其他重复规则，不要叠加。\n已在本地实测生效；仍不保证覆盖全部广告位或消除所有启动等待。",
       "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/HUPU.png",
-      "date": "2026-10-27",
-      "version": "1.0.0",
+      "date": "2026-11-01",
+      "version": "0.1.1",
       "tags": [
         "Stash 覆写",
         "去广告"
@@ -67,16 +17,13 @@
       "type": "stash",
       "authors": [
         {
-          "name": "原规则：ZenmoFeiShi；Stash 适配：ChatGPT",
+          "name": "群友投稿（未署名）；Stash 适配：ChatGPT",
           "url": ""
         }
       ],
       "homepage": "",
-      "rulesCount": 0,
+      "rulesCount": 1,
       "mitmHosts": [
-        "games.mobileapi.hupu.com",
-        "fairy.mobileapi.hupu.com",
-        "bbs.mobileapi.hupu.com",
         "goblin.hupu.com"
       ],
       "needsMitm": true,
@@ -87,6 +34,203 @@
       },
       "install": {
         "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride"
+      }
+    },
+    {
+      "id": "youtube-adblock-enhanced-stash",
+      "name": "YouTube 去广告增强版",
+      "desc": "YouTube 去广告、隐藏界面元素、画质与播放增强，12 项参数（10 个开关 + 2 个翻译语言）均可在 Stash 覆写参数中调整。\n首页信息流补强默认开启，用于清理 Sponsored 广告卡片、空壳与相邻分隔线；如遇误删可关闭。\n字幕翻译使用 Google Translate 翻译 timedtext 响应；保留原 XML 结构，返回字符串 body 并清理 Content-Length/Content-Encoding，按缓存逐步补齐。\n歌词翻译可选，仍调用 Google Translate，默认关闭。请信任 Stash 的 MitM 证书。\n移植自 Maasea、gholts、RuCu6 的 Loon 插件；翻译逻辑参考 Maasea/VirgilClyne；首页补强参考 Hey-sayiwanna/YouTube-ADBlock-on-Feed。",
+      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png",
+      "date": "2026-11-01",
+      "version": "1.3.4",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "Maasea",
+          "url": "https://github.com/Maasea"
+        },
+        {
+          "name": "gholts",
+          "url": "https://github.com/gholts"
+        },
+        {
+          "name": "RuCu6",
+          "url": "https://github.com/RuCu6"
+        },
+        {
+          "name": "VirgilClyne",
+          "url": "https://github.com/VirgilClyne"
+        },
+        {
+          "name": "Hey-sayiwanna",
+          "url": "https://github.com/Hey-sayiwanna"
+        }
+      ],
+      "homepage": "https://github.com/your98k/Rule-Hub",
+      "rulesCount": 1,
+      "mitmHosts": [
+        "rr*.googlevideo.com",
+        "s.youtube.com",
+        "www.youtube.com",
+        "youtubei.googleapis.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube-ADBlock-Enhanced.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/YouTube-ADBlock-Enhanced.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride"
+      }
+    },
+    {
+      "id": "baidumap-remove-ads-stash",
+      "name": "百度地图",
+      "desc": "移除开屏广告、出行页面推广、周边页面推广、打车页面推广，并精简「我的」页面。需开启 MitM 并信任 Stash 证书；百度地图校验 HTTPS 证书，须使用去除 SSL Pinning 的签名 IPA，App Store 原版无法生效。",
+      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/BaiduMap.png",
+      "date": "2026-10-31 23:12",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "原 Loon 插件：可莉🅥；Stash 适配：your98k",
+          "url": ""
+        }
+      ],
+      "homepage": "https://kelee.one/Tool/Loon/Lpx/BaiduMap_remove_ads.lpx",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "afd.baidu.com",
+        "newclient.map.baidu.com",
+        "yongche.baidu.com",
+        "ecom.map.baidu.com",
+        "maphotel.baidu.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BaiduMap_remove_ads.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/BaiduMap_remove_ads.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/BaiduMap_remove_ads.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BaiduMap_remove_ads.stoverride"
+      }
+    },
+    {
+      "id": "telegram-loon",
+      "name": "Telegram 外链跳转（可调参数）",
+      "desc": "把 t.me / telegram.me / telegram.dog 的网页链接 302 跳转到指定 Telegram 客户端。客户端、代理策略、主机名都在插件设置里改，不用动文件。",
+      "icon": "",
+      "date": "2026-10-31 14:20:00",
+      "version": "",
+      "tags": [
+        "Loon 插件",
+        "Telegram, 跳转, 工具"
+      ],
+      "type": "loon",
+      "authors": [
+        {
+          "name": "原 Loon 插件 @sooyaaab（BoStudioHub）；可调参数版适配",
+          "url": ""
+        }
+      ],
+      "homepage": "https://t.me/BoStudioHub",
+      "rulesCount": 19,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/Telegram外链跳转.plugin",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/Telegram外链跳转.plugin",
+        "page": "https://your98k.github.io/Rule-Hub/files/Loon/Telegram外链跳转.plugin"
+      },
+      "install": {
+        "loon": "loon://import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Fyour98k%2FRule-Hub%2Fmain%2FLoon%2FTelegram%E5%A4%96%E9%93%BE%E8%B7%B3%E8%BD%AC.plugin"
+      }
+    },
+    {
+      "id": "youtube-adblock-enhanced-loon",
+      "name": "YouTube 去广告增强版",
+      "desc": "12 项参数：10 个开关 + 字幕/歌词翻译，含首页 Sponsored 补强；需启用改写与 MitM。与旧 YouTube 插件二选一。",
+      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png",
+      "date": "2026-10-30",
+      "version": "1.3.3",
+      "tags": [
+        "Loon 插件",
+        "去广告"
+      ],
+      "type": "loon",
+      "authors": [
+        {
+          "name": "Maasea",
+          "url": "https://github.com/Maasea"
+        },
+        {
+          "name": "gholts",
+          "url": "https://github.com/gholts"
+        },
+        {
+          "name": "RuCu6",
+          "url": "https://github.com/RuCu6"
+        },
+        {
+          "name": "VirgilClyne",
+          "url": "https://github.com/VirgilClyne"
+        },
+        {
+          "name": "Hey-sayiwanna",
+          "url": "https://github.com/Hey-sayiwanna"
+        }
+      ],
+      "homepage": "https://github.com/your98k/Rule-Hub",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "rr*.googlevideo.com",
+        "s.youtube.com",
+        "www.youtube.com",
+        "youtubei.googleapis.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/YouTube-ADBlock-Enhanced.plugin",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/YouTube-ADBlock-Enhanced.plugin",
+        "page": "https://your98k.github.io/Rule-Hub/files/Loon/YouTube-ADBlock-Enhanced.plugin"
+      },
+      "install": {
+        "loon": "loon://import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Fyour98k%2FRule-Hub%2Fmain%2FLoon%2FYouTube-ADBlock-Enhanced.plugin"
+      }
+    },
+    {
+      "id": "bilibili-adblock-stash",
+      "name": "📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)",
+      "desc": "'哔哩哔哩：去广告",
+      "icon": "",
+      "date": "2026-10-28",
+      "version": "",
+      "tags": [
+        "Stash 覆写"
+      ],
+      "type": "stash",
+      "authors": [],
+      "homepage": "",
+      "rulesCount": 8,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.ADBlock.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride"
       }
     },
     {
@@ -125,53 +269,28 @@
       }
     },
     {
-      "id": "youtube-stash",
-      "name": "YouTube 去广告 · 可调参数",
-      "desc": "沿用原 YouTube / YouTube Music 去广告脚本。\n支持手动设置上传按钮、Shorts 按钮、选段按钮、\n字幕翻译语言、歌词翻译语言和调试模式。\n使用前需启用 MITM，并安装、信任相应证书。",
-      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png",
-      "date": "2026-10-27",
-      "version": "1.0.0",
+      "id": "bilibili-stash",
+      "name": "Bilibili",
+      "desc": "",
+      "icon": "",
+      "date": "2026-10-26",
+      "version": "",
       "tags": [
-        "Stash 覆写",
-        "去广告"
+        "Stash 覆写"
       ],
       "type": "stash",
-      "authors": [
-        {
-          "name": "Maasea",
-          "url": "https://github.com/Maasea"
-        },
-        {
-          "name": ", VirgilClyne",
-          "url": "https://github.com/VirgilClyne"
-        },
-        {
-          "name": ", Choler",
-          "url": "https://github.com/Choler"
-        },
-        {
-          "name": ", DivineEngine",
-          "url": "https://github.com/DivineEngine"
-        },
-        {
-          "name": ", app2smile",
-          "url": "https://github.com/app2smile"
-        }
-      ],
-      "homepage": "https://hub.kelee.one",
-      "rulesCount": 2,
-      "mitmHosts": [
-        "*.googlevideo.com",
-        "youtubei.googleapis.com"
-      ],
-      "needsMitm": true,
+      "authors": [],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [],
+      "needsMitm": false,
       "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/YouTube.stoverride"
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.stoverride"
       },
       "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride"
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride"
       }
     },
     {
@@ -300,6 +419,44 @@
       },
       "install": {
         "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride"
+      }
+    },
+    {
+      "id": "amap-stash",
+      "name": "高德地图",
+      "desc": "过滤高德地图广告；部分广告需卸载重装或清除缓存后才会彻底消失。需要开启 MITM 并信任 Stash 证书。",
+      "icon": "https://github.com/ishowshu/loon/raw/refs/heads/main/icon/gaode.png",
+      "date": "2026-09-19 11:41",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "原 Loon 插件：树先生（ishowshu）；Stash 适配：your98k",
+          "url": ""
+        }
+      ],
+      "homepage": "https://github.com/ishowshu/loon",
+      "rulesCount": 1,
+      "mitmHosts": [
+        "m5.amap.com",
+        "amap-aos-info-nogw.amap.com",
+        "m5-zb.amap.com",
+        "info.amap.com",
+        "ai.amap.com",
+        "render.amap.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Amap.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Amap.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Amap.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Amap.stoverride"
       }
     },
     {

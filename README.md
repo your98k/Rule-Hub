@@ -22,8 +22,7 @@
 
 | 覆写 | 版本要求 | 说明 | Raw | CDN |
 | :--- | :--- | :--- | :---: | :---: |
-| YouTube 去广告（旧版） | TF 3.7+ | 去广告 + 可调参数（底栏按钮、字幕/歌词翻译） | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube.stoverride) |
-| YouTube 去广告增强版 | TF 3.7+ | 12 项参数（10 开关 + 字幕/歌词翻译 + 首页补强），内嵌脚本。**与旧版二选一** | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube-ADBlock-Enhanced.stoverride) |
+| YouTube 去广告增强版 | TF 3.7+ | 12 项参数（10 开关 + 字幕/歌词翻译 + 首页补强），内嵌脚本 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube-ADBlock-Enhanced.stoverride) |
 | 哔哩哔哩去广告 | iOS 15+ | 基于 Sparkle，需 MitM over HTTP/2；过滤广告/弹窗，解锁后台播放与投屏，支持空降助手 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride) |
 | 哔哩哔哩 ADBlock | iOS/tvOS 3.7+ | Biliverse v0.7.5 移植，32 项原生参数，无需 BoxJS。**与上一条二选一** | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
 | 红果短剧去广告 | 通用 | 域名拦截，不改动全局 IPv6/DNS | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
@@ -35,7 +34,7 @@
 
 ## 使用要点
 
-- **YouTube（Stash/Loon）**：参数默认关翻译，介意字幕/歌词外发请保持关闭；「首页信息流补强」误删正常卡片时关闭；旧版与增强版不要同时启用。
+- **YouTube（Stash/Loon）**：参数默认关翻译，介意字幕/歌词外发请保持关闭；「首页信息流补强」误删正常卡片时关闭；不要与其他 YouTube 去广告插件同时启用。
 - **哔哩哔哩（两版二选一）**：空降助手默认开启（数据来自 bsbsb.top）；「百年大会员」仅客户端 UI 效果，非真实会员；开屏广告若回来了，多为 QUIC 绕过，覆写已内置 8 条 QUIC REJECT 规则。
 - **腾讯视频**：首次使用需卸载重装 App，冷启动 2–3 次；脚本每 24h 自动拉取，无需手动更新。
 - **京东**：保持「获取慢慢买 Cookie」参数开启，在慢慢买 App「我的」页刷新一次即可取到 Cookie。

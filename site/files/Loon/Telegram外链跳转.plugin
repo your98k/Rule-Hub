@@ -1,0 +1,75 @@
+#!name=Telegram 外链跳转（可调参数）
+#!desc=把 t.me / telegram.me / telegram.dog 的网页链接 302 跳转到指定 Telegram 客户端。客户端、代理策略、主机名都在插件设置里改，不用动文件。
+#!author=原 Loon 插件 @sooyaaab（BoStudioHub）；可调参数版适配
+#!homepage=https://t.me/BoStudioHub
+#!tag=Telegram, 跳转, 工具
+#!system=iOS, iPadOS
+#!date=2026-10-31 14:20:00
+#!remark=需开启 MITM 并安装信任 Loon 证书；策略名必须是配置里真实存在的策略组，否则规则不生效。
+
+############################################################
+#  参数说明（插件设置里可视化调整，改完保存即生效）
+#
+#  CLIENT  跳转客户端  默认 tg（Telegram 官方）
+#          tg / swiftgram / nagram / turrit / ime / nicegram / lingogram
+#          对应 scheme：tg:// swiftgram:// nagram:// turrit:// ime://
+#                       nicegram:// lingogram://
+#          第三方客户端的 scheme 若与实际不符（点了没反应），
+#          去它的 ipa 里读 Payload/*.app/Info.plist 的 CFBundleURLSchemes 取真值，
+#          然后在本文件里直接改 CLIENT 的候选值。
+#
+#  POLICY  代理指向的策略  默认 PROXY
+#          必须与主配置里的策略组名完全一致（如 节点选择、🚀 节点选择、机场）
+#
+#  HOSTS   MITM 主机名     默认 t.me,www.t.me,telegram.me,www.telegram.me,telegram.dog,www.telegram.dog
+#          新增域名时，除了这里，还要同步改下面每条 URL Rewrite 里的域名组
+#          域名组固定写法：(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)
+############################################################
+
+[Argument]
+CLIENT = select, "tg", "swiftgram", "nagram", "turrit", "ime", "nicegram", "lingogram", tag = 跳转至对应客户端, desc = tg 为 Telegram 官方，其余为第三方客户端
+POLICY = input, "PROXY", tag = 代理指向的策略, desc = 填配置里真实存在的策略组名，如 节点选择
+HOSTS = input, "t.me,www.t.me,telegram.me,www.telegram.me,telegram.dog,www.telegram.dog", tag = 主机名, desc = 逗号分隔，新增域名时还要同步改 URL Rewrite 里的域名组
+
+[Rule]
+DOMAIN-SUFFIX,t.me,{POLICY}
+DOMAIN-SUFFIX,telegram.me,{POLICY}
+DOMAIN-SUFFIX,telegram.dog,{POLICY}
+
+[URL Rewrite]
+# ---- 代理链接（MTProto / SOCKS5），参数原样带给客户端 ----
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/proxy\?(.+)$ {CLIENT}://proxy?$1 302
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/socks\?(.+)$ {CLIENT}://socks?$1 302
+
+# ---- 语言包 ----
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/setlanguage\/([A-Za-z0-9_-]+) {CLIENT}://setlanguage?lang=$1 302
+
+# ---- 贴纸包 / 表情包 ----
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/addstickers\/([A-Za-z0-9_]+) {CLIENT}://addstickers?set=$1 302
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/addemoji\/([A-Za-z0-9_]+) {CLIENT}://addemoji?set=$1 302
+
+# ---- 分享面板 t.me/share/url?url=...&text=... ----
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/share\/url\?(.+)$ {CLIENT}://msg_url?$1 302
+
+# ---- 邀请链接 t.me/+HASH 与 t.me/joinchat/HASH ----
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/\+([A-Za-z0-9_-]+) {CLIENT}://join?invite=$1 302
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/joinchat\/([A-Za-z0-9_-]+) {CLIENT}://join?invite=$1 302
+
+# ---- 私有频道帖子 t.me/c/CHANNEL_ID/POST_ID ----
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/c\/(\d+)\/(\d+) {CLIENT}://privatepost?channel=$1&post=$2 302
+
+# ---- 频道预览页 t.me/s/CHANNEL[/POST_ID]，去掉 s/ 前缀 ----
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/s\/([A-Za-z0-9_]+)\/(\d+) {CLIENT}://resolve?domain=$1&post=$2 302
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/s\/([A-Za-z0-9_]+) {CLIENT}://resolve?domain=$1 302
+
+# ---- 普通 用户名/帖子 与 带参数的用户名链接 ----
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/([A-Za-z0-9_]+)\/(\d+) {CLIENT}://resolve?domain=$1&post=$2 302
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/([A-Za-z0-9_]+)\?(.+)$ {CLIENT}://resolve?domain=$1&$2 302
+
+# ---- 兜底：纯用户名 / 首页 ----
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/([A-Za-z0-9_]+)\/?$ {CLIENT}://resolve?domain=$1 302
+^https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)\/?$ {CLIENT}:// 302
+
+[MITM]
+hostname = %APPEND% {HOSTS}
+
