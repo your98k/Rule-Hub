@@ -25,11 +25,11 @@ version: "1.0.0"
 
 http:
   mitm:
-    - "afd.baidu.com"
-    - "newclient.map.baidu.com"
-    - "yongche.baidu.com"
-    - "ecom.map.baidu.com"
-    - "maphotel.baidu.com"
+    - afd.baidu.com
+    - newclient.map.baidu.com
+    - yongche.baidu.com
+    - ecom.map.baidu.com
+    - maphotel.baidu.com
 
   url-rewrite:
     # 广告位配置下发（开屏广告）
