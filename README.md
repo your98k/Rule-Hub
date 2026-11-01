@@ -28,6 +28,7 @@
 | **Telegram 链接跳转** | 需 Stash MitM | 将 t.me、telegram.me、telegram.dog 链接 307 跳转至所选 Telegram 客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride) |
 | **京东去广告 + 慢慢买历史比价** | **iOS/tvOS 3.7+；macOS 4.4+** | 京东广告过滤与慢慢买历史价格；内置 Stash Cookie 采集修复，需启用并信任 MitM CA | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride) |
 | **虎扑去广告（Stash 原生 jq）** | **iOS/tvOS 2.8+** | 保留原拦截规则，将 4 处 JS 响应改为原生 jq；需启用并信任 MitM CA。请勿与旧虎扑覆写叠加 | [Raw 订阅](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride) | [CDN 订阅](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HuPu.stoverride) |
+| **百度地图去广告** | **iOS/tvOS 2.8+** | 移植 kelee.one 官方 Loon 插件（2026-10-02 版）：移除开屏、出行页、周边页、打车页推广并精简「我的」页面；补齐了上游漏配的 `maphotel.baidu.com`。需 MitM 与去 SSL Pinning 的签名 IPA，App Store 原版无效 | [查看/复制](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BaiduMap_remove_ads.stoverride) | [查看/复制](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/BaiduMap_remove_ads.stoverride) |
 
 > Stash 的两个 YouTube 覆写功能有重叠，请只启用一个：旧版和增强版都支持字幕/歌词翻译；增强版提供 12 项参数和首页 Sponsored 补强。Loon 用户请使用上面的 Loon 版插件。
 
