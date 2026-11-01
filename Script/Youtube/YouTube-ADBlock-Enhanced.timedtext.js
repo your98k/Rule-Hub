@@ -249,27 +249,41 @@
 
   async function translateMany(lines, language, httpClient) {
     if (!lines.length) return null;
-    var output = new Array(lines.length);
+    var output = lines.slice();
+    var groupSize = 6;
+    var groups = [];
+    for (var i = 0; i < lines.length; i += groupSize) {
+      groups.push({ start: i, items: lines.slice(i, i + groupSize) });
+    }
     var cursor = 0;
+    var started = Date.now();
     async function worker() {
       while (true) {
-        var index = cursor++;
-        if (index >= lines.length) return;
-        var text = lines[index];
-        if (!text || !text.trim()) {
-          output[index] = text;
-          continue;
-        }
+        if (Date.now() - started > 20000) return;
+        var group = groups[cursor++];
+        if (!group) return;
         var result = null;
         try {
-          result = await translateText(text, language, httpClient);
+          result = await translateText(group.items.join("\n"), language, httpClient);
         } catch (error) {}
-        output[index] = result && result[0] ? result[0] : text;
+        if (!result) continue;
+        var mapped = null;
+        if (result.length >= group.items.length) {
+          mapped = result.slice(0, group.items.length);
+        } else {
+          var joined = result.join("").split("\n");
+          if (joined.length >= group.items.length) mapped = joined.slice(0, group.items.length);
+        }
+        if (!mapped) continue;
+        for (var j = 0; j < group.items.length; j++) {
+          var replacement = mapped[j];
+          if (replacement && replacement !== group.items[j]) output[group.start + j] = replacement;
+        }
       }
     }
     var workers = [];
-    var count = Math.min(8, lines.length);
-    for (var i = 0; i < count; i++) workers.push(worker());
+    var count = Math.min(8, groups.length);
+    for (var k = 0; k < count; k++) workers.push(worker());
     await Promise.all(workers);
     return output;
   }
@@ -660,6 +674,8 @@
           format = detectFormat(body);
         }
       }
+      realConsole.log(TAG + " script=timedtext endpoint=timedtext target=" + language +
+        " format=" + format + "|entry");
       if (language === "off") {
         realConsole.log(TAG + " script=timedtext endpoint=timedtext target=off format=" + format +
           " lines=0 translated=0 changed=0 bodyLen=" + originalLength +

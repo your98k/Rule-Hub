@@ -7,7 +7,7 @@
 #!system = iOS,iPadOS
 #!loon_version = 3.5.1(978)
 #!date = 2026-10-30
-#!version = 1.3.1
+#!version = 1.3.2
 
 [Argument]
 autoHd = switch,false,type=boolean,tag=自动最高画质,desc=自动选择 YouTube 最高画质
