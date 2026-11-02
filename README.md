@@ -16,6 +16,7 @@
 | 插件 | 说明 | Raw | CDN |
 | :--- | :--- | :---: | :---: |
 | 红果短剧去广告 | 拦截开屏与信息流广告 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/HongGuo.plugin) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/HongGuo.plugin) |
+| 虎扑去广告（本地 Mock 精简版） | 仅对 `interfaceAd/getOther` 广告接口本地返回无广告 JSON，无需等待该接口上游；Loon 3.5.1(978)+，需 MitM | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/HuPu.plugin) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/HuPu.plugin) |
 | YouTube 去广告增强版 | 12 项参数 + 首页补强 + 字幕/歌词翻译，与 Stash 增强版同源 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/YouTube-ADBlock-Enhanced.plugin) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/YouTube-ADBlock-Enhanced.plugin) |
 
 ## Stash 覆写
@@ -39,6 +40,7 @@
 - **腾讯视频**：首次使用需卸载重装 App，冷启动 2–3 次；脚本每 24h 自动拉取，无需手动更新。
 - **京东**：保持「获取慢慢买 Cookie」参数开启，在慢慢买 App「我的」页刷新一次即可取到 Cookie。
 - **Telegram**：「代理指向的策略」须填写当前配置中已存在的策略组或节点名。
+- **虎扑（Loon Mock 版）**：仅覆盖 `interfaceAd/getOther` 广告接口，不是全量净化；需 Loon 3.5.1(978)+ 并启用 MitM，勿与旧虎扑插件或 Stash 版同时启用。
 
 ## 鸣谢
 
