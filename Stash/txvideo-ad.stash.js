@@ -1,11 +1,11 @@
 // Stash adaptation of ZenmoFeiShi/Qx Txvideoad.js
-// Upstream SHA256: 51ae2ee0b713e765aecdf9e9c7fe5fde4e724b07464fab3891388e3f21e3ac6e
-// Synced at: 2026-11-01T10:38:58Z
+// Upstream SHA256: ca96b90cb1cefaa26af178d15a3a2e3f0f8cc03393b06934ef99fc156e825f10
+// Synced at: 2026-11-03T12:24:00Z
 
 (() => {
   const TAB_DROP_KEYS = ["smallvideo_entrance", "goods_entrance", "vip_entrance"];
   const TAB_DROP_TITLES = ["短剧", "好物", "会员专区"];
-  const TAB_CUT_WHITELIST = "0;2;4";
+  const TAB_CUT_WHITELIST = "0;4";
   const AD_ANY = ["AdResponseInfo", "InnerAdPromotionEventList", "InnerAdCommonPromotionEventActivityList", "LoadingConfig", "PreloadResourceInfo", "AdFeedInfo"];
   const DROP_MODULES = ["user_center_more_function"];
   const AD_MODULE_IDS = ["outerPaster"];

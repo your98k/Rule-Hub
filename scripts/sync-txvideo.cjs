@@ -88,15 +88,23 @@ function updateState(state, now, upstreamHash, sourceChanged) {
   return changed;
 }
 
+// #!update 只是上游的日期元数据，改它不应该让定时任务红灯
+function normalizeSnippet(text) {
+  return text.replace(/^#!update[ \t]*=.*$/gm, "#!update =");
+}
+
 async function main() {
   const [snippet, upstream] = await Promise.all([fetchText(SNIPPET_URL), fetchText(SCRIPT_URL)]);
   const oldSnippet = read(SNIPPET_SNAPSHOT, "");
 
-  if (snippet !== oldSnippet) {
+  if (normalizeSnippet(snippet) !== normalizeSnippet(oldSnippet)) {
     console.error("Upstream rule file changed. Manual review is required; no files were updated.");
     console.error("Review TxvideoAD.snippet, then update Stash/TxvideoAD.stoverride rules and this workflow.");
     process.exit(2);
   }
+
+  // 规则正文没变时，快照仍跟随原文推进（日期行也算同步），避免快照长期落后
+  writeIfChanged(SNIPPET_SNAPSHOT, snippet);
 
   const oldUpstream = read(SCRIPT_SNAPSHOT, "");
   const upstreamHash = crypto.createHash("sha256").update(upstream).digest("hex");

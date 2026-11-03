@@ -51,6 +51,13 @@ function frame(header, body = empty) {
 
 const url = "https://i.video.qq.com/?test=1";
 
+// 底栏切割白名单跟随上游取值，不要在这里硬编码，否则上游一调整就误报失败
+const tabCutWhitelist = (() => {
+  const match = /TAB_CUT_WHITELIST = "([^"]*)"/.exec(payload);
+  assert.ok(match, "payload must declare TAB_CUT_WHITELIST");
+  return match[1];
+})();
+
 // 1-2. Splash request blocking, plain and gzip.
 const splashFunc = "/trpc.business_splash.ad_ssp_splash.splashService/GetSplashPreload";
 const splashRequest = frame(field(7, Buffer.from(splashFunc)));
@@ -84,7 +91,7 @@ for (const zip of [false, true]) {
   let out = Buffer.from(result.body);
   if (zip) out = zlib.gunzipSync(out);
   assert.ok(out.includes(Buffer.from("simple_mode_config")));
-  assert.ok(out.includes(Buffer.from("0;2;4")));
+  assert.ok(out.includes(Buffer.from(tabCutWhitelist)), "injected tab_bar_cut_whitelist must match payload: " + tabCutWhitelist);
 }
 
 // 7. rdelivery text rewrite.
