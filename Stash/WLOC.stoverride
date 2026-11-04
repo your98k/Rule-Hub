@@ -1,0 +1,100 @@
+name: Apple WLOC 定位修改（参数版）
+desc: |-
+  适用于 Stash iOS/tvOS 3.7+、macOS 4.4+。在覆写详情的「参数」中设置经纬度、精度、扰动半径和日志级别，保存并应用即可，无需编辑源码。
+  坐标填写 WGS84 十进制度数。在线选点/快捷指令保存的坐标及对应精度、扰动设置优先于本表单；要使用表单值，请先清除在线保存的位置。
+  保留上游安全默认值：没有在线保存的位置且经纬度仍为默认组合时，不修改定位。清除在线位置后，如本表单使用了自定义坐标，会回退到自定义坐标；需恢复真实定位时，停用本覆写最直接。
+  仅修改网络定位响应，并非全局 GPS 修改；需启用 MitM 并完全信任自己的 CA。上游提示 iOS 27 beta 6 起部分定位域名无法被 MitM，本参数适配不能绕过系统限制。
+  在线选点：https://wloc-pages.pages.dev/
+  设置位置快捷指令：https://www.icloud.com/shortcuts/a82717d8fdad4e6280866fcf911173f7
+  清除在线位置快捷指令：https://www.icloud.com/shortcuts/f42632d406504f24a2cd163af4fe012f
+author: Yu9191；Stash 参数适配：your98k
+homepage: https://github.com/your98k/Rule-Hub
+icon: https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/wloc.jpg
+category: Tools
+version: '1.0.0'
+date: '2026-11-04'
+
+# 上游：https://github.com/Yu9191/wloc
+# 仅增加 Stash 原生参数表单；保留上游两个脚本、匹配规则、存储键与更新地址。
+arguments-version: 1
+arguments:
+  longitude:
+    type: input
+    title: 经度（在线选点优先）
+    description: 'WGS84 十进制度数，范围 -180 至 180；仅填写数字、小数点及可选负号。默认与纬度组成上游透传占位值。'
+    default: '113.94114'
+    required: true
+    max-length: 32
+  latitude:
+    type: input
+    title: 纬度（在线选点优先）
+    description: 'WGS84 十进制度数，范围 -90 至 90；仅填写数字、小数点及可选负号。Stash 暂无小数输入类型，因此使用文本输入。'
+    default: '22.544577'
+    required: true
+    max-length: 32
+  accuracy:
+    type: input
+    value-type: integer
+    title: 精度（米）
+    description: '定位响应中的精度值，填写非负整数；在线保存的精度优先。'
+    default: 25
+    required: true
+    minimum: 0
+  randomRadius:
+    type: input
+    value-type: integer
+    title: 扰动半径（米，0 为关闭）
+    description: '在目标坐标附近随机扰动的半径，填写非负整数；在线保存的扰动半径优先。'
+    default: 0
+    required: true
+    minimum: 0
+  logLevel:
+    type: select
+    title: 日志级别
+    description: '日志可能包含目标坐标，分享前请脱敏；off 仅减少日志，上游读取配置时仍可能输出坐标。'
+    default: info
+    required: true
+    options:
+      - value: info
+        label: info（普通）
+      - value: warn
+        label: warn（警告）
+      - value: error
+        label: error（错误）
+      - value: debug
+        label: debug（调试）
+      - value: all
+        label: all（全部）
+      - value: 'off'
+        label: off（关闭）
+
+http:
+  mitm:
+    - 'gs-loc.apple.com'
+    - 'gs-loc-cn.apple.com'
+    - 'gsp-ssl.ls.apple.com'
+    - 'bluedot.is.autonavi.com'
+    - 'bluedot.is.autonavi.com.gds.alibabadns.com'
+  script:
+    - match: ^https?:\/\/(?:gs-loc(?:-cn)?\.apple\.com|gsp-ssl\.ls\.apple\.com|bluedot\.is\.autonavi\.com(?:\.gds\.alibabadns\.com)?)\/clls\/wloc
+      name: WLOC.Location
+      type: response
+      require-body: true
+      binary-mode: true
+      max-size: 0
+      timeout: 30
+      # 上游解析的是 & 分隔参数而非 JSON，故不使用 |json。
+      argument: 'longitude=${args.longitude}&latitude=${args.latitude}&accuracy=${args.accuracy}&randomRadius=${args.randomRadius}&logLevel=${args.logLevel}'
+    - match: ^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save
+      name: WLOC.Settings
+      type: request
+      require-body: false
+      timeout: 10
+
+script-providers:
+  WLOC.Location:
+    url: https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/wloc.js
+    interval: 86400
+  WLOC.Settings:
+    url: https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/wloc-settings.js
+    interval: 86400
