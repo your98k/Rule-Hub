@@ -1,26 +1,29 @@
 name: 'Telegram 链接跳转'
 desc: |-
-  将 t.me / telegram.me / telegram.dog 外部链接 307 重定向到所选 Telegram 客户端，可选：Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram，默认跳转官方 Telegram。
+  将 t.me / telegram.me / telegram.dog 网页链接交给指定客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram，默认官方 Telegram。
 
   使用说明：
-  · 需要安装并信任 Stash 的 MitM CA 证书
-  · 「代理指向的策略」请填写当前配置文件中已存在的策略组或节点名（对应 Loon 插件中的 PROXY 设置）
-  · 第三方客户端官方域名的分流规则将插入规则列表最前
+  · 需要安装并信任 Stash 的 MitM CA 证书；参数修改后请「保存并应用」
+  · 支持用户名、消息、话题、邀请、机器人参数等常见链接；不识别的网页路径原样放行
+  · 默认 307 直接跳转；若浏览器拦截，请将「打开方式」改为「兼容打开页」，再点击页面按钮
+  · 仅阻止上述三个域名的 QUIC，让网页请求回落到可改写的 TCP；不会全局禁用 QUIC
+  · 「代理指向的策略」须为当前配置中已存在的策略组或节点名
+  · iOS Universal Links 或 App 内部直接唤起客户端、不发出网页请求时，Stash 无法接管；可复制链接到 Safari 地址栏回车测试
 
 openUrl: 'https://apps.apple.com/app/id686449807'
 author: 'sooyaaabo (Loon 原作) / Stash 适配'
 homepage: 'https://loonlab.103516.xyz/Plugin/'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Telegram-01.png'
 category: '功能增强'
-date: '2026-10-26'
-version: '1.0.0'
+date: '2026-11-02'
+version: '1.1.0'
 
 arguments-version: 1
 arguments:
   tgapp:
     type: select
     title: 跳转至对应客户端
-    description: t.me 外部链接将 307 跳转到所选客户端的 URL Scheme
+    description: 选择已安装的客户端；更新覆写后会保留仍适用的自定义选择
     default: Telegram
     options:
       - value: Telegram
@@ -30,14 +33,27 @@ arguments:
       - value: iMe
       - value: Nicegram
       - value: Lingogram
+  open_mode:
+    type: select
+    title: 打开方式
+    description: 直接跳转被浏览器拦截时，可改用兼容页手动点击打开
+    default: redirect
+    options:
+      - value: redirect
+        label: 直接跳转（307）
+      - value: page
+        label: 兼容打开页（点击按钮）
   proxy_policy:
     type: input
     title: 代理指向的策略
-    description: 分流规则使用的策略，须为当前配置文件中已存在的策略组或节点名，如 PROXY、🚀 节点选择
+    description: 须为当前配置中已存在的策略组或节点名，如 PROXY、🚀 节点选择
     default: 'PROXY'
     required: true
 
 rules:
+  - 'AND,((DOMAIN,t.me),(PROTOCOL,QUIC)),REJECT,no-track'
+  - 'AND,((DOMAIN,telegram.me),(PROTOCOL,QUIC)),REJECT,no-track'
+  - 'AND,((DOMAIN,telegram.dog),(PROTOCOL,QUIC)),REJECT,no-track'
   - 'DOMAIN-SUFFIX,nagram.app,${args.proxy_policy}'
   - 'DOMAIN-SUFFIX,swiftgram.app,${args.proxy_policy}'
   - 'DOMAIN-SUFFIX,iturrit.com,${args.proxy_policy}'
@@ -47,42 +63,139 @@ rules:
   - 'DOMAIN-SUFFIX,intentchat.app,${args.proxy_policy}'
 
 http:
+  force-http-engine:
+    - 't.me:80'
+    - 't.me:443'
+    - 'telegram.me:80'
+    - 'telegram.me:443'
+    - 'telegram.dog:80'
+    - 'telegram.dog:443'
   mitm:
     - t.me
     - telegram.me
     - telegram.dog
   script:
     - name: Telegram.Redirect
-      match: '^https?:\/\/(t\.me|telegram\.me|telegram\.dog)\/'
+      match: '^https?://(?i:t\.me|telegram\.me|telegram\.dog)(?::(?:80|443))?(?:/|\?|$)'
       type: request
-      argument: '${args.tgapp}'
+      timeout: 5
+      argument: '{"tgapp":${args.tgapp|json},"open_mode":${args.open_mode|json}}'
 
 script-providers:
   Telegram.Redirect:
     payload: |
-      // Adapted from sooyaaabo's Loon plugin script (Telegram.redirect.js)
-      var MAPPING = {
-        'Telegram': 'tg',
-        'Swiftgram': 'sg',
-        'Nagram': 'na',
-        'Turrit': 'turrit',
-        'iMe': 'ime',
-        'Nicegram': 'ng',
-        'Lingogram': 'lingo'
-      };
-
-      var scheme = MAPPING[$argument] || 'tg';
-      var m = $request.url.match(/^(?:https?:\/\/)?(?:t\.me|telegram\.(?:me|dog))\/(.+)$/);
-
-      if (m) {
-        $done({
-          response: {
-            status: 307,
-            headers: {
-              'Location': scheme + '://resolve?domain=' + m[1]
+      // Telegram link routing for Stash. Derived from sooyaaabo's Telegram.redirect.js.
+      // Conversion rules: https://core.telegram.org/api/links
+      // No external requests, persistence, or private URLs in logs.
+      (function () {
+        var VERSION = '1.1.0';
+        var MAPPING = {Telegram:'tg', Swiftgram:'sg', Nagram:'na', Turrit:'turrit', iMe:'ime', Nicegram:'ng', Lingogram:'lingo'};
+        var RESERVED = /^(?:addemoji|addlist|addstickers|addstyle|addtheme|addcollection|auction|auth|bg|boost|c|call|confirmphone|contact|giftcode|invoice|iv|joinchat|login|m|nft|proxy|s|setlanguage|share|socks|msg|a|k|z|web|apps)$/i;
+        var ALLOWED_QUERY = /^(?:start|startgroup|startchannel|startapp|startattach|attach|choose|admin|game|mode|profile|direct|text|videochat|livestream|voicechat|thread|comment|single|t|task|option|boost|ref|collection)$/;
+      
+        function queryTail(raw, used) {
+          var kept = [];
+          raw.split('&').forEach(function (part) {
+            if (!part) return;
+            var key = decodeURIComponent(part.split('=')[0].replace(/\+/g, ' '));
+            if (ALLOWED_QUERY.test(key) && used.indexOf(key) < 0) {
+              // Keep encoded values as-is; never splice a decoded value into a URL.
+              if (/[\x00-\x20\x7f]/.test(part) || /%(?![0-9a-f]{2})/i.test(part)) throw new Error('bad query');
+              kept.push(part);
+              used.push(key);
             }
+          });
+          return kept.length ? '&' + kept.join('&') : '';
+        }
+      
+        function convert(raw, scheme) {
+          var match = raw.match(/^https?:\/\/(?:t\.me|telegram\.me|telegram\.dog)(?::(?:80|443))?(\/[^#]*)?(?:#.*)?$/i);
+          if (!match) return null;
+          var rest = match[1] || '/';
+          var pos = rest.indexOf('?');
+          var query = pos < 0 ? '' : rest.slice(pos + 1);
+          var path = pos < 0 ? rest : rest.slice(0, pos);
+          // A trailing slash is valid; empty middle components are not.
+          path = path.replace(/\/$/, '');
+          var parts = path.slice(1).split('/').map(function (part) {return decodeURIComponent(part);});
+          if (parts[0] === 's') {
+            if (parts.length < 2 || parts.length > 3 || RESERVED.test(parts[1]) || !/^[A-Za-z0-9_]{1,32}$/.test(parts[1]) || (parts.length === 3 && !/^\d+$/.test(parts[2]))) return null;
+            parts.shift();
           }
-        });
-      } else {
-        $done({});
-      }
+          if (!parts.length || parts.some(function (part) {return !part || /[\x00-\x20\x7f/#?&=]/.test(part);})) return null;
+          var first = parts[0], target = '', used = [], kind = '';
+          var invite = /^[A-Za-z0-9_-]+$/;
+          var username = /^[A-Za-z0-9_]{1,32}$/;
+          var numeric = /^\d+$/;
+          function build(action, values, type) {
+            var pairs = [];
+            Object.keys(values).forEach(function (key) {pairs.push(key + '=' + encodeURIComponent(values[key])); used.push(key);});
+            target = scheme + '://' + action + '?' + pairs.join('&');
+            kind = type;
+          }
+          if (first.charAt(0) === '+' && parts.length === 1 && invite.test(first.slice(1))) {
+            var token = first.slice(1);
+            if (numeric.test(token)) build('resolve', {phone:token}, 'phone');
+            else build('join', {invite:token}, 'invite');
+          } else if (first === 'joinchat' && parts.length === 2 && invite.test(parts[1])) {
+            build('join', {invite:parts[1]}, 'invite');
+          } else if (first === 'c' && (parts.length === 3 || parts.length === 4) && parts.slice(1).every(function (p) {return numeric.test(p);})) {
+            var privateValues = {channel:parts[1], post:parts[parts.length - 1]};
+            if (parts.length === 4) privateValues.thread = parts[2];
+            build('privatepost', privateValues, 'privatepost');
+          } else if (/^(?:addstickers|addemoji|addlist|setlanguage)$/.test(first) && parts.length === 2 && invite.test(parts[1])) {
+            var key = first === 'addlist' ? 'slug' : first === 'setlanguage' ? 'lang' : 'set';
+            var values = {}; values[key] = parts[1];
+            build(first, values, first);
+          } else if (!RESERVED.test(first) && username.test(first)) {
+            var publicValues = {domain:first};
+            if (parts.length === 2 && numeric.test(parts[1])) publicValues.post = parts[1];
+            else if (parts.length === 3 && numeric.test(parts[1]) && numeric.test(parts[2])) {
+              publicValues.post = parts[2]; publicValues.thread = parts[1];
+            } else if (parts.length === 3 && parts[1] === 's' && numeric.test(parts[2])) publicValues.story = parts[2];
+            else if (parts.length === 2 && /^[A-Za-z0-9_]+$/.test(parts[1]) && /(?:^|&)startapp(?:=|&|$)/.test(query)) publicValues.appname = parts[1];
+            else if (parts.length !== 1) return null;
+            build('resolve', publicValues, publicValues.post ? 'post' : 'resolve');
+          } else return null;
+          // Only resolve accepts user/bot options; invite and set links need no extra query.
+          if (target.indexOf('://resolve?') >= 0 || kind === 'privatepost') target += queryTail(query, used);
+          return {url:target, kind:kind};
+        }
+      
+        function htmlEscape(value) {
+          return value.replace(/[&<>"']/g, function (c) {return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+        }
+        function page(client, target) {
+          return '<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>打开 ' + htmlEscape(client) + '</title>' +
+            '<style>body{font:17px -apple-system,sans-serif;max-width:420px;margin:18vh auto;padding:24px;line-height:1.65;color:#202124;background:#f5f7fa}h1{font-size:26px}a{display:block;background:#1677df;color:white;text-align:center;padding:13px;border-radius:12px;text-decoration:none}p{color:#5e6672;font-size:15px}</style>' +
+            '<h1>使用 ' + htmlEscape(client) + ' 打开</h1><p>若浏览器拦截自动跳转，请点击下方按钮并允许打开 App。</p><a href="' + htmlEscape(target) + '">打开 ' + htmlEscape(client) + '</a><p>请确认已安装该客户端；如果没有响应，请将当前链接在 Safari 中打开后再试。</p></html>';
+        }
+      
+        var output = {};
+        try {
+          var rawArgument = typeof $argument === 'string' ? $argument.trim() : '';
+          var options = rawArgument.charAt(0) === '{' ? JSON.parse(rawArgument) : {tgapp:rawArgument || 'Telegram'};
+          var client = options.tgapp;
+          var mode = options.open_mode || 'redirect';
+          if (!Object.prototype.hasOwnProperty.call(MAPPING, client) || !/^(?:redirect|page)$/.test(mode)) throw new Error('invalid arguments');
+          var method = ($request.method || 'GET').toUpperCase();
+          var link = /^(?:GET|HEAD)$/.test(method) ? convert($request.url, MAPPING[client]) : null;
+          if (link) {
+            var headers = {'Cache-Control':'no-store, no-cache, must-revalidate', Pragma:'no-cache', Expires:'0'};
+            if (mode === 'page') {
+              headers['Content-Type'] = 'text/html; charset=utf-8';
+              headers['Content-Security-Policy'] = "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'";
+              headers['Referrer-Policy'] = 'no-referrer';
+              output = {response:{status:200, headers:headers, body:method === 'HEAD' ? '' : page(client, link.url)}};
+            } else {
+              headers.Location = link.url;
+              output = {response:{status:307, headers:headers, body:''}};
+            }
+            console.log('[Telegram.Redirect] v' + VERSION + ' client=' + client + ' mode=' + mode + ' type=' + link.kind);
+          }
+        } catch (error) {
+          // Do not log the input URL, argument, invite hash, or query contents.
+          console.log('[Telegram.Redirect] v' + VERSION + ' skipped: invalid arguments or URL');
+        }
+        $done(output);
+      }());

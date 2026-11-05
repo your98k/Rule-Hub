@@ -24,8 +24,7 @@
 | 覆写 | 版本要求 | 说明 | Raw | CDN |
 | :--- | :--- | :--- | :---: | :---: |
 | YouTube 去广告增强版 | TF 3.7+ | 12 项参数（10 开关 + 字幕/歌词翻译 + 首页补强），内嵌脚本 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube-ADBlock-Enhanced.stoverride) |
-| 哔哩哔哩去广告 | iOS 15+ | 基于 Sparkle，需 MitM over HTTP/2；过滤广告/弹窗，解锁后台播放与投屏，支持空降助手 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride) |
-| 哔哩哔哩 ADBlock | iOS/tvOS 3.7+ | Biliverse v0.7.5 移植，32 项原生参数，无需 BoxJS。**与上一条二选一** | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
+| 哔哩哔哩去广告 | iOS/tvOS 3.7+ | Biliverse v0.7.5 移植，32 项原生参数，无需 BoxJS；内置 8 条 QUIC 拦截 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
 | 红果短剧去广告 | 通用 | 域名拦截，不改动全局 IPv6/DNS | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
 | 腾讯视频净化 | iOS/tvOS 3.2.5+ | 开屏/暂停/底部推荐广告过滤；脚本每日自动同步上游 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TxvideoAD.stoverride) |
 | Telegram 链接跳转 | 需 MitM | t.me 等链接 307 跳转至所选 Telegram 客户端 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride) |
@@ -37,7 +36,7 @@
 ## 使用要点
 
 - **YouTube（Stash/Loon）**：参数默认关翻译，介意字幕/歌词外发请保持关闭；「首页信息流补强」误删正常卡片时关闭；不要与其他 YouTube 去广告插件同时启用。
-- **哔哩哔哩（两版二选一）**：空降助手默认开启（数据来自 bsbsb.top）；「百年大会员」仅客户端 UI 效果，非真实会员；开屏广告若回来了，多为 QUIC 绕过，覆写已内置 8 条 QUIC REJECT 规则。
+- **哔哩哔哩**：开屏广告若回来了，多为 QUIC 绕过，覆写已内置 8 条 QUIC REJECT 规则；去广告未生效时把「[调试] 日志等级」调到 INFO 查看脚本日志；不要与其他 B 站去广告覆写叠加。
 - **腾讯视频**：首次使用需卸载重装 App，冷启动 2–3 次；脚本每 24h 自动拉取，无需手动更新。
 - **京东**：保持「获取慢慢买 Cookie」参数开启，在慢慢买 App「我的」页刷新一次即可取到 Cookie。
 - **Telegram**：「代理指向的策略」须填写当前配置中已存在的策略组或节点名。

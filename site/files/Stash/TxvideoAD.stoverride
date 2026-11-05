@@ -3,17 +3,19 @@ desc: |-
   适配 ZenmoFeiShi 的腾讯视频净化规则，保留开屏/播放前广告过滤、底栏精简及我的页面净化逻辑。
   单文件内嵌脚本，需要 Stash 3.2.5+；已适配 Stash 的二进制 body 接口。
   使用前请卸载腾讯视频后重新安装；安装后冷启动腾讯视频 2–3 次，使配置生效。
-  已适配上游 2026-10-27 脚本更新：新增暂停广告（JCE 129196）与瀑布流合并广告过滤。
+  已适配上游 2026-11-01 脚本更新：底栏切割白名单由 0;2;4 调整为 0;4。
+  历史适配：2026-10-27 新增暂停广告（JCE 129196）与瀑布流合并广告过滤。
   已补 QUIC 拦截，防止开屏广告经 UDP 443 绕过 MitM。
   请启用 MITM，并安装、完全信任你自己生成的 CA 证书。
   脚本由 script-providers 每 24h 从 Stash/txvideo-ad.stash.js 自动更新；内嵌 payload 仅作离线兜底。实际效果取决于腾讯视频版本。
 author: TG@ZenMoFiShi（原作者）
-date: '2026-10-27'
-version: '1.1.0'
+date: '2026-11-01'
+version: '1.1.1'
 
 # 原始规则：https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TxvideoAD.snippet
 # 原始脚本：https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/Txvideoad.js
 # 2026-10-27 上游更新：新增 JCE 暂停广告 129196、瀑布流合并广告过滤。
+# 2026-11-01 上游更新：底栏切割白名单 0;2;4 → 0;4（规则文件只改了 #!update 日期）。
 # Stash 适配：将 bodyBytes 输入/输出改为二进制 body；文本接口单独关闭 binary-mode。
 # 不覆盖现有 CA、代理组或其他 MITM 域名；数组按 Stash 覆写规则合并。
 rules:
@@ -71,13 +73,13 @@ script-providers:
     interval: 86400
     payload: |
       // Stash adaptation of ZenmoFeiShi/Qx Txvideoad.js
-      // Upstream SHA256: 51ae2ee0b713e765aecdf9e9c7fe5fde4e724b07464fab3891388e3f21e3ac6e
-      // Synced at: 2026-11-01T10:38:58Z
+      // Upstream SHA256: ca96b90cb1cefaa26af178d15a3a2e3f0f8cc03393b06934ef99fc156e825f10
+      // Synced at: 2026-11-03T12:24:00Z
       
       (() => {
         const TAB_DROP_KEYS = ["smallvideo_entrance", "goods_entrance", "vip_entrance"];
         const TAB_DROP_TITLES = ["短剧", "好物", "会员专区"];
-        const TAB_CUT_WHITELIST = "0;2;4";
+        const TAB_CUT_WHITELIST = "0;4";
         const AD_ANY = ["AdResponseInfo", "InnerAdPromotionEventList", "InnerAdCommonPromotionEventActivityList", "LoadingConfig", "PreloadResourceInfo", "AdFeedInfo"];
         const DROP_MODULES = ["user_center_more_function"];
         const AD_MODULE_IDS = ["outerPaster"];

@@ -1,8 +1,136 @@
 {
-  "generated_at": "2026-11-01 14:29",
+  "generated_at": "2026-11-05 08:36",
   "repo": "https://github.com/your98k/Rule-Hub",
   "base": "https://your98k.github.io/Rule-Hub",
   "plugins": [
+    {
+      "id": "bilibili-adblock-stash",
+      "name": "📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)",
+      "desc": "'哔哩哔哩：去广告",
+      "icon": "",
+      "date": "2026-11-05",
+      "version": "",
+      "tags": [
+        "Stash 覆写"
+      ],
+      "type": "stash",
+      "authors": [],
+      "homepage": "",
+      "rulesCount": 8,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.ADBlock.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride"
+      }
+    },
+    {
+      "id": "wloc-stash",
+      "name": "Apple WLOC 定位修改（参数版）",
+      "desc": "适用于 Stash iOS/tvOS 3.7+、macOS 4.4+。在覆写详情的「参数」中设置经纬度、精度、扰动半径和日志级别，保存并应用即可，无需编辑源码。\n坐标填写 WGS84 十进制度数。在线选点/快捷指令保存的坐标及对应精度、扰动设置优先于本表单；要使用表单值，请先清除在线保存的位置。\n保留上游安全默认值：没有在线保存的位置且经纬度仍为默认组合时，不修改定位。清除在线位置后，如本表单使用了自定义坐标，会回退到自定义坐标；需恢复真实定位时，停用本覆写最直接。\n仅修改网络定位响应，并非全局 GPS 修改；需启用 MitM 并完全信任自己的 CA。上游提示 iOS 27 beta 6 起部分定位域名无法被 MitM，本参数适配不能绕过系统限制。\n在线选点：https://wloc-pages.pages.dev/\n设置位置快捷指令：https://www.icloud.com/shortcuts/a82717d8fdad4e6280866fcf911173f7\n清除在线位置快捷指令：https://www.icloud.com/shortcuts/f42632d406504f24a2cd163af4fe012f",
+      "icon": "https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/wloc.jpg",
+      "date": "2026-11-04",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "Tools"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "Yu9191；Stash 参数适配：your98k",
+          "url": ""
+        }
+      ],
+      "homepage": "https://github.com/your98k/Rule-Hub",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "gs-loc.apple.com",
+        "gs-loc-cn.apple.com",
+        "gsp-ssl.ls.apple.com",
+        "bluedot.is.autonavi.com",
+        "bluedot.is.autonavi.com.gds.alibabadns.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WLOC.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/WLOC.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/WLOC.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WLOC.stoverride"
+      }
+    },
+    {
+      "id": "hupu-loon",
+      "name": "虎扑去广告（本地 Mock 精简版）",
+      "desc": "群友方案的 Loon 原生适配。仅处理 goblin.hupu.com 的 interfaceAd/getOther 广告接口，本地返回 HTTP 200 无广告 JSON，无需等待该接口上游响应，无远程脚本。需启用 MitM 并安装、完全信任 Loon CA；启用前停用旧虎扑插件及重复重写。需要 Loon 3.5.1(978)+。未实机验证，不保证移除全部广告或解决所有启动等待。",
+      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/HUPU.png",
+      "date": "2026-11-03",
+      "version": "",
+      "tags": [
+        "Loon 插件",
+        "去广告"
+      ],
+      "type": "loon",
+      "authors": [
+        {
+          "name": "群友投稿（未署名）；Loon 适配：ChatGPT",
+          "url": ""
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 1,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/HuPu.plugin",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/HuPu.plugin",
+        "page": "https://your98k.github.io/Rule-Hub/files/Loon/HuPu.plugin"
+      },
+      "install": {
+        "loon": "loon://import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Fyour98k%2FRule-Hub%2Fmain%2FLoon%2FHuPu.plugin"
+      }
+    },
+    {
+      "id": "telegram-stash",
+      "name": "Telegram 链接跳转",
+      "desc": "将 t.me / telegram.me / telegram.dog 网页链接交给指定客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram，默认官方 Telegram。\n\n使用说明：\n· 需要安装并信任 Stash 的 MitM CA 证书；参数修改后请「保存并应用」\n· 支持用户名、消息、话题、邀请、机器人参数等常见链接；不识别的网页路径原样放行\n· 默认 307 直接跳转；若浏览器拦截，请将「打开方式」改为「兼容打开页」，再点击页面按钮\n· 仅阻止上述三个域名的 QUIC，让网页请求回落到可改写的 TCP；不会全局禁用 QUIC\n· 「代理指向的策略」须为当前配置中已存在的策略组或节点名\n· iOS Universal Links 或 App 内部直接唤起客户端、不发出网页请求时，Stash 无法接管；可复制链接到 Safari 地址栏回车测试",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Telegram-01.png",
+      "date": "2026-11-02",
+      "version": "1.1.0",
+      "tags": [
+        "Stash 覆写",
+        "功能增强"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "sooyaaabo (Loon 原作) / Stash 适配",
+          "url": ""
+        }
+      ],
+      "homepage": "https://loonlab.103516.xyz/Plugin/",
+      "rulesCount": 10,
+      "mitmHosts": [
+        "t.me",
+        "telegram.me",
+        "telegram.dog"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Telegram.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride"
+      }
+    },
     {
       "id": "hupu-stash",
       "name": "虎扑去广告",
@@ -34,6 +162,41 @@
       },
       "install": {
         "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride"
+      }
+    },
+    {
+      "id": "txvideoad-stash",
+      "name": "腾讯视频净化（Stash）",
+      "desc": "适配 ZenmoFeiShi 的腾讯视频净化规则，保留开屏/播放前广告过滤、底栏精简及我的页面净化逻辑。\n单文件内嵌脚本，需要 Stash 3.2.5+；已适配 Stash 的二进制 body 接口。\n使用前请卸载腾讯视频后重新安装；安装后冷启动腾讯视频 2–3 次，使配置生效。\n已适配上游 2026-11-01 脚本更新：底栏切割白名单由 0;2;4 调整为 0;4。\n历史适配：2026-10-27 新增暂停广告（JCE 129196）与瀑布流合并广告过滤。\n已补 QUIC 拦截，防止开屏广告经 UDP 443 绕过 MitM。\n请启用 MITM，并安装、完全信任你自己生成的 CA 证书。\n脚本由 script-providers 每 24h 从 Stash/txvideo-ad.stash.js 自动更新；内嵌 payload 仅作离线兜底。实际效果取决于腾讯视频版本。",
+      "icon": "",
+      "date": "2026-11-01",
+      "version": "1.1.1",
+      "tags": [
+        "Stash 覆写"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "TG@ZenMoFiShi（原作者）",
+          "url": ""
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 8,
+      "mitmHosts": [
+        "i.video.qq.com",
+        "iacc.qq.com",
+        "config.ab.qq.com",
+        "rdelivery.qq.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TxvideoAD.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/TxvideoAD.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride"
       }
     },
     {
@@ -209,91 +372,6 @@
       }
     },
     {
-      "id": "bilibili-adblock-stash",
-      "name": "📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)",
-      "desc": "'哔哩哔哩：去广告",
-      "icon": "",
-      "date": "2026-10-28",
-      "version": "",
-      "tags": [
-        "Stash 覆写"
-      ],
-      "type": "stash",
-      "authors": [],
-      "homepage": "",
-      "rulesCount": 8,
-      "mitmHosts": [],
-      "needsMitm": false,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.ADBlock.stoverride"
-      },
-      "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride"
-      }
-    },
-    {
-      "id": "txvideoad-stash",
-      "name": "腾讯视频净化（Stash）",
-      "desc": "适配 ZenmoFeiShi 的腾讯视频净化规则，保留开屏/播放前广告过滤、底栏精简及我的页面净化逻辑。\n单文件内嵌脚本，需要 Stash 3.2.5+；已适配 Stash 的二进制 body 接口。\n使用前请卸载腾讯视频后重新安装；安装后冷启动腾讯视频 2–3 次，使配置生效。\n已适配上游 2026-10-27 脚本更新：新增暂停广告（JCE 129196）与瀑布流合并广告过滤。\n已补 QUIC 拦截，防止开屏广告经 UDP 443 绕过 MitM。\n请启用 MITM，并安装、完全信任你自己生成的 CA 证书。\n脚本由 script-providers 每 24h 从 Stash/txvideo-ad.stash.js 自动更新；内嵌 payload 仅作离线兜底。实际效果取决于腾讯视频版本。",
-      "icon": "",
-      "date": "2026-10-27",
-      "version": "1.1.0",
-      "tags": [
-        "Stash 覆写"
-      ],
-      "type": "stash",
-      "authors": [
-        {
-          "name": "TG@ZenMoFiShi（原作者）",
-          "url": ""
-        }
-      ],
-      "homepage": "",
-      "rulesCount": 8,
-      "mitmHosts": [
-        "i.video.qq.com",
-        "iacc.qq.com",
-        "config.ab.qq.com",
-        "rdelivery.qq.com"
-      ],
-      "needsMitm": true,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TxvideoAD.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/TxvideoAD.stoverride"
-      },
-      "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride"
-      }
-    },
-    {
-      "id": "bilibili-stash",
-      "name": "Bilibili",
-      "desc": "",
-      "icon": "",
-      "date": "2026-10-26",
-      "version": "",
-      "tags": [
-        "Stash 覆写"
-      ],
-      "type": "stash",
-      "authors": [],
-      "homepage": "",
-      "rulesCount": 0,
-      "mitmHosts": [],
-      "needsMitm": false,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.stoverride"
-      },
-      "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.stoverride"
-      }
-    },
-    {
       "id": "jingdong-stash",
       "name": "京东",
       "desc": "1. 过滤京东广告；2. 历史比价信息，任选其一即可。\n首次使用保持 Stash 连接，打开【慢慢买】APP →【我的】并刷新，提示【获取ck成功】后返回京东查看比价。\n此插件仅支持京东标准模式。\n——\n适配自 Loon 插件 JingDong.lpx（原作：RuCu6、Maasea、MuTu、苍井灰灰、mw418、可莉）。\n需要 Stash iOS/tvOS 3.7+ 或 macOS 4.4+，并已在 Stash 内生成、安装并信任 CA 证书。\n比价各版本在「覆写参数」中开关：通知版与嵌入版互斥、表格图与折线图互斥，请勿同时开启。",
@@ -322,41 +400,6 @@
       },
       "install": {
         "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride"
-      }
-    },
-    {
-      "id": "telegram-stash",
-      "name": "Telegram 链接跳转",
-      "desc": "将 t.me / telegram.me / telegram.dog 外部链接 307 重定向到所选 Telegram 客户端，可选：Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram，默认跳转官方 Telegram。\n\n使用说明：\n· 需要安装并信任 Stash 的 MitM CA 证书\n· 「代理指向的策略」请填写当前配置文件中已存在的策略组或节点名（对应 Loon 插件中的 PROXY 设置）\n· 第三方客户端官方域名的分流规则将插入规则列表最前",
-      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Telegram-01.png",
-      "date": "2026-10-26",
-      "version": "1.0.0",
-      "tags": [
-        "Stash 覆写",
-        "功能增强"
-      ],
-      "type": "stash",
-      "authors": [
-        {
-          "name": "sooyaaabo (Loon 原作) / Stash 适配",
-          "url": ""
-        }
-      ],
-      "homepage": "https://loonlab.103516.xyz/Plugin/",
-      "rulesCount": 7,
-      "mitmHosts": [
-        "t.me",
-        "telegram.me",
-        "telegram.dog"
-      ],
-      "needsMitm": true,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Telegram.stoverride"
-      },
-      "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride"
       }
     },
     {
