@@ -7,7 +7,6 @@ on:
   push:
     branches: [main]
     paths:
-      - 'Loon/**'
       - 'Stash/**'
       - 'scripts/generate-site.cjs'
       - 'scripts/site-template.html'

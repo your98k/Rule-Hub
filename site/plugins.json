@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05 08:36",
+  "generated_at": "2026-11-07 16:03",
   "repo": "https://github.com/your98k/Rule-Hub",
   "base": "https://your98k.github.io/Rule-Hub",
   "plugins": [
@@ -8,7 +8,7 @@
       "name": "📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)",
       "desc": "'哔哩哔哩：去广告",
       "icon": "",
-      "date": "2026-11-05",
+      "date": "2026-11-07",
       "version": "",
       "tags": [
         "Stash 覆写"
@@ -63,37 +63,6 @@
       },
       "install": {
         "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WLOC.stoverride"
-      }
-    },
-    {
-      "id": "hupu-loon",
-      "name": "虎扑去广告（本地 Mock 精简版）",
-      "desc": "群友方案的 Loon 原生适配。仅处理 goblin.hupu.com 的 interfaceAd/getOther 广告接口，本地返回 HTTP 200 无广告 JSON，无需等待该接口上游响应，无远程脚本。需启用 MitM 并安装、完全信任 Loon CA；启用前停用旧虎扑插件及重复重写。需要 Loon 3.5.1(978)+。未实机验证，不保证移除全部广告或解决所有启动等待。",
-      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/HUPU.png",
-      "date": "2026-11-03",
-      "version": "",
-      "tags": [
-        "Loon 插件",
-        "去广告"
-      ],
-      "type": "loon",
-      "authors": [
-        {
-          "name": "群友投稿（未署名）；Loon 适配：ChatGPT",
-          "url": ""
-        }
-      ],
-      "homepage": "",
-      "rulesCount": 1,
-      "mitmHosts": [],
-      "needsMitm": false,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/HuPu.plugin",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/HuPu.plugin",
-        "page": "https://your98k.github.io/Rule-Hub/files/Loon/HuPu.plugin"
-      },
-      "install": {
-        "loon": "loon://import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Fyour98k%2FRule-Hub%2Fmain%2FLoon%2FHuPu.plugin"
       }
     },
     {
@@ -289,89 +258,6 @@
       }
     },
     {
-      "id": "telegram-loon",
-      "name": "Telegram 外链跳转（可调参数）",
-      "desc": "把 t.me / telegram.me / telegram.dog 的网页链接 302 跳转到指定 Telegram 客户端。客户端、代理策略、主机名都在插件设置里改，不用动文件。",
-      "icon": "",
-      "date": "2026-10-31 14:20:00",
-      "version": "",
-      "tags": [
-        "Loon 插件",
-        "Telegram, 跳转, 工具"
-      ],
-      "type": "loon",
-      "authors": [
-        {
-          "name": "原 Loon 插件 @sooyaaab（BoStudioHub）；可调参数版适配",
-          "url": ""
-        }
-      ],
-      "homepage": "https://t.me/BoStudioHub",
-      "rulesCount": 19,
-      "mitmHosts": [],
-      "needsMitm": false,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/Telegram外链跳转.plugin",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/Telegram外链跳转.plugin",
-        "page": "https://your98k.github.io/Rule-Hub/files/Loon/Telegram外链跳转.plugin"
-      },
-      "install": {
-        "loon": "loon://import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Fyour98k%2FRule-Hub%2Fmain%2FLoon%2FTelegram%E5%A4%96%E9%93%BE%E8%B7%B3%E8%BD%AC.plugin"
-      }
-    },
-    {
-      "id": "youtube-adblock-enhanced-loon",
-      "name": "YouTube 去广告增强版",
-      "desc": "12 项参数：10 个开关 + 字幕/歌词翻译，含首页 Sponsored 补强；需启用改写与 MitM。与旧 YouTube 插件二选一。",
-      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png",
-      "date": "2026-10-30",
-      "version": "1.3.3",
-      "tags": [
-        "Loon 插件",
-        "去广告"
-      ],
-      "type": "loon",
-      "authors": [
-        {
-          "name": "Maasea",
-          "url": "https://github.com/Maasea"
-        },
-        {
-          "name": "gholts",
-          "url": "https://github.com/gholts"
-        },
-        {
-          "name": "RuCu6",
-          "url": "https://github.com/RuCu6"
-        },
-        {
-          "name": "VirgilClyne",
-          "url": "https://github.com/VirgilClyne"
-        },
-        {
-          "name": "Hey-sayiwanna",
-          "url": "https://github.com/Hey-sayiwanna"
-        }
-      ],
-      "homepage": "https://github.com/your98k/Rule-Hub",
-      "rulesCount": 0,
-      "mitmHosts": [
-        "rr*.googlevideo.com",
-        "s.youtube.com",
-        "www.youtube.com",
-        "youtubei.googleapis.com"
-      ],
-      "needsMitm": true,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/YouTube-ADBlock-Enhanced.plugin",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/YouTube-ADBlock-Enhanced.plugin",
-        "page": "https://your98k.github.io/Rule-Hub/files/Loon/YouTube-ADBlock-Enhanced.plugin"
-      },
-      "install": {
-        "loon": "loon://import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Fyour98k%2FRule-Hub%2Fmain%2FLoon%2FYouTube-ADBlock-Enhanced.plugin"
-      }
-    },
-    {
       "id": "jingdong-stash",
       "name": "京东",
       "desc": "1. 过滤京东广告；2. 历史比价信息，任选其一即可。\n首次使用保持 Stash 连接，打开【慢慢买】APP →【我的】并刷新，提示【获取ck成功】后返回京东查看比价。\n此插件仅支持京东标准模式。\n——\n适配自 Loon 插件 JingDong.lpx（原作：RuCu6、Maasea、MuTu、苍井灰灰、mw418、可莉）。\n需要 Stash iOS/tvOS 3.7+ 或 macOS 4.4+，并已在 Stash 内生成、安装并信任 CA 证书。\n比价各版本在「覆写参数」中开关：通知版与嵌入版互斥、表格图与折线图互斥，请勿同时开启。",
@@ -400,37 +286,6 @@
       },
       "install": {
         "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride"
-      }
-    },
-    {
-      "id": "hongguo-loon",
-      "name": "红果短剧广告拦截",
-      "desc": "红果短剧核心广告与穿山甲/字节系兜底拦截规则(已去重合并)。插件规则与主配置自动合并，不含 DNS 与 IPv6 设置。",
-      "icon": "https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png",
-      "date": "2026-10-20",
-      "version": "1.5.0",
-      "tags": [
-        "Loon 插件",
-        "去广告"
-      ],
-      "type": "loon",
-      "authors": [
-        {
-          "name": "Tartarus2014 & Customized",
-          "url": ""
-        }
-      ],
-      "homepage": "https://github.com/Tartarus2014/Loon-Script",
-      "rulesCount": 11,
-      "mitmHosts": [],
-      "needsMitm": false,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/HongGuo.plugin",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/HongGuo.plugin",
-        "page": "https://your98k.github.io/Rule-Hub/files/Loon/HongGuo.plugin"
-      },
-      "install": {
-        "loon": "loon://import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Fyour98k%2FRule-Hub%2Fmain%2FLoon%2FHongGuo.plugin"
       }
     },
     {
@@ -500,37 +355,6 @@
       },
       "install": {
         "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Amap.stoverride"
-      }
-    },
-    {
-      "id": "blockads-stash",
-      "name": "广告拦截&净化合集",
-      "desc": "(支持约730款APP/小程序)针对部分APP和小程序广告进行拦截，某些APP要清除缓存或者重新安装拦截广告才会生效！规则明细可以查看本插件的注释",
-      "icon": "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/AdblockPlus.png",
-      "date": "2026-09-10 21:10:39",
-      "version": "1.0",
-      "tags": [
-        "Stash 覆写",
-        "奶思的模块"
-      ],
-      "type": "stash",
-      "authors": [
-        {
-          "name": "奶思",
-          "url": "https://github.com/fmz200"
-        }
-      ],
-      "homepage": "https://github.com/fmz200/wool_scripts",
-      "rulesCount": 2964,
-      "mitmHosts": [],
-      "needsMitm": false,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/blockAds.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/blockAds.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/blockAds.stoverride"
-      },
-      "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/blockAds.stoverride"
       }
     }
   ]

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Rule-Hub · Loon 插件与 Stash 覆写仓库</title>
+  <title>Rule-Hub · Stash 专属覆写仓库</title>
   <!-- Tailwind 已预编译为静态 CSS，避免运行时 JIT 编译带来的卡顿 -->
   <link rel="stylesheet" href="./assets/tailwind.css">
   <style>
@@ -420,7 +420,7 @@
             </div>
             <div>
               <div id="island-exp-title" class="text-xs font-semibold text-white leading-tight">已复制插件订阅链接</div>
-              <div id="island-exp-sub" class="text-[11px] text-slate-400 font-mono truncate max-w-[210px]">loon://import?plugin=...</div>
+              <div id="island-exp-sub" class="text-[11px] text-slate-400 font-mono truncate max-w-[210px]">https://link.stash.ws/install-override/...</div>
             </div>
           </div>
           <span id="island-exp-badge" class="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
@@ -442,26 +442,21 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-lg sm:text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-cyan-300 dark:from-white dark:to-cyan-300">
-              Rule-Hub 插件仓库
+              Rule-Hub · Stash 覆写仓库
             </h1>
             <span class="hidden sm:inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-ios-blue/15 text-ios-cyan border border-ios-cyan/25">
               iOS 18 Fluid UI
             </span>
           </div>
           <p class="text-xs text-[var(--text-muted)] mt-0.5">
-            Loon 插件与 Stash 覆写合集 · 一键安装 · 数据自动同步
+            Stash 专属覆写合集 · 一键安装 · 数据自动同步
           </p>
         </div>
       </div>
 
-      <!-- Target Client Global Mode Selector & Quick Utilities -->
+      <!-- Stash-only quick utilities -->
       <div class="flex items-center gap-2.5 flex-wrap">
-        <!-- Default Target App Selector -->
-        <div class="hidden md:flex items-center bg-black/25 dark:bg-white/5 border border-white/10 rounded-full p-1 text-xs">
-          <span class="px-2.5 text-[var(--text-muted)] text-[11px]">默认客户端:</span>
-          <button onclick="setPreferredClient('Loon')" id="client-btn-Loon" class="ios-btn px-3 py-1 rounded-full font-medium bg-ios-blue text-white shadow-sm">Loon</button>
-          <button onclick="setPreferredClient('Stash')" id="client-btn-Stash" class="ios-btn px-3 py-1 rounded-full font-medium text-[var(--text-muted)] hover:text-white">Stash</button>
-        </div>
+        <span class="px-3 py-1.5 rounded-full text-xs font-semibold bg-cyan-500/15 text-cyan-300 border border-cyan-400/25">Stash 专属</span>
 
         <!-- Sound Haptics Toggle -->
         <button id="sound-toggle-btn" onclick="toggleSoundHaptics()" title="iOS 拟真声效与触感反馈" class="ios-btn ios-glass w-10 h-10 rounded-2xl flex items-center justify-center text-sm hover:border-ios-cyan/50">
@@ -498,13 +493,10 @@
         </div>
         <div class="text-xs leading-relaxed text-[var(--text-muted)]">
           <span class="font-semibold text-amber-300">独立维护声明：</span>
-          本站为个人维护的 Loon 与 Stash 插件仓库，所有规则与覆写来自公开仓库的整合适配，仅供学习与个人使用；禁止在中华人民共和国境内平台公开传播或用于商业用途。
+          本站为个人维护的 Stash 专属覆写仓库，规则与覆写来自公开仓库的整合适配，仅供学习与个人使用；禁止在中华人民共和国境内平台公开传播或用于商业用途。
         </div>
       </div>
       <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
-        <button onclick="openConverterModal()" class="ios-btn text-xs px-3 py-1.5 rounded-full bg-ios-indigo/20 text-indigo-300 border border-indigo-400/30 hover:bg-ios-indigo/30 font-medium">
-          ⚡ 链接转换器
-        </button>
         <button onclick="dismissBanner()" class="ios-btn text-xs px-2.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-[var(--text-muted)]">
           收起
         </button>
@@ -528,10 +520,10 @@
 
       <div class="ios-glass rounded-3xl p-4 flex items-center justify-between">
         <div>
-          <p class="text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-medium">Stash 覆写 / Loon 插件</p>
+          <p class="text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-medium">Stash 覆写</p>
           <div class="flex items-baseline gap-2 mt-1">
             <span id="stat-stash-count" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-amber-400">-</span>
-            <span class="text-xs text-[var(--text-muted)] font-mono">/ <span id="stat-loon-count">-</span></span>
+            <span class="text-xs text-[var(--text-muted)] font-mono">个覆写</span>
           </div>
         </div>
         <div class="w-11 h-11 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-xl">
@@ -552,12 +544,11 @@
         </div>
       </div>
 
-      <div class="ios-glass rounded-3xl p-4 flex items-center justify-between cursor-pointer hover:border-ios-purple/50" onclick="openConverterModal()">
+      <div class="ios-glass rounded-3xl p-4 flex items-center justify-between">
         <div>
-          <p class="text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-medium">一键配置工作台</p>
+          <p class="text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-medium">Stash 专属仓库</p>
           <div class="flex items-baseline gap-1.5 mt-1">
-            <span class="text-sm sm:text-base font-bold text-purple-300">生成专属 .conf</span>
-            <span class="text-xs text-[var(--text-muted)]">→</span>
+            <span class="text-sm sm:text-base font-bold text-purple-300">原生覆写 · 一键安装</span>
           </div>
         </div>
         <div class="w-11 h-11 rounded-2xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-xl">
@@ -626,7 +617,7 @@
     <div id="empty-state" class="hidden ios-glass rounded-3xl p-12 text-center my-8 max-w-lg mx-auto">
       <div class="text-5xl mb-3">🛸</div>
       <h3 class="text-lg font-bold">未找到匹配的插件模块</h3>
-      <p class="text-xs text-[var(--text-muted)] mt-1 mb-5">尝试更换关键词、清除筛选标签，或者使用 Script-Hub 转换外部模块链接。</p>
+      <p class="text-xs text-[var(--text-muted)] mt-1 mb-5">尝试更换关键词或清除筛选标签，也可以重置所有筛选条件。</p>
       <button onclick="resetAllFilters()" class="ios-btn px-5 py-2.5 rounded-full bg-gradient-to-r from-ios-blue to-ios-indigo text-white text-xs font-semibold shadow-lg">
         重置所有筛选条件
       </button>
@@ -635,7 +626,7 @@
     <!-- Footer -->
     <footer class="mt-14 mb-6 text-center text-xs text-[var(--text-muted)] space-y-2">
       <div class="flex items-center justify-center gap-3 flex-wrap">
-        <span>🧩 Rule-Hub 插件仓库</span>
+        <span>🧩 Rule-Hub · Stash 覆写仓库</span>
         <span>·</span>
         <span>数据更新：<span id="footer-sync-time" class="font-mono text-ios-cyan">-</span></span>
         <span>·</span>
@@ -657,8 +648,8 @@
         <span class="hidden sm:inline">净化去广</span>
       </button>
       <button onclick="openConverterModal()" class="dock-item flex items-center gap-1.5 px-3 py-2 rounded-full hover:bg-white/10 text-xs font-medium">
-        <span>🔄</span>
-        <span class="hidden sm:inline">链接转换</span>
+        <span>🔗</span>
+        <span class="hidden sm:inline">安装链接</span>
       </button>
     </div>
   </nav>
@@ -750,18 +741,18 @@
   </div>
 
 
-  <!-- MODAL 3: Script-Hub Cross-Client Converter -->
+  <!-- MODAL 2: Stash Install Link Generator -->
   <div id="converter-modal" class="ios-modal-backdrop fixed inset-0 z-50 bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="closeConverterOnBackdrop(event)">
     <div class="ios-sheet ios-glass w-full sm:max-w-xl rounded-t-[32px] sm:rounded-[32px] p-5 sm:p-7 border border-white/20">
       <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-4 sm:hidden"></div>
       <div class="flex items-center justify-between pb-4 border-b border-white/10">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center text-xl">
-            🔄
+            ⚡
           </div>
           <div>
-            <h3 class="text-base sm:text-lg font-bold">Script-Hub 跨端模块转换引擎</h3>
-            <p class="text-xs text-[var(--text-muted)]">将 Loon `.plugin` 实时转换为 Egern `.yaml`、Surge `.sgmodule` 或 Shadowrocket</p>
+            <h3 class="text-base sm:text-lg font-bold">Stash 覆写安装链接生成器</h3>
+            <p class="text-xs text-[var(--text-muted)]">粘贴 `.stoverride` Raw 地址，生成 Stash 一键安装链接</p>
           </div>
         </div>
         <button onclick="closeConverterModal()" class="ios-btn w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm">✕</button>
@@ -769,27 +760,17 @@
 
       <div class="space-y-4 mt-4">
         <div>
-          <label class="block text-xs text-[var(--text-muted)] mb-1.5">源文件 URL（.plugin / .stoverride 链接）</label>
+          <label class="block text-xs text-[var(--text-muted)] mb-1.5">Stash 覆写 Raw URL（.stoverride）</label>
           <input id="converter-input-url" type="text" oninput="updateConvertedUrl()" value="https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride" class="w-full px-3.5 py-2.5 rounded-xl bg-black/35 border border-white/15 text-xs font-mono focus:outline-none focus:border-ios-cyan" />
         </div>
 
-        <div class="grid grid-cols-4 gap-2">
-          <button onclick="setConverterTarget('stash')" id="conv-target-stash" class="ios-btn py-2 rounded-xl text-xs font-semibold bg-ios-blue text-white">
-            Stash
-          </button>
-          <button onclick="setConverterTarget('loon')" id="conv-target-loon" class="ios-btn py-2 rounded-xl text-xs font-semibold bg-white/10 text-[var(--text-muted)]">
-            Loon
-          </button>
-          <button onclick="setConverterTarget('surge')" id="conv-target-surge" class="ios-btn py-2 rounded-xl text-xs font-semibold bg-white/10 text-[var(--text-muted)]">
-            Surge (.sgmodule)
-          </button>
-          <button onclick="setConverterTarget('qx')" id="conv-target-qx" class="ios-btn py-2 rounded-xl text-xs font-semibold bg-white/10 text-[var(--text-muted)]">
-            Quantumult X
-          </button>
+        <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs">
+          <span class="text-[var(--text-muted)]">目标客户端</span>
+          <span class="font-semibold text-cyan-300">Stash</span>
         </div>
 
         <div>
-          <label class="block text-xs text-[var(--text-muted)] mb-1.5">转换后订阅地址 / URI Scheme</label>
+          <label class="block text-xs text-[var(--text-muted)] mb-1.5">Stash 一键安装链接</label>
           <div class="p-3 rounded-xl bg-black/55 border border-white/10 font-mono text-xs text-cyan-300 break-all" id="converter-output-url">
             https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride
           </div>
@@ -797,7 +778,7 @@
 
         <div class="flex justify-end gap-2.5 pt-2">
           <button onclick="copyConvertedUrl()" class="ios-btn px-4 py-2.5 rounded-xl bg-gradient-to-r from-ios-blue to-ios-purple text-white text-xs font-semibold">
-            复制转换链接
+            复制安装链接
           </button>
         </div>
       </div>
@@ -808,7 +789,7 @@
     // =========================================================================
     // 1. PLUGIN DATA - 从 plugins.json 动态加载，失败回退内嵌 window.__PLUGINS_DATA__
     // =========================================================================
-    window.__PLUGINS_DATA__={"generated_at":"2026-11-05 08:36","repo":"https://github.com/your98k/Rule-Hub","base":"https://your98k.github.io/Rule-Hub","plugins":[{"id":"bilibili-adblock-stash","name":"📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)","desc":"'哔哩哔哩：去广告","icon":"","date":"2026-11-05","version":"","tags":["Stash 覆写"],"type":"stash","authors":[],"homepage":"","rulesCount":8,"mitmHosts":[],"needsMitm":false,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.ADBlock.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride"}},{"id":"wloc-stash","name":"Apple WLOC 定位修改（参数版）","desc":"适用于 Stash iOS/tvOS 3.7+、macOS 4.4+。在覆写详情的「参数」中设置经纬度、精度、扰动半径和日志级别，保存并应用即可，无需编辑源码。\n坐标填写 WGS84 十进制度数。在线选点/快捷指令保存的坐标及对应精度、扰动设置优先于本表单；要使用表单值，请先清除在线保存的位置。\n保留上游安全默认值：没有在线保存的位置且经纬度仍为默认组合时，不修改定位。清除在线位置后，如本表单使用了自定义坐标，会回退到自定义坐标；需恢复真实定位时，停用本覆写最直接。\n仅修改网络定位响应，并非全局 GPS 修改；需启用 MitM 并完全信任自己的 CA。上游提示 iOS 27 beta 6 起部分定位域名无法被 MitM，本参数适配不能绕过系统限制。\n在线选点：https://wloc-pages.pages.dev/\n设置位置快捷指令：https://www.icloud.com/shortcuts/a82717d8fdad4e6280866fcf911173f7\n清除在线位置快捷指令：https://www.icloud.com/shortcuts/f42632d406504f24a2cd163af4fe012f","icon":"https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/wloc.jpg","date":"2026-11-04","version":"1.0.0","tags":["Stash 覆写","Tools"],"type":"stash","authors":[{"name":"Yu9191；Stash 参数适配：your98k","url":""}],"homepage":"https://github.com/your98k/Rule-Hub","rulesCount":0,"mitmHosts":["gs-loc.apple.com","gs-loc-cn.apple.com","gsp-ssl.ls.apple.com","bluedot.is.autonavi.com","bluedot.is.autonavi.com.gds.alibabadns.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WLOC.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/WLOC.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/WLOC.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WLOC.stoverride"}},{"id":"hupu-loon","name":"虎扑去广告（本地 Mock 精简版）","desc":"群友方案的 Loon 原生适配。仅处理 goblin.hupu.com 的 interfaceAd/getOther 广告接口，本地返回 HTTP 200 无广告 JSON，无需等待该接口上游响应，无远程脚本。需启用 MitM 并安装、完全信任 Loon CA；启用前停用旧虎扑插件及重复重写。需要 Loon 3.5.1(978)+。未实机验证，不保证移除全部广告或解决所有启动等待。","icon":"https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/HUPU.png","date":"2026-11-03","version":"","tags":["Loon 插件","去广告"],"type":"loon","authors":[{"name":"群友投稿（未署名）；Loon 适配：ChatGPT","url":""}],"homepage":"","rulesCount":1,"mitmHosts":[],"needsMitm":false,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/HuPu.plugin","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/HuPu.plugin","page":"https://your98k.github.io/Rule-Hub/files/Loon/HuPu.plugin"},"install":{"loon":"loon://import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Fyour98k%2FRule-Hub%2Fmain%2FLoon%2FHuPu.plugin"}},{"id":"telegram-stash","name":"Telegram 链接跳转","desc":"将 t.me / telegram.me / telegram.dog 网页链接交给指定客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram，默认官方 Telegram。\n\n使用说明：\n· 需要安装并信任 Stash 的 MitM CA 证书；参数修改后请「保存并应用」\n· 支持用户名、消息、话题、邀请、机器人参数等常见链接；不识别的网页路径原样放行\n· 默认 307 直接跳转；若浏览器拦截，请将「打开方式」改为「兼容打开页」，再点击页面按钮\n· 仅阻止上述三个域名的 QUIC，让网页请求回落到可改写的 TCP；不会全局禁用 QUIC\n· 「代理指向的策略」须为当前配置中已存在的策略组或节点名\n· iOS Universal Links 或 App 内部直接唤起客户端、不发出网页请求时，Stash 无法接管；可复制链接到 Safari 地址栏回车测试","icon":"https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Telegram-01.png","date":"2026-11-02","version":"1.1.0","tags":["Stash 覆写","功能增强"],"type":"stash","authors":[{"name":"sooyaaabo (Loon 原作) / Stash 适配","url":""}],"homepage":"https://loonlab.103516.xyz/Plugin/","rulesCount":10,"mitmHosts":["t.me","telegram.me","telegram.dog"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/Telegram.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride"}},{"id":"hupu-stash","name":"虎扑去广告","desc":"将群友提供的 getOther 广告接口方案适配为 Stash 原生 Mock。\n仅处理 goblin.hupu.com 的 interfaceAd/getOther 接口，本地返回无广告 JSON。\n匹配请求无需等待该接口的上游响应；无 JS、无 jq、无远程脚本。\n需启用 MitM，并安装、完全信任 Stash CA 证书。\n测试前禁用原虎扑覆写及其他重复规则，不要叠加。\n已在本地实测生效；仍不保证覆盖全部广告位或消除所有启动等待。","icon":"https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/HUPU.png","date":"2026-11-01","version":"0.1.1","tags":["Stash 覆写","去广告"],"type":"stash","authors":[{"name":"群友投稿（未署名）；Stash 适配：ChatGPT","url":""}],"homepage":"","rulesCount":1,"mitmHosts":["goblin.hupu.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HuPu.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/HuPu.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride"}},{"id":"txvideoad-stash","name":"腾讯视频净化（Stash）","desc":"适配 ZenmoFeiShi 的腾讯视频净化规则，保留开屏/播放前广告过滤、底栏精简及我的页面净化逻辑。\n单文件内嵌脚本，需要 Stash 3.2.5+；已适配 Stash 的二进制 body 接口。\n使用前请卸载腾讯视频后重新安装；安装后冷启动腾讯视频 2–3 次，使配置生效。\n已适配上游 2026-11-01 脚本更新：底栏切割白名单由 0;2;4 调整为 0;4。\n历史适配：2026-10-27 新增暂停广告（JCE 129196）与瀑布流合并广告过滤。\n已补 QUIC 拦截，防止开屏广告经 UDP 443 绕过 MitM。\n请启用 MITM，并安装、完全信任你自己生成的 CA 证书。\n脚本由 script-providers 每 24h 从 Stash/txvideo-ad.stash.js 自动更新；内嵌 payload 仅作离线兜底。实际效果取决于腾讯视频版本。","icon":"","date":"2026-11-01","version":"1.1.1","tags":["Stash 覆写"],"type":"stash","authors":[{"name":"TG@ZenMoFiShi（原作者）","url":""}],"homepage":"","rulesCount":8,"mitmHosts":["i.video.qq.com","iacc.qq.com","config.ab.qq.com","rdelivery.qq.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TxvideoAD.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/TxvideoAD.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride"}},{"id":"youtube-adblock-enhanced-stash","name":"YouTube 去广告增强版","desc":"YouTube 去广告、隐藏界面元素、画质与播放增强，12 项参数（10 个开关 + 2 个翻译语言）均可在 Stash 覆写参数中调整。\n首页信息流补强默认开启，用于清理 Sponsored 广告卡片、空壳与相邻分隔线；如遇误删可关闭。\n字幕翻译使用 Google Translate 翻译 timedtext 响应；保留原 XML 结构，返回字符串 body 并清理 Content-Length/Content-Encoding，按缓存逐步补齐。\n歌词翻译可选，仍调用 Google Translate，默认关闭。请信任 Stash 的 MitM 证书。\n移植自 Maasea、gholts、RuCu6 的 Loon 插件；翻译逻辑参考 Maasea/VirgilClyne；首页补强参考 Hey-sayiwanna/YouTube-ADBlock-on-Feed。","icon":"https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png","date":"2026-11-01","version":"1.3.4","tags":["Stash 覆写","去广告"],"type":"stash","authors":[{"name":"Maasea","url":"https://github.com/Maasea"},{"name":"gholts","url":"https://github.com/gholts"},{"name":"RuCu6","url":"https://github.com/RuCu6"},{"name":"VirgilClyne","url":"https://github.com/VirgilClyne"},{"name":"Hey-sayiwanna","url":"https://github.com/Hey-sayiwanna"}],"homepage":"https://github.com/your98k/Rule-Hub","rulesCount":1,"mitmHosts":["rr*.googlevideo.com","s.youtube.com","www.youtube.com","youtubei.googleapis.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube-ADBlock-Enhanced.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/YouTube-ADBlock-Enhanced.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride"}},{"id":"baidumap-remove-ads-stash","name":"百度地图","desc":"移除开屏广告、出行页面推广、周边页面推广、打车页面推广，并精简「我的」页面。需开启 MitM 并信任 Stash 证书；百度地图校验 HTTPS 证书，须使用去除 SSL Pinning 的签名 IPA，App Store 原版无法生效。","icon":"https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/BaiduMap.png","date":"2026-10-31 23:12","version":"1.0.0","tags":["Stash 覆写","去广告"],"type":"stash","authors":[{"name":"原 Loon 插件：可莉🅥；Stash 适配：your98k","url":""}],"homepage":"https://kelee.one/Tool/Loon/Lpx/BaiduMap_remove_ads.lpx","rulesCount":0,"mitmHosts":["afd.baidu.com","newclient.map.baidu.com","yongche.baidu.com","ecom.map.baidu.com","maphotel.baidu.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BaiduMap_remove_ads.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/BaiduMap_remove_ads.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/BaiduMap_remove_ads.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BaiduMap_remove_ads.stoverride"}},{"id":"telegram-loon","name":"Telegram 外链跳转（可调参数）","desc":"把 t.me / telegram.me / telegram.dog 的网页链接 302 跳转到指定 Telegram 客户端。客户端、代理策略、主机名都在插件设置里改，不用动文件。","icon":"","date":"2026-10-31 14:20:00","version":"","tags":["Loon 插件","Telegram, 跳转, 工具"],"type":"loon","authors":[{"name":"原 Loon 插件 @sooyaaab（BoStudioHub）；可调参数版适配","url":""}],"homepage":"https://t.me/BoStudioHub","rulesCount":19,"mitmHosts":[],"needsMitm":false,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/Telegram外链跳转.plugin","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/Telegram外链跳转.plugin","page":"https://your98k.github.io/Rule-Hub/files/Loon/Telegram外链跳转.plugin"},"install":{"loon":"loon://import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Fyour98k%2FRule-Hub%2Fmain%2FLoon%2FTelegram%E5%A4%96%E9%93%BE%E8%B7%B3%E8%BD%AC.plugin"}},{"id":"youtube-adblock-enhanced-loon","name":"YouTube 去广告增强版","desc":"12 项参数：10 个开关 + 字幕/歌词翻译，含首页 Sponsored 补强；需启用改写与 MitM。与旧 YouTube 插件二选一。","icon":"https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png","date":"2026-10-30","version":"1.3.3","tags":["Loon 插件","去广告"],"type":"loon","authors":[{"name":"Maasea","url":"https://github.com/Maasea"},{"name":"gholts","url":"https://github.com/gholts"},{"name":"RuCu6","url":"https://github.com/RuCu6"},{"name":"VirgilClyne","url":"https://github.com/VirgilClyne"},{"name":"Hey-sayiwanna","url":"https://github.com/Hey-sayiwanna"}],"homepage":"https://github.com/your98k/Rule-Hub","rulesCount":0,"mitmHosts":["rr*.googlevideo.com","s.youtube.com","www.youtube.com","youtubei.googleapis.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/YouTube-ADBlock-Enhanced.plugin","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/YouTube-ADBlock-Enhanced.plugin","page":"https://your98k.github.io/Rule-Hub/files/Loon/YouTube-ADBlock-Enhanced.plugin"},"install":{"loon":"loon://import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Fyour98k%2FRule-Hub%2Fmain%2FLoon%2FYouTube-ADBlock-Enhanced.plugin"}},{"id":"jingdong-stash","name":"京东","desc":"1. 过滤京东广告；2. 历史比价信息，任选其一即可。\n首次使用保持 Stash 连接，打开【慢慢买】APP →【我的】并刷新，提示【获取ck成功】后返回京东查看比价。\n此插件仅支持京东标准模式。\n——\n适配自 Loon 插件 JingDong.lpx（原作：RuCu6、Maasea、MuTu、苍井灰灰、mw418、可莉）。\n需要 Stash iOS/tvOS 3.7+ 或 macOS 4.4+，并已在 Stash 内生成、安装并信任 CA 证书。\n比价各版本在「覆写参数」中开关：通知版与嵌入版互斥、表格图与折线图互斥，请勿同时开启。","icon":"https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/JingDong.png","date":"2026-10-26","version":"1.0.1","tags":["Stash 覆写","去广告"],"type":"stash","authors":[],"homepage":"https://loonlab.103516.xyz/Plugin/","rulesCount":1,"mitmHosts":["api.m.jd.com","in.m.jd.com","apapia-sqk-weblogic.manmanbuy.com","m.360buyimg.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/JingDong.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride"}},{"id":"hongguo-loon","name":"红果短剧广告拦截","desc":"红果短剧核心广告与穿山甲/字节系兜底拦截规则(已去重合并)。插件规则与主配置自动合并，不含 DNS 与 IPv6 设置。","icon":"https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png","date":"2026-10-20","version":"1.5.0","tags":["Loon 插件","去广告"],"type":"loon","authors":[{"name":"Tartarus2014 & Customized","url":""}],"homepage":"https://github.com/Tartarus2014/Loon-Script","rulesCount":11,"mitmHosts":[],"needsMitm":false,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Loon/HongGuo.plugin","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Loon/HongGuo.plugin","page":"https://your98k.github.io/Rule-Hub/files/Loon/HongGuo.plugin"},"install":{"loon":"loon://import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Fyour98k%2FRule-Hub%2Fmain%2FLoon%2FHongGuo.plugin"}},{"id":"hongguo-stash","name":"红果短剧广告拦截","desc":"红果短剧核心广告与穿山甲/字节系兜底拦截规则（已去重合并）。\n采用默认前插合并，不改动现有 DNS 与 IPv6 全局设置。","icon":"https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png","date":"2026-10-20","version":"1.5.0","tags":["Stash 覆写","去广告"],"type":"stash","authors":[{"name":"Tartarus2014 & Customized","url":""}],"homepage":"https://github.com/Tartarus2014/Loon-Script","rulesCount":11,"mitmHosts":[],"needsMitm":false,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/HongGuo.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride"}},{"id":"amap-stash","name":"高德地图","desc":"过滤高德地图广告；部分广告需卸载重装或清除缓存后才会彻底消失。需要开启 MITM 并信任 Stash 证书。","icon":"https://github.com/ishowshu/loon/raw/refs/heads/main/icon/gaode.png","date":"2026-09-19 11:41","version":"1.0.0","tags":["Stash 覆写","去广告"],"type":"stash","authors":[{"name":"原 Loon 插件：树先生（ishowshu）；Stash 适配：your98k","url":""}],"homepage":"https://github.com/ishowshu/loon","rulesCount":1,"mitmHosts":["m5.amap.com","amap-aos-info-nogw.amap.com","m5-zb.amap.com","info.amap.com","ai.amap.com","render.amap.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Amap.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Amap.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/Amap.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Amap.stoverride"}},{"id":"blockads-stash","name":"广告拦截&净化合集","desc":"(支持约730款APP/小程序)针对部分APP和小程序广告进行拦截，某些APP要清除缓存或者重新安装拦截广告才会生效！规则明细可以查看本插件的注释","icon":"https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/AdblockPlus.png","date":"2026-09-10 21:10:39","version":"1.0","tags":["Stash 覆写","奶思的模块"],"type":"stash","authors":[{"name":"奶思","url":"https://github.com/fmz200"}],"homepage":"https://github.com/fmz200/wool_scripts","rulesCount":2964,"mitmHosts":[],"needsMitm":false,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/blockAds.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/blockAds.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/blockAds.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/blockAds.stoverride"}}]};
+    window.__PLUGINS_DATA__={"generated_at":"2026-11-07 16:03","repo":"https://github.com/your98k/Rule-Hub","base":"https://your98k.github.io/Rule-Hub","plugins":[{"id":"bilibili-adblock-stash","name":"📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)","desc":"'哔哩哔哩：去广告","icon":"","date":"2026-11-07","version":"","tags":["Stash 覆写"],"type":"stash","authors":[],"homepage":"","rulesCount":8,"mitmHosts":[],"needsMitm":false,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/Bilibili.ADBlock.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride"}},{"id":"wloc-stash","name":"Apple WLOC 定位修改（参数版）","desc":"适用于 Stash iOS/tvOS 3.7+、macOS 4.4+。在覆写详情的「参数」中设置经纬度、精度、扰动半径和日志级别，保存并应用即可，无需编辑源码。\n坐标填写 WGS84 十进制度数。在线选点/快捷指令保存的坐标及对应精度、扰动设置优先于本表单；要使用表单值，请先清除在线保存的位置。\n保留上游安全默认值：没有在线保存的位置且经纬度仍为默认组合时，不修改定位。清除在线位置后，如本表单使用了自定义坐标，会回退到自定义坐标；需恢复真实定位时，停用本覆写最直接。\n仅修改网络定位响应，并非全局 GPS 修改；需启用 MitM 并完全信任自己的 CA。上游提示 iOS 27 beta 6 起部分定位域名无法被 MitM，本参数适配不能绕过系统限制。\n在线选点：https://wloc-pages.pages.dev/\n设置位置快捷指令：https://www.icloud.com/shortcuts/a82717d8fdad4e6280866fcf911173f7\n清除在线位置快捷指令：https://www.icloud.com/shortcuts/f42632d406504f24a2cd163af4fe012f","icon":"https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/wloc.jpg","date":"2026-11-04","version":"1.0.0","tags":["Stash 覆写","Tools"],"type":"stash","authors":[{"name":"Yu9191；Stash 参数适配：your98k","url":""}],"homepage":"https://github.com/your98k/Rule-Hub","rulesCount":0,"mitmHosts":["gs-loc.apple.com","gs-loc-cn.apple.com","gsp-ssl.ls.apple.com","bluedot.is.autonavi.com","bluedot.is.autonavi.com.gds.alibabadns.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WLOC.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/WLOC.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/WLOC.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WLOC.stoverride"}},{"id":"telegram-stash","name":"Telegram 链接跳转","desc":"将 t.me / telegram.me / telegram.dog 网页链接交给指定客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram，默认官方 Telegram。\n\n使用说明：\n· 需要安装并信任 Stash 的 MitM CA 证书；参数修改后请「保存并应用」\n· 支持用户名、消息、话题、邀请、机器人参数等常见链接；不识别的网页路径原样放行\n· 默认 307 直接跳转；若浏览器拦截，请将「打开方式」改为「兼容打开页」，再点击页面按钮\n· 仅阻止上述三个域名的 QUIC，让网页请求回落到可改写的 TCP；不会全局禁用 QUIC\n· 「代理指向的策略」须为当前配置中已存在的策略组或节点名\n· iOS Universal Links 或 App 内部直接唤起客户端、不发出网页请求时，Stash 无法接管；可复制链接到 Safari 地址栏回车测试","icon":"https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Telegram-01.png","date":"2026-11-02","version":"1.1.0","tags":["Stash 覆写","功能增强"],"type":"stash","authors":[{"name":"sooyaaabo (Loon 原作) / Stash 适配","url":""}],"homepage":"https://loonlab.103516.xyz/Plugin/","rulesCount":10,"mitmHosts":["t.me","telegram.me","telegram.dog"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/Telegram.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride"}},{"id":"hupu-stash","name":"虎扑去广告","desc":"将群友提供的 getOther 广告接口方案适配为 Stash 原生 Mock。\n仅处理 goblin.hupu.com 的 interfaceAd/getOther 接口，本地返回无广告 JSON。\n匹配请求无需等待该接口的上游响应；无 JS、无 jq、无远程脚本。\n需启用 MitM，并安装、完全信任 Stash CA 证书。\n测试前禁用原虎扑覆写及其他重复规则，不要叠加。\n已在本地实测生效；仍不保证覆盖全部广告位或消除所有启动等待。","icon":"https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/HUPU.png","date":"2026-11-01","version":"0.1.1","tags":["Stash 覆写","去广告"],"type":"stash","authors":[{"name":"群友投稿（未署名）；Stash 适配：ChatGPT","url":""}],"homepage":"","rulesCount":1,"mitmHosts":["goblin.hupu.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HuPu.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/HuPu.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HuPu.stoverride"}},{"id":"txvideoad-stash","name":"腾讯视频净化（Stash）","desc":"适配 ZenmoFeiShi 的腾讯视频净化规则，保留开屏/播放前广告过滤、底栏精简及我的页面净化逻辑。\n单文件内嵌脚本，需要 Stash 3.2.5+；已适配 Stash 的二进制 body 接口。\n使用前请卸载腾讯视频后重新安装；安装后冷启动腾讯视频 2–3 次，使配置生效。\n已适配上游 2026-11-01 脚本更新：底栏切割白名单由 0;2;4 调整为 0;4。\n历史适配：2026-10-27 新增暂停广告（JCE 129196）与瀑布流合并广告过滤。\n已补 QUIC 拦截，防止开屏广告经 UDP 443 绕过 MitM。\n请启用 MITM，并安装、完全信任你自己生成的 CA 证书。\n脚本由 script-providers 每 24h 从 Stash/txvideo-ad.stash.js 自动更新；内嵌 payload 仅作离线兜底。实际效果取决于腾讯视频版本。","icon":"","date":"2026-11-01","version":"1.1.1","tags":["Stash 覆写"],"type":"stash","authors":[{"name":"TG@ZenMoFiShi（原作者）","url":""}],"homepage":"","rulesCount":8,"mitmHosts":["i.video.qq.com","iacc.qq.com","config.ab.qq.com","rdelivery.qq.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TxvideoAD.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/TxvideoAD.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride"}},{"id":"youtube-adblock-enhanced-stash","name":"YouTube 去广告增强版","desc":"YouTube 去广告、隐藏界面元素、画质与播放增强，12 项参数（10 个开关 + 2 个翻译语言）均可在 Stash 覆写参数中调整。\n首页信息流补强默认开启，用于清理 Sponsored 广告卡片、空壳与相邻分隔线；如遇误删可关闭。\n字幕翻译使用 Google Translate 翻译 timedtext 响应；保留原 XML 结构，返回字符串 body 并清理 Content-Length/Content-Encoding，按缓存逐步补齐。\n歌词翻译可选，仍调用 Google Translate，默认关闭。请信任 Stash 的 MitM 证书。\n移植自 Maasea、gholts、RuCu6 的 Loon 插件；翻译逻辑参考 Maasea/VirgilClyne；首页补强参考 Hey-sayiwanna/YouTube-ADBlock-on-Feed。","icon":"https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png","date":"2026-11-01","version":"1.3.4","tags":["Stash 覆写","去广告"],"type":"stash","authors":[{"name":"Maasea","url":"https://github.com/Maasea"},{"name":"gholts","url":"https://github.com/gholts"},{"name":"RuCu6","url":"https://github.com/RuCu6"},{"name":"VirgilClyne","url":"https://github.com/VirgilClyne"},{"name":"Hey-sayiwanna","url":"https://github.com/Hey-sayiwanna"}],"homepage":"https://github.com/your98k/Rule-Hub","rulesCount":1,"mitmHosts":["rr*.googlevideo.com","s.youtube.com","www.youtube.com","youtubei.googleapis.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube-ADBlock-Enhanced.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/YouTube-ADBlock-Enhanced.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride"}},{"id":"baidumap-remove-ads-stash","name":"百度地图","desc":"移除开屏广告、出行页面推广、周边页面推广、打车页面推广，并精简「我的」页面。需开启 MitM 并信任 Stash 证书；百度地图校验 HTTPS 证书，须使用去除 SSL Pinning 的签名 IPA，App Store 原版无法生效。","icon":"https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/BaiduMap.png","date":"2026-10-31 23:12","version":"1.0.0","tags":["Stash 覆写","去广告"],"type":"stash","authors":[{"name":"原 Loon 插件：可莉🅥；Stash 适配：your98k","url":""}],"homepage":"https://kelee.one/Tool/Loon/Lpx/BaiduMap_remove_ads.lpx","rulesCount":0,"mitmHosts":["afd.baidu.com","newclient.map.baidu.com","yongche.baidu.com","ecom.map.baidu.com","maphotel.baidu.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BaiduMap_remove_ads.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/BaiduMap_remove_ads.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/BaiduMap_remove_ads.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BaiduMap_remove_ads.stoverride"}},{"id":"jingdong-stash","name":"京东","desc":"1. 过滤京东广告；2. 历史比价信息，任选其一即可。\n首次使用保持 Stash 连接，打开【慢慢买】APP →【我的】并刷新，提示【获取ck成功】后返回京东查看比价。\n此插件仅支持京东标准模式。\n——\n适配自 Loon 插件 JingDong.lpx（原作：RuCu6、Maasea、MuTu、苍井灰灰、mw418、可莉）。\n需要 Stash iOS/tvOS 3.7+ 或 macOS 4.4+，并已在 Stash 内生成、安装并信任 CA 证书。\n比价各版本在「覆写参数」中开关：通知版与嵌入版互斥、表格图与折线图互斥，请勿同时开启。","icon":"https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/JingDong.png","date":"2026-10-26","version":"1.0.1","tags":["Stash 覆写","去广告"],"type":"stash","authors":[],"homepage":"https://loonlab.103516.xyz/Plugin/","rulesCount":1,"mitmHosts":["api.m.jd.com","in.m.jd.com","apapia-sqk-weblogic.manmanbuy.com","m.360buyimg.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/JingDong.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride"}},{"id":"hongguo-stash","name":"红果短剧广告拦截","desc":"红果短剧核心广告与穿山甲/字节系兜底拦截规则（已去重合并）。\n采用默认前插合并，不改动现有 DNS 与 IPv6 全局设置。","icon":"https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png","date":"2026-10-20","version":"1.5.0","tags":["Stash 覆写","去广告"],"type":"stash","authors":[{"name":"Tartarus2014 & Customized","url":""}],"homepage":"https://github.com/Tartarus2014/Loon-Script","rulesCount":11,"mitmHosts":[],"needsMitm":false,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/HongGuo.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride"}},{"id":"amap-stash","name":"高德地图","desc":"过滤高德地图广告；部分广告需卸载重装或清除缓存后才会彻底消失。需要开启 MITM 并信任 Stash 证书。","icon":"https://github.com/ishowshu/loon/raw/refs/heads/main/icon/gaode.png","date":"2026-09-19 11:41","version":"1.0.0","tags":["Stash 覆写","去广告"],"type":"stash","authors":[{"name":"原 Loon 插件：树先生（ishowshu）；Stash 适配：your98k","url":""}],"homepage":"https://github.com/ishowshu/loon","rulesCount":1,"mitmHosts":["m5.amap.com","amap-aos-info-nogw.amap.com","m5-zb.amap.com","info.amap.com","ai.amap.com","render.amap.com"],"needsMitm":true,"urls":{"raw":"https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Amap.stoverride","cdn":"https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Amap.stoverride","page":"https://your98k.github.io/Rule-Hub/files/Stash/Amap.stoverride"},"install":{"stash":"https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Amap.stoverride"}}]};
 
     let PLUGINS = [];
 
@@ -820,7 +801,6 @@
 
     function normalizePlugin(raw, i) {
       const inst = raw.install || {};
-      const type = raw.type || (inst.stash ? "stash" : "loon");
       const gradients = [
         "from-blue-500 via-sky-500 to-cyan-400",
         "from-pink-500 via-rose-500 to-fuchsia-600",
@@ -836,12 +816,12 @@
       const tagIcons = { "去广告": "🛡️", "功能增强": "⚡", "解锁会员": "👑", "定时任务": "⏰" };
       const firstTag = (raw.tags || []).find(t => tagIcons[t]);
       return {
-        id: raw.id || ("plugin-" + i),
-        name: raw.name || "未命名插件",
-        icon: firstTag ? tagIcons[firstTag] : (type === "stash" ? "📦" : "🎈"),
+        id: raw.id || ("stash-override-" + i),
+        name: raw.name || "未命名覆写",
+        icon: firstTag ? tagIcons[firstTag] : "📦",
         imageUrl: raw.icon || "",
         gradient: gradients[i % gradients.length],
-        category: (raw.tags || [])[1] || (type === "stash" ? "Stash 覆写" : "Loon 插件"),
+        category: (raw.tags || [])[1] || "Stash 覆写",
         tags: raw.tags || [],
         updatedAt: raw.date || "",
         authors: (raw.authors || []).map(a => a.name),
@@ -851,11 +831,10 @@
         needsMitm: !!raw.needsMitm,
         rulesCount: raw.rulesCount || 0,
         version: raw.version || "",
-        type: type,
+        type: "stash",
         url: (raw.urls && raw.urls.raw) || "",
         cdnUrl: (raw.urls && raw.urls.cdn) || "",
-        installStash: inst.stash || "",
-        installLoon: inst.loon || ""
+        installStash: inst.stash || ""
       };
     }
 
@@ -867,17 +846,18 @@
       searchQuery: "",
       activeCategory: "全部",
       sortMode: "default", // 'default'（时间倒序） | 'name'
-      preferredClient: "Loon", // 'Loon' | 'Egern' | 'Surge'
       soundEnabled: true,
       darkMode: true,
       favorites: new Set(),
-      converterTarget: "stash",
       islandTimer: null
     };
 
     try {
-      const savedFavs = localStorage.getItem("loonlab_favs");
-      if (savedFavs) state.favorites = new Set(JSON.parse(savedFavs));
+      const savedFavs = localStorage.getItem("rulehub_favs") || localStorage.getItem("loonlab_favs");
+      if (savedFavs) {
+        state.favorites = new Set(JSON.parse(savedFavs));
+        localStorage.setItem("rulehub_favs", savedFavs);
+      }
     } catch (e) {}
 
     // =========================================================================
@@ -977,8 +957,8 @@
         collapseIsland();
       } else {
         triggerIslandNotification(
-          `当前默认客户端: ${state.preferredClient}`,
-          `共收录 ${PLUGINS.length} 个插件模块 · 点击安装按钮唤起客户端`,
+          "Rule-Hub · Stash 专属覆写",
+          `共收录 ${PLUGINS.length} 个覆写 · 点击卡片预览与安装`,
           "🛰️",
           "Ready"
         );
@@ -1049,12 +1029,11 @@
       const empty = document.getElementById("empty-state");
       const counter = document.getElementById("plugin-counter-label");
 
-      counter.textContent = `${state.activeCategory} · 显示 ${filtered.length} / ${PLUGINS.length} 个插件模块`;
+      counter.textContent = `${state.activeCategory} · 显示 ${filtered.length} / ${PLUGINS.length} 个覆写`;
       document.getElementById("stat-fav-count").textContent = state.favorites.size;
       document.getElementById("stat-total-plugins").textContent = PLUGINS.length;
-      document.getElementById("stat-stash-count").textContent = PLUGINS.filter(p => p.type === "stash").length;
-      document.getElementById("stat-loon-count").textContent = PLUGINS.filter(p => p.type === "loon").length;
-      document.getElementById("island-count").textContent = PLUGINS.length + " 模块";
+      document.getElementById("stat-stash-count").textContent = PLUGINS.length;
+      document.getElementById("island-count").textContent = PLUGINS.length + " 个覆写";
 
       if (filtered.length === 0) {
         grid.innerHTML = "";
@@ -1099,7 +1078,7 @@
                         `).join("")}
                       </div>
                       ${plugin.authors[0] ? `<span class="text-[11px] text-[var(--text-muted)] truncate max-w-[9rem]">@${plugin.authors[0]}</span>` : ""}
-                      <span class="text-[10px] font-mono px-1.5 py-0.2 rounded ${plugin.type === "stash" ? "bg-cyan-500/15 text-cyan-300 border border-cyan-400/25" : "bg-orange-500/15 text-orange-300 border border-orange-400/25"}">${plugin.type === "stash" ? "Stash" : "Loon"}</span>
+                      <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-400/25">Stash 覆写</span>
                       ${plugin.needsMitm ? `<span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-400/25">MITM</span>` : ""}
                       ${plugin.version ? `<span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white/5 text-[var(--text-muted)] border border-white/10 whitespace-nowrap">v${plugin.version}</span>` : ""}
                     </div>
@@ -1154,22 +1133,13 @@
                 <span>📋</span>
                 <span>CopyURL</span>
               </button>
-              ${plugin.installLoon ? `
               <button
-                onclick="installToClient('${plugin.id}', 'Loon')"
-                class="ios-btn py-2 px-3 rounded-2xl bg-gradient-to-r from-ios-blue to-ios-indigo hover:brightness-110 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-md shadow-ios-blue/25"
-              >
-                <span>🎈</span>
-                <span>Loon</span>
-              </button>` : ""}
-              ${plugin.installStash ? `
-              <button
-                onclick="installToClient('${plugin.id}', 'Stash')"
+                onclick="installToStash('${plugin.id}')"
                 class="ios-btn py-2 px-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-ios-blue hover:brightness-110 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-md shadow-cyan-500/25"
               >
                 <span>⚡</span>
                 <span>Stash</span>
-              </button>` : ""}
+              </button>
             </div>
           </article>
         `;
@@ -1241,30 +1211,18 @@
       );
     }
 
-    function installToClient(pluginId, client) {
+    function installToStash(pluginId) {
       const p = PLUGINS.find(item => item.id === pluginId);
       if (!p) return;
 
-      let schemeUrl = "";
-      if (client === "Loon") {
-        schemeUrl = p.installLoon || `loon://import?plugin=${encodeURIComponent(p.url)}`;
-      } else if (client === "Stash") {
-        // 通用链接（https）+ URL Scheme 兜底
-        schemeUrl = p.installStash || `stash://install-override?url=${encodeURIComponent(p.url)}`;
-      }
-
-      safeCopyText(schemeUrl);
-      if (client === "Stash") {
-        // link.stash.ws 是 https 通用链接，直接跳转即可唤起 Stash
-        window.location.href = schemeUrl;
-      } else {
-        window.location.href = schemeUrl;
-      }
+      const installUrl = p.installStash || `stash://install-override?url=${encodeURIComponent(p.url)}`;
+      safeCopyText(installUrl);
+      window.location.href = installUrl;
       triggerIslandNotification(
-        `正在唤起 ${client} 导入 「${p.name}」`,
-        schemeUrl,
-        client === "Loon" ? "🎈" : "⚡",
-        client
+        `正在唤起 Stash 导入「${p.name}」`,
+        installUrl,
+        "⚡",
+        "Stash"
       );
     }
 
@@ -1279,7 +1237,7 @@
         triggerIslandNotification(`已加入我的收藏`, p ? p.name : pluginId, "❤️", "Saved");
       }
       try {
-        localStorage.setItem("loonlab_favs", JSON.stringify([...state.favorites]));
+        localStorage.setItem("rulehub_favs", JSON.stringify([...state.favorites]));
       } catch (e) {}
       renderCategoryPills();
       renderPluginGrid();
@@ -1349,22 +1307,7 @@
       setSortMode("default", 0);
       renderCategoryPills();
       renderPluginGrid();
-      triggerIslandNotification("视图已重置", "展示全部核心 Loon & Egern 模块", "🏠", "All");
-    }
-
-    function setPreferredClient(client) {
-      playTapticSound("switch");
-      state.preferredClient = client;
-      ["Loon", "Egern", "Surge"].forEach(c => {
-        const btn = document.getElementById(`client-btn-${c}`);
-        if (!btn) return;
-        if (c === client) {
-          btn.className = "ios-btn px-3 py-1 rounded-full font-medium bg-ios-blue text-white shadow-sm";
-        } else {
-          btn.className = "ios-btn px-3 py-1 rounded-full font-medium text-[var(--text-muted)] hover:text-white";
-        }
-      });
-      triggerIslandNotification(`默认客户端已切换为 ${client}`, "点击卡片安装将优先生成对应 URI", "⚙️", client);
+      triggerIslandNotification("视图已重置", "展示全部 Stash 覆写", "🏠", "All");
     }
 
     function toggleSoundHaptics() {
@@ -1554,7 +1497,7 @@ function openInspector(pluginId, event) {
             <div>
               <div class="flex items-center gap-2 flex-wrap">
                 <h3 class="text-lg font-bold">${p.name}</h3>
-                <span class="px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold ${p.type === "stash" ? "bg-cyan-500/15 text-cyan-300" : "bg-orange-500/15 text-orange-300"}">${p.type === "stash" ? "Stash 覆写" : "Loon 插件"}</span>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-cyan-500/15 text-cyan-300">Stash 覆写</span>
                 ${p.version ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-mono bg-white/5 text-[var(--text-muted)] border border-white/10">v${p.version}</span>` : ""}
               </div>
               <p class="text-xs text-[var(--text-muted)] mt-1">${p.authors.length ? "作者: " + p.authors.map(a => "@" + a).join(" · ") + " · " : ""}更新于 ${p.updatedAt || "未知"}</p>
@@ -1591,28 +1534,23 @@ function openInspector(pluginId, event) {
         <!-- Source Preview -->
         <div>
           <div class="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1.5">
-            <span>插件源码预览 <span class="font-mono">(${p.type === "stash" ? ".stoverride" : ".plugin"})</span>:</span>
+            <span>覆写源码预览 <span class="font-mono">(.stoverride)</span>:</span>
             <button id="copy-source-btn" class="text-ios-cyan hover:underline">复制完整源码</button>
           </div>
           <pre id="inspector-source" class="p-3.5 rounded-2xl bg-black/65 border border-white/10 text-[11px] font-mono text-slate-200 overflow-x-auto leading-relaxed max-h-56"></pre>
         </div>
 
         <!-- Bottom Action Bar -->
-        <div class="mt-5 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-2.5">
+        <div class="mt-5 pt-4 border-t border-white/10 flex flex-wrap items-center justify-end gap-2.5">
           <button onclick="openConverterWithPlugin('${p.id}')" class="ios-btn px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/15 text-xs font-semibold">
-            🔄 转换为其他客户端格式
+            🔗 生成 Stash 安装链接
           </button>
-          <div class="flex items-center gap-2 flex-wrap">
-            <button onclick="copyPluginUrl('${p.id}')" class="ios-btn px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/15 text-xs font-semibold">
-              📋 复制订阅链接
-            </button>
-            ${p.installLoon ? `<button onclick="installToClient('${p.id}', 'Loon')" class="ios-btn px-4 py-2.5 rounded-2xl bg-gradient-to-r from-ios-blue to-ios-indigo text-white text-xs font-semibold">
-              🎈 导入 Loon
-            </button>` : ""}
-            ${p.installStash ? `<button onclick="installToClient('${p.id}', 'Stash')" class="ios-btn px-4 py-2.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-ios-blue text-white text-xs font-semibold">
-              ⚡ 导入 Stash
-            </button>` : ""}
-          </div>
+          <button onclick="copyPluginUrl('${p.id}')" class="ios-btn px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/15 text-xs font-semibold">
+            📋 复制覆写链接
+          </button>
+          <button onclick="installToStash('${p.id}')" class="ios-btn px-4 py-2.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-ios-blue text-white text-xs font-semibold">
+            ⚡ 导入 Stash
+          </button>
         </div>
       `;
 
@@ -1636,7 +1574,7 @@ function openInspector(pluginId, event) {
     }
 
     // =========================================================================
-    // 10. SCRIPT-HUB CONVERTER MODAL
+    // 10. STASH INSTALL LINK GENERATOR
     // =========================================================================
     function openConverterModal() {
       playTapticSound("tap");
@@ -1645,10 +1583,8 @@ function openInspector(pluginId, event) {
     }
 
     function openConverterWithPlugin(pluginId) {
-      const p = PLUGINS.find(item => item.id === pluginId);
-      if (p) {
-        document.getElementById("converter-input-url").value = p.url;
-      }
+      const plugin = PLUGINS.find(item => item.id === pluginId);
+      if (plugin) document.getElementById("converter-input-url").value = plugin.url;
       closeInspector();
       openConverterModal();
     }
@@ -1657,45 +1593,25 @@ function openInspector(pluginId, event) {
       document.getElementById("converter-modal").classList.remove("open");
     }
 
-    function closeConverterOnBackdrop(e) {
-      if (e.target.id === "converter-modal") closeConverterModal();
-    }
-
-    function setConverterTarget(target) {
-      playTapticSound("switch");
-      state.converterTarget = target;
-      ["stash", "loon", "surge", "qx"].forEach(t => {
-        const btn = document.getElementById(`conv-target-${t}`);
-        if (t === target) {
-          btn.className = "ios-btn py-2 rounded-xl text-xs font-semibold bg-ios-blue text-white";
-        } else {
-          btn.className = "ios-btn py-2 rounded-xl text-xs font-semibold bg-white/10 text-[var(--text-muted)]";
-        }
-      });
-      updateConvertedUrl();
+    function closeConverterOnBackdrop(event) {
+      if (event.target.id === "converter-modal") closeConverterModal();
     }
 
     function updateConvertedUrl() {
       const rawUrl = document.getElementById("converter-input-url").value.trim();
-      const outEl = document.getElementById("converter-output-url");
-      const nameMatch = rawUrl.split("/").pop().replace(/\.(plugin|stoverride|sgmodule|conf)$/, "") || "Module";
-
-      if (state.converterTarget === "stash") {
-        const m = rawUrl.replace(/^https?:\/\//, "");
-        outEl.textContent = `https://link.stash.ws/install-override/${m}`;
-      } else if (state.converterTarget === "loon") {
-        outEl.textContent = `loon://import?plugin=${encodeURIComponent(rawUrl)}`;
-      } else if (state.converterTarget === "surge") {
-        outEl.textContent = `https://script.hub/file/_start_/${rawUrl}/_end_/${nameMatch}.sgmodule?type=loon-plugin&target=surge-module`;
-      } else {
-        outEl.textContent = `https://script.hub/file/_start_/${rawUrl}/_end_/${nameMatch}.conf?type=loon-plugin&target=qx-rewrite`;
+      const output = document.getElementById("converter-output-url");
+      if (!rawUrl) {
+        output.textContent = "粘贴 Stash 覆写 Raw URL 以生成安装链接";
+        return;
       }
+      const rawPath = rawUrl.replace(/^https?:\/\//, "");
+      output.textContent = `https://link.stash.ws/install-override/${rawPath}`;
     }
 
     function copyConvertedUrl() {
-      const out = document.getElementById("converter-output-url").textContent.trim();
-      safeCopyText(out);
-      triggerIslandNotification("已复制转换后模块链接", out, "🔄", state.converterTarget.toUpperCase());
+      const installUrl = document.getElementById("converter-output-url").textContent.trim();
+      safeCopyText(installUrl);
+      triggerIslandNotification("已复制 Stash 安装链接", installUrl, "🔗", "Stash");
       closeConverterModal();
     }
 
