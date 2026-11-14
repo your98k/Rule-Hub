@@ -1,0 +1,20 @@
+name: '豆瓣 去广告'
+desc: |-
+  拦截豆瓣广告接口，以及悄悄预载的京东素材视频与图片（`360buyimg` 资源）。
+  Loon 插件原生适配为 Stash 声明式 url-rewrite，不依赖任何远程脚本。
+  来源：loonlab 插件仓库 DouBan.lpx（上游 ishowshu）。
+openUrl: 'https://apps.apple.com/app/id332788690'
+author: 'ishowshu · Loon→Stash 原生适配'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DouBan.png'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - '*.360buyimg.com'
+    - 'api.douban.com'
+  url-rewrite:
+    - '^https://storage\.360buyimg\.com/material-video/video/[a-f0-9]{32}\.mp4$ reject-dict'
+    - '^https://img\d+\.360buyimg\.com/pop/jfs/t\d+/\d+/\d+/\d+/\d+/[A-Za-z0-9]{10,40}/[A-Za-z0-9]{10,40}\.jpg$ reject-dict'
+    - '^https://api\.douban\.com/v2/app_ads reject-dict'

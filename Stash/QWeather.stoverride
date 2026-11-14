@@ -1,0 +1,17 @@
+name: '和风天气 去广告'
+desc: |-
+  过滤和风天气 App 内的广告位（`/app/ad/list` 响应置空）。
+  Loon 插件原生适配为 Stash 声明式 body-rewrite，不依赖任何远程脚本。
+  来源：loonlab 插件仓库 QWeather.lpx（上游 ddgksf2013）。
+openUrl: 'https://apps.apple.com/app/id1461458147'
+author: 'ddgksf2013 · Loon→Stash 原生适配'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/QWeather.png'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'hfapp-service.qweather.net'
+  body-rewrite:
+    - '^https?://hfapp-service\.qweather\.net/.*/app/ad/list response-jq .data=[]'

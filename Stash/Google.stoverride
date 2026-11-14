@@ -1,0 +1,20 @@
+name: 'Google CN 域名跳转'
+desc: |-
+  把 `google.cn` / `g.cn` / `ditu|maps.google.cn` / `translate.google.cn` 307 跳转到对应国际站。
+  Loon 插件原生适配为 Stash 声明式 url-rewrite（307 重定向），不依赖任何远程脚本。
+  来源：loonlab 插件仓库 Google.lpx。
+openUrl: 'https://www.google.com'
+author: 'loonlab · Loon→Stash 原生适配'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Google.png'
+category: '功能增强'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - '*.google.cn'
+    - '*.g.cn'
+  url-rewrite:
+    - '^https?://(www\.)?(?:g|google)\.cn https://www.google.com 307'
+    - '^https?://(?:ditu|maps)\.google\.cn https://maps.google.com 307'
+    - '^https?://translate\.google\.cn https://translate.google.com 307'
