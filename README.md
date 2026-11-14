@@ -27,6 +27,7 @@
 | 百度地图去广告 | iOS/tvOS 2.8+ | 移植 kelee.one 插件；需去 SSL Pinning 的签名 IPA，App Store 原版无效 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BaiduMap_remove_ads.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/BaiduMap_remove_ads.stoverride) |
 | usAge Pro 解锁 | iOS/tvOS 3.7+ | 改写账号权益接口响应，把 `entitlements.pro.active` 置为有效（/api/v1/me、/api/v1/auth/apple、/api/v1/me/entitlements）；需 MitM，脚本每日同步 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/usAgePro.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/usAgePro.stoverride) |
 | Reven 内购解锁 | iOS/tvOS 3.7+ | 移植 reven.lpx；RevenueCat / Superwall / Adapty 三框架通杀，2 项原生参数（跳过指定 App、注入策略）；MitM 解密后由内嵌脚本透明转发到 Reven 服务替换订阅响应 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Reven.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Reven.stoverride) |
+| 水印猫会员信息解锁 | iOS/tvOS 3.2.5+ | 移植 89996462/Quantumult-X 的 sym.js；改写 watersymaoa.yunxiaoguo.cn/user/info 响应，会员字段置终身会员；需 MitM，脚本每日同步 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ShuiYinMao.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ShuiYinMao.stoverride) |
 
 ## 使用要点
 
@@ -39,6 +40,7 @@
 - **Reven**：需信任 MitM CA；Adapty 需卸载重装 App 才生效。解锁后报错或闪退的 App（如 Filebar），把它的 UA 关键词填进「跳过指定 App」，多个用英文逗号分隔，填 `-` 表示全解锁；lifetime 没解成功时把「注入策略」换成 `lifetime_sub` 再试。不要与 Loon 版插件同时启用。
 - **Telegram**：「代理指向的策略」须填写当前配置中已存在的策略组或节点名。
 - **菜鸟**：纯 Stash 原生实现（1 条 AND 规则 + 4 条 url-rewrite reject + 4 条 jq 响应改写），无远程脚本，只需信任 MitM CA。首页若仍有广告位残留，多为 App 走 QUIC 或没有彻底退出 App 重进。
+- **水印猫**：只改写 `/user/info` 的会员字段（isPurchasedSubscribe、waterVipInfo、maskMobile、nickName），需信任 MitM CA；脚本每 24 小时从仓库内的 `Stash/ShuiYinMao.stash.js` 同步，内嵌 payload 仅作离线兜底。未生效时先退出 App 重进以便重新请求该接口，再确认域名是否走 QUIC。
 
 ## 鸣谢
 
