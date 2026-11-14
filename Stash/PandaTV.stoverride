@@ -1,0 +1,26 @@
+name: 'PandaTV 解除区域限制'
+desc: |-
+  为 pandalive 的直播 CDN 请求补上 Origin 头，绕过服务端对来源站点的区域校验。
+  Loon 插件原生适配为 Stash 原生 header-rewrite（request-add），不需要脚本。
+  与上游的一处差异：上游 [Rule] 把 pandalive.co.kr / live-video.net 指向名为 PROXY 的策略组；
+  Stash 没有内置的 PROXY 策略，直接写会解析不到，因此这里把 4 条规则保留为注释，
+  需要时改成你配置里实际存在的策略组名再启用。
+  来源：loonlab 插件仓库 PandaTV.lpx。
+openUrl: 'https://apps.apple.com/app/id1487958527'
+author: 'loonlab · Loon→Stash 原生适配'
+category: '功能增强'
+date: '2026-11-15'
+version: '1.0.0'
+
+# rules:
+#   - 'DOMAIN-SUFFIX,pandalive.co.kr,PROXY'
+#   - 'DOMAIN-SUFFIX,5721004.xyz,PROXY'
+#   - 'DOMAIN-SUFFIX,live-video.net,PROXY'
+#   - 'DOMAIN-KEYWORD,live-video.net,PROXY'
+
+http:
+  mitm:
+    - 'live-video.net'
+    - '*.live-video.net'
+  header-rewrite:
+    - '^https?://[^/:?#]*\.live-video\.net[^/:?#]*(?=[:/?#]|$) request-add Origin https://www.pandalive.co.kr'

@@ -1,0 +1,29 @@
+name: '百度文库 去广告'
+desc: |-
+  移植 loonlab 插件仓库 BaiduWenku.lpx：8 条 url-rewrite、4 条 body-rewrite，全部为 Stash 原生声明式配置。
+  覆盖 2 个域名，使用前请在 Stash 信任 MitM CA。
+  来源：loonlab 插件仓库 BaiduWenku.lpx。
+openUrl: 'https://apps.apple.com/app/id547799333'
+author: 'loonlab · Loon→Stash 原生适配'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'appwk.baidu.com'
+    - 'tanbi.baidu.com'
+  url-rewrite:
+    - '^https://appwk\.baidu\.com/xpage/interface/wknaad\? - reject-dict'
+    - '^https://appwk\.baidu\.com/appapi/search/hot\? - reject-dict'
+    - '^https://appwk\.baidu\.com/naapi/search/wkhotwords\? - reject-dict'
+    - '^https://appwk\.baidu\.com/appapi/task/viptasklist\? - reject-dict'
+    - '^https://appwk\.baidu\.com/activity/interface/wkapppopup\? - reject-dict'
+    - '^https://appwk\.baidu\.com/appapi/abg/index\? - reject-dict'
+    - '^https://appwk\.baidu\.com/naapi/recommend/recommenddoc\? - reject-dict'
+    - '^https://appwk\.baidu\.com/naapi/recommend/vipdoccard\? - reject-dict'
+  body-rewrite:
+    - '^https://appwk\.baidu\.com/appapi/index/home\? response-jq del(.data.bannerInfo, .data.bannerList, .data.bannerListV2)'
+    - '^https://(appwk|tanbi)\.baidu\.com/gsula/sula/syncmrecall$ response-jq del(.data.items)'
+    - '^https://appwk\.baidu\.com/appapi/index/tab\? response-jq del(.data)'
+    - '^https://appwk\.baidu\.com/appapi/forum/feed\?reqMode=wenkuapp_main_feed response-jq del(.data)'
