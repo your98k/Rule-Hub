@@ -5,7 +5,8 @@ desc: |-
   · 阅读正文递归剔除 ad_info / chapter_ad / flow_ad 等纯广告键，正文一字不动
   · 底栏福利、金币、任务 Tab 过滤
   · 可选：把 VIP 与免广告权益字段置为有效，走官方自带的免广告通道
-  规则来源：TomCatXue 极简去广告（Beta）+ kelee.one DragonRead_remove_ads，合并去重后共 48 条。
+  规则来源：TomCatXue 极简去广告（Beta）+ kelee.one DragonRead_remove_ads，合并去重后共 50 条。
+  与「红果短剧广告拦截」并存无冲突：4 条泛关键词已收窄为具体域名，只作用于 fqnovel 域，不侵入 hongguoapp / hongguosdk。
 author: 'TomCatXue / 可莉🅥'
 homepage: 'https://github.com/TomCatXue/MyCookieCenter'
 icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/DragonRead.png'
@@ -51,16 +52,18 @@ rules:
   - 'DOMAIN,vas.snssdk.com,REJECT,no-track'
   - 'DOMAIN-KEYWORD,-ad-sign.byteimg.com,REJECT,no-track'
   - 'DOMAIN-KEYWORD,-ad-sign.fqnovelpic.com,REJECT,no-track'
-  - 'DOMAIN-KEYWORD,ads3-normal,REJECT,no-track'
-  - 'DOMAIN-KEYWORD,ads5-normal,REJECT,no-track'
+  - 'DOMAIN,ads3-normal.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,ads5-normal.zijieapi.com,REJECT,no-track'
 
   # —— 埋点 / 日志上报 ——
   - 'DOMAIN-SUFFIX,toutiaocloud.com,REJECT,no-track'
   - 'DOMAIN-SUFFIX,toutiaocloud.net,REJECT,no-track'
   - 'DOMAIN-KEYWORD,-applog.fqnovel.com,REJECT,no-track'
-  - 'DOMAIN-KEYWORD,rtlog,REJECT,no-track'
-  - 'DOMAIN-KEYWORD,mon11-misc,REJECT,no-track'
-  - 'DOMAIN-KEYWORD,mon3-misc,REJECT,no-track'
+  - 'DOMAIN,rtlog3-applog.fqnovel.com,REJECT,no-track'
+  - 'DOMAIN,rtlog5-applog.fqnovel.com,REJECT,no-track'
+  - 'DOMAIN,mon11-misc.fqnovel.com,REJECT,no-track'
+  - 'DOMAIN,mon11-misc-lq.fqnovel.com,REJECT,no-track'
+  - 'DOMAIN,mon3-misc.fqnovel.com,REJECT,no-track'
   - 'DOMAIN,abtest3-misc.zijieapi.com,REJECT,no-track'
   - 'DOMAIN,feedback-c.zijieapi.com,REJECT,no-track'
   - 'DOMAIN,security.snssdk.com,REJECT,no-track'
