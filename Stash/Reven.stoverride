@@ -1,0 +1,297 @@
+# Stash 覆写：Reven（RevenueCat / Superwall / Adapty 内购解锁）
+# 适配自 Loon 插件 https://reven.jsforbaby.workers.dev/reven/reven.lpx
+#
+# 映射说明：
+#   Loon [Script] http-request … script-path=   → Stash http.script（type: request + require-body）
+#   Loon [Mitm] hostname                        → Stash http.mitm
+#   Loon [Argument] Bypass / Strategy           → Stash arguments（input / select），改成表单
+#   Loon argument=[{Bypass},{Strategy}]         → Stash argument 用 |json 传 JSON 字符串
+#
+# 脚本以 payload 内联，不依赖远程 loon-redirect.js，相对 Loon 原版修了三处：
+#   1. 转发时剔掉 host / content-length / accept-encoding —— 把 api.revenuecat.com 的 Host 发给
+#      workers.dev 会让 Workers 路由找错站点，是 Loon 版偶发 404 的根源；
+#   2. 回包剔掉 content-length / content-encoding / etag —— 长度交引擎重算，不手写 Content-Length；
+#   3. 上游失败不再伪造 500，直接 $done({}) 放行真实请求，宁可这次没解锁也不让 App 接口全挂。
+#
+# 依赖：MitM 已启用并信任 CA 证书；参数表单需 iOS/tvOS 3.7+ / macOS 4.4+。
+
+name: 'Reven'
+desc: |-
+  一键解锁 RevenueCat / Superwall / Adapty 三个订阅框架的 App 内购。
+
+  · 跳过指定 App：遇到改响应就报错或闪退的 App（如 Filebar），
+    把它的 UA 关键词填进参数，多个用逗号隔开；填 - 表示全部 App 正常解锁。
+  · 注入策略：默认 auto（官方规范）。lifetime 解锁失败时优先试 lifetime_sub，
+    它兼容把 lifetime 塞进 subscriptions 并把过期时间写成 2099 的老 App。
+  · Adapty 需要卸载重装 App 才生效。
+
+  适配自 Loon 插件 reven.lpx（jsforbaby）。请求经 MitM 解密后由脚本转发到 Reven 服务，
+  用服务端返回的解锁数据替换原响应。需要已信任 CA 证书；HTTP/3（QUIC）流量不生效。
+icon: 'https://raw.githubusercontent.com/fishdown/Icon/refs/heads/master/app/RevenueCat.png'
+category: '内购解锁'
+date: '2026-11-14'
+version: '1.0.0'
+author: 'jsforbaby（原作者）'
+
+arguments-version: 1
+arguments:
+  bypass:
+    type: input
+    title: 跳过指定 App
+    description: 遇到修改响应会报错或闪退的 App（如 Filebar），填入它的 UA 关键词，多个用英文逗号隔开。填 - 表示全部 App 正常解锁。
+    default: '-'
+    required: true
+    max-length: 512
+  strategy:
+    type: select
+    title: 注入策略
+    description: auto 为官方规范；lifetime 解锁失败时优先换 lifetime_sub；year / month 跳过 lifetime；all 注入所有 PID。
+    default: auto
+    options:
+      - value: auto
+        label: auto（官方规范）
+      - value: lifetime_sub
+        label: lifetime_sub（兼容老 App 的 lifetime）
+      - value: year
+        label: year（跳过 lifetime）
+      - value: month
+        label: month（跳过 lifetime）
+      - value: all
+        label: all（注入所有 PID）
+
+http:
+  # 以下均为 HTTPS 443，条目默认只对 443 生效，无需写端口
+  mitm:
+    - 'api.revenuecat.com'
+    - 'api.rc-backup.com'
+    - 'rc.visionarytech.ltd'
+    - 'revenue.cuto.app'
+    - 'proxy.linearity.io'
+    - 'subscriptions-api.superwall.com'
+    - 'api.adapty.io'
+  script:
+    - name: reven-unlock
+      # 原 Loon：http-request ^https:\/\/(api\.revenuecat\.com|…)\/
+      match: '^https://(api\.revenuecat\.com|api\.rc-backup\.com|rc\.visionarytech\.ltd|revenue\.cuto\.app|proxy\.linearity\.io|subscriptions-api\.superwall\.com|api\.adapty\.io)/'
+      type: request
+      # 要把原请求体（收据、订阅 JSON）原样转发，必须读 body
+      require-body: true
+      # 请求体是 JSON 文本，保持默认的 String 模式，不要开 binary-mode
+      binary-mode: false
+      # 收据体一般几十 KB，4 MB 足够；超过会静默跳过脚本
+      max-size: 4194304
+      timeout: 15
+      argument: '{"bypass":${args.bypass|json},"strategy":${args.strategy|json}}'
+
+script-providers:
+  reven-unlock:
+    payload: |-
+      /**
+       * Reven · Stash 版
+       * 适配自 Loon 插件 reven.lpx / loon-redirect.js（2026-05-10 版，jsforbaby）
+       *
+       * 作用：把 RevenueCat / Superwall / Adapty 的 API 请求透明转发到 reven 服务，
+       *       由服务端返回解锁后的订阅数据。
+       *
+       * Stash 参数（JSON）：{"bypass":"-","strategy":"auto"}
+       * 兼容旧格式：Bypass=x&Strategy=y / [x,y] / 纯字符串
+       *
+       * 与 Loon 原版的差异：
+       *   1. 转发时剔除 host / content-length / accept-encoding / connection，
+       *      否则把 api.revenuecat.com 的 Host 头发给 workers.dev 会让 Workers 路由错乱。
+       *   2. 响应头剔除 content-length / content-encoding / transfer-encoding / etag，
+       *      长度交给 Stash 引擎重算，不手写 Content-Length。
+       *   3. 转发失败不再伪造 500，直接 $done({}) 放行真实请求，避免 App 接口整体不可用。
+       *   4. URL 已带查询串时用 & 拼接，不再拼出两个 ?。
+       */
+
+      (function () {
+        var ENDPOINT = 'https://reven.jsforbaby.workers.dev/reven';
+        var HOSTS = [
+          'api.revenuecat.com',
+          'api.rc-backup.com',
+          'rc.visionarytech.ltd',
+          'revenue.cuto.app',
+          'proxy.linearity.io',
+          'subscriptions-api.superwall.com',
+          'api.adapty.io'
+        ];
+        var STRATEGIES = ['auto', 'lifetime_sub', 'year', 'month', 'all'];
+
+        function safeDecode(s) {
+          try {
+            return decodeURIComponent(s);
+          } catch (e) {
+            return s;
+          }
+        }
+
+        function parseArgument(raw) {
+          var out = { bypass: '-', strategy: 'auto' };
+          if (raw === undefined || raw === null || raw === '') return out;
+
+          if (typeof raw === 'object') {
+            var b = raw.bypass !== undefined ? raw.bypass : raw.Bypass;
+            var s = raw.strategy !== undefined ? raw.strategy : raw.Strategy;
+            if (b !== undefined && b !== null) out.bypass = String(b);
+            if (s !== undefined && s !== null) out.strategy = String(s);
+            if (Array.isArray(raw)) {
+              if (raw.length > 0) out.bypass = String(raw[0]);
+              if (raw.length > 1) out.strategy = String(raw[1]);
+            }
+            return out;
+          }
+
+          var str = String(raw).trim();
+
+          // JSON 对象
+          if (str.charAt(0) === '{') {
+            try {
+              return parseArgument(JSON.parse(str));
+            } catch (e) {
+              /* 落到下面的字符串解析 */
+            }
+          }
+
+          // Bypass=x&Strategy=y
+          if (/bypass\s*=|strategy\s*=/i.test(str)) {
+            var bm = str.match(/bypass\s*=\s*([^&]*)/i);
+            var sm = str.match(/strategy\s*=\s*([^&]*)/i);
+            if (bm && bm[1]) out.bypass = safeDecode(bm[1]);
+            if (sm && sm[1]) out.strategy = safeDecode(sm[1]).toLowerCase();
+            return out;
+          }
+
+          // [Bypass, Strategy] / [Filebar, XXX, YYYY, auto]
+          if (str.charAt(0) === '[' && str.charAt(str.length - 1) === ']') {
+            var parts = str
+              .slice(1, -1)
+              .split(',')
+              .map(function (s) { return s.trim(); })
+              .filter(function (s) { return s.length > 0; });
+            if (parts.length === 1) {
+              out.bypass = parts[0];
+            } else if (parts.length > 1) {
+              var last = parts[parts.length - 1].toLowerCase();
+              if (STRATEGIES.indexOf(last) >= 0) {
+                out.strategy = last;
+                out.bypass = parts.slice(0, -1).join(',');
+              } else {
+                out.bypass = parts.join(',');
+              }
+            }
+            return out;
+          }
+
+          out.bypass = str;
+          return out;
+        }
+
+        function pickHost(url) {
+          for (var i = 0; i < HOSTS.length; i++) {
+            var prefix = 'https://' + HOSTS[i] + '/';
+            if (url.indexOf(prefix) === 0) {
+              return { host: HOSTS[i], rest: url.slice(prefix.length) };
+            }
+          }
+          return null;
+        }
+
+        // 转发前要剔除的请求头（小写）
+        var DROP_REQUEST = {
+          host: 1,
+          'content-length': 1,
+          'content-encoding': 1,
+          'accept-encoding': 1,
+          connection: 1,
+          'keep-alive': 1,
+          'proxy-connection': 1,
+          te: 1,
+          'transfer-encoding': 1
+        };
+        // 回包时要剔除的响应头（小写），长度与压缩交回引擎
+        var DROP_RESPONSE = {
+          'content-length': 1,
+          'content-encoding': 1,
+          'transfer-encoding': 1,
+          connection: 1,
+          'keep-alive': 1,
+          etag: 1,
+          digest: 1,
+          'content-md5': 1
+        };
+
+        var cfg = parseArgument(typeof $argument === 'undefined' ? '' : $argument);
+        var matched = pickHost(String($request.url || ''));
+
+        if (!matched) {
+          $done({});
+          return;
+        }
+
+        var rest = matched.rest;
+        var target =
+          ENDPOINT +
+          '/' +
+          matched.host +
+          '/' +
+          rest +
+          (rest.indexOf('?') >= 0 ? '&' : '?') +
+          'bypass=' +
+          encodeURIComponent(cfg.bypass) +
+          '&strategy=' +
+          encodeURIComponent(cfg.strategy);
+
+        var headers = {};
+        var srcHeaders = $request.headers || {};
+        for (var k in srcHeaders) {
+          if (!Object.prototype.hasOwnProperty.call(srcHeaders, k)) continue;
+          if (DROP_REQUEST[k.toLowerCase()]) continue;
+          headers[k] = srcHeaders[k];
+        }
+
+        var method = String($request.method || 'GET').toLowerCase();
+        var send = $httpClient[method];
+        if (typeof send !== 'function') {
+          $done({});
+          return;
+        }
+
+        var options = {
+          url: target,
+          headers: headers,
+          timeout: 10,
+          'auto-redirect': true
+        };
+        if ($request.body !== undefined && $request.body !== null && $request.body !== '') {
+          options.body = $request.body;
+        }
+
+        send.call($httpClient, options, function (error, response, data) {
+          // 转发失败：放行真实请求，宁可这次没解锁，也不把 App 接口打成 500
+          if (error || !response) {
+            console.log('reven: upstream failed, passthrough -> ' + (error || 'no response'));
+            $done({});
+            return;
+          }
+
+          var outHeaders = {};
+          var respHeaders = response.headers || {};
+          for (var h in respHeaders) {
+            if (!Object.prototype.hasOwnProperty.call(respHeaders, h)) continue;
+            if (DROP_RESPONSE[h.toLowerCase()]) continue;
+            outHeaders[h] = respHeaders[h];
+          }
+
+          var status = response.status || response.statusCode || 200;
+          var body = data === undefined || data === null ? '' : data;
+
+          $done({
+            response: {
+              status: status,
+              headers: outHeaders,
+              body: body
+            }
+          });
+        });
+      })();
