@@ -928,7 +928,7 @@ http:
     - '^https?://j1\.pupuapi\.com/client/marketing/advertisement/v response-replace-regex launch_time_close":\d+ launch_time_close":1660716799999'
     - '^https?://sh-gateway\.shihuo\.cn/v\d/services/sh-adapi/home/screen response-replace-regex egin_time":"\d{4} egin_time":"2099'
     - '^https?://tft-app\.cdtft\.cn/gateway-customer/tftapp/tft-ams/api/appAd response-replace-regex officialAdvertResultVo ddgksf2013'
-    - '^https?://acs\.m\.taobao\.com/gw/mtop\.alibaba.*mytab response-jq .data.model.children |= map(select(.name | contains(\"营销\") | not))'
+    - '^https?://acs\.m\.taobao\.com/gw/mtop\.alibaba.*mytab response-jq .data.model.children |= map(select(.name | contains("营销") | not))'
     - '^https?://mp\.weixin\.qq\.com/mp/getappmsgad response-replace-regex advertisement ddgksf2013'
     - '^https?://lcen\.xiaote\.net/api/graphql response-replace-regex screenSplashAd ddgksf2013'
     - '^https?://apps\.workair\.cn/app/version response-replace-regex ads" ddgksf2013"'
