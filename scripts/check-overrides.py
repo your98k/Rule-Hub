@@ -11,8 +11,11 @@
 
 用法：python3 scripts/check-overrides.py [目录，默认 Stash]
 """
-import sys, os, re, glob
+import sys, os, re, glob, shutil, subprocess
 import yaml
+
+JQ = shutil.which('jq')
+HAVE_JQ = JQ is not None
 
 URL_ACT = {'reject','reject-200','reject-img','reject-dict','reject-array','302','307','transparent'}
 BODY_ACT = {'request-replace-regex','response-replace-regex','request-jq','response-jq',
@@ -100,6 +103,21 @@ def main():
             if not isinstance(m, dict) or 'match' not in m or not ('text' in m or 'base64' in m):
                 issues.append((f, 'mock', '必须含 match 与 text/base64'))
 
+        # jq 表达式语法校验（有 jq 才做；CI 与 box 环境均有）
+        if HAVE_JQ:
+            for r in h.get('body-rewrite') or []:
+                parts = str(r).split(' ', 2)
+                if len(parts) == 3 and parts[1] == 'response-jq':
+                    pr = subprocess.run([JQ, '-n', parts[2]],
+                                        capture_output=True, text=True, timeout=10)
+                    # 只把语法错误算问题：jq -n 是空输入求值，
+                    # 依赖具体结构的运行时错误（如 Cannot iterate over null）属正常
+                    err = pr.stderr or ''
+                    if pr.returncode != 0 and re.search(
+                            r'syntax error|unexpected|Unterminated|Expected|unexpected end',
+                            err, re.I):
+                        issues.append((f, 'response-jq', 'jq 语法错误: ' + err.strip().split('\n')[0][:110]))
+
         providers = d.get('script-providers') or {}
         for s in h.get('script') or []:
             if not s.get('name') or not s.get('match') or s.get('type') not in ('request', 'response'):
@@ -111,7 +129,7 @@ def main():
             if len(str(r).split(',')) < 3:
                 issues.append((f, 'rules', f'字段不足: {str(r)[:50]}'))
 
-    print(f'检查 {len(files)} 个覆写，问题 {len(issues)} 条')
+    print(f'检查 {len(files)} 个覆写，问题 {len(issues)} 条' + ('' if HAVE_JQ else '（未安装 jq，跳过 jq 语法校验）'))
     for f, k, msg in issues:
         print(f'  {os.path.basename(f)} [{k}] {msg}')
     return 1 if issues else 0
