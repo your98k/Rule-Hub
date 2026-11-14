@@ -1,0 +1,27 @@
+name: '小蚕惠生活 去广告'
+desc: |-
+  移除红包推广、首页横幅、打车权益、大牌活动、开屏广告与更新弹窗。
+  Loon 插件原生适配为 Stash 原生 header-rewrite + url-rewrite，不依赖任何远程脚本。
+  修正上游漏配：规则命中 `web.xinyifm.cn`，但原 [MitM] 未列入该域名，规则实际不生效，此处已补。
+  来源：loonlab 插件仓库 XiaoCan.lpx（上游 Sliverkiss / 可莉）。
+openUrl: 'https://apps.apple.com/app/id1618414236'
+author: 'Sliverkiss / 可莉 · Loon→Stash 原生适配'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/XiaoCan.png'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'gw.xiaocantech.com'
+    - 'web2.realtech-inc.com'
+    - 'web.xinyifm.cn'
+    - 'sdk.1rtb.net'
+  header-rewrite:
+    - '^https://gw\.xiaocantech\.com/rpc request-replace-regex methodname .*(GetBannerList|IsShowOrderAwardPopup|UserLifeShopList|BrandBannerList|GetPromotionGlobalCfg) null'
+  url-rewrite:
+    - '^https://web2\.realtech-inc\.com/oss/xc-app-assets/configs/common/theme\.json reject-dict'
+    - '^https://web\.xinyifm\.cn/oss/xc-app-assets/configs/common/index_activity\.json reject-dict'
+    - '^https://web2\.realtech-inc\.com/oss/xc-app-assets/configs/common/links\.json reject-dict'
+    - '^https://sdk\.1rtb\.net/sdk/req_ad\? reject-dict'
+    - '^https://gw\.xiaocantech\.com/g/pa reject-dict'

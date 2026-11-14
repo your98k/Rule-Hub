@@ -1,0 +1,38 @@
+name: '美柚 去广告'
+desc: |-
+  清空会员页推广位、移除「我的」页圈子入口，并拦截信息流推荐与弹窗配置。
+  Loon 插件原生适配为 Stash 原生 body-rewrite + url-rewrite，不依赖任何远程脚本。
+  与上游的一处偏离：上游 [Rule] 把 `circle.seeyouyima.com` 整域 REJECT，
+  但同一个文件里又有针对该域 `article_recommend` 的精确 rewrite —— 整域拦截会让那条 rewrite 永远不执行。
+  此处按 rewrite 的意图处理：保留精确拦截，去掉整域 REJECT。
+  来源：loonlab 插件仓库 MeetYou.lpx。
+openUrl: 'https://apps.apple.com/app/id1441978239'
+author: 'loonlab · Loon→Stash 原生适配'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/MeetYou.png'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+rules:
+  - 'DOMAIN,ad.seeyouyima.com,REJECT'
+  - 'DOMAIN,axxd.xmseeyouyima.com,REJECT'
+  - 'DOMAIN,jingqi.youzibuy.com,REJECT'
+  - 'DOMAIN,mgo.seeyouyima.com,REJECT'
+  - 'DOMAIN,ad-logs.seeyouyima.com,REJECT'
+  - 'DOMAIN,ab.seeyouyima.com,REJECT'
+
+http:
+  mitm:
+    - 'circle.seeyouyima.com'
+    - 'circle.xmseeyouyima.com'
+    - 'common.seeyouyima.com'
+    - 'sub.seeyouyima.com'
+    - 'users.seeyouyima.com'
+    - 'config-service.seeyouyima.com'
+  url-rewrite:
+    - '^https?://circle\.(xm)?seeyouyima\.com/v\d/article_recommend\? reject'
+    - '^https?://common\.seeyouyima\.com/v\d/conf_list reject'
+    - '^https?://config-service\.seeyouyima\.com/api/configs/batch reject-200'
+  body-rewrite:
+    - '^https?://sub\.seeyouyima\.com/v\d/sub/my_vip response-jq .data={}'
+    - '^https?://users\.seeyouyima\.com/v\d/wo\? response-jq del(.data.circle)'
