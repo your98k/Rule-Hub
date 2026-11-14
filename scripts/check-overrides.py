@@ -11,7 +11,7 @@
 
 用法：python3 scripts/check-overrides.py [目录，默认 Stash]
 """
-import sys, os, re, glob, shutil, subprocess
+import sys, os, re, glob, json, shutil, subprocess
 import yaml
 
 JQ = shutil.which('jq')
@@ -102,6 +102,12 @@ def main():
         for m in h.get('mock') or []:
             if not isinstance(m, dict) or 'match' not in m or not ('text' in m or 'base64' in m):
                 issues.append((f, 'mock', '必须含 match 与 text/base64'))
+            elif 'text' in m:
+                # text 必须是合法 JSON；YAML 单引号里的 \" 会变成字面反斜杠，导致 JSON 非法
+                try:
+                    json.loads(m['text'])
+                except Exception:
+                    issues.append((f, 'mock', 'text 不是合法 JSON（检查是否残留 \\" 转义）'))
 
         # jq 表达式语法校验（有 jq 才做；CI 与 box 环境均有）
         if HAVE_JQ:
