@@ -1,8 +1,5 @@
 name: '腾讯文档 去广告'
-desc: |-
-  拦截腾讯文档弹窗广告与首页横幅推广接口，直接返回空对象。
-  Loon 插件原生适配为 Stash 声明式 url-rewrite，不依赖任何远程脚本。
-  来源：loonlab 插件仓库 TencentDocs.lpx（上游 可莉）。
+desc: '移植 loonlab 的 TencentDocs.lpx，Stash 原生声明式，2 条规则。'
 openUrl: 'https://apps.apple.com/app/id1370780836'
 author: '可莉 · Loon→Stash 原生适配'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TencentDocs.png'

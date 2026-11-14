@@ -1,9 +1,5 @@
 name: '小蚕惠生活 去广告'
-desc: |-
-  移除红包推广、首页横幅、打车权益、大牌活动、开屏广告与更新弹窗。
-  Loon 插件原生适配为 Stash 原生 header-rewrite + url-rewrite，不依赖任何远程脚本。
-  修正上游漏配：规则命中 `web.xinyifm.cn`，但原 [MitM] 未列入该域名，规则实际不生效，此处已补。
-  来源：loonlab 插件仓库 XiaoCan.lpx（上游 Sliverkiss / 可莉）。
+desc: '移植 loonlab 的 XiaoCan.lpx，Stash 原生声明式，6 条规则。'
 openUrl: 'https://apps.apple.com/app/id1618414236'
 author: 'Sliverkiss / 可莉 · Loon→Stash 原生适配'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/XiaoCan.png'

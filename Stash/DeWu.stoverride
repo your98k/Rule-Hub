@@ -1,8 +1,5 @@
 name: '得物 去广告'
-desc: |-
-  拦截得物开屏/信息流推广、搜索热词与券模块，并精简「我的」页钱包与发现页分组。
-  Loon 插件原生适配为 Stash 原生 url-rewrite + body-rewrite，不依赖任何远程脚本。
-  来源：loonlab 插件仓库 DeWu.lpx。
+desc: '移植 loonlab 的 DeWu.lpx，Stash 原生声明式，10 条规则。'
 openUrl: 'https://apps.apple.com/app/id1012871328'
 author: 'loonlab · Loon→Stash 原生适配'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DeWu.png'

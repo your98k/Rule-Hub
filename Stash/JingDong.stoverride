@@ -6,14 +6,7 @@
 #   Loon [Script] 的 enable 开关 → 覆写参数 select 门控：开启=(?:)、关闭=(?!)，
 #     拼接在各比价脚本 match 的 ^ 之后（(?!) 永不匹配，从而等效关闭该脚本）
 name: '京东'
-desc: |-
-  1. 过滤京东广告；2. 历史比价信息，任选其一即可。
-  首次使用保持 Stash 连接，打开【慢慢买】APP →【我的】并刷新，提示【获取ck成功】后返回京东查看比价。
-  此插件仅支持京东标准模式。
-  ——
-  适配自 Loon 插件 JingDong.lpx（原作：RuCu6、Maasea、MuTu、苍井灰灰、mw418、可莉）。
-  需要 Stash iOS/tvOS 3.7+ 或 macOS 4.4+，并已在 Stash 内生成、安装并信任 CA 证书。
-  比价各版本在「覆写参数」中开关：通知版与嵌入版互斥、表格图与折线图互斥，请勿同时开启。
+desc: '京东去广告与历史比价。'
 openUrl: 'https://apps.apple.com/app/id414245413'
 author: 'RuCu6, Maasea, MuTu, 苍井灰灰, mw418, 可莉（Loon 插件原作）'
 homepage: 'https://loonlab.103516.xyz/Plugin/'

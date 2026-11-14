@@ -1,9 +1,5 @@
 name: '爱奇艺体育 去广告'
-desc: |-
-  移植 loonlab 插件仓库 IQIYI_Ssports.lpx：1 条 url-rewrite、3 条 body-rewrite，全部为 Stash 原生声明式配置。
-  Loon 的 reject_dict 映射为 reject-dict，json.jq / json.delete 映射为 response-jq，jq 引号已反转义。
-  覆盖 2 个域名，使用前请在 Stash 信任 MitM CA。
-  来源：loonlab 插件仓库 IQIYI_Ssports.lpx。
+desc: '移植 loonlab 的 IQIYI_Ssports.lpx，Stash 原生声明式，4 条规则。'
 openUrl: 'https://apps.apple.com/app/id1478240836'
 author: 'loonlab · Loon→Stash 原生适配'
 category: '去广告'

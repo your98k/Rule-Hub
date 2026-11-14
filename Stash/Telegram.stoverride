@@ -1,14 +1,5 @@
 name: 'Telegram 链接跳转'
-desc: |-
-  将 t.me / telegram.me / telegram.dog 网页链接交给指定客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram，默认官方 Telegram。
-
-  使用说明：
-  · 需要安装并信任 Stash 的 MitM CA 证书；参数修改后请「保存并应用」
-  · 支持用户名、消息、话题、邀请、机器人参数等常见链接；不识别的网页路径原样放行
-  · 默认 307 直接跳转；若浏览器拦截，请将「打开方式」改为「兼容打开页」，再点击页面按钮
-  · 仅阻止上述三个域名的 QUIC，让网页请求回落到可改写的 TCP；不会全局禁用 QUIC
-  · 「代理指向的策略」须为当前配置中已存在的策略组或节点名
-  · iOS Universal Links 或 App 内部直接唤起客户端、不发出网页请求时，Stash 无法接管；可复制链接到 Safari 地址栏回车测试
+desc: '把 t.me 等网页链接交给指定的 Telegram 客户端。'
 
 openUrl: 'https://apps.apple.com/app/id686449807'
 author: 'sooyaaabo (Loon 原作) / Stash 适配'

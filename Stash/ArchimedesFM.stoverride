@@ -1,8 +1,5 @@
 name: '阿基米德 去广告'
-desc: |-
-  移植 loonlab 插件仓库 ArchimedesFM.lpx：0 条 url-rewrite、4 条 body-rewrite，全部为 Stash 原生声明式配置。
-  覆盖 3 个域名，使用前请在 Stash 信任 MitM CA。
-  来源：loonlab 插件仓库 ArchimedesFM.lpx。
+desc: '移植 loonlab 的 ArchimedesFM.lpx，Stash 原生声明式，4 条规则。'
 openUrl: 'https://apps.apple.com/app/id519588844'
 author: 'loonlab · Loon→Stash 原生适配'
 category: '去广告'

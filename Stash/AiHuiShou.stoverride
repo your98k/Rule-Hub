@@ -1,9 +1,5 @@
 name: '爱回收 去广告'
-desc: |-
-  移植 loonlab 插件仓库 AiHuiShou.lpx：3 条 url-rewrite、19 条 body-rewrite，全部为 Stash 原生声明式配置。
-  Loon 的 reject_dict/reject 映射为 reject-dict/reject，json.jq / json.delete / json.replace 分别映射为 response-jq / response-json-replace，body.mock 映射为 http.mock。
-  覆盖 5 个域名，使用前请在 Stash 信任 MitM CA。
-  来源：loonlab 插件仓库 AiHuiShou.lpx。
+desc: '移植 loonlab 的 AiHuiShou.lpx，Stash 原生声明式，22 条规则。'
 openUrl: 'https://apps.apple.com/app/id1245586078'
 author: 'loonlab · Loon→Stash 原生适配'
 category: '去广告'

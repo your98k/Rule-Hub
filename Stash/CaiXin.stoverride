@@ -1,8 +1,5 @@
 name: '财新 去广告'
-desc: |-
-  拦截财新 App 的广告位与热推接口，首页推送/关键词/小程序信息改为本地 mock 空响应。
-  Loon 插件原生适配为 Stash 原生 url-rewrite + mock，不依赖任何远程脚本。
-  来源：loonlab 插件仓库 CaiXin.lpx。
+desc: '移植 loonlab 的 CaiXin.lpx，Stash 原生声明式，10 条规则。'
 openUrl: 'https://apps.apple.com/app/id519983645'
 author: 'loonlab · Loon→Stash 原生适配'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/CaiXin.png'

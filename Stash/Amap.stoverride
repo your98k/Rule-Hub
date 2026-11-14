@@ -1,5 +1,5 @@
 name: "高德地图"
-desc: "过滤高德地图广告；部分广告需卸载重装或清除缓存后才会彻底消失。需要开启 MITM 并信任 Stash 证书。"
+desc: '高德地图去广告，需信任 MitM 证书。'
 author: "原 Loon 插件：树先生（ishowshu）；Stash 适配：your98k"
 homepage: "https://github.com/ishowshu/loon"
 icon: "https://github.com/ishowshu/loon/raw/refs/heads/main/icon/gaode.png"

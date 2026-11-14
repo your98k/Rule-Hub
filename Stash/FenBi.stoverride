@@ -1,10 +1,5 @@
 name: '粉笔 去广告'
-desc: |-
-  移植 loonlab 插件仓库 FenBi.lpx：12 条 url-rewrite、2 条 body-rewrite、1 条 mock。
-  Loon 的 reject_dict 映射为 reject-dict，json.jq / json.delete 映射为 response-jq，
-  body.mock 映射为 Stash 的 http.mock（text 为合法 JSON，不带转义）。
-  覆盖 4 个域名，使用前请在 Stash 信任 MitM CA。
-  来源：loonlab 插件仓库 FenBi.lpx。
+desc: '移植 loonlab 的 FenBi.lpx，Stash 原生声明式，15 条规则。'
 openUrl: 'https://apps.apple.com/cn/app/id1228600770'
 author: 'loonlab · Loon→Stash 原生适配'
 category: '去广告'

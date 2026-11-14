@@ -9,13 +9,7 @@
 # 注意：Loon 响应改写是首条命中即停，Stash body-rewrite 是链式依次执行，
 #   因此 page.fetch 与 page.fetch.cn 两条正则均以 (?:\?|$) 锚定结尾，避免同时命中。
 name: '菜鸟'
-desc: |-
-  过滤菜鸟 App 首页瀑布流、搜索栏、寄件券、发现页，
-  以及配置加载 / 开屏 / 设置页加载的广告数据。
-  ——
-  适配自 Loon 插件 CaiNiao.lpx（原作：githubdulong）。
-  全部为 Stash 原生 Rule + url-rewrite + body-rewrite，不依赖远程脚本。
-  需要 MitM，并已在 Stash 内生成、安装并信任 CA 证书。
+desc: '菜鸟 App 去广告（首页瀑布流、搜索栏、寄件券、发现页）。'
 openUrl: 'https://apps.apple.com/app/id951610982'
 author: 'githubdulong[https://github.com/githubdulong]'
 homepage: 'https://loonlab.103516.xyz/Plugin/'

@@ -1,8 +1,5 @@
 name: '瑞幸咖啡 去广告'
-desc: |-
-  拦截瑞幸 App 首页商品列表、轮播图、礼品卡、日历、幸运集杯等推广接口共 8 条。
-  Loon 插件原生适配为 Stash 原生 url-rewrite，不依赖任何远程脚本。
-  来源：loonlab 插件仓库 LuckinCoffee.lpx。
+desc: '移植 loonlab 的 LuckinCoffee.lpx，Stash 原生声明式，8 条规则。'
 openUrl: 'https://apps.apple.com/app/id1450089146'
 author: 'loonlab · Loon→Stash 原生适配'
 category: '去广告'

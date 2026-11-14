@@ -1,11 +1,5 @@
 name: '顺丰速运 去广告'
-desc: |-
-  移植 loonlab 插件仓库 SF-Express.lpx：6 条 url-rewrite、1 条 body-rewrite、1 条 mock，全部为 Stash 原生声明式配置。
-  SF-Express 的 module-config mock 原始 text 含嵌套 JSON 字符串（引号未转义），无法直接作为合法 JSON，
-  改为等价的空模块响应 {"version":"2.0","success":true,"obj":[]}。
-  Loon 的 reject_dict/reject 映射为 reject-dict/reject，json.jq / json.delete / json.replace 分别映射为 response-jq / response-json-replace，body.mock 映射为 http.mock。
-  覆盖 4 个域名，使用前请在 Stash 信任 MitM CA。
-  来源：loonlab 插件仓库 SF-Express.lpx。
+desc: '顺丰速运去广告；module-config 用空模块响应替代（原 mock 文本非法）。'
 openUrl: 'https://apps.apple.com/app/id488113102'
 author: 'loonlab · Loon→Stash 原生适配'
 category: '去广告'

@@ -1,9 +1,5 @@
 name: '盒马 去广告'
-desc: |-
-  移植 loonlab 插件仓库 Freshippo.lpx：7 条 url-rewrite、5 条 body-rewrite，全部为 Stash 原生声明式配置。
-  Loon 的 reject_dict 映射为 reject-dict，json.jq 映射为 response-jq，jq 引号已反转义。
-  覆盖 1 个域名，使用前请在 Stash 信任 MitM CA。
-  来源：loonlab 插件仓库 Freshippo.lpx。
+desc: '移植 loonlab 的 Freshippo.lpx，Stash 原生声明式，12 条规则。'
 openUrl: 'https://apps.apple.com/app/id1035987008'
 author: 'loonlab · Loon→Stash 原生适配'
 category: '去广告'

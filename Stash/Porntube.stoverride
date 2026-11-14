@@ -1,10 +1,5 @@
 name: 'Porntube VIP 解锁（Stash 参数版）'
-desc: |-
-  跟随 Yu9191/Rewrite 新版 porntube.conf（Build 2026-11-14，4 脚本）。
-  功能：VIP 解锁 + 去广告；视频页内嵌播放器按钮（网页播放/lenna/SenPlayer/Infuse/
-  VLC/自定义/更多），自定义 Scheme 直接在网页填写保存，不再依赖 BoxJS。
-  新增页面请求脚本剥离条件请求头，修复返回主页整页刷新。
-  使用前需在 Stash 中安装并信任 MitM CA 证书；脚本更新间隔 86400 秒。
+desc: 'Porntube VIP 解锁与去广告，四脚本版。'
 author: 'Yu9191 Rewrite（Stash 适配）'
 homepage: 'https://github.com/Yu9191/Rewrite'
 icon: 'https://raw.githubusercontent.com/fishdown/Icon/master/app/porntube.png'

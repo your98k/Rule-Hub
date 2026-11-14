@@ -1,8 +1,5 @@
 name: '车来了 去广告'
-desc: |-
-  移植 loonlab 插件仓库 CheLaiLe.lpx：5 条 url-rewrite、0 条 body-rewrite，全部为 Stash 原生声明式配置。
-  覆盖 7 个域名，使用前请在 Stash 信任 MitM CA。
-  来源：loonlab 插件仓库 CheLaiLe.lpx。
+desc: '移植 loonlab 的 CheLaiLe.lpx，Stash 原生声明式，5 条规则。'
 openUrl: 'https://apps.apple.com/app/id519661118'
 author: 'loonlab · Loon→Stash 原生适配'
 category: '去广告'

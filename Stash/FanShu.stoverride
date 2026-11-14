@@ -1,8 +1,5 @@
 name: '帆书 去广告'
-desc: |-
-  移植 loonlab 插件仓库 FanShu.lpx：9 条 url-rewrite、0 条 body-rewrite，全部为 Stash 原生声明式配置。
-  覆盖 1 个域名，使用前请在 Stash 信任 MitM CA。
-  来源：loonlab 插件仓库 FanShu.lpx。
+desc: '移植 loonlab 的 FanShu.lpx，Stash 原生声明式，9 条规则。'
 openUrl: 'https://apps.apple.com/app/id806183603'
 author: 'loonlab · Loon→Stash 原生适配'
 category: '去广告'

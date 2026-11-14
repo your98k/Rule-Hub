@@ -16,17 +16,7 @@
 # 依赖：MitM 已启用并信任 CA 证书；参数表单需 iOS/tvOS 3.7+ / macOS 4.4+。
 
 name: 'Reven'
-desc: |-
-  一键解锁 RevenueCat / Superwall / Adapty 三个订阅框架的 App 内购。
-
-  · 跳过指定 App：遇到改响应就报错或闪退的 App（如 Filebar），
-    把它的 UA 关键词填进参数，多个用逗号隔开；填 - 表示全部 App 正常解锁。
-  · 注入策略：默认 auto（官方规范）。lifetime 解锁失败时优先试 lifetime_sub，
-    它兼容把 lifetime 塞进 subscriptions 并把过期时间写成 2099 的老 App。
-  · Adapty 需要卸载重装 App 才生效。
-
-  适配自 Loon 插件 reven.lpx（jsforbaby）。请求经 MitM 解密后由脚本转发到 Reven 服务，
-  用服务端返回的解锁数据替换原响应。需要已信任 CA 证书；HTTP/3（QUIC）流量不生效。
+desc: '解锁 RevenueCat / Superwall / Adapty 三个订阅框架的内购。'
 icon: 'https://raw.githubusercontent.com/fishdown/Icon/refs/heads/master/app/RevenueCat.png'
 category: '内购解锁'
 date: '2026-11-14'

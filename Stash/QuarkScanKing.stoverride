@@ -1,8 +1,5 @@
 name: '夸克扫描王 去广告'
-desc: |-
-  移植 loonlab 插件仓库 QuarkScanKing.lpx：1 条 url-rewrite、1 条 body-rewrite，全部为 Stash 原生声明式配置。
-  覆盖 4 个域名，使用前请在 Stash 信任 MitM CA。
-  来源：loonlab 插件仓库 QuarkScanKing.lpx。
+desc: '移植 loonlab 的 QuarkScanKing.lpx，Stash 原生声明式，2 条规则。'
 openUrl: 'https://apps.apple.com/app/id1542030138'
 author: 'loonlab · Loon→Stash 原生适配'
 category: '去广告'
