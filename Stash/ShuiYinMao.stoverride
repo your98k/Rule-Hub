@@ -1,26 +1,28 @@
 name: 水印猫会员信息解锁（Stash）
 desc: |-
   移植 89996462/Quantumult-X 的 ycdz/sym.js（水印猫，作者：彭于晏💞），改为 Stash 原生覆写。
-  只需改写 watersymaoa.yunxiaoguo.cn/user/info 响应正文：isPurchasedSubscribe 置 1、waterVipInfo 置终身会员、maskMobile 与 nickName 置彭于晏Crack。
-  与原脚本相比改为按字段名做括号配对定位，字段嵌套层级或顺序变化不受影响；改写后清理失效的 Content-Length / Content-Encoding / ETag 等响应头，交给引擎重算。
+  改写 watersymaoa.yunxiaoguo.cn 域名下响应正文的会员字段：isPurchasedSubscribe 置有效、waterVipInfo 置终身会员、maskMobile 与 nickName 置彭于晏Crack。
+  按字段名做括号配对定位，字段嵌套层级或顺序变化不受影响；isPurchasedSubscribe 保持原有类型（布尔写 true、数字写 1）。改写后清理失效的 Content-Length / Content-Encoding / ETag 等响应头。
+  调试：脚本向 Stash 脚本日志打印以 [SYM] 开头的一行，含状态码、body 长度、四个字段的命中次数；未命中时会追加一行 keys= 列出响应里的字段名（只列字段名，不含值）。确认生效后可把脚本里的 DEBUG 改为 false。
   需要开启 MitM 并安装、完全信任你自己生成的 CA 证书；QUIC(HTTP/3) 流量不经过 HTTP 引擎，不会生效。
-  脚本由 script-providers 每 24h 从 Stash/ShuiYinMao.stash.js 自动更新；内嵌 payload 仅作离线兜底。
+  脚本由 script-providers 每 24h 从 jsDelivr 镜像同步 Stash/ShuiYinMao.stash.js；内嵌 payload 为离线兜底，Stash 3.2.5+ 可用。
 author: 彭于晏💞 / 89996462（原作者）
 homepage: https://github.com/89996462/Quantumult-X
 openUrl: https://raw.githubusercontent.com/89996462/Quantumult-X/main/ycdz/sym.js
 icon: https://github.com/Toperlock/Quantumult/raw/main/icon/Doraemon/Doraemon-1045.png
 category: 脚本改写
 date: '2026-11-15'
-version: '1.0.0'
+version: '1.0.1'
 
 http:
   # HTTPS 必须命中 MitM 才会解密并由脚本处理
   mitm:
     - watersymaoa.yunxiaoguo.cn
   # 数组默认前插：本条排在已有脚本之前，不影响其他脚本
+  # match 暂放到域名级，便于在脚本日志里看到该域名下所有接口；确认后可收窄到 /user/info
   script:
     - name: shuiyinmao-user-info
-      match: '^https:\/\/watersymaoa\.yunxiaoguo\.cn\/user\/info'
+      match: '^https:\/\/watersymaoa\.yunxiaoguo\.cn\/'
       type: response
       require-body: true
       max-size: 1048576
@@ -30,7 +32,7 @@ http:
 
 script-providers:
   shuiyinmao-user-info:
-    url: https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ShuiYinMao.stash.js
+    url: https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ShuiYinMao.stash.js
     interval: 86400
     payload: |
       /**
@@ -38,16 +40,21 @@ script-providers:
        * 原始脚本：89996462/Quantumult-X → ycdz/sym.js（作者：彭于晏💞）
        * 适配：仅改动响应正文中的 4 个字段，结构与字段顺序无关；
        *      改写后清理 Content-Length / Content-Encoding 等失效头，交给引擎重算。
+       * 调试：DEBUG = true 时向 Stash 脚本日志打印命中情况与响应类名，便于定位不生效的原因。
        */
+
+      const DEBUG = true;
 
       const VIP_INFO = '{"subscribeCycle":-1,"beginTime":"2025-09-09 09:09:09","firstOpenTime":"2025-09-09 09:09:09","freeTimes":0,"userSign":"D-ej8OAp7SY","expireTime":"2999-09-09 09:09:09","typeName":"终身会员","remainDays":9,"sign":"wa44coNPDkg","createTime":"2025-09-09 09:09:09"}';
 
       // 把 text 中所有 "field":<任意 JSON 值> 的“值”整体替换为 valueJson，
       // 值可以是字符串、数字、对象、数组或 null，靠括号配对定位结束位置。
+      // 返回 { text, count }，count 为实际替换次数。
       function replaceJsonField(text, field, valueJson) {
         const key = '"' + field + '":';
         let out = '';
         let i = 0;
+        let count = 0;
         while (i < text.length) {
           const idx = text.indexOf(key, i);
           if (idx < 0) {
@@ -55,6 +62,7 @@ script-providers:
             break;
           }
           out += text.slice(i, idx) + key + valueJson;
+          count += 1;
           let p = idx + key.length;
           let depth = 0;
           let inString = false;
@@ -79,7 +87,23 @@ script-providers:
           }
           i = p;
         }
-        return out;
+        return { text: out, count: count };
+      }
+
+      // 只打印字段名，不打印字段值，避免日志里出现手机号等隐私内容。
+      function collectKeys(body) {
+        const seen = {};
+        const list = [];
+        const re = /"([A-Za-z0-9_]{1,40})"\s*:/g;
+        let m;
+        while ((m = re.exec(body)) !== null) {
+          const k = m[1];
+          if (seen[k]) continue;
+          seen[k] = 1;
+          list.push(k);
+          if (list.length >= 80) break;
+        }
+        return list.join(',');
       }
 
       function cleanHeaders(headers) {
@@ -93,16 +117,30 @@ script-providers:
       }
 
       (function () {
+        const url = ($request && $request.url) || '';
         let body = $response && $response.body;
         if (typeof body !== 'string' || body === '') {
+          if (DEBUG) console.log('[SYM] 无法读取文本 body: ' + url);
           $done({});
           return;
         }
 
-        let out = replaceJsonField(body, 'isPurchasedSubscribe', '1');
-        out = replaceJsonField(out, 'waterVipInfo', VIP_INFO);
-        out = replaceJsonField(out, 'maskMobile', '"彭于晏Crack"');
-        out = replaceJsonField(out, 'nickName', '"彭于晏Crack"');
+        // 保持原字段类型：原来是布尔值就写 true，原来是数字就写 1，避免类型变化导致解析失败。
+        const boolLike = /"isPurchasedSubscribe"\s*:\s*(true|false)/.test(body);
+        const r1 = replaceJsonField(body, 'isPurchasedSubscribe', boolLike ? 'true' : '1');
+        const r2 = replaceJsonField(r1.text, 'waterVipInfo', VIP_INFO);
+        const r3 = replaceJsonField(r2.text, 'maskMobile', '"彭于晏Crack"');
+        const r4 = replaceJsonField(r3.text, 'nickName', '"彭于晏Crack"');
+        const out = r4.text;
+        const hits = [r1.count, r2.count, r3.count, r4.count];
+
+        if (DEBUG) {
+          const status = ($response && $response.status) || '';
+          console.log('[SYM] status=' + status + ' len=' + body.length + ' hits=' + hits.join('/') + ' changed=' + (out !== body) + ' url=' + url);
+          if (hits[0] === 0 && hits[1] === 0) {
+            console.log('[SYM] keys=' + collectKeys(body));
+          }
+        }
 
         if (out === body) {
           $done({});

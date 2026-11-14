@@ -3,16 +3,21 @@
  * 原始脚本：89996462/Quantumult-X → ycdz/sym.js（作者：彭于晏💞）
  * 适配：仅改动响应正文中的 4 个字段，结构与字段顺序无关；
  *      改写后清理 Content-Length / Content-Encoding 等失效头，交给引擎重算。
+ * 调试：DEBUG = true 时向 Stash 脚本日志打印命中情况与响应类名，便于定位不生效的原因。
  */
+
+const DEBUG = true;
 
 const VIP_INFO = '{"subscribeCycle":-1,"beginTime":"2025-09-09 09:09:09","firstOpenTime":"2025-09-09 09:09:09","freeTimes":0,"userSign":"D-ej8OAp7SY","expireTime":"2999-09-09 09:09:09","typeName":"终身会员","remainDays":9,"sign":"wa44coNPDkg","createTime":"2025-09-09 09:09:09"}';
 
 // 把 text 中所有 "field":<任意 JSON 值> 的“值”整体替换为 valueJson，
 // 值可以是字符串、数字、对象、数组或 null，靠括号配对定位结束位置。
+// 返回 { text, count }，count 为实际替换次数。
 function replaceJsonField(text, field, valueJson) {
   const key = '"' + field + '":';
   let out = '';
   let i = 0;
+  let count = 0;
   while (i < text.length) {
     const idx = text.indexOf(key, i);
     if (idx < 0) {
@@ -20,6 +25,7 @@ function replaceJsonField(text, field, valueJson) {
       break;
     }
     out += text.slice(i, idx) + key + valueJson;
+    count += 1;
     let p = idx + key.length;
     let depth = 0;
     let inString = false;
@@ -44,7 +50,23 @@ function replaceJsonField(text, field, valueJson) {
     }
     i = p;
   }
-  return out;
+  return { text: out, count: count };
+}
+
+// 只打印字段名，不打印字段值，避免日志里出现手机号等隐私内容。
+function collectKeys(body) {
+  const seen = {};
+  const list = [];
+  const re = /"([A-Za-z0-9_]{1,40})"\s*:/g;
+  let m;
+  while ((m = re.exec(body)) !== null) {
+    const k = m[1];
+    if (seen[k]) continue;
+    seen[k] = 1;
+    list.push(k);
+    if (list.length >= 80) break;
+  }
+  return list.join(',');
 }
 
 function cleanHeaders(headers) {
@@ -58,16 +80,30 @@ function cleanHeaders(headers) {
 }
 
 (function () {
+  const url = ($request && $request.url) || '';
   let body = $response && $response.body;
   if (typeof body !== 'string' || body === '') {
+    if (DEBUG) console.log('[SYM] 无法读取文本 body: ' + url);
     $done({});
     return;
   }
 
-  let out = replaceJsonField(body, 'isPurchasedSubscribe', '1');
-  out = replaceJsonField(out, 'waterVipInfo', VIP_INFO);
-  out = replaceJsonField(out, 'maskMobile', '"彭于晏Crack"');
-  out = replaceJsonField(out, 'nickName', '"彭于晏Crack"');
+  // 保持原字段类型：原来是布尔值就写 true，原来是数字就写 1，避免类型变化导致解析失败。
+  const boolLike = /"isPurchasedSubscribe"\s*:\s*(true|false)/.test(body);
+  const r1 = replaceJsonField(body, 'isPurchasedSubscribe', boolLike ? 'true' : '1');
+  const r2 = replaceJsonField(r1.text, 'waterVipInfo', VIP_INFO);
+  const r3 = replaceJsonField(r2.text, 'maskMobile', '"彭于晏Crack"');
+  const r4 = replaceJsonField(r3.text, 'nickName', '"彭于晏Crack"');
+  const out = r4.text;
+  const hits = [r1.count, r2.count, r3.count, r4.count];
+
+  if (DEBUG) {
+    const status = ($response && $response.status) || '';
+    console.log('[SYM] status=' + status + ' len=' + body.length + ' hits=' + hits.join('/') + ' changed=' + (out !== body) + ' url=' + url);
+    if (hits[0] === 0 && hits[1] === 0) {
+      console.log('[SYM] keys=' + collectKeys(body));
+    }
+  }
 
   if (out === body) {
     $done({});
