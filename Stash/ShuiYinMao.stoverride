@@ -1,12 +1,19 @@
 name: 水印猫会员信息解锁（Stash）
-desc: '水印猫会员字段解锁（脚本改写响应）。'
+desc: |-
+  移植 89996462/Quantumult-X 的 ycdz/sym.js（水印猫，作者：彭于晏💞），改为 Stash 原生覆写。
+  实测 App 当前请求的接口域名为 watersymaoa.zijiemofang.cn，上游脚本里的 watersymaoa.yunxiaoguo.cn 已不再使用，两个域名都已覆盖。
+  改写响应正文的会员字段：isPurchasedSubscribe 置有效、waterVipInfo 置终身会员、maskMobile 与 nickName 置彭于晏Crack。
+  按字段名做括号配对定位，字段嵌套层级或顺序变化不受影响；isPurchasedSubscribe 保持原有类型（布尔写 true、数字写 1）。改写后清理失效的 Content-Length / Content-Encoding / ETag 等响应头。
+  默认静默运行。需要排查时把脚本里的 DEBUG 改为 true，脚本会向 Stash 脚本日志打印以 [SYM] 开头的一行（状态码、body 长度、四字段命中次数），未命中时另附 keys= 列出响应字段名（只列字段名，不含值）。
+  需要开启 MitM 并安装、完全信任你自己生成的 CA 证书；QUIC(HTTP/3) 流量不经过 HTTP 引擎，不会生效。
+  脚本由 script-providers 每 24h 从 jsDelivr 镜像同步 Stash/ShuiYinMao.stash.js；内嵌 payload 为离线兜底，Stash 3.2.5+ 可用。
 author: 彭于晏💞 / 89996462（原作者）
 homepage: https://github.com/89996462/Quantumult-X
 openUrl: https://raw.githubusercontent.com/89996462/Quantumult-X/main/ycdz/sym.js
 icon: https://github.com/Toperlock/Quantumult/raw/main/icon/Doraemon/Doraemon-1045.png
 category: 脚本改写
 date: '2026-11-15'
-version: '1.0.2'
+version: '1.0.3'
 
 http:
   # HTTPS 必须命中 MitM 才会解密并由脚本处理
@@ -14,7 +21,8 @@ http:
     - watersymaoa.zijiemofang.cn
     - watersymaoa.yunxiaoguo.cn
   # 数组默认前插：本条排在已有脚本之前，不影响其他脚本
-  # match 暂放到域名级，便于在脚本日志里看到该域名下所有接口；确认后可收窄到 /user/info
+  # match 故意放到域名级：上游域名与接口路径都变过，放宽后新建/改名的接口也不用再改覆写；
+  # 命中但字段不存在时脚本原样返回，不影响其他请求
   script:
     - name: shuiyinmao-user-info
       match: '^https:\/\/(?:watersymaoa\.zijiemofang\.cn|watersymaoa\.yunxiaoguo\.cn)\/'
@@ -35,10 +43,10 @@ script-providers:
        * 原始脚本：89996462/Quantumult-X → ycdz/sym.js（作者：彭于晏💞）
        * 适配：仅改动响应正文中的 4 个字段，结构与字段顺序无关；
        *      改写后清理 Content-Length / Content-Encoding 等失效头，交给引擎重算。
-       * 调试：DEBUG = true 时向 Stash 脚本日志打印命中情况与响应类名，便于定位不生效的原因。
+       * 调试：把 DEBUG 改为 true 时向 Stash 脚本日志打印命中情况与响应字段名，便于定位不生效的原因。
        */
 
-      const DEBUG = true;
+      const DEBUG = false;
 
       const VIP_INFO = '{"subscribeCycle":-1,"beginTime":"2025-09-09 09:09:09","firstOpenTime":"2025-09-09 09:09:09","freeTimes":0,"userSign":"D-ej8OAp7SY","expireTime":"2999-09-09 09:09:09","typeName":"终身会员","remainDays":9,"sign":"wa44coNPDkg","createTime":"2025-09-09 09:09:09"}';
 

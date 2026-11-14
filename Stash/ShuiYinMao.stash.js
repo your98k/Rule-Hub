@@ -3,10 +3,10 @@
  * 原始脚本：89996462/Quantumult-X → ycdz/sym.js（作者：彭于晏💞）
  * 适配：仅改动响应正文中的 4 个字段，结构与字段顺序无关；
  *      改写后清理 Content-Length / Content-Encoding 等失效头，交给引擎重算。
- * 调试：DEBUG = true 时向 Stash 脚本日志打印命中情况与响应类名，便于定位不生效的原因。
+ * 调试：把 DEBUG 改为 true 时向 Stash 脚本日志打印命中情况与响应字段名，便于定位不生效的原因。
  */
 
-const DEBUG = true;
+const DEBUG = false;
 
 const VIP_INFO = '{"subscribeCycle":-1,"beginTime":"2025-09-09 09:09:09","firstOpenTime":"2025-09-09 09:09:09","freeTimes":0,"userSign":"D-ej8OAp7SY","expireTime":"2999-09-09 09:09:09","typeName":"终身会员","remainDays":9,"sign":"wa44coNPDkg","createTime":"2025-09-09 09:09:09"}';
 
