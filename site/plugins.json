@@ -1,14 +1,98 @@
 {
-  "generated_at": "2026-11-07 16:03",
+  "generated_at": "2026-11-14 09:55",
   "repo": "https://github.com/your98k/Rule-Hub",
   "base": "https://your98k.github.io/Rule-Hub",
   "plugins": [
+    {
+      "id": "porntube-stash",
+      "name": "Porntube VIP 解锁（Stash 参数版）",
+      "desc": "跟随 Yu9191/Rewrite 新版 porntube.conf（Build 2026-11-14，4 脚本）。\n功能：VIP 解锁 + 去广告；视频页内嵌播放器按钮（网页播放/lenna/SenPlayer/Infuse/\nVLC/自定义/更多），自定义 Scheme 直接在网页填写保存，不再依赖 BoxJS。\n新增页面请求脚本剥离条件请求头，修复返回主页整页刷新。\n使用前需在 Stash 中安装并信任 MitM CA 证书；脚本更新间隔 86400 秒。",
+      "icon": "https://raw.githubusercontent.com/fishdown/Icon/master/app/porntube.png",
+      "date": "2026-11-14",
+      "version": "2.0.0",
+      "tags": [
+        "Stash 覆写",
+        "影音"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "Yu9191 Rewrite（Stash 适配）",
+          "url": ""
+        }
+      ],
+      "homepage": "https://github.com/Yu9191/Rewrite",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "v2.cdn199.com",
+        "v2.kekecdn.net",
+        "v2.luchu.org",
+        "v2.madou.ws",
+        "v2.papapa.biz",
+        "v2.tianmtv.com",
+        "v2.xiaoshuo.info",
+        "v2.xiaoshuo.la",
+        "porntube.cool",
+        "porntube.fit",
+        "porntube.site",
+        "porntube.store",
+        "91porn.coach",
+        "91porn.top",
+        "91porn.band",
+        "91porn.name",
+        "91porn.plus",
+        "91porn.porn",
+        "91porn.red",
+        "91porn.sex",
+        "91pornny.com",
+        "91.wtf",
+        "91forum.com",
+        "91dabiaojie.com",
+        "91zpc.app",
+        "91zpc.pro",
+        "91zpc.org",
+        "91zpc.co",
+        "91zpc.com",
+        "91zpcs.com",
+        "chineseselfie.com",
+        "chineseselfie.net",
+        "chineseselfie.org",
+        "xchina.day",
+        "xchina.cloud",
+        "xchina.plus",
+        "xchina.tube",
+        "xchina.cool",
+        "xchina.red",
+        "xasian.org",
+        "theporny.com",
+        "madoumedia.org",
+        "1024videos.com",
+        "1024movies.com",
+        "bdsmzoo.com",
+        "pornshop.one",
+        "pilipili.cool",
+        "dsdav.net",
+        "x91.club",
+        "x91porn.com",
+        "chinesebdsm.com",
+        "*.chinesebdsm.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Porntube.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Porntube.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Porntube.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Porntube.stoverride"
+      }
+    },
     {
       "id": "bilibili-adblock-stash",
       "name": "📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)",
       "desc": "'哔哩哔哩：去广告",
       "icon": "",
-      "date": "2026-11-07",
+      "date": "2026-11-08",
       "version": "",
       "tags": [
         "Stash 覆写"
