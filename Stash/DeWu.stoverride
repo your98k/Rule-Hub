@@ -14,13 +14,13 @@ http:
   mitm:
     - 'app.dewu.com'
   url-rewrite:
-    - '^https://app\.dewu\.com/api/v1/app/advertisement/ reject-dict'
-    - '^https://app\.dewu\.com/hacking-newbie/v1/app/coupon/module\? reject-dict'
-    - '^https://app\.dewu\.com/api/v1/app/search/lexicon/v3/background_words\? reject-dict'
-    - '^https://app\.dewu\.com/api/v1/app/search/lexicon/v1/rank_words\? reject-dict'
-    - '^https://app\.dewu\.com/sns-rec/v1/attention/feed\? reject-dict'
-    - '^https://app\.dewu\.com/sns-rec/v1/search/word-skip/new-list\? reject-dict'
-    - '^https://app\.dewu\.com/sns-rec/v1/search/hotword-list\? reject-dict'
+    - '^https://app\.dewu\.com/api/v1/app/advertisement/ - reject-dict'
+    - '^https://app\.dewu\.com/hacking-newbie/v1/app/coupon/module\? - reject-dict'
+    - '^https://app\.dewu\.com/api/v1/app/search/lexicon/v3/background_words\? - reject-dict'
+    - '^https://app\.dewu\.com/api/v1/app/search/lexicon/v1/rank_words\? - reject-dict'
+    - '^https://app\.dewu\.com/sns-rec/v1/attention/feed\? - reject-dict'
+    - '^https://app\.dewu\.com/sns-rec/v1/search/word-skip/new-list\? - reject-dict'
+    - '^https://app\.dewu\.com/sns-rec/v1/search/hotword-list\? - reject-dict'
   body-rewrite:
     - '^https://app\.dewu\.com/api/v1/app/biz-aggregate/me/user-index\? response-jq .data.modules |= map(if .key == "wallet" then .data.menus |= map(select(.key == "coupon" or .key == "allowance" or .key == "gift" or .key == "balance")) else . end) | .data.modules |= map(select(.key != "merchant" and .key != "discountCoupon"))'
     - '^https://app\.dewu\.com/api/v1/app/account/wallet/page/entrance\? response-jq .data.groupInfoDTOS |= map(.moduleInfoDTO = {assetModule: .moduleInfoDTO.assetModule}) | .data.moduleNames = [.data.moduleNames[] | select(. == "assetModule")] | .data.groupNames |= (map(select(. == "MAIN" or . == "ASYNC_COMMON" or . == "ASYNC_GOODS_FEEDS")))'

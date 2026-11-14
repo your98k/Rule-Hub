@@ -15,5 +15,5 @@ http:
     - 'tianshu.qq.com'
     - 'h5.qzone.qq.com'
   url-rewrite:
-    - '^https://tianshu\.qq\.com/open/ts_access/GetAds\? reject-dict'
-    - '^https://h5\.qzone\.qq\.com/p/adboss/api/json/ts_access/GetAds$ reject-dict'
+    - '^https://tianshu\.qq\.com/open/ts_access/GetAds\? - reject-dict'
+    - '^https://h5\.qzone\.qq\.com/p/adboss/api/json/ts_access/GetAds$ - reject-dict'

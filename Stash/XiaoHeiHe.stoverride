@@ -14,6 +14,6 @@ http:
   mitm:
     - 'api.xiaoheihe.cn'
   url-rewrite:
-    - '^https://api\.xiaoheihe\.cn/account/get_ads_info_v2 reject-dict'
+    - '^https://api\.xiaoheihe\.cn/account/get_ads_info_v2 - reject-dict'
   body-rewrite:
     - '^https://api\.xiaoheihe\.cn/bbs/app/feeds/news response-jq .result.links |= map(if .content_type == 27 then del(.title, .ad_pm, .img_gif, .idea_id, .ad_report, .label, .source, .intranet_only, .ad_cm, .content_type, .PROTOCOL, .img, .ad_ratio) else . end)'

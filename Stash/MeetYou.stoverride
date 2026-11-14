@@ -30,9 +30,9 @@ http:
     - 'users.seeyouyima.com'
     - 'config-service.seeyouyima.com'
   url-rewrite:
-    - '^https?://circle\.(xm)?seeyouyima\.com/v\d/article_recommend\? reject'
-    - '^https?://common\.seeyouyima\.com/v\d/conf_list reject'
-    - '^https?://config-service\.seeyouyima\.com/api/configs/batch reject-200'
+    - '^https?://circle\.(xm)?seeyouyima\.com/v\d/article_recommend\? - reject'
+    - '^https?://common\.seeyouyima\.com/v\d/conf_list - reject'
+    - '^https?://config-service\.seeyouyima\.com/api/configs/batch - reject-200'
   body-rewrite:
     - '^https?://sub\.seeyouyima\.com/v\d/sub/my_vip response-jq .data={}'
     - '^https?://users\.seeyouyima\.com/v\d/wo\? response-jq del(.data.circle)'
