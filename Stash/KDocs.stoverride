@@ -1,0 +1,20 @@
+name: '金山文档 去广告'
+desc: |-
+  移植 loonlab 插件仓库 KDocs.lpx：3 条 url-rewrite，全部为 Stash 原生声明式配置。
+  Loon 的 reject_dict 映射为 reject-dict。
+  覆盖 2 个域名，使用前请在 Stash 信任 MitM CA。
+  来源：loonlab 插件仓库 KDocs.lpx。
+openUrl: 'https://apps.apple.com/app/id1092813975'
+author: 'loonlab · Loon→Stash 原生适配'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'www.kdocs.cn'
+    - 'f-api.kdocs.cn'
+  url-rewrite:
+    - '^https://www\.kdocs\.cn/kdg/api/v1/cards/type/3\?iosVer=\d+\.\d+\.\d+&isGetList=1 - reject-dict'
+    - '^https://www\.kdocs\.cn/kdg/api/v1/cards/type/27\?iosVer=\d+\.\d+\.\d+&isGetList=1 - reject-dict'
+    - '^https://f-api\.kdocs\.cn/godfather/api/thirdparty/v1/viewpager\?showLocal=mobileWebIndex - reject-dict'

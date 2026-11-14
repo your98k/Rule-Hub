@@ -1,0 +1,23 @@
+name: '淘票票 去广告'
+desc: |-
+  移植 loonlab 插件仓库 TaoPiaoPiao.lpx：3 条 url-rewrite、3 条 body-rewrite，全部为 Stash 原生声明式配置。
+  Loon 的 reject_dict 映射为 reject-dict，json.jq / json.delete 映射为 response-jq，jq 引号已反转义。
+  覆盖 1 个域名，使用前请在 Stash 信任 MitM CA。
+  来源：loonlab 插件仓库 TaoPiaoPiao.lpx。
+openUrl: 'https://apps.apple.com/app/id1124642406'
+author: 'loonlab · Loon→Stash 原生适配'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'acs.m.taobao.com'
+  url-rewrite:
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.film\.life\.popup\.get/ - reject-dict'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.film\.mtopindependentadvertiseapi\.queryadvertise/ - reject-dict'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.film\.mtopitemadvertiseapi\.queryadvertise/ - reject-dict'
+  body-rewrite:
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.film\.mtopintegrationapi\.homeconfig/ response-jq del(.data.returnValue.floatingBanner, .data.returnValue.searchShadeList)'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.film\.mtopintegrationapi\.homeconfig/ response-jq .data.returnValue.topTab |= map(select(.activeImage | not)) | .data.returnValue.topTab |= map(del(.backgroundColor))'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.film\.life\.aristotle\.get/ response-jq def filter_nodes: map(if .data.componentId? and (.data.componentId | type == "string") and (.data.componentId | (contains("tpp_banner") or . == "tpp_guess_like")) then empty else .nodes |= (if . then filter_nodes else . end) end); .data.nodes |= (if . then filter_nodes else . end)'

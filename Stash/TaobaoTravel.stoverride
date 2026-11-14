@@ -1,0 +1,21 @@
+name: '飞猪 去广告'
+desc: |-
+  移植 loonlab 插件仓库 TaobaoTravel.lpx：5 条 url-rewrite，全部为 Stash 原生声明式配置。
+  Loon 的 reject_dict 映射为 reject-dict。
+  覆盖 1 个域名，使用前请在 Stash 信任 MitM CA。
+  来源：loonlab 插件仓库 TaobaoTravel.lpx。
+openUrl: 'https://apps.apple.com/app/id453289462'
+author: 'loonlab · Loon→Stash 原生适配'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'acs.m.taobao.com'
+  url-rewrite:
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.fliggy\.crm\.screen\.allresource/ - reject-dict'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.fliggy\.crm\.screen\.predict/ - reject-dict'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.fliggy\.tripzoo\.new\.couponlist/ - reject-dict'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.trip\.my\.recommendcard/ - reject-dict'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.fliggy\.recommend\.common\.guess\.tab\.feeds/ - reject-dict'
