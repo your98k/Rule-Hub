@@ -1,0 +1,57 @@
+# Stash 覆写：菜鸟（去广告）
+# 适配自 Loon 插件 https://loon.103516.xyz/Plugin/CaiNiao.lpx （2026-11-02 21:00 版，原作 githubdulong）
+# 映射说明：
+#   Loon [Rule] AND,((URL-REGEX …),(USER-AGENT …)) → Stash rules 的 AND 逻辑规则；
+#     目标是明文 http://，不进 HTTP 引擎，故只能保留为规则而不能写 url-rewrite
+#   Loon request … then reject(404)                 → http.url-rewrite 的 reject（404 + 空 body）
+#   Loon response … response.json.jq("del(…)")      → http.body-rewrite 的 response-jq
+#   Loon [MitM] hostname                            → http.mitm
+# 注意：Loon 响应改写是首条命中即停，Stash body-rewrite 是链式依次执行，
+#   因此 page.fetch 与 page.fetch.cn 两条正则均以 (?:\?|$) 锚定结尾，避免同时命中。
+name: '菜鸟'
+desc: |-
+  过滤菜鸟 App 首页瀑布流、搜索栏、寄件券、发现页，
+  以及配置加载 / 开屏 / 设置页加载的广告数据。
+  ——
+  适配自 Loon 插件 CaiNiao.lpx（原作：githubdulong）。
+  全部为 Stash 原生 Rule + url-rewrite + body-rewrite，不依赖远程脚本。
+  需要 MitM，并已在 Stash 内生成、安装并信任 CA 证书。
+openUrl: 'https://apps.apple.com/app/id951610982'
+author: 'githubdulong[https://github.com/githubdulong]'
+homepage: 'https://loonlab.103516.xyz/Plugin/'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/CaiNiao.png'
+category: '去广告'
+date: '2026-11-14'
+version: '1.0.0'
+
+rules:
+  # 原 Loon：AND, ((URL-REGEX, ^http://.+/amdc/mobileDispatch), (USER-AGENT, "Cainiao4iPhone*")), REJECT
+  - 'AND,((URL-REGEX,^http://.+/amdc/mobileDispatch),(USER-AGENT,Cainiao4iPhone*)),REJECT'
+
+http:
+  # 默认只对 443 端口生效，以下域名均为 HTTPS 443
+  mitm:
+    - 'netflow-mtop.cainiao.com'
+    - 'nbcps-mtop.cainiao.com'
+    - 'cn-acs.m.cainiao.com'
+    - 'e2e-mtop.cainiao.com'
+    - 'longquan-mtop.cainiao.com'
+  # 原 Loon：request if ${url} ~= /…/i then reject(404)
+  url-rewrite:
+    # 首页瀑布流
+    - '^https://nbcps-mtop\.cainiao\.com/gw/mtop\.cainiao\.nbcps\.presentation\.fetch\.cn - reject'
+    - '^https://netflow-mtop\.cainiao\.com/gw/mtop\.cainiao\.guoguo\.nbnetflow\.ads\.index - reject'
+    # 搜索栏
+    - '^https://cn-acs\.m\.cainiao\.com/gw/mtop\.cainiao\.adkeyword\.get\.cn - reject'
+    # 寄件券
+    - '^https://cn-acs\.m\.cainiao\.com/gw/mtop\.cainiao\.guoguo\.nbnetflow\.ads\.m?show - reject'
+  # 原 Loon：response if ${url} ~= /…/i then response.json.jq("…")
+  body-rewrite:
+    # 首页
+    - '^https://(cn-acs\.m|e2e-mtop)\.cainiao\.com/gw/mtop\.cainiao\.app\.e2e\.engine\.page\.fetch(?:\?|$) response-jq del(.data.data.data.mainSearch.bizData.searchContents, .data.data.data.operationList)'
+    # 我的
+    - '^https://e2e-mtop\.cainiao\.com/gw/mtop\.cainiao\.app\.e2e\.engine\.page\.fetch\.cn(?:\?|$) response-jq del(.data.data.banner, .data.data.activity, .data.data.vip)'
+    # 发现页
+    - '^https://longquan-mtop\.cainiao\.com/gw/mtop\.com\.cainiao\.longquan\.place\.getpageresourcecontent\.cn response-jq del(.data.result.placeContentMap["780001"].contentList)'
+    # 配置加载、开屏、设置页加载
+    - '^https://netflow-mtop\.cainiao\.com/gw/mtop\.cainiao\.guoguo\.nbnetflow\.ads response-jq if .data.result[0].materialId == "39017" then . else .data = {} end'
