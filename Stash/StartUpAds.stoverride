@@ -467,6 +467,10 @@ http:
     - 'spclient.wg.spotify.com'
     - '180.96.8.44'
     - '125.215.147.40'
+    - 'm.meitun.com'
+    - 'gateway2.etnet.com.hk'
+    - 'app.api.d3yuiw4.com'
+    - 'access.mypikpak.com'
   url-rewrite:
     - '^https?://2026.08.29/c415/v2.0.648 - reject-200'
     - '^https?://app\.58\.com/api/home/(advertising|appadv) - reject-200'
