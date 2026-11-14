@@ -1,17 +1,14 @@
 name: '红果短剧广告拦截'
 desc: |-
-  红果短剧广告拦截，含穿山甲与字节系兜底规则。
-  已知重复：与「番茄小说去广告」覆写重复两条 REJECT —— DOMAIN-SUFFIX,pangolin-sdk-toutiao.com 与 pglstatp-toutiao.com。
-  两条动作一致、目标一致，同时启用只是重复匹配，不改变结果；两边各自保留，是为了任一份单独启用时都不漏穿山甲拦截。
-  另注：本覆写的 DOMAIN-SUFFIX,zijieapi.com 覆盖整个字节接口域，番茄覆写里的 10 条 *.zijieapi.com 规则在两者同时启用时变为冗余，不影响结果。
-  完全体用法：需与「番茄小说去广告」同时启用。本覆写负责字节接口全域兜底（zijieapi / snssdk / 穿山甲 / hongguo 域），
-  番茄那份负责 fqnovel 域的路径级秒拒与响应体清理；只开一份都会留盲区。
+  红果短剧广告拦截：hongguoapp / hongguosdk / 穿山甲 / 字节接口域兜底。
+  与「番茄小说去广告」重复 2 条穿山甲规则，动作一致、无副作用。
+  完全体需两个覆写同开：本覆写兜字节全域，番茄那份管 fqnovel 路径与响应体。
 author: 'Tartarus2014 & Customized'
 homepage: 'https://github.com/Tartarus2014/Loon-Script'
 icon: 'https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png'
 category: '去广告'
 date: '2026-10-20'
-version: '1.5.2'
+version: '1.5.3'
 
 rules:
   # 红果核心广告拦截
@@ -19,7 +16,7 @@ rules:
   - DOMAIN-SUFFIX,hongguosdk.com,REJECT
   - DOMAIN-KEYWORD,hongguo.ad,REJECT
 
-  # 穿山甲与广告联盟 SDK（前两条与番茄小说覆写重复，见 desc）
+  # 穿山甲与广告联盟 SDK（前两条与番茄覆写重复，有意保留）
   - DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
   - DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
   - DOMAIN-SUFFIX,ad.pangle.cn,REJECT
