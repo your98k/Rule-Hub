@@ -2,8 +2,9 @@ name: usAge Pro
 desc: 把 usAge 账号权益接口返回的 entitlements.pro.active 置为有效（/api/v1/me、/api/v1/auth/apple、/api/v1/me/entitlements）
 author: 'your98k'
 category: 解锁会员
-version: '1.0.0'
+version: '1.0.1'
 date: '2026-11-14'
+icon: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/assets/icons/usAgePro.svg'
 
 http:
   mitm:
