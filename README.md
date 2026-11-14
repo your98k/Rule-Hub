@@ -19,7 +19,7 @@
 | YouTube 去广告增强版 | TF 3.7+ | 12 项参数（10 开关 + 字幕/歌词翻译 + 首页补强），内嵌脚本 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube-ADBlock-Enhanced.stoverride) |
 | 哔哩哔哩去广告 | iOS/tvOS 3.7+ | Biliverse v0.7.5 移植，32 项原生参数，无需 BoxJS；内置 8 条 QUIC 拦截 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
 | 红果短剧去广告 | 通用 | 域名拦截，不改动全局 IPv6/DNS | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
-| 番茄小说去广告 | iOS/tvOS 3.7+；macOS 4.4+ | TomCatXue 极简去广告 + kelee 版合并：48 条域名拦截（全部 no-track）+ 10 条路径秒拒（reject-dict）+ 4 条 jq 响应清理（VIP 免广告注入 / 正文广告键递归剔除 / 底栏福利 Tab 过滤），3 项原生参数，纯内核实现，无远程脚本 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DragonRead.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DragonRead.stoverride) |
+| 番茄小说去广告 | iOS/tvOS 3.7+；macOS 4.4+ | TomCatXue 极简去广告 + kelee 版合并：50 条域名拦截（全部 no-track）+ 10 条路径秒拒（reject-dict）+ 4 条 jq 响应清理（VIP 免广告注入 / 正文广告键递归剔除 / 底栏福利 Tab 过滤），3 项原生参数，纯内核实现，无远程脚本；已与红果覆写做过交叉校验，互不误伤 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DragonRead.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DragonRead.stoverride) |
 | 腾讯视频净化 | iOS/tvOS 3.2.5+ | 开屏/暂停/底部推荐广告过滤；脚本每日自动同步上游 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TxvideoAD.stoverride) |
 | Telegram 链接跳转 | 需 MitM | t.me 等链接 307 跳转至所选 Telegram 客户端 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride) |
 | 京东去广告 + 比价 | iOS/tvOS 3.7+；macOS 4.4+ | 京东广告过滤 + 慢慢买历史价格 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride) |
@@ -42,6 +42,8 @@
 - **Telegram**：「代理指向的策略」须填写当前配置中已存在的策略组或节点名。
 - **菜鸟**：纯 Stash 原生实现（1 条 AND 规则 + 4 条 url-rewrite reject + 4 条 jq 响应改写），无远程脚本，只需信任 MitM CA。首页若仍有广告位残留，多为 App 走 QUIC 或没有彻底退出 App 重进。
 - **番茄小说**：三层全在内核完成，无脚本下载、无等待。`unlock_vip` 关掉后只做去广告、不改任何权益字段；`clean_reader` 用 jq 的 `walk` 递归遍历，只删 `ad_info` / `chapter_ad` / `flow_ad` 等广告键并把 `need_ad`、`show_ad` 等开关置 0，小说正文（`content`）不动。需信任 MitM CA；只处理 HTTP/HTTPS，App 若走 QUIC 则改写不生效。开屏若仍有残留，先看 Stash 连接记录里的实际请求路径再补规则，别按老路径硬加。
+  **与红果短剧共存**：两者同属字节系，但已做过交叉校验——番茄里 4 条泛关键词（`rtlog`、`mon11-misc`、`mon3-misc`、`ads3/5-normal`）已收窄为具体域名，只作用在 `fqnovel.com`，不会拦 `hongguoapp.com` / `hongguosdk.com`。仅 `pangolin-sdk-toutiao.com`、`pglstatp-toutiao.com` 两条在两个覆写里重复出现，同为目标一致拒绝，重复匹配无副作用，保留是为了让每个覆写都能单独使用。
+  反过来，红果那条 `DOMAIN-SUFFIX,zijieapi.com,REJECT` 覆盖了整个字节接口域，番茄里 10 条 `*.zijieapi.com` 规则在两者同时启用时会变成冗余（不影响结果）；番茄主接口在 `fqnovel.com`，不受这条影响。
 - **水印猫**：只改写会员字段（isPurchasedSubscribe、waterVipInfo、maskMobile、nickName），需信任 MitM CA；脚本每 24 小时从仓库内的 `Stash/ShuiYinMao.stash.js` 同步，内嵌 payload 仅作离线兜底。**域名会变**：上游脚本写的是 yunxiaoguo.cn，实测 App 已改用 zijiemofang.cn，覆写已同时覆盖两者；若日后又失效，先在 Stash 的连接记录里看 App 实际连哪个域名，再据此调整 mitm 与 match，不要只信脚本注释。
 
 ## 鸣谢
