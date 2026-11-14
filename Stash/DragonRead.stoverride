@@ -1,54 +1,120 @@
-name: '番茄小说去广告'
+name: '番茄小说去广告（原生·全量）'
 desc: |-
-  移除番茄小说开屏广告、章末/文末广告、听书页广告、悬浮福利组件与底栏多余标签。
-  原生 Stash 覆写：规则前插 + no-track，不依赖 mitm、不加载脚本、不改其它配置。
-  规则来源：Loon 插件 DragonRead_remove_ads（可莉🅥，kelee.one，2026-10-02）逐条等价迁移。
-author: '可莉🅥'
-homepage: 'https://hub.kelee.one'
+  番茄小说（DragonRead）去广告：域名级拦截 + 路径级秒拒 + 响应体字段清理，三层都在 Stash 内核完成，不加载任何远程脚本。
+  · 开屏广告、章末推广、商业化混排、激励视频接口直接 reject-dict，秒回空字典
+  · 阅读正文递归剔除 ad_info / chapter_ad / flow_ad 等纯广告键，正文一字不动
+  · 底栏福利、金币、任务 Tab 过滤
+  · 可选：把 VIP 与免广告权益字段置为有效，走官方自带的免广告通道
+  规则来源：TomCatXue 极简去广告（Beta）+ kelee.one DragonRead_remove_ads，合并去重后共 48 条。
+author: 'TomCatXue / 可莉🅥'
+homepage: 'https://github.com/TomCatXue/MyCookieCenter'
 icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/DragonRead.png'
 openUrl: 'https://apps.apple.com/app/id1468454200'
 category: '去广告'
 version: '2026-11-15'
 
-rules:
-  # —— 广告投放与归因 SDK ——
-  - 'DOMAIN,zlink.ugsdk.cn,REJECT,no-track'
-  - 'DOMAIN,ads3-normal.zijieapi.com,REJECT,no-track'
-  - 'DOMAIN,ads5-normal.zijieapi.com,REJECT,no-track'
-  - 'DOMAIN,vcs.zijieapi.com,REJECT,no-track'
-  - 'DOMAIN,mssdk.zijieapi.com,REJECT,no-track'
-  - 'DOMAIN,effect.snssdk.com,REJECT,no-track'
-  - 'DOMAIN,vas.snssdk.com,REJECT,no-track'
-  - 'DOMAIN,security.snssdk.com,REJECT,no-track'
-  - 'DOMAIN,timon.zijieapi.com,REJECT,no-track'
-  - 'DOMAIN,ma.zijieapi.com,REJECT,no-track'
+arguments-version: 1
+arguments:
+  unlock_vip:
+    type: switch
+    title: 注入 VIP / 免广告权益
+    description: 把账号权益与用户信息接口里的会员、免广告字段置为有效，走官方原生免广告通道
+    default: true
+  clean_tabs:
+    type: switch
+    title: 过滤底栏福利 Tab
+    description: 移除书城底栏的福利、金币、任务、赚钱类标签
+    default: true
+  clean_reader:
+    type: switch
+    title: 清理正文广告字段
+    description: 递归剔除阅读接口里的广告占位键，只删广告键，不动正文文本
+    default: true
 
-  # —— 曝光/行为埋点上报 ——
-  - 'DOMAIN,mon.toutiaocloud.com,REJECT,no-track'
-  - 'DOMAIN,mon.toutiaocloud.net,REJECT,no-track'
-  - 'DOMAIN,mon3-misc.fqnovel.com,REJECT,no-track'
-  - 'DOMAIN,mon11-misc.fqnovel.com,REJECT,no-track'
-  - 'DOMAIN,mon11-misc-lq.fqnovel.com,REJECT,no-track'
-  - 'DOMAIN,log3-applog.fqnovel.com,REJECT,no-track'
-  - 'DOMAIN,log5-applog.fqnovel.com,REJECT,no-track'
-  - 'DOMAIN,rtlog3-applog.fqnovel.com,REJECT,no-track'
-  - 'DOMAIN,rtlog5-applog.fqnovel.com,REJECT,no-track'
+rules:
+  # —— 穿山甲 / 巨量广告 SDK ——
+  - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT,no-track'
+  - 'DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT,no-track'
+  - 'DOMAIN-SUFFIX,pangle.io,REJECT,no-track'
+  - 'DOMAIN-SUFFIX,sgsnssdk.com,REJECT,no-track'
+  - 'DOMAIN-SUFFIX,byteactivity.com,REJECT,no-track'
+  - 'DOMAIN,zlink.ugsdk.cn,REJECT,no-track'
+  - 'DOMAIN,ads.toutiao.com,REJECT,no-track'
+  - 'DOMAIN,ad.toutiao.com,REJECT,no-track'
+  - 'DOMAIN,ad.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,effect.snssdk.com,REJECT,no-track'
+  - 'DOMAIN,ma.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,mssdk.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,mssdk-bu.bytedance.com,REJECT,no-track'
+  - 'DOMAIN,mssdk.volces.com,REJECT,no-track'
+  - 'DOMAIN,vcs.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,vas.snssdk.com,REJECT,no-track'
+  - 'DOMAIN-KEYWORD,-ad-sign.byteimg.com,REJECT,no-track'
+  - 'DOMAIN-KEYWORD,-ad-sign.fqnovelpic.com,REJECT,no-track'
+  - 'DOMAIN-KEYWORD,ads3-normal,REJECT,no-track'
+  - 'DOMAIN-KEYWORD,ads5-normal,REJECT,no-track'
+
+  # —— 埋点 / 日志上报 ——
+  - 'DOMAIN-SUFFIX,toutiaocloud.com,REJECT,no-track'
+  - 'DOMAIN-SUFFIX,toutiaocloud.net,REJECT,no-track'
+  - 'DOMAIN-KEYWORD,-applog.fqnovel.com,REJECT,no-track'
+  - 'DOMAIN-KEYWORD,rtlog,REJECT,no-track'
+  - 'DOMAIN-KEYWORD,mon11-misc,REJECT,no-track'
+  - 'DOMAIN-KEYWORD,mon3-misc,REJECT,no-track'
   - 'DOMAIN,abtest3-misc.zijieapi.com,REJECT,no-track'
   - 'DOMAIN,feedback-c.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,security.snssdk.com,REJECT,no-track'
+  - 'DOMAIN,log.snssdk.com,REJECT,no-track'
+  - 'DOMAIN,extlog.snssdk.com,REJECT,no-track'
+  - 'DOMAIN,toblog.ctobsnssdk.com,REJECT,no-track'
 
-  # —— 抖音/直播引流入口 ——
-  - 'DOMAIN,webcast-open.douyin.com,REJECT,no-track'
-  - 'DOMAIN,p3-webcast-sign.douyinpic.com,REJECT,no-track'
-  - 'DOMAIN,p11-webcast-sign.douyinpic.com,REJECT,no-track'
-  - 'DOMAIN,lf-normal-gr-sourcecdn.bytegecko.com,REJECT,no-track'
-  - 'DOMAIN,lf-webcast-gr-sourcecdn.bytegecko.com,REJECT,no-track'
-
-  # —— 素材/小游戏/热更新下发 ——
-  - 'DOMAIN,p3-developer.bytemaimg.com,REJECT,no-track'
+  # —— 素材下发 / 小游戏 / 热更新 ——
   - 'DOMAIN,gecko3.zijieapi.com,REJECT,no-track'
   - 'DOMAIN,gecko5.zijieapi.com,REJECT,no-track'
   - 'DOMAIN,minigame3-normal.zijieapi.com,REJECT,no-track'
   - 'DOMAIN,minigame5-normal.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,timon.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,lf-ad-ies.bytecdn.cn,REJECT,no-track'
+  - 'DOMAIN,lf-normal-gr-sourcecdn.bytegecko.com,REJECT,no-track'
+  - 'DOMAIN,lf-webcast-gr-sourcecdn.bytegecko.com,REJECT,no-track'
+  - 'DOMAIN,p3-developer.bytemaimg.com,REJECT,no-track'
   - 'DOMAIN,is.snssdk.com,REJECT,no-track'
   - 'DOMAIN,is-lq.snssdk.com,REJECT,no-track'
   - 'DOMAIN,i.snssdk.com,REJECT,no-track'
+  - 'DOMAIN,bds.snssdk.com,REJECT,no-track'
+
+  # —— 抖音 / 直播引流 ——
+  - 'DOMAIN,webcast-open.douyin.com,REJECT,no-track'
+  - 'DOMAIN,p11-webcast-sign.douyinpic.com,REJECT,no-track'
+  - 'DOMAIN,p3-webcast-sign.douyinpic.com,REJECT,no-track'
+
+http:
+  mitm:
+    - '*.fqnovel.com'
+    - '*.fqnovelpic.com'
+    - '*.novelreading.com'
+
+  url-rewrite:
+    # 开屏广告（两代路径）
+    - '^https?://.*\.fqnovel\.com/api/ad/splash/ reject-dict'
+    - '^https?://.*\.fqnovel\.com/api/ad/v\d+/splash/ reject-dict'
+    # 章末广告位、商业化混排、阅读内插页
+    - '^https?://.*\.fqnovel\.com/reading/commerceapi/chapter_end/resource/ reject-dict'
+    - '^https?://.*\.fqnovel\.com/reading/commerceapi/ad/ reject-dict'
+    - '^https?://.*\.fqnovel\.com/reading/commerceapi/commerce/tab/ reject-dict'
+    # 横幅 / 激励 / 不感兴趣 / 上报 / 直播推广
+    - '^https?://.*\.fqnovel\.com/api/ad/v\d+/(aggregate|banner|inspire|dislike|report|live_cmm) reject-dict'
+    - '^https?://.*\.fqnovel\.com/api/ad/union/sdk/get_ads reject-dict'
+    # 悬浮活动部件、计时器金币球、激励视频弹窗
+    - '^https?://.*\.fqnovel\.com/luckycat/crossover/v\d+/get_timer_widget reject-dict'
+    - '^https?://.*\.fqnovel\.com/polaris/task/incentive_ad_again_info reject-dict'
+    - '^https?://.*\.fqnovel\.com/luckycat/novel/page/ios_task reject-dict'
+
+  body-rewrite:
+    # VIP / 免广告权益注入（可在参数里关掉）
+    - '^https?://.*\.fqnovel\.com/api/novel/account/v1/vip/info/ response-jq if (${args.unlock_vip}) then (.code = 0 | .message = "success" | (.data // {}) as $d | .data = ($d | .is_vip = 1 | .vip_type = 1 | .status = 1 | .expire_time = 4070880000 | .vip_expire_time = 4070880000 | .is_ad_free = 1 | .ad_free = 1 | .ad_free_expire_time = 4070880000 | .left_time = 4070880000 | .is_auto_renew = false | .vip_title = "永久尊贵会员" | .vip_card_left_time = 4070880000 | .vip_only = true)) else . end'
+    - '^https?://.*\.fqnovel\.com/(reading/user/info|reading/user/basic_info/get/) response-jq if (${args.unlock_vip}) then ((.data // .) | .is_vip = 1 | .vip_type = 1 | .ad_free = 1 | .is_ad_free = 1 | .expire_time = 4070880000) as $u | (if (.data | type) == "object" then .data = $u else . = $u end) else . end'
+    # 正文广告字段递归清理
+    - '^https?://.*\.fqnovel\.com/(reading/reader/full/|reading/reader/batch_full/|api/novel/book/reader/content/) response-jq if (${args.clean_reader}) then walk(if type == "object" then (del(.ad_info)|del(.chapter_ad)|del(.flow_ad_list)|del(.flow_ad)|del(.ad_card)|del(.ad_unit)|del(.ad_style)|del(.ad_track)|del(.reward_video)|del(.insert_ad)|del(.banner_ad)|del(.page_ad)|del(.tips_ad)|del(.ad_reward)|del(.bottom_ad)|(if has("need_ad") then .need_ad = false else . end)|(if has("show_ad") then .show_ad = 0 else . end)|(if has("has_ad") then .has_ad = 0 else . end)|(if has("is_ad") then .is_ad = 0 else . end)) else . end) else . end'
+    # 底栏福利 / 金币 / 任务 Tab 过滤
+    - '^https?://.*\.fqnovel\.com/(reading/bookapi/bookmall/tab|openapi/setting/tab/) response-jq if (${args.clean_tabs}) then (if (.data.tabs | type) == "array" then .data.tabs |= map(select((tostring | test("welfare|luckycat|task_tab|福利|赚钱|金币"; "i")) | not)) elif (.tabs | type) == "array" then .tabs |= map(select((tostring | test("welfare|luckycat|task_tab|福利|赚钱|金币"; "i")) | not)) elif (.tab_list | type) == "array" then .tab_list |= map(select((tostring | test("welfare|luckycat|task_tab|福利|赚钱|金币"; "i")) | not)) else . end) else . end'
