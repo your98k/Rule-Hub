@@ -9,6 +9,8 @@ desc: |-
   与「红果短剧广告拦截」并存无冲突：4 条泛关键词已收窄为具体域名，只作用于 fqnovel 域，不侵入 hongguoapp / hongguosdk。
   已知重复：本覆写与红果覆写各含 DOMAIN-SUFFIX,pangolin-sdk-toutiao.com 与 pglstatp-toutiao.com 两条 REJECT。
   两条目的一致、动作一致，同时启用只是重复匹配，不改变结果；保留是为了任一份单独启用时都不漏穿山甲拦截。
+  完全体用法：需与「红果短剧广告拦截」同时启用。红果那份用 DOMAIN-SUFFIX,zijieapi.com 兜住整个字节接口域，
+  本覆写负责 fqnovel 域的路径级秒拒与响应体清理；只开一份都会留盲区（只开红果→番茄广告接口仍在；只开番茄→字节系其他接口不拦）。
 author: 'TomCatXue / 可莉🅥'
 homepage: 'https://github.com/TomCatXue/MyCookieCenter'
 icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/DragonRead.png'
