@@ -1,0 +1,24 @@
+name: '帆书 去广告'
+desc: |-
+  移植 loonlab 插件仓库 FanShu.lpx：9 条 url-rewrite、0 条 body-rewrite，全部为 Stash 原生声明式配置。
+  覆盖 1 个域名，使用前请在 Stash 信任 MitM CA。
+  来源：loonlab 插件仓库 FanShu.lpx。
+openUrl: 'https://apps.apple.com/app/id806183603'
+author: 'loonlab · Loon→Stash 原生适配'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'g*.dushu365.com'
+  url-rewrite:
+    - '^https?://popup\.dushu365\.com/api/v2/sfo/(user_)?popup_(?:config|display)s - reject'
+    - '^https?://g[a-z0-9-]+\.dushu365\.com/chief-orch/config/config/v\d+/(?:shortCut|appUpdateUnite|loadingAd) - reject'
+    - '^https?://g[a-z0-9-]+\.dushu365\.com/fs-retain/trialVip/v\d+/requestTrialVipPopDoNotSendReward - reject'
+    - '^https?://g[a-z0-9-]+\.dushu365\.com/resource-orchestration-system/vipLandingPage/v\d+/getVipLandingPageApp - reject'
+    - '^https?://g[a-z0-9-]+\.dushu365\.com/fandeng-orch/dual2211/config - reject'
+    - '^https?://g[a-z0-9-]+\.dushu365\.com/fdtalk-orch/newcomerzone/v\d+/guide - reject'
+    - '^https?://g[a-z0-9-]+\.dushu365\.com/fandeng-orch/bookboy/v\d+/vipPagePop - reject'
+    - '^https?://g[a-z0-9-]+\.dushu365\.com/chief-orch/config/config/v\d+/appConfig - reject'
+    - '^https?://g[a-z0-9-]+\.dushu365\.com/order-orchestration/orderWeb/exchange/v100/showExchangeButton - reject'
