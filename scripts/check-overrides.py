@@ -95,6 +95,12 @@ def main():
                     continue
                 if s[1] not in acts:
                     issues.append((f, key, f'action 非法: {s[1]}'))
+                elif s[1] in ('response-json-replace', 'request-json-replace') and len(s) < 4:
+                    issues.append((f, key, 'json-replace 需要 <路径> <值> 两个参数'))
+                elif s[1] in ('response-json-add', 'request-json-add') and len(s) < 4:
+                    issues.append((f, key, 'json-add 需要 <路径> <值> 两个参数'))
+                elif s[1] in ('response-json-del', 'request-json-del') and len(s) < 3:
+                    issues.append((f, key, 'json-del 需要至少一个路径'))
                 for hh in host_candidates(s[0]):
                     if not covered(hh):
                         issues.append((f, key, f'域名未入 mitm: {hh}'))
