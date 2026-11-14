@@ -1,0 +1,35 @@
+name: '超格教育 去广告'
+desc: |-
+  移植 loonlab 插件仓库 ChaoGeJiaoYu.lpx：0 条 url-rewrite、2 条 body-rewrite、3 条 mock，全部为 Stash 原生声明式配置。
+  覆盖 1 个域名，使用前请在 Stash 信任 MitM CA。
+  来源：loonlab 插件仓库 ChaoGeJiaoYu.lpx。
+openUrl: 'https://apps.apple.com/app/id1550599036'
+author: 'loonlab · Loon→Stash 原生适配'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'mapi.chaogejiaoyu.com'
+  body-rewrite:
+    - '^https://mapi\.chaogejiaoyu\.com/api/outline/getAppBanner\?(?:[^#]*&)?adv_flag=2(?:&|$) response-jq .data = [(.data[0] | .banner_img = "https://i.im.ge/QQdilvc/CGBanner.png" | .banner_img_new = "https://i.im.ge/QQdilvc/CGBanner.png" | .title = "超格教育" | .content = "" | .source_type = "0" | .source_id = "0" | .h5_url = "")]'
+    - '^https://mapi\.chaogejiaoyu\.com/api/user/checkToken(?:\?|$) response-jq .data.has_ad_page_list = [] | .data.startup.show_promotion = 0 | .data.startup.promotion_url = "" | .data.startup.home_top_menu_list |= map(select(.type != "ad_btn"))'
+  mock:
+    - match: '^https://mapi\.chaogejiaoyu\.com/api/ad/getPageAdList(?:\?|$)'
+      text: '{"status":0,"message":"success","data":{"ad_list":[]}}'
+      status-code: 200
+      headers:
+        Content-Type: 'application/json'
+  mock:
+    - match: '^https://mapi\.chaogejiaoyu\.com/api/outline/getAppBanner\?(?:[^#]*&)?adv_flag=1(?:&|$)'
+      text: '{"status":0,"message":"success","data":[]}'
+      status-code: 200
+      headers:
+        Content-Type: 'application/json'
+  mock:
+    - match: '^https://mapi\.chaogejiaoyu\.com/api/course/getOpenCourseColumnInfo(?:\?|$)'
+      text: '{"status":0,"message":"success","data":{}}'
+      status-code: 200
+      headers:
+        Content-Type: 'application/json'

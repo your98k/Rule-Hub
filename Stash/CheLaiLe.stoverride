@@ -1,0 +1,26 @@
+name: '车来了 去广告'
+desc: |-
+  移植 loonlab 插件仓库 CheLaiLe.lpx：5 条 url-rewrite、0 条 body-rewrite，全部为 Stash 原生声明式配置。
+  覆盖 7 个域名，使用前请在 Stash 信任 MitM CA。
+  来源：loonlab 插件仓库 CheLaiLe.lpx。
+openUrl: 'https://apps.apple.com/app/id519661118'
+author: 'loonlab · Loon→Stash 原生适配'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'ad.chelaile.net.cn'
+    - 'atrace.chelaile.net.cn'
+    - 'api.chelaile.net.cn'
+    - 'cdn.api.chelaile.net.cn'
+    - 'cdn.api.chelaileapp.cn'
+    - 'web.chelaile.net.cn'
+    - 'cdn.*.chelaileapp.cn'
+  url-rewrite:
+    - '^https?://[^/]*chelaile(?:app)?\.cn/(?:adpub|goocity/advert|goocity/flowPos/home|feserver/vip-page/images/).* - reject'
+    - '^https?://[^/]*chelaile\.net\.cn/adpub/.* - reject'
+    - '^https?://api-access\.pangolin-sdk-toutiao(?:1)?\.com/api/ad/union/sdk/.* - reject'
+    - '^https?://adx\.yg84\.com/sdk/ad/.* - reject'
+    - '^https?://mobads\.baidu\.com/.* - reject'
