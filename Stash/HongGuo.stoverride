@@ -1,14 +1,13 @@
-name: '红果短剧广告拦截'
+name: '红果短剧去广告'
 desc: |-
-  红果短剧广告拦截：hongguoapp / hongguosdk / 穿山甲 / 字节接口域兜底。
-  与「番茄小说去广告」重复 2 条穿山甲规则，动作一致、无副作用。
-  完全体需两个覆写同开：本覆写兜字节全域，番茄那份管 fqnovel 路径与响应体。
+  红果短剧去广告：域名拦截（hongguoapp / hongguosdk / 穿山甲 / 字节接口域）。
+  与「番茄小说」同开为完全体。
 author: 'Tartarus2014 & Customized'
 homepage: 'https://github.com/Tartarus2014/Loon-Script'
 icon: 'https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png'
 category: '去广告'
 date: '2026-10-20'
-version: '1.5.3'
+version: '1.5.4'
 
 rules:
   # 红果核心广告拦截
