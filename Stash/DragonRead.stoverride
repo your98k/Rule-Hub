@@ -1,9 +1,8 @@
 name: '番茄小说去广告（原生·全量）'
 desc: |-
-  番茄小说（DragonRead）去广告，全部在 Stash 内核完成，无远程脚本。
+  番茄小说（DragonRead）去广告，全部在 Stash 内核完成，无远程脚本、无参数。
   · 开屏、章末推广、商业化混排、激励接口：reject-dict 秒回空字典
   · 正文广告键递归剔除，正文不动；底栏福利 Tab 过滤
-  · 可选注入 VIP / 免广告权益（参数可关）
   来源：TomCatXue + kelee.one，共 50 条规则。
   完全体需与「红果短剧广告拦截」同开：红果兜字节全域，本覆写管 fqnovel 路径与响应体。两条穿山甲规则重复，属有意保留。
 author: 'TomCatXue / 可莉🅥'
@@ -12,24 +11,6 @@ icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px
 openUrl: 'https://apps.apple.com/app/id1468454200'
 category: '去广告'
 version: '2026-11-15'
-
-arguments-version: 1
-arguments:
-  unlock_vip:
-    type: switch
-    title: 注入 VIP / 免广告权益
-    description: 把账号权益与用户信息接口里的会员、免广告字段置为有效，走官方原生免广告通道
-    default: true
-  clean_tabs:
-    type: switch
-    title: 过滤底栏福利 Tab
-    description: 移除书城底栏的福利、金币、任务、赚钱类标签
-    default: true
-  clean_reader:
-    type: switch
-    title: 清理正文广告字段
-    description: 递归剔除阅读接口里的广告占位键，只删广告键，不动正文文本
-    default: true
 
 rules:
   # —— 穿山甲 / 巨量广告 SDK ——
@@ -114,10 +95,10 @@ http:
     - '^https?://.*\.fqnovel\.com/luckycat/novel/page/ios_task reject-dict'
 
   body-rewrite:
-    # VIP / 免广告权益注入（可在参数里关掉）
-    - '^https?://.*\.fqnovel\.com/api/novel/account/v1/vip/info/ response-jq if (${args.unlock_vip}) then (.code = 0 | .message = "success" | (.data // {}) as $d | .data = ($d | .is_vip = 1 | .vip_type = 1 | .status = 1 | .expire_time = 4070880000 | .vip_expire_time = 4070880000 | .is_ad_free = 1 | .ad_free = 1 | .ad_free_expire_time = 4070880000 | .left_time = 4070880000 | .is_auto_renew = false | .vip_title = "永久尊贵会员" | .vip_card_left_time = 4070880000 | .vip_only = true)) else . end'
-    - '^https?://.*\.fqnovel\.com/(reading/user/info|reading/user/basic_info/get/) response-jq if (${args.unlock_vip}) then ((.data // .) | .is_vip = 1 | .vip_type = 1 | .ad_free = 1 | .is_ad_free = 1 | .expire_time = 4070880000) as $u | (if (.data | type) == "object" then .data = $u else . = $u end) else . end'
+    # VIP / 免广告权益注入
+    - '^https?://.*\.fqnovel\.com/api/novel/account/v1/vip/info/ response-jq (.code = 0 | .message = "success" | (.data // {}) as $d | .data = ($d | .is_vip = 1 | .vip_type = 1 | .status = 1 | .expire_time = 4070880000 | .vip_expire_time = 4070880000 | .is_ad_free = 1 | .ad_free = 1 | .ad_free_expire_time = 4070880000 | .left_time = 4070880000 | .is_auto_renew = false | .vip_title = "永久尊贵会员" | .vip_card_left_time = 4070880000 | .vip_only = true)'
+    - '^https?://.*\.fqnovel\.com/(reading/user/info|reading/user/basic_info/get/) response-jq ((.data // .) | .is_vip = 1 | .vip_type = 1 | .ad_free = 1 | .is_ad_free = 1 | .expire_time = 4070880000) as $u | (if (.data | type) == "object" then .data = $u else . = $u end)'
     # 正文广告字段递归清理
-    - '^https?://.*\.fqnovel\.com/(reading/reader/full/|reading/reader/batch_full/|api/novel/book/reader/content/) response-jq if (${args.clean_reader}) then walk(if type == "object" then (del(.ad_info)|del(.chapter_ad)|del(.flow_ad_list)|del(.flow_ad)|del(.ad_card)|del(.ad_unit)|del(.ad_style)|del(.ad_track)|del(.reward_video)|del(.insert_ad)|del(.banner_ad)|del(.page_ad)|del(.tips_ad)|del(.ad_reward)|del(.bottom_ad)|(if has("need_ad") then .need_ad = false else . end)|(if has("show_ad") then .show_ad = 0 else . end)|(if has("has_ad") then .has_ad = 0 else . end)|(if has("is_ad") then .is_ad = 0 else . end)) else . end) else . end'
+    - '^https?://.*\.fqnovel\.com/(reading/reader/full/|reading/reader/batch_full/|api/novel/book/reader/content/) response-jq walk(if type == "object" then (del(.ad_info)|del(.chapter_ad)|del(.flow_ad_list)|del(.flow_ad)|del(.ad_card)|del(.ad_unit)|del(.ad_style)|del(.ad_track)|del(.reward_video)|del(.insert_ad)|del(.banner_ad)|del(.page_ad)|del(.tips_ad)|del(.ad_reward)|del(.bottom_ad)|(if has("need_ad") then .need_ad = false else . end)|(if has("show_ad") then .show_ad = 0 else . end)|(if has("has_ad") then .has_ad = 0 else . end)|(if has("is_ad") then .is_ad = 0 else . end)) else . end)'
     # 底栏福利 / 金币 / 任务 Tab 过滤
-    - '^https?://.*\.fqnovel\.com/(reading/bookapi/bookmall/tab|openapi/setting/tab/) response-jq if (${args.clean_tabs}) then (if (.data.tabs | type) == "array" then .data.tabs |= map(select((tostring | test("welfare|luckycat|task_tab|福利|赚钱|金币"; "i")) | not)) elif (.tabs | type) == "array" then .tabs |= map(select((tostring | test("welfare|luckycat|task_tab|福利|赚钱|金币"; "i")) | not)) elif (.tab_list | type) == "array" then .tab_list |= map(select((tostring | test("welfare|luckycat|task_tab|福利|赚钱|金币"; "i")) | not)) else . end) else . end'
+    - '^https?://.*\.fqnovel\.com/(reading/bookapi/bookmall/tab|openapi/setting/tab/) response-jq (if (.data.tabs | type) == "array" then .data.tabs |= map(select((tostring | test("welfare|luckycat|task_tab|福利|赚钱|金币"; "i")) | not)) elif (.tabs | type) == "array" then .tabs |= map(select((tostring | test("welfare|luckycat|task_tab|福利|赚钱|金币"; "i")) | not)) elif (.tab_list | type) == "array" then .tab_list |= map(select((tostring | test("welfare|luckycat|task_tab|福利|赚钱|金币"; "i")) | not)) else . end)'
