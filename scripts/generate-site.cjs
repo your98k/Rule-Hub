@@ -231,10 +231,21 @@ function main() {
   const template = fs.readFileSync(templatePath, 'utf8');
   const marker = /window\.__PLUGINS_DATA__\s*=\s*\{[^;]*\};/;
   if (!marker.test(template)) throw new Error('site-template.html 缺少 window.__PLUGINS_DATA__ 占位');
-  fs.writeFileSync(
-    path.join(SITE, 'index.html'),
-    template.replace(marker, `window.__PLUGINS_DATA__=${JSON.stringify(data)};`)
-  );
+
+  // 首页醒目提醒：带自定义参数的覆写有版本门槛（内联样式，不依赖 Tailwind 编译产物）
+  const NOTICE = [
+    '<div style="max-width:1100px;margin:14px auto 0;padding:12px 18px;border-radius:14px;',
+    'background:rgba(255,196,0,.18);border:1px solid rgba(255,176,0,.55);color:#c8871a;',
+    'font-size:14px;font-weight:600;line-height:1.65;text-align:center;">',
+    '⚠️ 带「自定义参数」的覆写需要 Stash 3.7 及以上版本，低于该版本导入会报错。',
+    '</div>'
+  ].join('');
+
+  const html = template
+    .replace(marker, `window.__PLUGINS_DATA__=${JSON.stringify(data)};`)
+    .replace(/<body([^>]*)>/i, (m, attrs) => `<body${attrs}>${NOTICE}`);
+
+  fs.writeFileSync(path.join(SITE, 'index.html'), html);
 
   console.log(`OK: ${plugins.length} 个 Stash 覆写 -> site/ (base=${BASE})`);
   for (const plugin of plugins) console.log(`  ${plugin.name} | ${plugin.date} | ${plugin.tags.join(',')}`);
