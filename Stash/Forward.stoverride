@@ -1,0 +1,26 @@
+name: 'Forward 订阅转发'
+desc: '把 fluxapi 的订阅接口转发到 mock 服务，用 Stash 原生脚本实现。'
+category: '功能增强'
+author: 'loonlab · Loon→Stash 原生仿写'
+date: '2026-11-15'
+version: '1.0.0'
+
+# Stash 没有内置的 PROXY 策略；需要让 mock 域名走代理时，
+# 把下面这条改成你配置里实际存在的策略组名再取消注释。
+# rules:
+#   - 'DOMAIN,mock.forward1.workers.dev,PROXY'
+
+http:
+  mitm:
+    - 'fluxapi.vvebo.vip'
+  script:
+    - name: 'forward-rewrite'
+      match: '^https://fluxapi\.vvebo\.vip/v1/'
+      type: request
+      timeout: 10
+      engine: auto
+
+script-providers:
+  forward-rewrite:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Forward.js'
+    interval: 86400

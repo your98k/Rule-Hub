@@ -1,0 +1,25 @@
+name: 'QQ 链接解锁'
+desc: '解除 QQ 内访问非白名单链接的拦截，用 Stash 原生脚本改写请求。'
+openUrl: 'https://apps.apple.com/app/id444934666'
+author: '可莉 · Loon→Stash 原生仿写'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/QQ.png'
+category: '功能增强'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'c.pc.qq.com'
+    - 'pingtas.qq.com'
+    - 'cgi.connect.qq.com'
+  script:
+    - name: 'qq-unlock'
+      match: '^https://(?:c\.pc\.qq\.com/(?:middlem|middlect|index|ios)\.html|pingtas\.qq\.com/webview/pingd|cgi\.connect\.qq\.com/qqconnectopen/get_urlinfoForQQV2)'
+      type: request
+      timeout: 10
+      engine: auto
+
+script-providers:
+  qq-unlock:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/QQUnlock.js'
+    interval: 86400
