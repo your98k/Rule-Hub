@@ -1,11 +1,13 @@
 name: '红果短剧去广告'
-desc: '红果短剧广告拦截，含穿山甲与字节系兜底规则。'
+desc: |-
+  红果短剧去广告：域名拦截（hongguoapp / hongguosdk / 穿山甲 / 字节广告域）。
+  与「番茄小说」同开为完全体。
 author: 'Tartarus2014 & Customized'
 homepage: 'https://github.com/Tartarus2014/Loon-Script'
 icon: 'https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png'
 category: '去广告'
 date: '2026-10-20'
-version: '1.5.4'
+version: '1.6.0'
 
 rules:
   # 红果核心广告拦截
@@ -20,7 +22,12 @@ rules:
   - DOMAIN-SUFFIX,ad.pangolin.cn,REJECT
   - DOMAIN-KEYWORD,ad-union-sdk,REJECT
 
-  # 字节系广告与配置兜底
+  # 字节广告与埋点：只拦具体主机，不再整个 zijieapi.com 全域拒绝
+  # （全域拒绝会连带打掉 tnc 配置下发、save 同步、polaris 等业务接口）
   - DOMAIN-KEYWORD,be-pack,REJECT
-  - DOMAIN-SUFFIX,zijieapi.com,REJECT
+  - DOMAIN,ad.zijieapi.com,REJECT
+  - DOMAIN-KEYWORD,ads3-normal,REJECT
+  - DOMAIN-KEYWORD,ads5-normal,REJECT
+  - DOMAIN-KEYWORD,applog.zijieapi.com,REJECT
+  - DOMAIN,feedback-c.zijieapi.com,REJECT
   - DOMAIN-KEYWORD,tnc.snssdk,REJECT
