@@ -4,7 +4,7 @@
 
 🌐 **在线覆写画廊**：[your98k.github.io/Rule-Hub](https://your98k.github.io/Rule-Hub/)（支持搜索、标签筛选、一键安装）
 
-> ⚠️ **带「自定义参数」的覆写需要 Stash 3.7 及以上版本。** 低于 3.7 导入会失败（报错类似 `the override is invalid`）。涉及：番茄小说、Porntube、Apple WLOC、哔哩哔哩、YouTube、京东、Reven、Telegram。
+> ⚠️ **带「自定义参数」的覆写需要 Stash 3.7 及以上版本。** 低于 3.7 导入会失败（报错类似 `the override is invalid`）。涉及：Porntube、Apple WLOC、哔哩哔哩、YouTube、京东、Reven、Telegram。
 
 ## 安装
 
@@ -21,7 +21,7 @@
 | YouTube 去广告增强版 | Stash 3.7+ | 12 项参数（10 开关 + 字幕/歌词翻译 + 首页补强），内嵌脚本 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube-ADBlock-Enhanced.stoverride) |
 | 哔哩哔哩去广告 | Stash 3.7+ | Biliverse v0.7.5 移植，32 项原生参数，无需 BoxJS；内置 8 条 QUIC 拦截 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
 | 红果短剧去广告 | 通用 | 域名拦截，不改动全局 IPv6/DNS | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
-| 番茄小说去广告 | Stash 3.7+ | TomCatXue 极简去广告 + kelee 版合并：50 条域名拦截（全部 no-track）+ 10 条路径秒拒（reject-dict）+ 4 条 jq 响应清理（VIP 免广告注入 / 正文广告键递归剔除 / 底栏福利 Tab 过滤），3 项原生参数；与红果覆写交叉校验，互不误伤 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DragonRead.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DragonRead.stoverride) |
+| 番茄小说去广告 | 通用 | 50 条域名拦截（广告 SDK / 埋点上报 / 素材下发 / 抖音引流），全部 `no-track`；**不做 MitM 与改写**——该 App 有证书校验，一开 MitM 就断网 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DragonRead.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DragonRead.stoverride) |
 | 腾讯视频净化 | iOS/tvOS 3.2.5+ | 开屏/暂停/底部推荐广告过滤；脚本每日自动同步上游 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TxvideoAD.stoverride) |
 | Telegram 链接跳转 | Stash 3.7+ | t.me 等链接 307 跳转至所选 Telegram 客户端，3 项原生参数 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride) |
 | 京东去广告 + 比价 | Stash 3.7+ | 京东广告过滤 + 慢慢买历史价格，5 项原生参数 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride) |
@@ -43,8 +43,7 @@
 - **Reven**：需信任 MitM CA；Adapty 需卸载重装 App 才生效。解锁后报错或闪退的 App（如 Filebar），把它的 UA 关键词填进「跳过指定 App」，多个用英文逗号分隔，填 `-` 表示全解锁；lifetime 没解成功时把「注入策略」换成 `lifetime_sub` 再试。不要与 Loon 版插件同时启用。
 - **Telegram**：「代理指向的策略」须填写当前配置中已存在的策略组或节点名。
 - **菜鸟**：纯 Stash 原生实现（1 条 AND 规则 + 4 条 url-rewrite reject + 4 条 jq 响应改写），无远程脚本，只需信任 MitM CA。首页若仍有广告位残留，多为 App 走 QUIC 或没有彻底退出 App 重进。
-- **番茄小说**：三层全在内核完成，无脚本下载、无等待。3 项参数：`unlock_vip` 注入 VIP / 免广告权益，`clean_reader` 递归剔正文广告键（只删 `ad_info`、`chapter_ad`、`flow_ad` 等，`content` 不动），`clean_tabs` 过滤底栏福利 Tab。需信任 MitM CA；只处理 HTTP/HTTPS，App 若走 QUIC 则改写不生效。
-  **与红果短剧共存**：两者同属字节系，已交叉校验——番茄里 4 条泛关键词已收窄为具体域名，只作用在 `fqnovel.com`，不会拦 `hongguoapp.com` / `hongguosdk.com`。仅 `pangolin-sdk-toutiao.com`、`pglstatp-toutiao.com` 两条在两个覆写里重复，同为目标一致拒绝，重复匹配无副作用，保留是为了让每个覆写都能单独使用。**完全体需要两个覆写同时启用**。
+- **番茄小说**：纯域名拦截，无需 MitM，不改 DNS/IPv6。**该 App 有 SSL Pinning**：一旦覆写里出现 `mitm`（哪怕只列域名、没有任何改写动作），App 就会报「网络出错，请点击重试」。所以路径级秒拒与响应体清理都上不了，只保留域名层。开屏、章末这类走自己接口的广告去不掉；广告 SDK、埋点、素材、引流入口已全部拦死。
 - **水印猫**：只改写会员字段（isPurchasedSubscribe、waterVipInfo、maskMobile、nickName），需信任 MitM CA；脚本每 24 小时从仓库内的 `Stash/ShuiYinMao.stash.js` 同步，内嵌 payload 仅作离线兜底。**域名会变**：上游脚本写的是 yunxiaoguo.cn，实测 App 已改用 zijiemofang.cn，覆写已同时覆盖两者；若日后又失效，先在 Stash 的连接记录里看 App 实际连哪个域名，再据此调整 mitm 与 match，不要只信脚本注释。
 
 ## 鸣谢
