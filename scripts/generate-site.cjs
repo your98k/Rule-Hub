@@ -232,18 +232,13 @@ function main() {
   const marker = /window\.__PLUGINS_DATA__\s*=\s*\{[^;]*\};/;
   if (!marker.test(template)) throw new Error('site-template.html 缺少 window.__PLUGINS_DATA__ 占位');
 
-  // 首页醒目提醒：带自定义参数的覆写有版本门槛（内联样式，不依赖 Tailwind 编译产物）
-  const NOTICE = [
-    '<div style="max-width:1100px;margin:14px auto 0;padding:12px 18px;border-radius:14px;',
-    'background:rgba(255,196,0,.18);border:1px solid rgba(255,176,0,.55);color:#c8871a;',
-    'font-size:14px;font-weight:600;line-height:1.65;text-align:center;">',
-    '⚠️ 带「自定义参数」的覆写需要 Stash 3.7 及以上版本，低于该版本导入会报错。',
-    '</div>'
-  ].join('');
+  // 首页提示条：内容放在 scripts/site-notice.html，改文案或样式只动那个小文件
+  const noticePath = path.join(__dirname, 'site-notice.html');
+  const NOTICE = fs.existsSync(noticePath) ? fs.readFileSync(noticePath, 'utf8').trim() : '';
 
   const html = template
     .replace(marker, `window.__PLUGINS_DATA__=${JSON.stringify(data)};`)
-    .replace(/<body([^>]*)>/i, (m, attrs) => `<body${attrs}>${NOTICE}`);
+    .replace(/<main([^>]*)>/i, (m, attrs) => (NOTICE ? `<main${attrs}>${NOTICE}` : m));
 
   fs.writeFileSync(path.join(SITE, 'index.html'), html);
 
