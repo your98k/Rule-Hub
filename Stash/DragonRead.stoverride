@@ -1,10 +1,7 @@
-name: '番茄小说去广告（原生·全量）'
+name: '番茄小说去广告'
 desc: |-
-  番茄小说（DragonRead）去广告，全部在 Stash 内核完成，无远程脚本、无参数。
-  · 开屏、章末推广、商业化混排、激励接口：reject-dict 秒回空字典
-  · 正文广告键递归剔除，正文不动；底栏福利 Tab 过滤
-  来源：TomCatXue + kelee.one，共 50 条规则。
-  完全体需与「红果短剧广告拦截」同开：红果兜字节全域，本覆写管 fqnovel 路径与响应体。两条穿山甲规则重复，属有意保留。
+  番茄小说去广告：域名拦截 + 路径秒拒 + 正文广告清理 + 底栏福利 Tab 过滤 + VIP 免广告注入。
+  需 MitM；与「红果短剧」同开为完全体。
 author: 'TomCatXue / 可莉🅥'
 homepage: 'https://github.com/TomCatXue/MyCookieCenter'
 icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/DragonRead.png'
