@@ -1,43 +1,70 @@
 name: '番茄小说去广告'
 desc: |-
-  番茄小说去广告：域名拦截 + MitM 检测版（仅用于定位，无改写动作）。
-  测试完请告知结果。
+  番茄小说去广告：字节系广告 SDK、埋点、素材与引流入口的域名拦截。
+  纯域名规则，不含 MitM 与改写（App 有证书校验，改写会导致无网络）。
+  与「红果短剧」同开为完全体。
 author: 'TomCatXue / 可莉🅥'
 homepage: 'https://github.com/TomCatXue/MyCookieCenter'
 icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/DragonRead.png'
 openUrl: 'https://apps.apple.com/app/id1468454200'
 category: '去广告'
-version: '2026-11-15-mitmtest'
+version: '2026-11-15'
 
 rules:
-  # 穿山甲 / 广告联盟 SDK
+  # —— 穿山甲 / 巨量广告 SDK ——
   - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT,no-track'
   - 'DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT,no-track'
   - 'DOMAIN-SUFFIX,pangle.io,REJECT,no-track'
+  - 'DOMAIN-SUFFIX,sgsnssdk.com,REJECT,no-track'
+  - 'DOMAIN-SUFFIX,byteactivity.com,REJECT,no-track'
   - 'DOMAIN,zlink.ugsdk.cn,REJECT,no-track'
-
-  # 头条系广告位
   - 'DOMAIN,ads.toutiao.com,REJECT,no-track'
   - 'DOMAIN,ad.toutiao.com,REJECT,no-track'
   - 'DOMAIN,ad.zijieapi.com,REJECT,no-track'
-  - 'DOMAIN-KEYWORD,ads3-normal,REJECT,no-track'
-  - 'DOMAIN-KEYWORD,ads5-normal,REJECT,no-track'
+  - 'DOMAIN,effect.snssdk.com,REJECT,no-track'
+  - 'DOMAIN,ma.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,mssdk.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,mssdk-bu.bytedance.com,REJECT,no-track'
+  - 'DOMAIN,mssdk.volces.com,REJECT,no-track'
+  - 'DOMAIN,vcs.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,vas.snssdk.com,REJECT,no-track'
   - 'DOMAIN-KEYWORD,-ad-sign.byteimg.com,REJECT,no-track'
   - 'DOMAIN-KEYWORD,-ad-sign.fqnovelpic.com,REJECT,no-track'
+  - 'DOMAIN,ads3-normal.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,ads5-normal.zijieapi.com,REJECT,no-track'
 
-  # 埋点 / 日志上报
+  # —— 埋点 / 日志上报 ——
   - 'DOMAIN-SUFFIX,toutiaocloud.com,REJECT,no-track'
   - 'DOMAIN-SUFFIX,toutiaocloud.net,REJECT,no-track'
   - 'DOMAIN-KEYWORD,-applog.fqnovel.com,REJECT,no-track'
+  - 'DOMAIN,rtlog3-applog.fqnovel.com,REJECT,no-track'
+  - 'DOMAIN,rtlog5-applog.fqnovel.com,REJECT,no-track'
   - 'DOMAIN,mon11-misc.fqnovel.com,REJECT,no-track'
   - 'DOMAIN,mon11-misc-lq.fqnovel.com,REJECT,no-track'
   - 'DOMAIN,mon3-misc.fqnovel.com,REJECT,no-track'
+  - 'DOMAIN,abtest3-misc.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,feedback-c.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,security.snssdk.com,REJECT,no-track'
+  - 'DOMAIN,log.snssdk.com,REJECT,no-track'
+  - 'DOMAIN,extlog.snssdk.com,REJECT,no-track'
+  - 'DOMAIN,toblog.ctobsnssdk.com,REJECT,no-track'
 
-  # 抖音引流入口
+  # —— 素材下发 / 小游戏 / 热更新 ——
+  - 'DOMAIN,gecko3.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,gecko5.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,minigame3-normal.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,minigame5-normal.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,timon.zijieapi.com,REJECT,no-track'
+  - 'DOMAIN,lf-ad-ies.bytecdn.cn,REJECT,no-track'
+  - 'DOMAIN,lf-normal-gr-sourcecdn.bytegecko.com,REJECT,no-track'
+  - 'DOMAIN,lf-webcast-gr-sourcecdn.bytegecko.com,REJECT,no-track'
+  - 'DOMAIN,p3-developer.bytemaimg.com,REJECT,no-track'
+  - 'DOMAIN,is.snssdk.com,REJECT,no-track'
+  - 'DOMAIN,is-lq.snssdk.com,REJECT,no-track'
+  - 'DOMAIN,i.snssdk.com,REJECT,no-track'
+  - 'DOMAIN,bds.snssdk.com,REJECT,no-track'
+
+  # —— 抖音 / 直播引流 ——
   - 'DOMAIN,webcast-open.douyin.com,REJECT,no-track'
-
-http:
-  mitm:
-    - '*.fqnovel.com'
-    - '*.fqnovelpic.com'
-    - '*.novelreading.com'
+  - 'DOMAIN,p11-webcast-sign.douyinpic.com,REJECT,no-track'
+  - 'DOMAIN,p3-webcast-sign.douyinpic.com,REJECT,no-track'
