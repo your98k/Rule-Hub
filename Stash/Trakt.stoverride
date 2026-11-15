@@ -1,0 +1,202 @@
+name: 'Trakt 增强'
+desc: |-
+  Trakt 各页面英译简中/港台繁体（含海报）、历史剧集按剧合并、详情页 Forward/Infuse/Rex 跳转按钮，兼容其它使用 Trakt API 的应用。
+  移植自 DemoJameson 的 Loon 插件，脚本沿用上游、每日自动更新。
+  自定义参数仅支持 Stash 3.7 及以上版本。
+  注：走 HTTP/3 的请求不会被解密，脚本对这类请求不生效。
+author: 'DemoJameson（Stash 适配）'
+homepage: 'https://github.com/DemoJameson/Proxy.Modules'
+icon: 'https://raw.githubusercontent.com/DemoJameson/Proxy.Modules/main/trakt_simplified_chinese/images/trakt.webp'
+openUrl: 'https://apps.apple.com/app/id1514873602'
+category: '功能增强'
+version: '2026-11-15'
+
+arguments-version: 1
+arguments:
+  fake_vip:
+    type: switch
+    title: 伪装成 VIP
+    description: 启用后伪装为 Trakt VIP 会员，移除 App 中的广告
+    default: true
+  locale:
+    type: select
+    title: 目标语言
+    description: 选择目标语言
+    default: '简体中文'
+    options:
+      - value: '简体中文'
+      - value: '繁體中文（台灣）'
+      - value: '繁體中文（香港）'
+  poster:
+    type: select
+    title: 海报语言
+    description: 原片语言使用 TMDb 影片原始语言图片；中文按所选语言优先匹配海报；原图保留 Trakt 原图
+    default: '原片语言'
+    options:
+      - value: '原片语言'
+      - value: '简体中文'
+      - value: '繁體中文（台灣）'
+      - value: '繁體中文（香港）'
+      - value: '原图'
+  engine:
+    type: select
+    title: 翻译引擎
+    description: 谷歌翻译（快，需翻墙）、DeepLX（慢，可直连）、关闭
+    default: '谷歌翻译'
+    options:
+      - value: '谷歌翻译'
+      - value: 'DeepLX'
+      - value: '关闭'
+  douban_characters:
+    type: switch
+    title: 用豆瓣翻译角色名
+    description: 启用后会用豆瓣翻译角色名
+    default: true
+  merge_history:
+    type: switch
+    title: 历史剧集按电视剧合并
+    description: 启用后会将历史页面电视剧类别的观看记录按电视剧合并
+    default: true
+  forward_order:
+    type: select
+    title: Forward 跳转按钮
+    description: 序号代表在 Trakt 中的排序位置，0 不显示
+    default: '1'
+    options:
+      - value: '0'
+      - value: '1'
+      - value: '2'
+      - value: '3'
+  infuse_order:
+    type: select
+    title: Infuse 跳转按钮
+    description: 序号代表在 Trakt 中的排序位置，0 不显示
+    default: '2'
+    options:
+      - value: '0'
+      - value: '1'
+      - value: '2'
+      - value: '3'
+  rex_order:
+    type: select
+    title: Rex 跳转按钮
+    description: 序号代表在 Trakt 中的排序位置，0 不显示
+    default: '3'
+    options:
+      - value: '0'
+      - value: '1'
+      - value: '2'
+      - value: '3'
+  backend:
+    type: input
+    title: 翻译缓存接口
+    description: 用于批量获取 Trakt 的中文翻译，一般留空即可
+    default: 'https://proxy-modules.demojameson.de5.net'
+    max-length: 512
+  tamper_auth:
+    type: switch
+    title: 篡改应用授权
+    description: 将第三方 App 的 Trakt 授权篡改成 Trakt 官方 App，规避应用连接数限制，请仅在需要时开启
+    default: false
+  debug_mode:
+    type: select
+    title: 调试模式
+    description: 禁用本地缓存不读写持久化存储；禁用远端缓存不请求后端接口；禁用所有缓存两者皆禁
+    default: '关闭'
+    options:
+      - value: '关闭'
+      - value: '禁用本地缓存'
+      - value: '禁用远端缓存'
+      - value: '禁用所有缓存'
+
+http:
+  mitm:
+    - 'apiz.trakt.tv'
+    - 'api.trakt.tv'
+    - 'auth.trakt.tv'
+    - 'trakt.tv'
+    - 'api.themoviedb.org'
+    - 'image.tmdb.org'
+    - 'proxy-modules.demojameson.de5.net'
+
+  script:
+    - name: 'trakt-advanced'
+      match: '^https:\/\/(?:apiz?\.trakt\.tv|auth\.trakt\.tv|trakt\.tv)\/oauth\/(?:device\/code|device\/token|token)(?:\?.*)?$'
+      type: request
+      require-body: true
+      max-size: 1048576
+      timeout: 10
+      argument: '${args.fake_vip},${args.locale},${args.poster},${args.engine},${args.douban_characters},${args.merge_history},${args.forward_order},${args.infuse_order},${args.rex_order},${args.backend},${args.tamper_auth},${args.debug_mode}'
+    - name: 'trakt-advanced'
+      match: '^https:\/\/(?:auth\.)?trakt\.tv\/oauth\/authorize(?:\?.*)?$'
+      type: request
+      timeout: 10
+      argument: '${args.fake_vip},${args.locale},${args.poster},${args.engine},${args.douban_characters},${args.merge_history},${args.forward_order},${args.infuse_order},${args.rex_order},${args.backend},${args.tamper_auth},${args.debug_mode}'
+    - name: 'trakt-advanced'
+      match: '^https:\/\/(?:auth\.)?trakt\.tv\/api\/auth\/oauth2\/authorize(?:\?.*)?$'
+      type: response
+      timeout: 10
+      argument: '${args.fake_vip},${args.locale},${args.poster},${args.engine},${args.douban_characters},${args.merge_history},${args.forward_order},${args.infuse_order},${args.rex_order},${args.backend},${args.tamper_auth},${args.debug_mode}'
+    - name: 'trakt-advanced'
+      match: '^https:\/\/(?:auth\.trakt\.tv|trakt\.tv)\/oauth\/(?:device\/code|device\/token|token)(?:\?.*)?$'
+      type: response
+      require-body: true
+      max-size: 8388608
+      timeout: 10
+      argument: '${args.fake_vip},${args.locale},${args.poster},${args.engine},${args.douban_characters},${args.merge_history},${args.forward_order},${args.infuse_order},${args.rex_order},${args.backend},${args.tamper_auth},${args.debug_mode}'
+    - name: 'trakt-advanced'
+      match: '^https:\/\/proxy-modules\.demojameson\.de5\.net\/api\/redirect\?.*$'
+      type: request
+      timeout: 10
+      argument: '${args.fake_vip},${args.locale},${args.poster},${args.engine},${args.douban_characters},${args.merge_history},${args.forward_order},${args.infuse_order},${args.rex_order},${args.backend},${args.tamper_auth},${args.debug_mode}'
+    - name: 'trakt-advanced'
+      match: '^https:\/\/image\.tmdb\.org\/t\/p\/w342\/[a-z0-9_-]+_logo\.webp(?:\?.*)?$'
+      type: request
+      timeout: 10
+      argument: '${args.fake_vip},${args.locale},${args.poster},${args.engine},${args.douban_characters},${args.merge_history},${args.forward_order},${args.infuse_order},${args.rex_order},${args.backend},${args.tamper_auth},${args.debug_mode}'
+    - name: 'trakt-advanced'
+      match: '^https:\/\/apiz?\.trakt\.tv\/sync\/history\/episodes\/?(\?.*)?$'
+      type: request
+      timeout: 10
+      argument: '${args.fake_vip},${args.locale},${args.poster},${args.engine},${args.douban_characters},${args.merge_history},${args.forward_order},${args.infuse_order},${args.rex_order},${args.backend},${args.tamper_auth},${args.debug_mode}'
+    - name: 'trakt-advanced'
+      match: '^https:\/\/apiz?\.trakt\.tv\/users\/[^\/]+?\/history\/episodes\/?(\?.*)?$'
+      type: request
+      timeout: 10
+      argument: '${args.fake_vip},${args.locale},${args.poster},${args.engine},${args.douban_characters},${args.merge_history},${args.forward_order},${args.infuse_order},${args.rex_order},${args.backend},${args.tamper_auth},${args.debug_mode}'
+    - name: 'trakt-advanced'
+      match: '^https:\/\/apiz?\.trakt\.tv\/shows\/[^\/]+\/seasons\/\d+(?:\/.*|\?.*)?$'
+      type: request
+      timeout: 10
+      argument: '${args.fake_vip},${args.locale},${args.poster},${args.engine},${args.douban_characters},${args.merge_history},${args.forward_order},${args.infuse_order},${args.rex_order},${args.backend},${args.tamper_auth},${args.debug_mode}'
+    - name: 'trakt-advanced'
+      match: '^https:\/\/apiz?\.trakt\.tv\/(?!oauth\/).*$'
+      type: request
+      timeout: 10
+      argument: '${args.fake_vip},${args.locale},${args.poster},${args.engine},${args.douban_characters},${args.merge_history},${args.forward_order},${args.infuse_order},${args.rex_order},${args.backend},${args.tamper_auth},${args.debug_mode}'
+    - name: 'trakt-advanced'
+      match: '^https:\/\/apiz?\.trakt\.tv\/.*$'
+      type: response
+      require-body: true
+      max-size: 8388608
+      timeout: 60
+      argument: '${args.fake_vip},${args.locale},${args.poster},${args.engine},${args.douban_characters},${args.merge_history},${args.forward_order},${args.infuse_order},${args.rex_order},${args.backend},${args.tamper_auth},${args.debug_mode}'
+    - name: 'trakt-advanced'
+      match: '^https:\/\/api\.themoviedb\.org\/3\/watch\/providers\/(?:movie|tv)(\?.*)?$'
+      type: response
+      require-body: true
+      max-size: 4194304
+      timeout: 60
+      argument: '${args.fake_vip},${args.locale},${args.poster},${args.engine},${args.douban_characters},${args.merge_history},${args.forward_order},${args.infuse_order},${args.rex_order},${args.backend},${args.tamper_auth},${args.debug_mode}'
+    - name: 'trakt-advanced'
+      match: '^https:\/\/api\.themoviedb\.org\/3\/(?:tv|movie)\/\d+\?.*watch(?:%2F|\/)providers.*$'
+      type: response
+      require-body: true
+      max-size: 4194304
+      timeout: 60
+      argument: '${args.fake_vip},${args.locale},${args.poster},${args.engine},${args.douban_characters},${args.merge_history},${args.forward_order},${args.infuse_order},${args.rex_order},${args.backend},${args.tamper_auth},${args.debug_mode}'
+
+script-providers:
+  trakt-advanced:
+    url: 'https://raw.githubusercontent.com/DemoJameson/Proxy.Modules/main/trakt_simplified_chinese/trakt_simplified_chinese.js'
+    interval: 86400
