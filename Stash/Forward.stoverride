@@ -1,7 +1,7 @@
 name: 'Forward 订阅转发'
 desc: 'Forward 订阅转发，共 1 条规则。'
 category: '功能增强'
-author: '原创'
+author: 'your98k'
 date: '2026-11-15'
 version: '1.0.0'
 

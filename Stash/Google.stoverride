@@ -1,7 +1,7 @@
 name: 'Google CN 域名跳转'
 desc: 'Google CN 域名跳转，共 3 条规则。'
 openUrl: 'https://www.google.com'
-author: '原创'
+author: 'your98k'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Google.png'
 category: '功能增强'
 date: '2026-11-15'
