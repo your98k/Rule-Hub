@@ -120,7 +120,10 @@ def main():
             for r in h.get('body-rewrite') or []:
                 parts = str(r).split(' ', 2)
                 if len(parts) == 3 and parts[1] == 'response-jq':
-                    pr = subprocess.run([JQ, '-n', parts[2]],
+                    # 参数占位符 ${args.xxx} 由 Stash 在应用覆写时展开，
+                    # 静态校验前先替换成 true，否则 jq 会误报语法错
+                    expr = re.sub(r'\$\{args\.[A-Za-z0-9_]+\}', 'true', parts[2])
+                    pr = subprocess.run([JQ, '-n', expr],
                                         capture_output=True, text=True, timeout=10)
                     # 只把语法错误算问题：jq -n 是空输入求值，
                     # 依赖具体结构的运行时错误（如 Cannot iterate over null）属正常
