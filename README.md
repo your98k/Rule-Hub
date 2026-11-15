@@ -4,7 +4,7 @@
 
 🌐 **在线覆写画廊**：[your98k.github.io/Rule-Hub](https://your98k.github.io/Rule-Hub/)（支持搜索、标签筛选、一键安装）
 
-> ⚠️ **带「自定义参数」的覆写需要 Stash 3.7 及以上版本。** 低于 3.7 导入会失败（报错类似 `the override is invalid`）。涉及：Porntube、Apple WLOC、哔哩哔哩、YouTube、京东、Reven、Telegram。
+> ⚠️ **带「自定义参数」的覆写需要 Stash 3.7 及以上版本。** 低于 3.7 导入会失败（报错类似 `the override is invalid`）。涉及：Porntube、Apple WLOC、哔哩哔哩、YouTube、京东、Reven、Telegram、Trakt。
 
 ## 安装
 
@@ -22,6 +22,7 @@
 | 哔哩哔哩去广告 | Stash 3.7+ | Biliverse v0.7.5 移植，32 项原生参数，无需 BoxJS；内置 8 条 QUIC 拦截 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
 | 红果短剧去广告 | 通用 | 域名拦截，不改动全局 IPv6/DNS | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
 | 番茄小说去广告 | 通用 | 50 条域名拦截（广告 SDK / 埋点上报 / 素材下发 / 抖音引流），全部 `no-track`；**不做 MitM 与改写**——该 App 有证书校验，一开 MitM 就断网 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DragonRead.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DragonRead.stoverride) |
+| Trakt 增强 | Stash 3.7+ | DemoJameson Loon 插件移植：页面与海报中文化、历史剧集按剧合并、详情页 Forward/Infuse/Rex 跳转；12 项原生参数，13 条脚本路由，脚本每日同步上游 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Trakt.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Trakt.stoverride) |
 | 腾讯视频净化 | iOS/tvOS 3.2.5+ | 开屏/暂停/底部推荐广告过滤；脚本每日自动同步上游 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TxvideoAD.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TxvideoAD.stoverride) |
 | Telegram 链接跳转 | Stash 3.7+ | t.me 等链接 307 跳转至所选 Telegram 客户端，3 项原生参数 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride) |
 | 京东去广告 + 比价 | Stash 3.7+ | 京东广告过滤 + 慢慢买历史价格，5 项原生参数 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingDong.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingDong.stoverride) |
@@ -44,10 +45,11 @@
 - **Telegram**：「代理指向的策略」须填写当前配置中已存在的策略组或节点名。
 - **菜鸟**：纯 Stash 原生实现（1 条 AND 规则 + 4 条 url-rewrite reject + 4 条 jq 响应改写），无远程脚本，只需信任 MitM CA。首页若仍有广告位残留，多为 App 走 QUIC 或没有彻底退出 App 重进。
 - **番茄小说**：纯域名拦截，无需 MitM，不改 DNS/IPv6。**该 App 有 SSL Pinning**：一旦覆写里出现 `mitm`（哪怕只列域名、没有任何改写动作），App 就会报「网络出错，请点击重试」。所以路径级秒拒与响应体清理都上不了，只保留域名层。开屏、章末这类走自己接口的广告去不掉；广告 SDK、埋点、素材、引流入口已全部拦死。
+- **Trakt**：需信任 MitM CA 并开启 MitM，否则脚本不触发。12 项参数与上游 Loon 插件一一对应；「篡改应用授权」默认关闭，仅在第三方 App 报连接数超限时开启。「翻译引擎」选 DeepLX 可免翻墙但较慢。不要与 Loon 版 Trakt 插件同时启用——同名请求会被两边各改写一次。
 - **水印猫**：只改写会员字段（isPurchasedSubscribe、waterVipInfo、maskMobile、nickName），需信任 MitM CA；脚本每 24 小时从仓库内的 `Stash/ShuiYinMao.stash.js` 同步，内嵌 payload 仅作离线兜底。**域名会变**：上游脚本写的是 yunxiaoguo.cn，实测 App 已改用 zijiemofang.cn，覆写已同时覆盖两者；若日后又失效，先在 Stash 的连接记录里看 App 实际连哪个域名，再据此调整 mitm 与 match，不要只信脚本注释。
 
 ## 鸣谢
 
-[Yu9191/Rewrite](https://github.com/Yu9191/Rewrite)（Porntube 上游）· [Sparkle](https://github.com/kokoryh/Sparkle)（kokoryh）· [Biliverse/ADBlock](https://github.com/Biliverse/ADBlock)（ClydeTime / VirgilClyne / app2smile / RuCu6 / Maasea）· Maasea / gholts / RuCu6 / DivineEngine / Choler · [Hey-sayiwanna](https://github.com/Hey-sayiwanna/YouTube-ADBlock-on-Feed) · Tartarus2014 · kelee.one · ZenmoFeiShi/Qx · [jsforbaby](https://reven.jsforbaby.workers.dev/reven/reven.lpx)（Reven）· TomCatXue（番茄小说）
+[Yu9191/Rewrite](https://github.com/Yu9191/Rewrite)（Porntube 上游）· [Sparkle](https://github.com/kokoryh/Sparkle)（kokoryh）· [Biliverse/ADBlock](https://github.com/Biliverse/ADBlock)（ClydeTime / VirgilClyne / app2smile / RuCu6 / Maasea）· Maasea / gholts / RuCu6 / DivineEngine / Choler · [Hey-sayiwanna](https://github.com/Hey-sayiwanna/YouTube-ADBlock-on-Feed) · Tartarus2014 · kelee.one · ZenmoFeiShi/Qx · [jsforbaby](https://reven.jsforbaby.workers.dev/reven/reven.lpx)（Reven）· TomCatXue（番茄小说）· DemoJameson（Trakt）
 
 本项目仅供学习研究与个人自用，请勿商用。
