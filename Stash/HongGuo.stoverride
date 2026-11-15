@@ -1,7 +1,5 @@
 name: '红果短剧去广告'
-desc: |-
-  红果短剧去广告：域名拦截（hongguoapp / hongguosdk / 穿山甲 / 字节接口域）。
-  与「番茄小说」同开为完全体。
+desc: '红果短剧广告拦截，含穿山甲与字节系兜底规则。'
 author: 'Tartarus2014 & Customized'
 homepage: 'https://github.com/Tartarus2014/Loon-Script'
 icon: 'https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png'

@@ -1,5 +1,5 @@
 name: 'Spotify 去广告'
-desc: '移除 Spotify 播放广告并解锁部分高级功能（脚本改写 protobuf 响应）。'
+desc: '移植 loonlab 的 Spotify.lpx，Stash 原生声明式，2 条规则。'
 openUrl: 'https://apps.apple.com/app/id324684580'
 author: '001ProMax · Loon→Stash 原生适配'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Spotify.png'
