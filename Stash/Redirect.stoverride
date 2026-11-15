@@ -1,5 +1,5 @@
 name: '链接重定向合集'
-desc: '移植 loonlab 的 Redirect.lpx，Stash 原生声明式，60 条规则。'
+desc: '移植 loonlab 的 Redirect.lpx，Stash 原生声明式，61 条规则。'
 author: 'loonlab · Loon→Stash 原生适配'
 category: '去广告'
 date: '2026-11-15'
@@ -129,6 +129,12 @@ http:
     - 'you.163.com'
     - 'yuanchengxiezuo.com'
     - 'zbrushcn.com'
+  script:
+    - name: 'biliintl-locale'
+      match: '^https?://(?:app|passport)\.biliintl\.com/'
+      type: request
+      timeout: 10
+      engine: auto
   url-rewrite:
     - '^http://(www.)?aicoin\.cn/$ https://www.aicoin.com/ 302'
     - '^http://(www.)?jd\.com/ https://www.jd.com/ 302'
@@ -190,3 +196,8 @@ http:
     - '^https?://cn\.ultraiso\.net/ https://cn.ezbsystems.com/ultraiso/ 302'
     - '^https?://hypersnap\.mairuan\.com/ https://www.keyshot.com/ 302'
     - '^https?://logoshejishi\.mairuan\.com/ https://www.sothink.com/product/logo-design-software/ 302'
+
+script-providers:
+  biliintl-locale:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/BiliIntlRedirect.js'
+    interval: 86400
