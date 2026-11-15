@@ -80,19 +80,19 @@ http:
 
   url-rewrite:
     # 开屏广告（两代路径）
-    - '^https?://.*\.fqnovel\.com/api/ad/splash/ reject-dict'
-    - '^https?://.*\.fqnovel\.com/api/ad/v\d+/splash/ reject-dict'
+    - '^https?://.*\.fqnovel\.com/api/ad/splash/ - reject-dict'
+    - '^https?://.*\.fqnovel\.com/api/ad/v\d+/splash/ - reject-dict'
     # 章末广告位、商业化混排、阅读内插页
-    - '^https?://.*\.fqnovel\.com/reading/commerceapi/chapter_end/resource/ reject-dict'
-    - '^https?://.*\.fqnovel\.com/reading/commerceapi/ad/ reject-dict'
-    - '^https?://.*\.fqnovel\.com/reading/commerceapi/commerce/tab/ reject-dict'
+    - '^https?://.*\.fqnovel\.com/reading/commerceapi/chapter_end/resource/ - reject-dict'
+    - '^https?://.*\.fqnovel\.com/reading/commerceapi/ad/ - reject-dict'
+    - '^https?://.*\.fqnovel\.com/reading/commerceapi/commerce/tab/ - reject-dict'
     # 横幅 / 激励 / 不感兴趣 / 上报 / 直播推广
-    - '^https?://.*\.fqnovel\.com/api/ad/v\d+/(aggregate|banner|inspire|dislike|report|live_cmm) reject-dict'
-    - '^https?://.*\.fqnovel\.com/api/ad/union/sdk/get_ads reject-dict'
+    - '^https?://.*\.fqnovel\.com/api/ad/v\d+/(aggregate|banner|inspire|dislike|report|live_cmm) - reject-dict'
+    - '^https?://.*\.fqnovel\.com/api/ad/union/sdk/get_ads - reject-dict'
     # 悬浮活动部件、计时器金币球、激励视频弹窗
-    - '^https?://.*\.fqnovel\.com/luckycat/crossover/v\d+/get_timer_widget reject-dict'
-    - '^https?://.*\.fqnovel\.com/polaris/task/incentive_ad_again_info reject-dict'
-    - '^https?://.*\.fqnovel\.com/luckycat/novel/page/ios_task reject-dict'
+    - '^https?://.*\.fqnovel\.com/luckycat/crossover/v\d+/get_timer_widget - reject-dict'
+    - '^https?://.*\.fqnovel\.com/polaris/task/incentive_ad_again_info - reject-dict'
+    - '^https?://.*\.fqnovel\.com/luckycat/novel/page/ios_task - reject-dict'
 
   body-rewrite:
     # VIP / 免广告权益注入
