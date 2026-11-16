@@ -1,0 +1,14 @@
+name: 'AppRaven 会员解锁'
+desc: 'AppRaven 会员相关字段置为已购，纯声明式改写响应。'
+openUrl: 'https://apps.apple.com/app/id1532203205'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/AppRaven.png'
+author: 'your98k'
+category: '会员解锁'
+date: '2026-11-16'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'appraven.net'
+  body-rewrite:
+    - '^https://appraven\.net/appraven/graphql response-replace-regex "premium":false "premium":true "hasInAppPurchases":false "hasInAppPurchases":true "youOwn":false "youOwn":true "arcade":false "arcade":true "preorder":false "preorder":true'

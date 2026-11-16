@@ -1,0 +1,39 @@
+name: '铁路12306 去广告'
+desc: |-
+  铁路12306 去广告，共 3 条规则。
+openUrl: 'https://apps.apple.com/app/id564818103'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/12306.png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-16'
+version: '1.0.0'
+
+rules:
+  - 'DOMAIN,ad.12306.cn,DIRECT'
+
+http:
+  mitm:
+    - 'ad.12306.cn'
+    - 'mobile.12306.cn'
+  script:
+    - name: '12306-0'
+      match: '^https://ad\.12306\.cn/ad/ser/getAdList$'
+      type: request
+      require-body: true
+      max-size: 10485760
+      timeout: 10
+      engine: auto
+    - name: '12306-1'
+      match: '^https://mobile\.12306\.cn/otsmobile/app/mgs/mgw\.htm$'
+      type: request
+      max-size: 10485760
+      timeout: 10
+      engine: auto
+
+script-providers:
+  12306-0:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Railway12306.js'
+    interval: 86400
+  12306-1:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Railway12306.js'
+    interval: 86400

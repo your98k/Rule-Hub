@@ -1,0 +1,64 @@
+name: '百度网盘'
+desc: |-
+  过滤百度网盘广告，解锁部分SVIP功能。
+author: 'your98k'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/baidunetdisk.png
+date: '2026-10-02 12:00'
+openUrl: 'https://apps.apple.com/app/id547166701'
+category: '去广告, 解锁会员'
+# 由 Loon 插件自动转换：BaiduNetDisk.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md], ddgksf2013[https://github.com/ddgksf2013], chxm1023[https://github.com/chxm1023]
+http:
+  url-rewrite:
+    - '^https://pan\.baidu\.com/api/getconfig\? - reject-dict'
+    - '^https://pan\.baidu\.com/api/getsyscfg\? - reject-dict'
+    - '^https://pan\.baidu\.com/api/taskscore/tasklist\? - reject-dict'
+    - '^https://pan\.baidu\.com/act/api/activityentry\? - reject-dict'
+    - '^https://pan\.baidu\.com/rest/\d\.\d/pcs/adv\? - reject-dict'
+    - '^https://pan\.baidu\.com/api/plugin/get\? - reject-dict'
+    - '^https://pan\.baidu\.com/recommend/query/list\? - reject-dict'
+    - '^https?://.*baidu\.com/rest/.*/membership/proxy/guide - reject'
+    - '^https?://pan\.baidu\.com/act/v\d/(bchannel|welfare)/list - reject'
+    - '^https://pan\.baidu\.com/feed/hotlist - reject'
+    - '^https?://.*zhangyuyidong\.cn/api/zysdk - reject'
+    - '^https://pan\.baidu\.com/queryintent/queryhint - reject'
+    - '^https://pan\.baidu\.com/coins/center/notice - reject'
+    - '^https://pan\.baidu\.com/recommend/shortseries/list - reject-dict'
+  body-rewrite:
+    - '^https://pan\.baidu\.com/feed/kingkongdistrict\? response-jq .data.data |= map(select(.type != "novel" and .type != "shortplay" and .type != "print" and .type != "job_hunt"))'
+  mitm:
+    - 'pan.baidu.com'
+    - 'afd.baidu.com'
+    - 'baidu.com'
+    - 'zhangyuyidong.cn'
+  script:
+    - name: 'bdpan_ads'
+      match: '^https?://afd\.baidu\.com/afd/entry'
+      type: 'response'
+    - name: 'bdpan_ads'
+      match: '^https://pan\.baidu\.com/feed/cardinfos'
+      type: 'response'
+    - name: 'bdpan_ads'
+      match: '^https://pan\.baidu\.com/rest/.*/membership/user\?method=gamecenter'
+      type: 'response'
+    - name: 'bdcloud'
+      match: '^https?://pan\.baidu\.com/(act/.+/(activityentry|bchannel|cardwelfare|skin)|rest/.+/(membership/user|pcs/adv)|feed/cardinfos|api/(user/getinfo|quota|loginstatus|account/getprivilege)|buy/ad/conf|wap/vip|coins/taskcenter/homensr)'
+      type: 'response'
+    - name: 'bdpan_unlock'
+      match: '^https://pan\.baidu\.com/api/streaming\?app_id=\d+&type=M3U8_HQ_1080'
+      type: 'request'
+    - name: 'bdpan_unlock'
+      match: '^https://pan\.baidu\.com/rest/.*/membership/user'
+      type: 'response'
+script-providers:
+  bdpan_ads:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/ddgksf2013.top/scripts/bdpan.ads.js'
+    interval: 86400
+  bdcloud:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/raw.githubusercontent.com/chxm1023__Rewrite/main/bdcloud.js'
+    interval: 86400
+  bdpan_unlock:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/ddgksf2013.top/scripts/bdpan.unlock.js'
+    interval: 86400

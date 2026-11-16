@@ -1,0 +1,37 @@
+name: '粉笔 去广告'
+desc: '粉笔 去广告，共 15 条规则。'
+openUrl: 'https://apps.apple.com/cn/app/id1228600770'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/FenBi.png'
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'keapi.fenbi.com'
+    - 'market-api.fenbi.com'
+    - 'ke.fenbi.com'
+    - 'hera-webapp.fenbi.com'
+  url-rewrite:
+    - '^https://keapi\.fenbi\.com/app/(?:iphone|ipad)/position_resource/get_banners\? - reject-dict'
+    - '^https://market-api\.fenbi\.com/(?:iphone|ipad)/v1/assistant/info\? - reject-dict'
+    - '^https://keapi\.fenbi\.com/app/(?:iphone|ipad)/\w+/reddot\? - reject-dict'
+    - '^https://ke\.fenbi\.com/(?:iphone|ipad)/v3/timetable/today_with_public_episodes\? - reject-dict'
+    - '^https://hera-webapp\.fenbi\.com/(?:iphone|ipad)/topic/hotquery/list\? - reject-dict'
+    - '^https://hera-webapp\.fenbi\.com/(?:iphone|ipad)/explore/consts\? - reject-dict'
+    - '^https://hera-webapp\.fenbi\.com/(?:iphone|ipad)/announcement/hotquery/list\? - reject-dict'
+    - '^https://ke\.fenbi\.com/(?:iphone|ipad)/v3/user_member/entry\? - reject-dict'
+    - '^https://market-api\.fenbi\.com/(?:iphone|ipad)/v1/assistant/my\? - reject-dict'
+    - '^https://ke\.fenbi\.com/(?:iphone|ipad)/v3/remind/instant\? - reject-dict'
+    - '^https://keapi\.fenbi\.com/ai/(?:iphone|ipad)/exercise_remark/get_questions_remark\? - reject-dict'
+    - '^https://keapi\.fenbi\.com/app/(?:iphone|ipad)/position_resource/get_tiku_banners\? - reject-dict'
+  body-rewrite:
+    - '^https://hera-webapp\.fenbi\.com/(?:iphone|ipad)/recommend/info\? response-jq del(.data.rollingBanner)'
+    - '^https://ke\.fenbi\.com/(?:iphone|ipad)/v3/apps/config\? response-jq del(.data.bottomIconInfos.position.iconDefaultUrl, .data.bottomIconInfos.position.iconSelectedUrl, .data.bottomIconInfos.position.nightModeIconDefaultUrl, .data.bottomIconInfos.position.nightModeIconSelectedUrl)'
+  mock:
+    - match: '^https://keapi\.fenbi\.com/ai/(?:iphone|ipad)/entry\?'
+      text: '{"msg":"","data":null,"code":404}'
+      status-code: 200
+      headers:
+        Content-Type: 'application/json'

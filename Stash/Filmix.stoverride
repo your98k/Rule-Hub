@@ -1,0 +1,13 @@
+name: 'Filmix 会员解锁'
+desc: '解锁 Filmix 影视库会员标识，改写用户信息接口的 VIP 字段。'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/filmix.png
+author: 'your98k'
+category: '会员解锁'
+date: '2026-11-16'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'appv3.filmix.com.cn'
+  body-rewrite:
+    - '^https://appv3\.filmix\.com\.cn/api/v2/user/user/info response-jq .is_vip = true | .vip_level = 1 | .vip_start_time = "2025-01-01T00:00:00.000Z" | .vip_end_time = "2099-12-31T23:59:59.999Z" | .first_vip_start_time = "2025-01-01T00:00:00.000Z" | .user.vip_level = 1'

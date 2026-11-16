@@ -1,0 +1,27 @@
+name: '中国联通 去广告'
+desc: '中国联通 去广告，共 10 条规则。'
+openUrl: 'https://apps.apple.com/app/id392397057'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/liantong(0).png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+rules:
+  - 'DOMAIN,m1.ad.10010.com,REJECT'
+
+http:
+  mitm:
+    - 'm.client.10010.com'
+    - 'img.client.10010.com'
+  url-rewrite:
+    - '^https?://m\.client\.10010\.com/mobileserviceimportant/customer/querySmartServicekhd.htm - reject'
+    - '^https?://m\.client\.10010\.com/clientIndex/api/v1/index/queryIndexExclusiveOffers - reject'
+    - '^https?://img\.client\.10010\.com/homejingxuan12/js/(pubuliu|1homeView) - reject'
+  body-rewrite:
+    - '^https://m\.client\.10010\.com/search_service/tyfbSearch/searchDiscoverListExpress response-jq .data = []'
+    - '^https://m\.client\.10010\.com/search_service/search/searchScrollWord response-jq .["113000004"] = []'
+    - '^https://m\.client\.10010\.com/clientIndex/v1/api/navHome response-jq .datas.homeTopMenuItems |= map(select(.menuName != "通通" and .menuName != "vowifi" and .menuName != "签到" and .menuName != ""))'
+    - '^https://m\.client\.10010\.com/clientIndex/homefusion/fuInter response-jq del(.["HomeFusion.backGroundQuery"], .["HomeFusion.fuchuangAdv_A8"], .["HomeFusion.bottomLabel"])'
+    - '^https://m\.client\.10010\.com/clientMyPage/v1/api/myWallet response-jq .data.payShowFlag = false'
+    - '^https?://m\.client\.10010\.com/clientMyPage/v\d/api/(myWallet|myPoints|myColorfulRingtone|newUserInfo|getDeviceInfo) response-jq .data={}'

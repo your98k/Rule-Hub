@@ -1,0 +1,89 @@
+name: '酷我音乐 去广告'
+desc: |-
+  酷我音乐去广告，共 14 条规则。
+openUrl: 'https://apps.apple.com/app/id587673454'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/kuwomusic.png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-16'
+version: '1.0.0'
+
+rules:
+  - 'IP-CIDR,111.206.98.63/32,REJECT,no-resolve'
+
+http:
+  mitm:
+    - '*.kuwo.cn'
+    - 'ad.tencentmusic.com'
+    - 'abt-kuwo.tencentmusic.com'
+  url-rewrite:
+    - '^https://vip\d\.kuwo\.cn/commercia/vipconf/projectPage/getPageContent - reject-dict'
+    - '^https://tingshu\.kuwo\.cn/v2/api/pay/user/info - reject-dict'
+    - '^https://appi\.kuwo\.cn/kuwopay/personal/cells - reject-dict'
+    - '^https?://mobilead\.kuwo\.cn/EcomResourceServer/get(IOSIsHideAd|Motor)\.do - reject-200'
+    - '^https?://rich\.kuwo\.cn/(AdService|ecom)/kaiping/ad[iI]nfo - reject-200'
+    - '^https?://wapi\.kuwo\.cn/openapi/v\d+/(?:user/)?(?:(?:config|adVip|pop|freeMode(?:/h5)?)(?:/))?(?:info|text|homePage|message|give/time)(?:[/?#]|$) - reject-200'
+    - '^https?://appi\.kuwo\.cn/kuwopay\vip-tab/setting - reject-200'
+  script:
+    - name: 'kuwo-0'
+      match: '^https?://(?:vip1\.kuwo\.cn/(?:vip/enc/user/vip|vip/v2/user/vip|(?:commercia/)?vip/(?:v2/theme\?op=gd|player/getStyleListByModel|hanger/wear)|commercia/vip/dressCenter/getTabList|commercia/vipTab/myTab/base)|.+\.kuwo\.cn/mobi\.s\?f=(?:kuwo|kwxs)\&q=|music(?:pay)?\.kuwo\.cn/music\.pay\?newver=3|wapi\.kuwo\.cn/openapi/v1/user/freeMode/give/time|tingshu\.kuwo\.cn/(?:api/v2/pay/app/getConfigInfo|v2/api/pay/payInfo/kwplayer/payMiniBar)|audiobookpay\.kuwo\.cn/a\.p|homepages\.kuwo\.cn(?:\.eo\.dnse1\.com)?/mgxh\.s)'
+      type: response
+      require-body: true
+      max-size: 10485760
+      timeout: 60
+      engine: auto
+    - name: 'kuwo-1'
+      match: '^https?://(mgxhtj|nmobi|searchrecterm)\.kuwo\.cn/(mgxh|mobi|recterm)\.s'
+      type: response
+      require-body: true
+      max-size: 10485760
+      timeout: 10
+      engine: auto
+    - name: 'kuwo-2'
+      match: '^https?://audiobookpay\.kuwo\.cn/a\.p'
+      type: response
+      require-body: true
+      max-size: 10485760
+      timeout: 10
+      engine: auto
+    - name: 'kuwo-3'
+      match: '^https?://musicpay\.kuwo\.cn/music\.pay'
+      type: response
+      require-body: true
+      max-size: 10485760
+      timeout: 10
+      engine: auto
+    - name: 'kuwo-4'
+      match: '^https?://vip1\.kuwo\.cn/vip/(enc/user/vip\?op=ui|v\d/theme\?op=gd)'
+      type: response
+      require-body: true
+      max-size: 10485760
+      timeout: 10
+      engine: auto
+    - name: 'kuwo-5'
+      match: '^https?://vip1\.kuwo\.cn/vip/v\d/user/vip\?op=ui'
+      type: response
+      require-body: true
+      max-size: 10485760
+      timeout: 10
+      engine: auto
+
+script-providers:
+  kuwo-0:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/KuwoMusic.js'
+    interval: 86400
+  kuwo-1:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/KuwoMusic.js'
+    interval: 86400
+  kuwo-2:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/KuwoMusic.js'
+    interval: 86400
+  kuwo-3:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/KuwoMusic.js'
+    interval: 86400
+  kuwo-4:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/KuwoMusic.js'
+    interval: 86400
+  kuwo-5:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/KuwoMusic.js'
+    interval: 86400

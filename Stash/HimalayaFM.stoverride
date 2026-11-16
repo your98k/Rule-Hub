@@ -1,0 +1,48 @@
+name: '喜马拉雅 去广告'
+desc: '喜马拉雅 去广告，共 22 条规则。'
+openUrl: 'https://apps.apple.com/app/id738420988'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/ximalaya.png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'gslbali.ximalaya.com'
+    - 'search.ximalaya.com'
+    - 'searchwsa.ximalaya.com'
+    - 'mobile.ximalaya.com'
+    - 'mobilehera.ximalaya.com'
+    - 'mobwsa.ximalaya.com'
+    - 'm.ximalaya.com'
+    - 'mwsa.ximalaya.com'
+  url-rewrite:
+    - '^https://(?:search|searchwsa)\.ximalaya\.com/hub/(guideWord|hotWord)V\d/ - reject-dict'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/discovery-feed/v\d/scene/listen/refresh\? - reject-dict'
+    - '^https://(?:m|mwsa)\.ximalaya\.com/x-web-activity/signIn/getHomePageSignInInfo/ - reject-dict'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/subscribe/v\d/subscribe/tagAlbumList$ - reject-dict'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/track-feed/v\d/chase/recommend/ - reject-dict'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/social-web/follow-stream/category/\d+$ - reject-dict'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/mobile-playpage/playpage/recommendContentV\d/ - reject-dict'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/mobile-playpage/playpage/recommend/resource/allocation/ - reject-dict'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/firework-portal/v\d+/sync\? - reject-dict'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/business-sale-promotion-guide-mobile-web/popup/ - reject-dict'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/app-skin-service/skin/setting/info/ - reject-dict'
+    - '^https://(?:live|livewsa)\.ximalaya\.com/lamia/v1/subscribe/status$ - reject-dict'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/subscribe/v\d/subscribe/recommend\? - reject-dict'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/mobile-user/v\d/purchased/recommend/ - reject-dict'
+  body-rewrite:
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/discovery-feed/v\d/mix/ response-jq .heData |= map(select(.item.list[].bizType != "SceneListenCard"))'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/discovery-category/customCategories/ response-jq .categoryList |= map(.itemList |= map(select(.title | test("直播|123狂欢节|SVIP"; "i") | not))) | .customCategoryList |= map(select(.title | test("直播|123狂欢节|SVIP"; "i") | not))'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/football-portal/diff2/batch\? response-jq del(.json.ad, .json.toc)'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/nexus-web/v\d/tabs/customTabs\? response-jq .data.feedTabs |= map(select(.name != "大赛"))'
+    - '^https://mobwsa\.ximalaya\.com/mobile-playpage/playpage/tabs/v2/ response-jq del(.data.playpage.resourceMap.defaultResource, .data.playpage.resourceMap.playPageTip)'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/mobile-user/v\d/homePage/ response-jq del(.data.freeListenV2)'
+    - '^https://(?:mobile|mobilehera|mobwsa)\.ximalaya\.com/mobile-user/v\d/homePage/ response-jq .data.serviceModule.entrances |= map(select(.name == "全部服务"))'
+  mock:
+    - match: '^https://(?:m|mwsa)\.ximalaya\.com/community/square/v\d/stream\?'
+      text: '{"data":{"cards":[{"content":{},"type":"RECOMMENDS"}]},"ret":0}'
+      status-code: 200
+      headers:
+        Content-Type: 'application/json'

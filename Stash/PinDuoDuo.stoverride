@@ -1,0 +1,82 @@
+name: '拼多多'
+desc: |-
+  过滤拼多多广告
+author: 'your98k'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/pinduoduo.png
+date: '2026-10-02 12:00'
+openUrl: 'https://apps.apple.com/app/id1044283059'
+category: '去广告'
+# 由 Loon 插件自动转换：PinDuoDuo.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：sooyaaabo[https://github.com/sooyaaabo], ZenmoFeiShi[https://github.com/ZenmoFeiShi], RuCu6[https://github.com/RuCu6], ishowshu[https://github.com/ishowshu], 可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md]
+http:
+  url-rewrite:
+    - '^https://api\.pinduoduo\.com/api/aristotle/unrated_order_for_unreceived_tab\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/aristotle/query_order_list_tabs_element\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/aquarius/hungary/global/homepage\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/search_hotquery\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/zaire_biz/chat/resource/get_list_data\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/alexa/goods/back_up\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/brand-olay/goods_detail/bybt_guide\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/engels/reviews/require/append\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/phantom/gbdbpdv/extra\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/manufacturer/cross/shortcut/list\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/dunkirk/liveactivity/push/create/url/report\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/growth/nagato/app/index/gather\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/engels/wait/receive/review\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/buffon/nasus/recommend\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/caterham/v3/query/ - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/xrec/goods_rec/pay_after_use_v2\? - reject-dict'
+    - '^https://api\.(?:pinduoduo|yangkeduo)\.com/api/cappuccino/splash\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/social/mall/follow/hot/recommend\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/leporis/notification/clear_tab_red_dot\? - reject-dict'
+    - '^https://api\.pinduoduo\.com/api/caterham/v2/query/goods_detail_with_tags\? - reject-dict'
+  body-rewrite:
+    - '^https://api\.pinduoduo\.com/api/alexa/homepage/hub\? response-json-del result.icon_set'
+    - '^https://api\.pinduoduo\.com/api/alexa/homepage/hub\? response-json-del result.search_bar_hot_query'
+    - '^https://api\.pinduoduo\.com/api/alexa/homepage/hub\? response-json-del result.dy_module.irregular_banner_dy'
+    - '^https://api\.pinduoduo\.com/api/alexa/homepage/hub\? response-jq .result.bottom_tabs? |= map(select(.link | IN("index.html","chat_list.html","personal.html"))) | .result.buffer_bottom_tabs? |= map(select(.link | IN("index.html","chat_list.html","personal.html"))) | .result.all_top_opts = [] | .result.module_order? |= map(select(.module_name | IN("irregular_banner","ad_module","timeline") | not))'
+    - '^https://api\.pinduoduo\.com/search\? response-json-del expansion'
+    - '^https://api\.pinduoduo\.com/api/philo/personal/hub\? response-json-del monthly_card_entrance'
+    - '^https://api\.pinduoduo\.com/api/philo/personal/hub\? response-json-del personal_center_style_v2_vo'
+    - '^https://api\.pinduoduo\.com/api/philo/personal/hub\? response-json-del icon_set.icons'
+    - '^https://api\.pinduoduo\.com/api/philo/personal/hub\? response-json-del icon_set.top_personal_icons'
+    - '^https://api\.pinduoduo\.com/api/philo/personal/hub\? response-json-del title_bar_items'
+    - '^https://api\.pinduoduo\.com/api/philo/personal/hub\? response-json-del personal_banner'
+    - '^https://api\.pinduoduo\.com/api/oak/integration/render\? response-json-del bottom_section_list'
+    - '^https://api\.pinduoduo\.com/api/oak/integration/render\? response-json-del ui.bottom_section'
+    - '^https://api\.pinduoduo\.com/api/oak/integration/render\? response-json-del ui.live_section.float_info'
+    - '^https://api\.pinduoduo\.com/order/ response-json-del marketing_banner_vo'
+    - '^https://api\.pinduoduo\.com/order/ response-json-del shipping.banner_above_recommend'
+    - '^https://api\.pinduoduo\.com/api/aristotle/order_list_v4\? response-jq .orders |= map(.order_buttons |= map(del(.order_growth_tip)))'
+  mitm:
+    - 'api.pinduoduo.com'
+    - 'api.yangkeduo.com'
+    - 'm.pinduoduo.net'
+  script:
+    - name: 'pinduoduo'
+      match: '^https://m\.pinduoduo\.net/comment_result\.html\?'
+      type: 'response'
+    - name: 'pinduoduo'
+      match: '^https://m\.pinduoduo\.net/mdkd/package\?'
+      type: 'response'
+rules:
+  - 'DOMAIN,sdk.1rtb.net,REJECT'
+  - 'DOMAIN,ta-a.pinduoduo.com,REJECT'
+  - 'DOMAIN,ta.pinduoduo.com,REJECT'
+  - 'DOMAIN,th-a.pinduoduo.com,REJECT'
+  - 'DOMAIN,th-b.pinduoduo.com,REJECT'
+  - 'DOMAIN,th.pinduoduo.com,REJECT'
+  - 'DOMAIN,titan.pinduoduo.com,REJECT'
+  - 'IP-CIDR,121.5.84.85/32,REJECT'
+  - 'IP-CIDR,183.194.214.21/32,REJECT'
+  - 'IP-CIDR,49.235.102.190/32,REJECT'
+  - 'IP-CIDR,81.69.116.33/32,REJECT'
+  - 'IP-CIDR,183.194.214.20/32,REJECT'
+  - 'IP-CIDR,117.185.244.145/32,REJECT'
+  - 'IP-CIDR,183.194.214.14/32,REJECT'
+script-providers:
+  pinduoduo:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/rucu6.pages.dev/Scripts/pinduoduo.js'
+    interval: 86400

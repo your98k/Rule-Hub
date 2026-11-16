@@ -1,0 +1,23 @@
+name: '小蚕惠生活 去广告'
+desc: '小蚕惠生活 去广告，共 6 条规则。'
+openUrl: 'https://apps.apple.com/app/id1618414236'
+author: 'your98k'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/XiaoCan.png'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'gw.xiaocantech.com'
+    - 'web2.realtech-inc.com'
+    - 'web.xinyifm.cn'
+    - 'sdk.1rtb.net'
+  header-rewrite:
+    - '^https://gw\.xiaocantech\.com/rpc request-replace-regex methodname .*(GetBannerList|IsShowOrderAwardPopup|UserLifeShopList|BrandBannerList|GetPromotionGlobalCfg) null'
+  url-rewrite:
+    - '^https://web2\.realtech-inc\.com/oss/xc-app-assets/configs/common/theme\.json - reject-dict'
+    - '^https://web\.xinyifm\.cn/oss/xc-app-assets/configs/common/index_activity\.json - reject-dict'
+    - '^https://web2\.realtech-inc\.com/oss/xc-app-assets/configs/common/links\.json - reject-dict'
+    - '^https://sdk\.1rtb\.net/sdk/req_ad\? - reject-dict'
+    - '^https://gw\.xiaocantech\.com/g/pa - reject-dict'

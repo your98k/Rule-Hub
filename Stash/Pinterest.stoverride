@@ -1,0 +1,21 @@
+# 来源：https://github.com/fkingikelee/fkikelee/blob/main/lpx/Pinterest_remove_ads.lpx
+# 纯声明式 body-rewrite，无远程脚本、无参数。
+name: 'Pinterest 去广告'
+desc: |-
+  移除瀑布流与「更多探索」中的推广内容
+category: '去广告'
+icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/Pinterest.png'
+openUrl: 'https://apps.apple.com/app/id429047995'
+homepage: 'https://hub.kelee.one'
+author: '可莉🅥（原规则）；Stash 原生适配'
+date: '2026-11-17 01:00'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'api.pinterest.com'
+  body-rewrite:
+    # 仅剔除 is_promoted 显式为 true / "true" 的条目；字段缺失或 null 时保留，
+    # 避免字段改名后把整条瀑布流清空；data 非数组时原样放行。
+    - '(?i)^https://api\.pinterest\.com/v\d/feeds/home/\? response-jq if (.data | type) == "array" then .data |= map(select(((.is_promoted == true) or (.is_promoted == "true")) | not)) else . end'
+    - '(?i)^https://api\.pinterest\.com/v\d/pins/\d+/related/modules/\? response-jq if (.data | type) == "array" then .data |= map(select(((.is_promoted == true) or (.is_promoted == "true")) | not)) else . end'

@@ -1,0 +1,17 @@
+name: '中国广电 去广告'
+desc: '中国广电 去广告，共 3 条规则。'
+openUrl: 'https://apps.apple.com/app/id1590128819'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/ChinaBroadcastNetwork.png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'app.10099.com.cn'
+  url-rewrite:
+    - '^https?://app\.10099\.com\.cn/contact-web/api/version/getFlashScreenPage - reject-200'
+  body-rewrite:
+    - '^https?://app\.10099\.com\.cn/contact-web/api/content/qryPosterStand response-jq .data |= map(select(.posterStandName | test("中部业务菜单|导航栏|我的-特色|个人中心|客服")))'
+    - '^https?://app\.10099\.com\.cn/contact-web/api/content/qryNavigationMenuList response-jq .data[]?.children |= map(select(.catalogName!="视听"))'

@@ -1,0 +1,24 @@
+name: 'Listenify 增强'
+desc: |-
+  Listenify 增强，共 1 条规则。
+author: 'your98k'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Listenify.png'
+category: '去广告'
+date: '2026-11-16'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'api.lrc.cx'
+  script:
+    - name: 'listenify-0'
+      match: '^https://api\.lrc\.cx/(lyrics|cover)'
+      type: request
+      max-size: 10485760
+      timeout: 10
+      engine: auto
+
+script-providers:
+  listenify-0:
+    url: 'https://raw.githubusercontent.com/Yswag/for-own-use/main/js/listenify.js'
+    interval: 86400

@@ -1,0 +1,19 @@
+name: '爱奇艺体育 去广告'
+desc: '爱奇艺体育 去广告，共 4 条规则。'
+openUrl: 'https://apps.apple.com/app/id1478240836'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/aiqiyitiyu.png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'json.ssports.com'
+    - 'show.ssports.com'
+  url-rewrite:
+    - '^https://show\.ssports\.com/s\?brand - reject-dict'
+  body-rewrite:
+    - '^https://json\.ssports\.com/json/recommend response-jq .retData |= (del(.mybanner, .databanner10) | select(. != {}))'
+    - '^https://show\.ssports\.com/x\?brand response-jq del(.retData.mybanner, .retData.databanner10)'
+    - '^https://json\.ssports\.com/json/channel/ios/v2/newMy\.json$ response-jq (.retData.moduleList) |= map(select((.isAd != 1) and (.moduleName | test("回放|集锦") | not)))'

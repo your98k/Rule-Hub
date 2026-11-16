@@ -1,0 +1,25 @@
+name: 虎扑去广告
+desc: '虎扑去广告，用 Stash 原生 mock 实现。'
+author: 'your98k'
+category: 去广告
+version: '0.1.1'
+date: '2026-11-01'
+icon: https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/HUPU.png
+# 独立测试版，不包含旧版的个人页、热榜等净化规则。
+# 保留投稿的定向直连；未命中 Mock 的同域请求仍按正常业务处理。
+rules:
+  - DOMAIN-SUFFIX,goblin.hupu.com,DIRECT
+
+http:
+  mitm:
+    - goblin.hupu.com
+
+  # 原投稿为 response 阶段替换正文；这里改为原生本地响应。
+  # getOther 下的 v1/v2、batch 等子路径均可命中，不匹配 getOtherInfo。
+  # 域名点已转义，路径设置边界；修正投稿的弯引号与正则结尾。
+  mock:
+    - match: '(?i)^https?://goblin\.hupu\.com/\d+/\d+(?:\.\d+)*/interfaceAd/getOther(?:/|\?|$)'
+      status-code: 200
+      headers:
+        Content-Type: application/json; charset=utf-8
+      text: '{"ad_code":-41,"show_type":0,"ads":[]}'

@@ -1,0 +1,18 @@
+name: '飞猪 去广告'
+desc: '飞猪 去广告，共 5 条规则。'
+openUrl: 'https://apps.apple.com/app/id453289462'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TaobaoTravel.png'
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'acs.m.taobao.com'
+  url-rewrite:
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.fliggy\.crm\.screen\.allresource/ - reject-dict'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.fliggy\.crm\.screen\.predict/ - reject-dict'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.fliggy\.tripzoo\.new\.couponlist/ - reject-dict'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.trip\.my\.recommendcard/ - reject-dict'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.fliggy\.recommend\.common\.guess\.tab\.feeds/ - reject-dict'

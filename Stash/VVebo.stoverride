@@ -1,0 +1,35 @@
+name: 'VVebo 修复'
+desc: 'VVebo 修复，修正用户主页时间线与我的页面加载异常。'
+openUrl: 'https://apps.apple.com/app/id670910957'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/VVebo.png'
+author: 'your98k'
+category: '功能修复'
+date: '2026-11-16'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'api.weibo.cn'
+  script:
+    - name: vvebo-user-timeline
+      match: '^https://api\.weibo\.cn/2/remind/unread_count\?'
+      type: request
+    - name: vvebo-user-timeline
+      match: '^https://api\.weibo\.cn/2/statuses/user_timeline\?'
+      type: request
+    - name: vvebo-user-timeline
+      match: '^https://api\.weibo\.cn/2/profile/statuses/tab\?'
+      type: response
+      require-body: true
+    - name: vvebo-fans
+      match: '^https://api\.weibo\.cn/2/cardlist\?'
+      type: response
+      require-body: true
+
+script-providers:
+  vvebo-user-timeline:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/vvebo-user-timeline.js'
+    interval: 86400
+  vvebo-fans:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/vvebo-fans.js'
+    interval: 86400

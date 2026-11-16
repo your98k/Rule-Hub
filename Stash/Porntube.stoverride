@@ -1,0 +1,171 @@
+name: 'Porntube VIP 解锁（Stash 参数版）'
+desc: 'Porntube VIP 解锁与去广告，四脚本版。'
+author: 'your98k'
+homepage: 'https://github.com/Yu9191/Rewrite'
+icon: 'https://raw.githubusercontent.com/fishdown/Icon/master/app/porntube.png'
+category: '影音'
+date: '2026-11-14'
+version: '2.0.0'
+
+arguments-version: 1
+arguments:
+  logLevel:
+    type: select
+    title: 日志级别
+    description: 脚本日志详细程度；排查问题时可选 debug 或 all
+    default: 'info'
+    options:
+      - value: 'info'
+        label: info
+      - value: 'off'
+        label: 'off'
+      - value: 'error'
+        label: error
+      - value: 'warn'
+        label: warn
+      - value: 'debug'
+        label: debug
+      - value: 'all'
+        label: all
+  player:
+    type: select
+    title: 播放器
+    description: 解锁后跳转使用的播放器
+    default: 'lenna'
+    options:
+      - value: 'lenna'
+      - value: 'SenPlayer'
+      - value: 'SenPlayer-dl'
+      - value: 'Infuse'
+      - value: 'Fileball'
+      - value: 'VidHub'
+      - value: 'IINA'
+      - value: 'Alook'
+      - value: 'VLC'
+      - value: 'KMPlayer'
+      - value: 'NPlayer'
+      - value: 'Safari'
+  scheme:
+    type: input
+    title: 自定义 scheme
+    description: 仅作为网页『自定义』输入框的初始值；none 或留空表示不预填。真正生效的 Scheme 在网页里填写并点保存。含 = 的会被参数解析截断。
+    default: 'none'
+    max-length: 512
+  encode:
+    type: select
+    title: URL 编码
+    description: 控制播放地址是否进行 URL 编码
+    default: 'default'
+    options:
+      - value: 'default'
+        label: default
+      - value: 'yes'
+        label: 'yes'
+      - value: 'no'
+        label: 'no'
+  jump:
+    type: select
+    title: 播放器跳转
+    description: 解锁后是否自动跳转播放器。上游新版默认关闭，改为在网页里点按钮手动播放
+    default: 'no'
+    options:
+      - value: 'yes'
+        label: 'yes'
+      - value: 'no'
+        label: 'no'
+
+http:
+  mitm:
+    - 'v2.cdn199.com'
+    - 'v2.kekecdn.net'
+    - 'v2.luchu.org'
+    - 'v2.madou.ws'
+    - 'v2.papapa.biz'
+    - 'v2.tianmtv.com'
+    - 'v2.xiaoshuo.info'
+    - 'v2.xiaoshuo.la'
+    - 'porntube.cool'
+    - 'porntube.fit'
+    - 'porntube.site'
+    - 'porntube.store'
+    - '91porn.coach'
+    - '91porn.top'
+    - '91porn.band'
+    - '91porn.name'
+    - '91porn.plus'
+    - '91porn.porn'
+    - '91porn.red'
+    - '91porn.sex'
+    - '91pornny.com'
+    - '91.wtf'
+    - '91forum.com'
+    - '91dabiaojie.com'
+    - '91zpc.app'
+    - '91zpc.pro'
+    - '91zpc.org'
+    - '91zpc.co'
+    - '91zpc.com'
+    - '91zpcs.com'
+    - 'chineseselfie.com'
+    - 'chineseselfie.net'
+    - 'chineseselfie.org'
+    - 'xchina.day'
+    - 'xchina.cloud'
+    - 'xchina.plus'
+    - 'xchina.tube'
+    - 'xchina.cool'
+    - 'xchina.red'
+    - 'xasian.org'
+    - 'theporny.com'
+    - 'madoumedia.org'
+    - '1024videos.com'
+    - '1024movies.com'
+    - 'bdsmzoo.com'
+    - 'pornshop.one'
+    - 'pilipili.cool'
+    - 'dsdav.net'
+    - 'x91.club'
+    - 'x91porn.com'
+    - 'chinesebdsm.com'
+    - '*.chinesebdsm.com'
+  script:
+    - name: 'porntube-request'
+      match: '^https?://v2\.(?:cdn199\.com|kekecdn\.net|luchu\.org|madou\.ws|papapa\.biz|tianmtv\.com|xiaoshuo\.info|xiaoshuo\.la)/js'
+      type: request
+      require-body: true
+      max-size: 1048576
+      timeout: 10
+    - name: 'porntube-api'
+      match: '^https?://v2\.(?:cdn199\.com|kekecdn\.net|luchu\.org|madou\.ws|papapa\.biz|tianmtv\.com|xiaoshuo\.info|xiaoshuo\.la)/js'
+      type: response
+      require-body: true
+      binary-mode: true
+      max-size: 5242880
+      timeout: 20
+      argument: 'logLevel=${args.logLevel}&player=${args.player}&scheme=${args.scheme}&encode=${args.encode}&jump=${args.jump}'
+    - name: 'porntube-page-request'
+      match: '^https?://(?:porntube\.(?:cool|fit|site|store)|91porn\.(?:coach|top|band|name|plus|porn|red|sex)|91pornny\.com|91\.wtf|91forum\.com|91dabiaojie\.com|91zpc\.(?:app|pro|org|co|com)|chineseselfie\.(?:com|net|org)|xchina\.(?:day|cloud|plus|tube|cool|red)|xasian\.org|theporny\.com|madoumedia\.org|1024(?:videos|movies)\.com|bdsmzoo\.com|pornshop\.one|pilipili\.cool|dsdav\.net|x91\.club|x91porn\.com|chinesebdsm\.\w+)/(?:video/[^/?]+|videos\?|videos$|$|\?)'
+      type: request
+      timeout: 5
+    - name: 'porntube-frontend'
+      match: '^https?://(?:porntube\.(?:cool|fit|site|store)|91porn\.(?:coach|top|band|name|plus|porn|red|sex)|91pornny\.com|91\.wtf|91forum\.com|91dabiaojie\.com|91zpc\.(?:app|pro|org|co|com)|chineseselfie\.(?:com|net|org)|xchina\.(?:day|cloud|plus|tube|cool|red)|xasian\.org|theporny\.com|madoumedia\.org|1024(?:videos|movies)\.com|bdsmzoo\.com|pornshop\.one|pilipili\.cool|dsdav\.net|x91\.club|x91porn\.com|chinesebdsm\.\w+)/(?:video/[^/?]+|videos\?|videos$|$|\?|porntube-scheme\?)'
+      type: response
+      require-body: true
+      binary-mode: true
+      max-size: 10485760
+      timeout: 20
+      argument: 'scheme=${args.scheme}'
+
+script-providers:
+  porntube-request:
+    url: 'https://raw.githubusercontent.com/Yu9191/Rewrite/refs/heads/main/porntube/dist/porntube-request.js'
+    interval: 86400
+  porntube-api:
+    url: 'https://raw.githubusercontent.com/Yu9191/Rewrite/refs/heads/main/porntube/dist/porntube.js'
+    interval: 86400
+  porntube-page-request:
+    url: 'https://raw.githubusercontent.com/Yu9191/Rewrite/refs/heads/main/porntube/dist/porntube-page-request.js'
+    interval: 86400
+  porntube-frontend:
+    url: 'https://raw.githubusercontent.com/Yu9191/Rewrite/refs/heads/main/porntube/dist/porntube-frontend.js'
+    interval: 86400

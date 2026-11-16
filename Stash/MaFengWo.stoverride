@@ -1,0 +1,20 @@
+name: '马蜂窝 去广告'
+desc: '马蜂窝 去广告，共 4 条规则。'
+openUrl: 'https://apps.apple.com/app/id391066926'
+author: 'your98k'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/MaFengWo.png'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+rules:
+  - 'DOMAIN,advert.mafengwo.cn,REJECT'
+
+http:
+  mitm:
+    - 'mapi.mafengwo.cn'
+  url-rewrite:
+    - '^https://mapi\.mafengwo\.cn/user/growth/get_growth_tip/v1\? - reject-dict'
+  body-rewrite:
+    - '^https://mapi\.mafengwo\.cn/discovery/get_index/v7\? response-jq .data.list |= map(select(.data.business_type != "gdcpm"))'
+    - '^https://mapi\.mafengwo\.cn/sales/home/get_header/v3\? response-jq .data.list[] |= ( .data |= del(.banners) )'

@@ -1,0 +1,37 @@
+name: '爱奇艺 去广告'
+desc: '爱奇艺 去广告，清理首页焦点图、瀑布流、播放页与搜索广告位。'
+openUrl: 'https://apps.apple.com/app/id393765873'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/aiqiyi(1).png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-16'
+version: '1.0.0'
+
+rules:
+  - 'IP-CIDR,103.44.59.54/32,REJECT,no-resolve'
+  - 'IP-CIDR,111.63.147.158/32,REJECT,no-resolve'
+  - 'IP-CIDR,116.211.198.237/32,REJECT,no-resolve'
+  - 'DOMAIN-SUFFIX,cupid.iqiyi.com,DIRECT'
+  - 'DOMAIN,api.iqiyi.com,REJECT'
+  - 'DOMAIN,access.if.iqiyi.com,REJECT'
+
+http:
+  mitm:
+    - 'cards.iqiyi.com'
+    - 'comment-card.iqiyi.com'
+    - 'iface2.iqiyi.com'
+    - 'act.vip.iqiyi.com'
+  url-rewrite:
+    - '^https?://iface2\.iqiyi\.com/control/3\.0/init_proxy\? - reject-dict'
+    - '^https?://act\.vip\.iqiyi\.com/interact/api/v2/show\? - reject-dict'
+    - '^https?://iface2\.iqiyi\.com/ivos/interact/video/data\? - reject-dict'
+    - '^https?://iface2\.iqiyi\.com/video/3\.0/v_interface_proxy\? - reject-dict'
+    - '^https?://iface2\.iqiyi\.com/views_pop/3\.0/pop_control\? - reject-dict'
+  body-rewrite:
+    - '^https://cards\.iqiyi\.com/views_home/3\.0/qy_home\? response-json-del base.statistics'
+    - '^https://cards\.iqiyi\.com/views_home/3\.0/qy_home\? response-jq .cards |= ((. // []) | map(select(.alias_name? as $n | $n != "focus" and $n != "ad_mobile_flow" and $n != "ad_trueview")))'
+    - '^https://cards\.iqiyi\.com/views_category/3\.0/category_home\? response-jq .base //= {} | if ((.base.statistics.ad_str?) // null) then del(.base.statistics) else . end | .cards |= ((. // []) | map(select(.alias_name? as $n | $n != "entrence_focus" and $n != "ad_trueview")))'
+    - '^https://cards\.iqiyi\.com/waterfall(-plt)?/3\.0/feed\? response-jq .base //= {} | if ((.base.statistics.ad_str?) // null) then del(.base.statistics) else . end | del(.. | select(.block_class?))'
+    - '^https://cards\.iqiyi\.com/views_plt/3\.0/player_tabs_v2\? response-jq .kv_pair.activity_tab |= ((try (fromjson) catch []) | map(select(.tab_text? == "包场")) | tojson)'
+    - '^https://cards\.iqiyi\.com/views_plt/3\.0/player_tabs_v2\? response-jq .cards |= ((. // []) | map(select(.alias_name? as $n | $n != "play_vip_promotion" and $n != "play_detail_tag" and $n != "play_chat_entrance" and $n != "play_ad_no_vip" and $n != "play_vertical_short_video" and $n != "play_rap_custom" and $n != "play_topical_tab" and $n != "play_vertical" and $n != "play_water_fall_like"))) | del(.. | select(.block_class?))'
+    - '^https://cards\.iqiyi\.com/views_search/3\.0/hot_query_search\? response-jq .cards |= ((. // []) | map(select(.alias_name? as $n | $n != "ad_trueview" and $n != "ad_mobile_flow" and $n != "search_mid_text_ad"))) | .base //= {} | if ((.base.statistics.ad_str?) // null) then del(.base.statistics) else . end'

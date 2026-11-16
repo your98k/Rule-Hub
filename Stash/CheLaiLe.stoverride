@@ -1,0 +1,24 @@
+name: '车来了 去广告'
+desc: '车来了 去广告，共 5 条规则。'
+openUrl: 'https://apps.apple.com/app/id519661118'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/buschelaile.png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'ad.chelaile.net.cn'
+    - 'atrace.chelaile.net.cn'
+    - 'api.chelaile.net.cn'
+    - 'cdn.api.chelaile.net.cn'
+    - 'cdn.api.chelaileapp.cn'
+    - 'web.chelaile.net.cn'
+    - 'cdn.*.chelaileapp.cn'
+  url-rewrite:
+    - '^https?://[^/]*chelaile(?:app)?\.cn/(?:adpub|goocity/advert|goocity/flowPos/home|feserver/vip-page/images/).* - reject'
+    - '^https?://[^/]*chelaile\.net\.cn/adpub/.* - reject'
+    - '^https?://api-access\.pangolin-sdk-toutiao(?:1)?\.com/api/ad/union/sdk/.* - reject'
+    - '^https?://adx\.yg84\.com/sdk/ad/.* - reject'
+    - '^https?://mobads\.baidu\.com/.* - reject'

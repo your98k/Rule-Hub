@@ -1,0 +1,155 @@
+name: 'WebPage'
+desc: |-
+  过滤部分网页广告
+author: 'your98k'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Alook.png'
+date: '2026-10-31 22:00'
+category: '去广告'
+# 由 Loon 插件自动转换：WebPage.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：RuCu6[https://github.com/RuCu6], kokoryh[https://github.com/kokoryh]
+http:
+  url-rewrite:
+    - '^https://asserts\.avple\.tv/file/avple-images/ad\.js - reject'
+    - '^https://cn\.pornhub\.com/(?:interstitial|_xa/ads) - reject-dict'
+  mitm:
+    - 'asserts.avple.tv'
+    - 'e-hentai.org'
+    - 'exhentai.org'
+    - '*.pornhub.com'
+    - 'boxer.baidu.com'
+    - 'm.baidu.com'
+    - 'www.baidu.com'
+    - 'zhidao.baidu.com'
+    - 'www.hgeme.com'
+    - 'www.xn--wcv59z.com'
+    - 'yhg007.com'
+    - '*.111107?.xyz'
+    - '18hlw.com'
+    - '8olbt.imsatcmn.cc'
+    - 'javranking.cc'
+    - 'miniapp2.52ywy.com'
+    - '*.zimuquan*.top'
+    - '*.zimuquan*.uk'
+    - '*.zimuquan*.com'
+    - 'hanime1.me'
+    - 'javdb.com'
+    - 'missav.ai'
+    - 'missav.fans'
+    - 'missav.ws'
+    - 'baidu.com'
+    - 'd.xyz'
+  script:
+    - name: 'webpage_hanime'
+      match: '^https://hanime1\.me/(?!(favicon|css|js|cdn-cgi|load))'
+      type: 'response'
+    - name: 'webpage_ehentai'
+      match: '^https://e-hentai\.org/g/'
+      type: 'response'
+    - name: 'baiduNoRedirect'
+      match: '^https://boxer\.baidu\.com/scheme\?scheme'
+      type: 'request'
+      timeout: 10
+    - name: 'baidu_index'
+      match: '^https://(?:www|m)\.baidu\.com(/|/\?(tn=&)?from=\d+\w)?$'
+      type: 'response'
+      timeout: 10
+    - name: 'baidu_zhidao'
+      match: '^https://zhidao\.baidu\.com/(?:question|index|\?fr|\?word)'
+      type: 'response'
+      timeout: 10
+    - name: 'myblockads'
+      match: '^https://www\.(?:hgeme|xn--wcv59z)\.com/'
+      type: 'response'
+      timeout: 10
+    - name: 'myblockads'
+      match: '^https://(?:yhg007\.com|[a-z]{8}\.111107\d\.xyz)/hash/(?:[a-fA-F0-9]{40}|[A-Z2-7]{32})\.html'
+      type: 'response'
+      timeout: 10
+    - name: 'myblockads'
+      match: '^https://(?:yhg007\.com|[a-z]{8}\.111107\d\.xyz)/search-[^/]+\.html'
+      type: 'response'
+      timeout: 10
+    - name: 'myblockads'
+      match: '^https://(?:18hlw\.com|8olbt\.imsatcmn\.cc)/'
+      type: 'response'
+      timeout: 10
+    - name: 'myblockads'
+      match: '^https://javranking\.cc/(?:zh-hans|en)/'
+      type: 'response'
+    - name: 'a_52ywy'
+      match: '^https://miniapp2\.52ywy\.com/(?:ywyminiappbot/(?:getLatest|getLatestAll|getCategoryVideos|getSearch|series|movies|tv|av|getbloger)|player/getPlayer)(\?|$)'
+      type: 'response'
+      timeout: 10
+    - name: 'zimuquan'
+      match: '^https?://[^/]*zimuquan[^/]*/index\.php/vod/play/'
+      type: 'response'
+      timeout: 10
+    - name: 'ehentai'
+      match: '^https://e-hentai\.org/g/'
+      type: 'response'
+      timeout: 10
+    - name: 'hanime'
+      match: '^https://hanime1\.me/(?!(favicon|css|js|cdn-cgi|load))'
+      type: 'response'
+      timeout: 10
+    - name: 'myblockads'
+      match: '^https://javdb\.com/(?!over18\?)'
+      type: 'response'
+      timeout: 10
+    - name: 'missav'
+      match: '^https://missav\.(?:ai|fans|ws)/(?!favicon)(?!(build|fonts|img|js|api|cdn-cgi)/).'
+      type: 'response'
+      timeout: 10
+    - name: 'pornhub'
+      match: '^https://cn\.pornhub\.com/'
+      type: 'response'
+      timeout: 10
+rules:
+  - 'DOMAIN-SUFFIX,creative.myavlive.com,REJECT'
+  - 'DOMAIN-SUFFIX,trackwilltrk.com,REJECT'
+  - 'DOMAIN-SUFFIX,tsyndicate.com,REJECT'
+  - 'DOMAIN-SUFFIX,jads.co,REJECT'
+  - 'DOMAIN-SUFFIX,juicyads.com,REJECT'
+  - 'DOMAIN-SUFFIX,mnaspm.com,REJECT'
+  - 'DOMAIN,18hlw.com,PROXY'
+  - 'DOMAIN,8olbt.imsatcmn.cc,PROXY'
+  - 'DOMAIN,yhg007.com,PROXY'
+script-providers:
+  webpage_hanime:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/raw.githubusercontent.com/kokoryh__Sparkle/master/dist/webpage.hanime.js'
+    interval: 86400
+  webpage_ehentai:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/raw.githubusercontent.com/kokoryh__Sparkle/master/dist/webpage.ehentai.js'
+    interval: 86400
+  baiduNoRedirect:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/rucu6.pages.dev/Scripts/baidu/baiduNoRedirect.js'
+    interval: 86400
+  baidu_index:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/rucu6.pages.dev/Scripts/webpage/baidu-index.js'
+    interval: 86400
+  baidu_zhidao:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/rucu6.pages.dev/Scripts/webpage/baidu-zhidao.js'
+    interval: 86400
+  myblockads:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/rucu6.pages.dev/Scripts/webpage/myblockads.js'
+    interval: 86400
+  a_52ywy:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/rucu6.pages.dev/Scripts/webpage/52ywy.js'
+    interval: 86400
+  zimuquan:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/rucu6.pages.dev/Scripts/webpage/zimuquan.js'
+    interval: 86400
+  ehentai:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/rucu6.pages.dev/Scripts/webpage/ehentai.js'
+    interval: 86400
+  hanime:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/rucu6.pages.dev/Scripts/webpage/hanime.js'
+    interval: 86400
+  missav:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/rucu6.pages.dev/Scripts/webpage/missav.js'
+    interval: 86400
+  pornhub:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/rucu6.pages.dev/Scripts/webpage/pornhub.js'
+    interval: 86400

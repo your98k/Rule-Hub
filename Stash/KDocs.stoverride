@@ -1,0 +1,17 @@
+name: '金山文档 去广告'
+desc: '金山文档 去广告，共 3 条规则。'
+openUrl: 'https://apps.apple.com/app/id1092813975'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/wps.png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'www.kdocs.cn'
+    - 'f-api.kdocs.cn'
+  url-rewrite:
+    - '^https://www\.kdocs\.cn/kdg/api/v1/cards/type/3\?iosVer=\d+\.\d+\.\d+&isGetList=1 - reject-dict'
+    - '^https://www\.kdocs\.cn/kdg/api/v1/cards/type/27\?iosVer=\d+\.\d+\.\d+&isGetList=1 - reject-dict'
+    - '^https://f-api\.kdocs\.cn/godfather/api/thirdparty/v1/viewpager\?showLocal=mobileWebIndex - reject-dict'

@@ -1,0 +1,21 @@
+name: 'PandaTV 解除区域限制'
+desc: 'PandaTV 补 Origin 头绕过区域校验；路由规则需填入实际策略组后启用。'
+openUrl: 'https://apps.apple.com/app/id1487958527'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/06jichang/pandaTV.png
+author: 'your98k'
+category: '功能增强'
+date: '2026-11-15'
+version: '1.0.0'
+
+# rules:
+#   - 'DOMAIN-SUFFIX,pandalive.co.kr,PROXY'
+#   - 'DOMAIN-SUFFIX,5721004.xyz,PROXY'
+#   - 'DOMAIN-SUFFIX,live-video.net,PROXY'
+#   - 'DOMAIN-KEYWORD,live-video.net,PROXY'
+
+http:
+  mitm:
+    - 'live-video.net'
+    - '*.live-video.net'
+  header-rewrite:
+    - '^https?://[^/:?#]*\.live-video\.net[^/:?#]*(?=[:/?#]|$) request-add Origin https://www.pandalive.co.kr'

@@ -1,0 +1,26 @@
+name: '盒马 去广告'
+desc: '盒马 去广告，共 12 条规则。'
+openUrl: 'https://apps.apple.com/app/id1035987008'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Freshippo.png'
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'acs-m.freshippo.com'
+  url-rewrite:
+    - '^https://acs-m\.freshippo\.com/gw/mtop\.wdk\.render\.querysinglepage/ - reject-dict'
+    - '^https://acs-m\.freshippo\.com/gw/mtop\.wdk\.sg\.queryinnerpage/ - reject-dict'
+    - '^https://acs-m\.freshippo\.com/gw/mtop\.wdk\.lbs\.address\.getshopinfolist/ - reject-dict'
+    - '^https://acs-m\.freshippo\.com/gw/mtop\.wdk\.render\.querysearchpage/ - reject-dict'
+    - '^https://acs-m\.freshippo\.com/gw/mtop\.wdk\.sg\.querysinglescene/ - reject-dict'
+    - '^https://acs-m\.freshippo\.com/gw/mtop\.wdk\.melon\.collocation/ - reject-dict'
+    - '^https://acs-m\.freshippo\.com/gw/mtop\.wdk\.fc\.recommend\.feedscommondservice/ - reject-dict'
+  body-rewrite:
+    - '^https://acs-m\.freshippo\.com/gw/mtop\.wdk\.render\.queryindexpage/ response-jq if .data.pageType == "1" then .data.scenes |= map(select(.bizCode == "three_row_circle")) else . end'
+    - '^https://acs-m\.freshippo\.com/gw/mtop\.wdk\.render\.querytabfeedstream/ response-jq if .data.pageType == "5" then .data.scenes |= map(select(.sceneType == "100028")) else . end'
+    - '^https://acs-m\.freshippo\.com/gw/(mtop\.wdk\.render\.querychannelpage|mtop\.wdk\.render\.querysinglepage)/ response-jq if .data.pageType == "216" then .data.scenes |= map(select(.bizCode == "shop_walk_top_picture" or .bizCode == "shop_walk_shop_util" or .bizCode == "shop_walk_bistro")) else . end'
+    - '^https://acs-m\.freshippo\.com/gw/mtop\.wdk\.render\.querymypage/ response-jq .data.scenes |= map(select(.sceneType | IN("400029", "400005", "400010", "400002", "400004", "400015")))'
+    - '^https://acs-m\.freshippo\.com/gw/(mtop\.wdk\.lbs\.location\.shopdecideapi\.decideformain|mtop\.wdk\.lbs\.location\.shopdecideapi\.decidebygeocode)/ response-jq .data.groupList |= map(.ext.tabConfig |= (.normalTabList = (.normalTabList | map(select(.code as $c | ["HOME", "CLASSIFY", "CART", "MY"] | any(. == $c)))) | .normalTabListB = (.normalTabListB | map(select(.code as $c | ["HOME", "CLASSIFY", "CART", "MY"] | any(. == $c))))))'

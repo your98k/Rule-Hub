@@ -1,0 +1,711 @@
+{
+  "version": 1,
+  "results": [
+    {
+      "target": "Stash/BiliBili.ADBlock.Stash.Custom.stoverride",
+      "mode": "test-only",
+      "status": "test-only",
+      "detail": "Existing test fixture outside main inventory; preserved"
+    },
+    {
+      "target": "Stash/Bilibili.stoverride",
+      "mode": "test-only",
+      "status": "test-only",
+      "detail": "Existing test fixture outside main inventory; preserved"
+    },
+    {
+      "target": "Stash/QuShangWang-diag.stoverride",
+      "mode": "test-only",
+      "status": "test-only",
+      "detail": "Existing test fixture outside main inventory; preserved"
+    },
+    {
+      "target": "Stash/QuShangWang-diag2.stoverride",
+      "mode": "test-only",
+      "status": "test-only",
+      "detail": "Existing test fixture outside main inventory; preserved"
+    },
+    {
+      "target": "Stash/QuShangWang-diag3.stoverride",
+      "mode": "test-only",
+      "status": "test-only",
+      "detail": "Existing test fixture outside main inventory; preserved"
+    },
+    {
+      "target": "Stash/QuShangWang-isolate.stoverride",
+      "mode": "test-only",
+      "status": "test-only",
+      "detail": "Existing test fixture outside main inventory; preserved"
+    },
+    {
+      "target": "Stash/QuShangWang-spoof.stoverride",
+      "mode": "test-only",
+      "status": "test-only",
+      "detail": "Existing test fixture outside main inventory; preserved"
+    },
+    {
+      "target": "Stash/YouTube.stoverride",
+      "mode": "test-only",
+      "status": "test-only",
+      "detail": "Existing test fixture outside main inventory; preserved"
+    },
+    {
+      "target": "Stash/blockAds.stoverride",
+      "mode": "test-only",
+      "status": "test-only",
+      "detail": "Existing test fixture outside main inventory; preserved"
+    },
+    {
+      "target": "Stash/123Pan.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/AiHuiShou.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Alipan.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Amap.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/AppRaven.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/AppStoreMonitor.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/AppleOSMonitor.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/ArchimedesFM.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/BaiduMap_remove_ads.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/BaiduNetDisk.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/BaiduWenku.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Bank.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/BiliBili.Global.Native.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "Native parameterized adaptation; upstream release must be reviewed"
+    },
+    {
+      "target": "Stash/Bilibili.ADBlock.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "Pinned release with native additions"
+    },
+    {
+      "target": "Stash/Biliverse.Enhanced.Native.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "Preserve native parameterized version; resources audited separately"
+    },
+    {
+      "target": "Stash/Biliverse.Redirect.Native.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "Preserve native parameterized version; resources audited separately"
+    },
+    {
+      "target": "Stash/BodianMusic.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/CMS_Adblock.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/CaiNiao.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/CaiXin.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/CamScanner.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "No verified corresponding upstream file; preserve local implementation and report coverage gap"
+    },
+    {
+      "target": "Stash/ChaoGeJiaoYu.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/CheLaiLe.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/ChinaBroadnet.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/ChinaMobile.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/ChinaUnicom.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/ColorfulCloudsWeatherPro.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/CookieTask.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/CoolApk.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/CosmosFM.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/DaMai.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/DeWu.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/DiDi.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/DingDongMaiCai.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/DjDuoDuo.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "No verified corresponding upstream file; preserve local implementation and report coverage gap"
+    },
+    {
+      "target": "Stash/DouBan.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Douyin_HK.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/DragonRead.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "SSL pinning: domain-only design; do not restore MitM"
+    },
+    {
+      "target": "Stash/Ezviz.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/FanShu.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/FenBi.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Filmix.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "No verified corresponding upstream file; preserve local implementation and report coverage gap"
+    },
+    {
+      "target": "Stash/Forward.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Freshippo.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/GLaDOS.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/GitHub.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Goofish.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Google.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/HOK_GameHelper.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/HimalayaFM.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/HongGuo.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "Customized domain-only rules"
+    },
+    {
+      "target": "Stash/HuPu.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/IPAManager.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/IQIYI.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/IQIYI_Ssports.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/JingDong.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/JingdongWaimai.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/KDocs.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Keep.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/KeliBlockAdvertisers.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/KeliRemoveAds.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/KuwoMusic.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Kwai.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Listenify.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/LuckinCoffee.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/MaFengWo.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/MaiDuiDui.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/MangoTV.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/MeetYou.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/MeiTuan.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/MiguVideo.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/MyBlockAds.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/NeteaseMusic.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/NodeSeek.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/PandaTV.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/PinDuoDuo.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Pinterest.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "Preserve native parameterized version; resources audited separately"
+    },
+    {
+      "target": "Stash/Porntube.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/QQ.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/QQMusic.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/QWeather.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/QuShangWang.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "Native custom adaptation"
+    },
+    {
+      "target": "Stash/QuarkBrowser.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/QuarkScanKing.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Railway12306.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/RedNote.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Redirect.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Reven.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "Native custom relay adaptation"
+    },
+    {
+      "target": "Stash/RevenueCat.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/RevenueCat_baby.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/SF-Express.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/ShuiYinMao.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "Observed host and customized response adapter"
+    },
+    {
+      "target": "Stash/Soul.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Spotify.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/TaoBao.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/TaoPiaoPiao.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/TaobaoTravel.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Telegram.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/TencentDocs.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/TestFlight.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/TestFlightMonitor.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/ThunderCloudDisk.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Trakt.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/TxvideoAD.stoverride",
+      "mode": "specialized",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/UAPI_HotBoard.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Umetrip.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/V2EX.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/VVebo.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/Vistopia.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/WLOC.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/WebPage.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/WeiBo.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/XPTV.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/X_Web.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/XiaoCan.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/XiaoHeiHe.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/XueQiu.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/YouTube-ADBlock-Enhanced.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "Native custom binary/translation scripts"
+    },
+    {
+      "target": "Stash/YoukuVideo.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/ZhiHu.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/ZhuanZhuan.stoverride",
+      "mode": "merge",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/iRingo.Location.Native.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "Native adaptation managed separately; retain local implementation"
+    },
+    {
+      "target": "Stash/iRingo_WeatherKit.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/iTunes.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/miHoYoBBS.stoverride",
+      "mode": "review",
+      "status": "enrolled"
+    },
+    {
+      "target": "Stash/usAgePro.stoverride",
+      "mode": "local",
+      "status": "local-only",
+      "detail": "No verified corresponding upstream file; preserve local implementation and report coverage gap"
+    }
+  ],
+  "changed": [],
+  "counts": {
+    "enrolled": 110,
+    "local-only": 16,
+    "test-only": 9
+  }
+}

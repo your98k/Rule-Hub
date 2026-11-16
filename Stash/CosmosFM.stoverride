@@ -1,0 +1,21 @@
+name: '小宇宙 去广告'
+desc: '小宇宙 去广告，移除开屏、AI 总结、搜索推荐与首页运营位。'
+openUrl: 'https://apps.apple.com/app/id1488894313'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/xiaoyuzhou.png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-16'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'api.xiaoyuzhoufm.com'
+  url-rewrite:
+    - '^https://api\.xiaoyuzhoufm\.com/v\d/flash - reject-dict'
+    - '^https://api\.xiaoyuzhoufm\.com/v\d/ai - reject-dict'
+    - '^https://api\.xiaoyuzhoufm\.com/v\d/search/get - reject-dict'
+    - '^https://api\.xiaoyuzhoufm\.com/v1/category/list-daily - reject-dict'
+  body-rewrite:
+    - '^https://api\.xiaoyuzhoufm\.com/v1/related-podcast/list$ response-jq .data=[]'
+    - '^https://api\.xiaoyuzhoufm\.com/v1/discovery-feed/list response-jq .data |= ((. // []) | map(select(.type? != "DISCOVERY_HEADER" and .type? != "DISCOVERY_BANNER" and .type? != "DISCOVERY_COVER_BANNER")))'
+    - '^https?://api\.xiaoyuzhoufm\.com/v1/(related-episode|operation-resource)/list response-jq .data=[]'

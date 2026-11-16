@@ -1,0 +1,21 @@
+name: '京东外卖 去广告'
+desc: '京东外卖 去广告，共 6 条规则。'
+openUrl: 'https://apps.apple.com/app/id1661540519'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/jingdong.png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'color.jddj.com'
+    - 'api.m.jd.com'
+  url-rewrite:
+    - '^https://color\.jddj\.com/client\.action\?functionId=uniformRecommend - reject-dict'
+    - '^https://color\.jddj\.com/client\.action\?functionId=search_recommendRanking$ - reject-dict'
+  body-rewrite:
+    - '^https://color\.jddj\.com/client\.action\?functionId=hours_home$ response-jq del(.result.config.searchFloor.data[].searchWords) | .result.data |= map(if .tnConfigVO?.businessCode == "nearby_HourlyGo_Operation_Tags" then empty else . end)'
+    - '^https://color\.jddj\.com/client\.action\?functionId=wmHome$ response-jq (.floors |= map(del(.data.tnData.newsInfo?))) | .floors |= (map(select(.mId != "newWalletIdFloor" and .mId != "recommendfloor"))) | .floors |= (map(.data |= (if .tnData? then del(.tnData.cardList, .tnData.cardListStatic, .tnData.walletList) else . end)))'
+    - '^https://api\.m\.jd\.com/client\.action$ response-jq del(.data.searchDTO.searchWords, .data.wishlistDTO.bubbleTip)'
+    - '^https://api\.m\.jd\.com/client\.action$ response-jq .data.tabList |= (map(select(.code == "recommendation" or .code == "find_food")) | map(if .code == "recommendation" then .dpHomeFeedTabResultDTOList = .dpHomeFeedTabResultDTOList[0:2] else . end | .dpHomeBannerResultDTOList = []))'

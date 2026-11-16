@@ -1,0 +1,30 @@
+name: '顺丰速运 去广告'
+desc: '顺丰速运去广告；module-config 用空模块响应替代（原 mock 文本非法）。'
+openUrl: 'https://apps.apple.com/app/id488113102'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/shunfeng.png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'ccsp-egmas.sf-express.com'
+    - 'ucmp.sf-express.com'
+    - 'ucmp-static.sf-express.com'
+    - 'mapi.sfbest.com'
+  url-rewrite:
+    - '^https://ccsp-egmas\.sf-express\.com/cx-app-base/base/app/ad/ - reject-dict'
+    - '^https://ucmp\.sf-express\.com/proxy/esgcempcore/memberGoods/pointMallService/goodsList$ - reject-dict'
+    - '^https?://ccsp-egmas\.sf-express\.com/cx-app-video/video/app/video/labelClusterList - reject-dict'
+    - '^https?://ccsp-egmas\.sf-express\.com/cx-app-base/base/app/ad/queryInfoFlow - reject-dict'
+    - '^https?://ccsp-egmas\.sf-express\.com/cx-app-base/base/app/bms/queryRecommend - reject-dict'
+    - '^https?://mapi\.sfbest\.com/brokerservice-server/cms/getPositionById.* - reject'
+  body-rewrite:
+    - '^https://ccsp-egmas\.sf-express\.com/cx-app-base/base/app/appHomeConfig/query$ response-jq .obj |= map(select(.position != 2))'
+  mock:
+    - match: '^https://ucmp(-static)?\.sf-express\.com/proxy/ccspBase/module-config/(login/)?query\?'
+      text: '{"version":"2.0","success":true,"obj":[]}'
+      status-code: 200
+      headers:
+        Content-Type: 'application/json'

@@ -1,0 +1,21 @@
+name: '瑞幸咖啡 去广告'
+desc: '瑞幸咖啡 去广告，共 8 条规则。'
+openUrl: 'https://apps.apple.com/app/id1450089146'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/06jichang/luckin.png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'capi.lkcoffee.com'
+  url-rewrite:
+    - '^https://capi\.lkcoffee\.com/resource/m/growUp/calendarList - reject'
+    - '^https://capi\.lkcoffee\.com/resource/m/promotion/giftCard/topPage - reject'
+    - '^https://capi\.lkcoffee\.com/resource/m/sys/base/myLittleLuck - reject'
+    - '^https://capi\.lkcoffee\.com/resource/core/v2/menu/ordinaryUserLayeredArea - reject'
+    - '^https://capi\.lkcoffee\.com/resource/m/sys/common/modules - reject'
+    - '^https://capi\.lkcoffee\.com/resource/core/v2/homepage/homePageCoffeeList - reject'
+    - '^https://capi\.lkcoffee\.com/resource/m/eorder/product/popAppTagProductList - reject'
+    - '^https://capi\.lkcoffee\.com/resource/m/sys/app/adposNew - reject'

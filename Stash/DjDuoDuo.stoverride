@@ -1,0 +1,25 @@
+name: 'DJ多多 去广告'
+desc: 'DJ多多 去广告，移除开屏与歌单广告配置。'
+openUrl: 'https://apps.apple.com/app/id1039764887'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/DJmusic.png
+author: 'your98k'
+category: '去广告'
+date: '2026-11-16'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'api.dianyinduoduo.com'
+  script:
+    - name: djduoduo
+      match: '^https://api\.dianyinduoduo\.com/v4/config\.php\?'
+      type: response
+      require-body: true
+      engine: webkit
+      max-size: 4194304
+      timeout: 10
+
+script-providers:
+  djduoduo:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/DjDuoDuo.js'
+    interval: 86400

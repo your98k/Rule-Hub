@@ -1,0 +1,16 @@
+name: '王者营地 去广告'
+desc: '王者营地 去广告，共 3 条规则。'
+openUrl: 'https://apps.apple.com/app/id1224907800'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/HOK_GameHelper.png'
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'app.mval.qq.com'
+  url-rewrite:
+    - '^https://app\.mval\.qq\.com/go/recommend/platflashbox\? - reject-dict'
+    - '^https://app\.mval\.qq\.com/go/mlol_news/search/varcache_hotV\d\? - reject-dict'
+    - '^https://app\.mval\.qq\.com/go/customize_search/article_rank\? - reject-dict'
