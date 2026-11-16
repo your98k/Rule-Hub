@@ -28,7 +28,7 @@ http:
     - '^https://pan\.baidu\.com/coins/center/notice - reject'
     - '^https://pan\.baidu\.com/recommend/shortseries/list - reject-dict'
   body-rewrite:
-    - '^https://pan\.baidu\.com/feed/kingkongdistrict\? response-jq .data.data |= map(select(.type != \"novel\" and .type != \"shortplay\" and .type != \"print\" and .type != \"job_hunt\"))'
+    - '^https://pan\.baidu\.com/feed/kingkongdistrict\? response-jq .data.data |= map(select(.type != "novel" and .type != "shortplay" and .type != "print" and .type != "job_hunt"))'
   mitm:
     - 'pan.baidu.com'
     - 'afd.baidu.com'

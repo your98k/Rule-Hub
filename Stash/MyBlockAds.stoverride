@@ -66,9 +66,8 @@ http:
   body-rewrite:
     - '^http://ad\.5tao5ai\.com/common/getReceipt\? response-json-del payload.adInfo'
     - '^https://www\.washpayer\.com/common/getReceipt response-json-del payload.adInfo'
-    - '^https://mme\.api\.moji\.com/json/entrance/list$ response-jq del(.entrance_region_res_list[] | select(.region_name == \"皇冠区域\" or .region_name == \"banner区\")) | .entrance_region_res_list[].entrance_res_list |= if . then map(select(.entrance_name | . != \"墨迹钱包\" and . != \"墨圈\")) else . end'
-    - '^https://gql(-fed)?\.reddit\.com response-jq jq-path=https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/rucu6.pages.dev/JQLang/reddit.jq'
-    - '^https://api\.xiachufang\.com/v2/homepage/paged_waterfall_recommendations\.json response-jq .multiplex_cells |= map(select(.recommendation_cell.label != \"广告\"))'
+    - '^https://mme\.api\.moji\.com/json/entrance/list$ response-jq del(.entrance_region_res_list[] | select(.region_name == "皇冠区域" or .region_name == "banner区")) | .entrance_region_res_list[].entrance_res_list |= if . then map(select(.entrance_name | . != "墨迹钱包" and . != "墨圈")) else . end'
+    - '^https://api\.xiachufang\.com/v2/homepage/paged_waterfall_recommendations\.json response-jq .multiplex_cells |= map(select(.recommendation_cell.label != "广告"))'
     - '^https://api\.m\.mi\.com/v1/order/expressView response-json-del data.bottom.ad_info'
     - '^https://shop-api\.retail\.mi\.com/mtop/act/mishopSearch/mainSearch response-jq .data.recProductList=[]'
     - '^https://shop-api\.retail\.mi\.com/mtop/mf/home/v1/index response-json-del data.floors[0].data.left_icon_config'
