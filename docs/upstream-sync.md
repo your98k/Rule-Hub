@@ -2,9 +2,9 @@
 
 ## 运行与发布
 
-- 当前新工作流尚未启用：GitHub MCP 缺少 workflow 写入权限，待重新连接并授予 workflow 权限后安装。
-- 设计工作流名称：`Sync all upstreams to test`。
-- 安装启用后，计划每天 UTC 19:10（北京时间次日 03:10）运行，也支持手动 Run workflow。
+- 工作流已安装并启用（GitHub state: active）；安装提交 `bc419ba05a47e2bfa231216d6e1a929809151187`。
+- 工作流名称：`Sync all upstreams to test`。
+- 计划每天 UTC 19:10（北京时间次日 03:10）运行，也支持手动 Run workflow；GitHub 定时任务可能延迟。
 - 调度与工具从 main 读取；更新候选、基线与报告只写 test，正式覆写不自动发布。
 - test 缺少的正式文件从 main 补齐；test 已有文件（含微博试用版、诊断覆写）保留。
 - 通过测试后，由维护者按文件发布到 main，禁止把整个历史 test 分支直接合入 main。
@@ -51,3 +51,10 @@ python scripts/sync-upstreams.py --apply # 仅在 test 检出目录运行
 ```
 
 不要手工将下载失败或冲突项的快照推进，否则会把未处理的更新误标为已同步。
+
+## 首次 Actions 验证
+
+- [首轮运行](https://github.com/your98k/Rule-Hub/actions/runs/43924738689)：依赖安装、82 项回归测试、来源登记、test 提交及报告上传均完成。
+- 来源登记：110 enrolled、16 local-only、9 test-only；没有覆写更新候选。
+- 资源审计：135 个覆写、249 项资源；134 fetched、80 self-mirror、25 inline、9 HTML、1 HTTP 403，另有 1 个重复 YAML 键错误，共 11 项异常。
+- 最终失败是审计报告的预期信号，不代表工作流未启用；异常没有被自动修改或当成健康资源。
