@@ -1,0 +1,126 @@
+name: '去上网 伪造测试（临时）'
+desc: |-
+  实验：用脚本把自有接口响应替换为空 data，验证开屏广告能否跳过
+  若 App 闪退属预期风险，关掉本覆写即可恢复
+category: '去广告'
+openUrl: 'https://apps.apple.com/cn/app/id1215148253'
+date: '2026-11-16 20:00'
+version: '4.0-spoof'
+
+arguments-version: 1
+arguments:
+  spoof_mode:
+    type: select
+    title: 伪造范围
+    default: small
+    options:
+      - value: small
+        label: 仅空响应体小于 600 字节的请求（保守，针对开屏）
+      - value: all
+        label: 全部接口返回空 data（激进，用于验证容忍度）
+  ad_action:
+    type: select
+    title: 第三方广告域名
+    default: REJECT
+    options:
+      - value: REJECT
+        label: 拦截（正式使用）
+      - value: DIRECT
+        label: 放行（仅验证伪造响应时选，可排除干扰）
+
+http:
+  force-http-engine:
+    - 'qudaapi.8quan.com:80'
+  mitm:
+    - '*.8quan.com'
+    - '*.yedone.com'
+  script:
+    - name: qd-spoof
+      match: '^http://qudaapi\.8quan\.com/index\.php'
+      type: response
+      require-body: true
+      max-size: 2097152
+      timeout: 8
+      engine: auto
+      argument: '{"mode":${args.spoof_mode|json}}'
+
+script-providers:
+  qd-spoof:
+    payload: |
+      var cfg = {};
+      try { cfg = JSON.parse($argument || '{}'); } catch (e) { cfg = {}; }
+      var mode = cfg.mode || 'small';
+      var body = String(($response && $response.body) || '');
+      var len = body.length;
+      $persistentStore.write('hit mode=' + mode + ' len=' + len, 'qd_spoof_log');
+      var shouldSpoof = (mode === 'all') || (mode === 'small' && len < 600);
+      if (shouldSpoof) {
+        var empty = '{"time_stamp":1794825375,"p_encrypt":"","data":"","res":0,"msg":"操作成功"}';
+        $done({ body: empty });
+      } else {
+        $done({});
+      }
+
+rules:
+  - 'DOMAIN-SUFFIX,shanghailingye.cn,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,hzzfcm.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,adqtt.net,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,58iclick.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao1.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao-b.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,pglstatp-toutiao.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,ctobsnssdk.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,webcast-open.douyin.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,lf-cdn-tos.bytescm.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,tnc3-alisc1.zijieapi.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,vod-license-m.volccdn.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,vod-license-b.volccdn.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,yangyi02.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,gdt.qq.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,gdtimg.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,ugdtimg.com,${args.ad_action}'
+  - 'DOMAIN,pgdt.gtimg.cn,${args.ad_action}'
+  - 'DOMAIN,sdk.e.qq.com,${args.ad_action}'
+  - 'DOMAIN,sdkquic.e.qq.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,anythinktech.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,buluken.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,adwangmai.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,66mobi.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,yunxish.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,iggrowth.cn,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,fancyapi.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,fancydsp.com,${args.ad_action}'
+  - 'DOMAIN,fancydsp.oss-cn-beijing.aliyuncs.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,statisticslinks.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,halomobi.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,shunchangzhixing.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,funmob.top,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,bwton.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,optimized-ai.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,dxunion.cn,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,kakamobi.cn,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,tapseek.cn,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,yumobi.cn,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,bjrenze.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,qingxuntech.cn,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,inspmobi.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,adxyun.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,luanbird.cn,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,futongjieti.cn,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,9zadx.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,gravity-engine.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,xunruns.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,bluebellls.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,microengine.cn,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,ilandou.cn,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,u-mob.cn,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,cyapi.cn,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,adukwai.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,medproad.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,17admob.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,ibluefrog.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,zadervice.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,massx.com,${args.ad_action}'
+  - 'DOMAIN-SUFFIX,yfzj.top,${args.ad_action}'
+  - 'DOMAIN,image.uczzd.cn,${args.ad_action}'
