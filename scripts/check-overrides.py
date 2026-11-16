@@ -66,6 +66,20 @@ def main():
         for k in ('name', 'desc'):
             if k not in d:
                 issues.append((f, k, '缺失'))
+        # 仓库约定：desc 单行、<= 80 字，只写功能
+        desc = d.get('desc')
+        if isinstance(desc, str):
+            if '\n' in desc:
+                issues.append((f, 'desc', '必须单行（多条用逗号，不要换行）'))
+            if len(desc) > 80:
+                issues.append((f, 'desc', f'过长 {len(desc)} 字（上限 80）'))
+        # 仓库约定：author 统一为本仓库账号
+        if 'author' not in d:
+            issues.append((f, 'author', '缺失（应为 your98k）'))
+        elif isinstance(d.get('author'), str) and d['author'] != 'your98k':
+            issues.append((f, 'author', f"应统一为 your98k，实际 {d['author'][:30]}"))
+        if 'icon' not in d:
+            issues.append((f, 'icon', '缺失（应指向可访问的图片）'))
         # 展示字段必须是字符串：Stash 遇到非字符串会直接报 value must be a string
         for k in ('name', 'desc', 'author', 'category', 'date', 'version',
                   'icon', 'openUrl', 'homepage'):

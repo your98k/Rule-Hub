@@ -1,7 +1,7 @@
 name: 'IPA Manager'
 desc: |-
   下载IPA文件实现降级应用安装、已购下架应用安装。\n本插件依赖Scripting App且需解锁Pro权限。
-author: 'githubdulong[https://github.com/githubdulong]'
+author: 'your98k'
 homepage: 'https://github.com/harmonizr/loon-plugins'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/iAppStore-03.png'
 date: '2026-10-02 12:00'

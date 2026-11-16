@@ -1,7 +1,6 @@
 name: '去上网 去广告'
-desc: |-
-  拦截聚合广告联盟，并跳过自有加密接口下发的开屏广告
-  开屏通过替换接口响应实现，无需解密
+desc: '去上网 去广告，拦截广告联盟并跳过开屏广告。'
+author: 'your98k'
 category: '去广告'
 openUrl: 'https://apps.apple.com/cn/app/id1215148253'
 icon: 'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/32/d9/58/32d958a8-b679-84dd-52e8-385beaf47e19/AppIcon-0-0-1x_U007emarketing-0-6-0-85-220.png/512x512bb.jpg'

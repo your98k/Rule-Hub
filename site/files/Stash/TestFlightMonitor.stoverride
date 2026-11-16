@@ -1,7 +1,6 @@
 name: 'TestFlight Monitor'
-desc: |-
-  1.自动监控TestFlight，手动填写应用APP_ID，一旦有空余名额会自动通知，点击通知即可跳转加入；\n2.自动加入TestFlight，需先获取账号令牌[添加主机名testflight.apple.com]，一旦有空余名额会自动加入。
-author: 'fmz200[https://github.com/fmz200], DecoAri[https://github.com/DecoAri], xream[https://github.com/xream]'
+desc: 'TestFlight 名额监控与自动加入，有名额即通知。'
+author: 'your98k'
 homepage: 'https://github.com/harmonizr/loon-plugins'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TestFlight-04.png'
 date: '2026-10-02 12:00'

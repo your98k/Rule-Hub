@@ -1,7 +1,6 @@
 name: '中国移动'
-desc: |-
-  过滤中国移动广告，可自定义。\n支持Scripting中国移动小组件（https://www.imarkr.com/api/github/download/MaYIHEI/patch/scripting/cmcc.zip），使用前需获取Cookie，获取成功后可关闭Cookie脚本。
-author: 'ccyykk666[https://github.com/ccyykk666], sooyaaabo[https://github.com/sooyaaabo], MaYIHEI[https://github.com/MaYIHEI]'
+desc: '中国移动 去广告，规则可自定义，支持桌面小组件。'
+author: 'your98k'
 homepage: 'https://github.com/harmonizr/loon-plugins'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ChinaMobile.png'
 date: '2026-10-27 17:00'

@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-11-16 12:31",
+  "generated_at": "2026-11-16 12:37",
   "repo": "https://github.com/your98k/Rule-Hub",
   "base": "https://your98k.github.io/Rule-Hub",
   "plugins": [
     {
       "id": "qushangwang-stash",
       "name": "去上网 去广告",
-      "desc": "拦截聚合广告联盟，并跳过自有加密接口下发的开屏广告\n开屏通过替换接口响应实现，无需解密",
+      "desc": "去上网 去广告，拦截广告联盟并跳过开屏广告。",
       "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/32/d9/58/32d958a8-b679-84dd-52e8-385beaf47e19/AppIcon-0-0-1x_U007emarketing-0-6-0-85-220.png/512x512bb.jpg",
       "date": "2026-11-16 20:32",
       "version": "4.0",
@@ -15,7 +15,12 @@
         "去广告"
       ],
       "type": "stash",
-      "authors": [],
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
       "homepage": "",
       "rulesCount": 76,
       "mitmHosts": [
@@ -3339,12 +3344,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "RuCu6",
-          "url": "https://github.com/RuCu6"
-        },
-        {
-          "name": ", 可莉🅥",
-          "url": "https://github.com/luestr/ProxyResource/blob/main/README.md"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://loonlab.103516.xyz/Plugin/",
@@ -3601,7 +3602,7 @@
     {
       "id": "chinamobile-stash",
       "name": "中国移动",
-      "desc": "过滤中国移动广告，可自定义。\\n支持Scripting中国移动小组件（https://www.imarkr.com/api/github/download/MaYIHEI/patch/scripting/cmcc.zip），使用前需获取Cookie，获取成功后可关闭Cookie脚本。",
+      "desc": "中国移动 去广告，规则可自定义，支持桌面小组件。",
       "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ChinaMobile.png",
       "date": "2026-10-27 17:00",
       "version": "",
@@ -3612,16 +3613,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "ccyykk666",
-          "url": "https://github.com/ccyykk666"
-        },
-        {
-          "name": ", sooyaaabo",
-          "url": "https://github.com/sooyaaabo"
-        },
-        {
-          "name": ", MaYIHEI",
-          "url": "https://github.com/MaYIHEI"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -3696,8 +3689,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "ZenmoFeiShi",
-          "url": "https://github.com/ZenmoFeiShi"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -3725,7 +3718,7 @@
     {
       "id": "hongguo-stash",
       "name": "红果短剧去广告",
-      "desc": "红果短剧去广告：域名拦截（hongguoapp / hongguosdk / 穿山甲 / 字节广告域）。\n与「番茄小说」同开为完全体。",
+      "desc": "红果短剧 去广告，拦截自有 SDK 与穿山甲等广告域。",
       "icon": "https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png",
       "date": "2026-10-20",
       "version": "1.6.0",
@@ -3802,20 +3795,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "RuCu6",
-          "url": "https://github.com/RuCu6"
-        },
-        {
-          "name": ", fmz200",
-          "url": "https://github.com/fmz200"
-        },
-        {
-          "name": ", zmqcherish",
-          "url": "https://github.com/zmqcherish"
-        },
-        {
-          "name": ", 可莉🅥",
-          "url": "https://github.com/luestr/ProxyResource/blob/main/README.md"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -3849,16 +3830,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "RuCu6",
-          "url": "https://github.com/RuCu6"
-        },
-        {
-          "name": ", Keywos",
-          "url": "https://github.com/Keywos"
-        },
-        {
-          "name": ", 可莉🅥",
-          "url": "https://github.com/luestr/ProxyResource/blob/main/README.md"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -3975,7 +3948,7 @@
     {
       "id": "appstoremonitor-stash",
       "name": "AppStore Monitor",
-      "desc": "定时监控App Store内App的更新状态。\\n可输入多个AppID，可自定义查询区域顺序（不填则为默认顺序），均以逗号分隔。\\n可填入Bark Key使用Bark推送通知，若不填则默认使用Loon推送通知。\\n可填入Bark Group分组名称，默认为空值，无分组。\\n可选择Bark推送通知音效，默认值为system，使用系统默认提醒音效。",
+      "desc": "App Store 更新监控，按 AppID 查询并推送通知。",
       "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/AppStore-02.png",
       "date": "2026-10-02 12:00",
       "version": "",
@@ -3986,8 +3959,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "sooyaaabo",
-          "url": "https://github.com/sooyaaabo"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -4006,7 +3979,7 @@
     {
       "id": "appleosmonitor-stash",
       "name": "AppleOS Monitor",
-      "desc": "定时监控Apple系统的版本更新。\\n可自定义选择需要监控的设备系统。\\n可输入多个OS版本，不填则默认所有OS版本，以逗号分隔。\\n可选择版本类型，默认为all即所有版本。\\n可填入Bark Group分组名称，默认为空值，无分组。\\n可填入Bark Key使用Bark推送通知，不填则默认使用Loon推送通知。",
+      "desc": "Apple 系统版本更新监控，可选系统与版本类型。",
       "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/iBetame.png",
       "date": "2026-10-02 12:00",
       "version": "",
@@ -4017,8 +3990,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "sooyaaabo",
-          "url": "https://github.com/sooyaaabo"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -4084,12 +4057,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "RuCu6",
-          "url": "https://github.com/RuCu6"
-        },
-        {
-          "name": ", 可莉🅥",
-          "url": "https://github.com/luestr/ProxyResource/blob/main/README.md"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -4122,24 +4091,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "FoKit",
-          "url": "https://github.com/FoKit"
-        },
-        {
-          "name": ", GoodHolidays",
-          "url": "https://github.com/GoodHolidays"
-        },
-        {
-          "name": ", ClydeTime",
-          "url": "https://github.com/ClydeTime"
-        },
-        {
-          "name": ", MaYIHEI",
-          "url": "https://github.com/MaYIHEI"
-        },
-        {
-          "name": ", sooyaaabo",
-          "url": "https://github.com/sooyaaabo"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -4176,8 +4129,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "curtinp118",
-          "url": "https://github.com/curtinp118"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -4213,8 +4166,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "githubdulong",
-          "url": "https://github.com/githubdulong"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -4272,7 +4225,7 @@
     {
       "id": "nodeseek-stash",
       "name": "NodeSeek & DeepFlood",
-      "desc": "NodeSeek、DeepFlood每日签到。\\n登录账号进入个人页面以获取Cookie，成功后关闭Cookie脚本。\\n支持设置签到鸡腿奖励模式，默认为固定5个鸡腿。",
+      "desc": "NodeSeek、DeepFlood 每日签到，可设奖励模式。",
       "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/NodeSeek.png",
       "date": "2026-10-02 12:00",
       "version": "",
@@ -4283,8 +4236,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "sooyaaabo",
-          "url": "https://github.com/sooyaaabo"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -4352,20 +4305,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "RuCu6",
-          "url": "https://github.com/RuCu6"
-        },
-        {
-          "name": ", fmz200",
-          "url": "https://github.com/fmz200"
-        },
-        {
-          "name": ", meichiny",
-          "url": "https://github.com/meichiny"
-        },
-        {
-          "name": ", 可莉🅥",
-          "url": "https://github.com/luestr/ProxyResource/blob/main/README.md"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -4430,7 +4371,7 @@
     {
       "id": "testflightmonitor-stash",
       "name": "TestFlight Monitor",
-      "desc": "1.自动监控TestFlight，手动填写应用APP_ID，一旦有空余名额会自动通知，点击通知即可跳转加入；\\n2.自动加入TestFlight，需先获取账号令牌[添加主机名testflight.apple.com]，一旦有空余名额会自动加入。",
+      "desc": "TestFlight 名额监控与自动加入，有名额即通知。",
       "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TestFlight-04.png",
       "date": "2026-10-02 12:00",
       "version": "",
@@ -4441,16 +4382,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "fmz200",
-          "url": "https://github.com/fmz200"
-        },
-        {
-          "name": ", DecoAri",
-          "url": "https://github.com/DecoAri"
-        },
-        {
-          "name": ", xream",
-          "url": "https://github.com/xream"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -4471,7 +4404,7 @@
     {
       "id": "uapi-hotboard-stash",
       "name": "UAPI热榜聚合",
-      "desc": "基于UAPI热榜接口定时推送多平台热榜数据。\\n可选填UAPI Token，使用个人密钥将消耗积分。\\n可设置热榜平台，建议避免配置过多以减少请求频率。\\n可设置榜单条数，默认5条，最大10条。\\n支持平台：哔哩哔哩 bilibili、A站 acfun、微博热搜 weibo、知乎热榜 zhihu、知乎日报 zhihu-daily、抖音 douyin、小红书 xiaohongshu、快手 kuaishou、豆瓣电影 douban-movie、豆瓣小组 douban-group、百度贴吧 tieba、虎扑 hupu、NGA论坛 ngabbs、V2EX v2ex、吾爱破解 52pojie、全球主机交流 hostloc、酷安 coolapk、百度热搜 baidu、澎湃新闻 thepaper、今日头条 toutiao、腾讯新闻 qq-news、新浪热搜 sina、新浪新闻 sina-news、网易新闻 netease-news、虎嗅 huxiu、爱范儿 ifanr、少数派 sspai、IT之家 ithome、IT之家喜加一 ithome-xijiayi、掘金 juejin、简书 jianshu、果壳 guokr、36氪 36kr、51CTO 51cto、CSDN csdn、NodeSeek nodeseek、HelloGitHub hellogithub、英雄联盟 lol、原神 genshin、崩坏3 honkai、星穹铁道 starrail、网易云音乐热歌榜 netease-music、QQ音乐热歌榜 qq-music、微信读书 weread、天气预警 weatheralarm、地震速报 earthquake、历史上的今天 history",
+      "desc": "多平台热榜定时推送，可选平台与榜单条数。",
       "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/Other/FlameFill.png",
       "date": "2026-10-02 12:00",
       "version": "",
@@ -4482,8 +4415,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "sooyaaabo",
-          "url": "https://github.com/sooyaaabo"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -4537,7 +4470,7 @@
     {
       "id": "x-web-stash",
       "name": "X（Twitter）",
-      "desc": "过滤网页版X（Twitter）广告，支持自定义标签。\\n所有标签：政治, 股票, 商业, 科学, AI, 加密, 新闻, 金融, 软件, 体育, 科技, 艺术, 电影与电视, 游戏, 橄榄球, 动漫, 旅行, 美食, 棒球, 篮球, 美妆, 拳击, 足球, 职业, 汽车, 宠物, 名人, 音乐, 乡村音乐, 舞蹈, 恋爱, 设计, 教育, 电音, 创业公司, 电子竞技, 家庭, 时尚, 流行音乐, 高尔夫, 韩流音乐, 表情包, 健康, 摔跤, 赛车, 摩托车, 自然, 曲棍球, 奥运会, 照片, 播客, 房地产, 机器人, 摇滚, 橄榄球, 购物, 冰雪运动, 太空, 网球, 首页, 板球, F1, 骑行, J-Pop, 音乐会, 嘻哈, 爵士乐, 犯罪, 选举, 生物技术, 心理健康, 数字艺术",
+      "desc": "网页版 X（Twitter）去广告，支持自定义标签。",
       "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/X-01.png",
       "date": "2026-10-02 12:00",
       "version": "",
@@ -4548,12 +4481,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "fmz200",
-          "url": "https://github.com/fmz200"
-        },
-        {
-          "name": ", sooyaaabo",
-          "url": "https://github.com/sooyaaabo"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
@@ -4619,16 +4548,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "chxm1023",
-          "url": "https://github.com/chxm1023"
-        },
-        {
-          "name": ", ddgksf2013",
-          "url": "https://github.com/ddgksf2013"
-        },
-        {
-          "name": ", Guding88",
-          "url": "https://github.com/Guding88"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/harmonizr/loon-plugins",
