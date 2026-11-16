@@ -20,6 +20,7 @@
 | Porntube VIP 解锁 | Stash 3.7+ | Yu9191 上游 2026-11-14 四脚本版移植；视频页内嵌播放器按钮（网页播放/lenna/SenPlayer/Infuse/VLC/自定义），5 项原生参数，跳转默认关闭 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Porntube.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Porntube.stoverride) |
 | YouTube 去广告增强版 | Stash 3.7+ | 12 项参数（10 开关 + 字幕/歌词翻译 + 首页补强），内嵌脚本 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube-ADBlock-Enhanced.stoverride) |
 | 哔哩哔哩去广告 | Stash 3.7+ | Biliverse v0.7.5 移植，32 项原生参数，无需 BoxJS；内置 8 条 QUIC 拦截 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
+| BiliBili Global 原生参数版 | Stash 3.7+ | Biliverse Global v0.9.3；10 项原生参数：CDN 类型、四地区开关、四地区策略名称及日志。内嵌核心脚本，固定版本 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BiliBili.Global.Native.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/BiliBili.Global.Native.stoverride) |
 | 红果短剧去广告 | 通用 | 域名拦截，不改动全局 IPv6/DNS | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
 | 番茄小说去广告 | 通用 | 50 条域名拦截（广告 SDK / 埋点上报 / 素材下发 / 抖音引流），全部 `no-track`；**不做 MitM 与改写**——该 App 有证书校验，一开 MitM 就断网 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DragonRead.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DragonRead.stoverride) |
 | Trakt 增强 | Stash 3.7+ | DemoJameson Loon 插件移植：页面与海报中文化、历史剧集按剧合并、详情页 Forward/Infuse/Rex 跳转；12 项原生参数，13 条脚本路由，脚本每日同步上游 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Trakt.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Trakt.stoverride) |
@@ -40,6 +41,7 @@
 - **Porntube**：播放器按钮注入在视频页，「自定义」填完 Scheme 必须点「保存」，由页面请求 `/porntube-scheme` 写回本地存储，留空不覆盖。跳转默认关闭，想解锁后自动唤起播放器才把「播放器跳转」改成 yes。需信任 MitM CA；站点走 QUIC 时脚本不触发。**不要与旧版 Porntube 覆写同时启用**——同名脚本会互相顶掉，异名脚本会各触发一次导致双重改写。
 - **YouTube**：默认关闭字幕/歌词翻译；介意字幕或歌词内容外发时请保持关闭。「首页信息流补强」误删正常卡片时可关闭；不要与其他 YouTube 去广告覆写同时启用。
 - **哔哩哔哩**：开屏广告若重新出现，多为 QUIC 绕过；覆写已内置 8 条 QUIC REJECT 规则。去广告未生效时，把「[调试] 日志等级」调到 INFO 查看脚本日志；不要与其他 B 站去广告覆写叠加。
+- **BiliBili Global**：在覆写「参数」中设置。大陆默认 DIRECT，港澳台填写现有节点或策略组名；开关开启但策略名为空时，该地区跳过自动探测。停用原版 Global，避免重复处理。核心脚本固定 v0.9.3，不随上游自动更新；文件约 1.16 MB。已完成静态与模拟测试，未做真机播放联调。
 - **腾讯视频**：首次使用需卸载重装 App，并冷启动 2–3 次；脚本每 24 小时自动拉取，无需手动更新。
 - **京东**：保持「获取慢慢买 Cookie」参数开启，在慢慢买 App「我的」页刷新一次即可获取 Cookie。
 - **usAge Pro**：需信任 MitM CA；启用后彻底结束 App 再重新打开。脚本由云端拉取、每 24 小时自动更新，无需手动改本地文件；与其他同名脚本（`usage-pro`）不要重复启用。
