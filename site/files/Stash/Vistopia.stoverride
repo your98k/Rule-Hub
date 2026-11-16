@@ -1,0 +1,74 @@
+name: '看理想 去广告'
+desc: '看理想 去广告，清理开屏、弹窗与会员页购买区，修正音频下载与播放链路。'
+openUrl: 'https://apps.apple.com/app/id1342118033'
+author: 'your98k'
+category: '去广告'
+date: '2026-11-16'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'api.vistopia.com.cn'
+    - 'shop.vistopia.com.cn'
+  mock:
+    - match: '^https?://api\.vistopia\.com\.cn/api/v2/home/advertisement(\?|$)'
+      base64: 'eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6W119'
+      status-code: 200
+      headers:
+        Content-Type: application/json
+    - match: '^https?://api\.vistopia\.com\.cn/api/v2/other/pop-up(\?|$)'
+      base64: 'eyJzdGF0dXMiOiJlcnJvciIsImRhdGEiOm51bGx9'
+      status-code: 404
+      headers:
+        Content-Type: application/json
+  script:
+    - name: vistopia-no-ads
+      match: '^https?://api\.vistopia\.com\.cn/api/v2/home/header-new(\?|$)'
+      type: response
+      require-body: true
+    - name: vistopia-no-ads
+      match: '^https?://api\.vistopia\.com\.cn/api/v2/other/config(\?|$)'
+      type: response
+      require-body: true
+    - name: vistopia-video-compat
+      match: '^https?://api\.vistopia\.com\.cn/api/v2/(reader/(section-detail|detail)|user/home|vip/buy-list|services/play-token(?!\?library_article_id=))'
+      type: response
+      require-body: true
+      timeout: 15
+      max-size: 8388608
+    - name: vistopia-vip-page
+      match: '^https?://shop\.vistopia\.com\.cn/vip_rights(?:\?|$)'
+      type: response
+      require-body: true
+    - name: vistopia-download-unlock
+      match: '^https?://api\.vistopia\.com\.cn/api/v2/(services/articles-play-token(\?|$)|content/batch(\?|$))'
+      type: response
+      require-body: true
+    - name: vistopia-catalog-unlock
+      match: '^https?://api\.vistopia\.com\.cn/api/v2/content/(content-show/\d+|article_list(\?|$))'
+      type: response
+      require-body: true
+    - name: vistopia-profile-clean
+      match: '^https?://api\.vistopia\.com\.cn/api/v2/user/profile(\?|$)'
+      type: response
+      require-body: true
+
+script-providers:
+  vistopia-no-ads:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/vistopia-no-ads.js'
+    interval: 86400
+  vistopia-video-compat:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/vistopia-video-compat.js'
+    interval: 86400
+  vistopia-vip-page:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/vistopia-vip-page.js'
+    interval: 86400
+  vistopia-download-unlock:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/vistopia-download-unlock.js'
+    interval: 86400
+  vistopia-catalog-unlock:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/vistopia-catalog-unlock.js'
+    interval: 86400
+  vistopia-profile-clean:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/vistopia-profile-clean.js'
+    interval: 86400

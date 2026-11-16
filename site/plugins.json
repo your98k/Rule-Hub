@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16 07:23",
+  "generated_at": "2026-11-16 07:25",
   "repo": "https://github.com/your98k/Rule-Hub",
   "base": "https://your98k.github.io/Rule-Hub",
   "plugins": [
@@ -413,6 +413,42 @@
       }
     },
     {
+      "id": "iqiyi-stash",
+      "name": "爱奇艺 去广告",
+      "desc": "爱奇艺 去广告，清理首页焦点图、瀑布流、播放页与搜索广告位。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 6,
+      "mitmHosts": [
+        "cards.iqiyi.com",
+        "comment-card.iqiyi.com",
+        "iface2.iqiyi.com",
+        "act.vip.iqiyi.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/IQIYI.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/IQIYI.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/IQIYI.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/IQIYI.stoverride"
+      }
+    },
+    {
       "id": "kuwomusic-stash",
       "name": "酷我音乐 去广告",
       "desc": "酷我音乐去广告，共 14 条规则。",
@@ -792,6 +828,40 @@
       },
       "install": {
         "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/VVebo.stoverride"
+      }
+    },
+    {
+      "id": "vistopia-stash",
+      "name": "看理想 去广告",
+      "desc": "看理想 去广告，清理开屏、弹窗与会员页购买区，修正音频下载与播放链路。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "api.vistopia.com.cn",
+        "shop.vistopia.com.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Vistopia.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Vistopia.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Vistopia.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Vistopia.stoverride"
       }
     },
     {
