@@ -2,7 +2,7 @@ name: 'Spotify 去广告'
 desc: 'Spotify 去广告与解锁，拦截广告接口并补丁 Premium 配置，可隐藏三处入口。'
 openUrl: 'https://apps.apple.com/app/id324684580'
 author: 'your98k'
-icon: 'https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/App-Icons/spotify.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/spotify.png
 category: '去广告'
 date: '2026-11-16'
 version: '2.0.0'

@@ -2,7 +2,7 @@ name: 'Trakt 增强'
 desc: 'Trakt 去广告。'
 author: 'your98k'
 homepage: 'https://github.com/DemoJameson/Proxy.Modules'
-icon: 'https://raw.githubusercontent.com/DemoJameson/Proxy.Modules/main/trakt_simplified_chinese/images/trakt.webp'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/trakt.png
 openUrl: 'https://apps.apple.com/app/id1514873602'
 category: '功能增强'
 version: '2026-11-15'

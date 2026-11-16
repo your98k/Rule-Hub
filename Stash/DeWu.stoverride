@@ -2,7 +2,7 @@ name: '得物 去广告'
 desc: '得物 去广告，共 10 条规则。'
 openUrl: 'https://apps.apple.com/app/id1012871328'
 author: 'your98k'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DeWu.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/dewu.png
 category: '去广告'
 date: '2026-11-15'
 version: '1.0.0'

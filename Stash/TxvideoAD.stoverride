@@ -1,7 +1,7 @@
 name: 腾讯视频净化（Stash）
 desc: '腾讯视频净化（开屏、暂停、底栏广告）。'
 author: 'your98k'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TencentVideo.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/tengxunshipin.png
 date: '2026-11-01'
 version: '1.1.1'
 

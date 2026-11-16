@@ -1,7 +1,7 @@
 name: 'TestFlight 解除区域限制'
 desc: 'TestFlight 解除区域限制，改写安装请求的 storefrontId。'
 openUrl: 'https://apps.apple.com/app/id899247664'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TestFlight-03.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/testflight.png
 author: 'your98k'
 category: '功能增强'
 date: '2026-11-16'
