@@ -6,8 +6,7 @@ homepage: 'https://loonlab.103516.xyz/Plugin/'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Alipan-01.png'
 date: '2026-11-02 21:00'
 open-url: 'https://apps.apple.com/app/id1494661473'
-category: #!replace
-  - '去广告'
+category: '去广告'
 # 由 Loon 插件自动转换：Alipan.lpx
 # 上游主页：https://loonlab.103516.xyz/Plugin/
 # 原作者：RuCu6[https://github.com/RuCu6], 可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md]

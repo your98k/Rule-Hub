@@ -6,8 +6,7 @@ homepage: 'https://github.com/harmonizr/loon-plugins'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/NeteaseMusic.png'
 date: '2026-10-16 22:00'
 open-url: 'https://apps.apple.com/app/id590338362'
-category: #!replace
-  - '去广告, 解锁会员'
+category: '去广告, 解锁会员'
 # 由 Loon 插件自动转换：NeteaseMusic.lpx
 # 上游主页：https://github.com/harmonizr/loon-plugins
 # 原作者：RuCu6[https://github.com/RuCu6], Keywos[https://github.com/Keywos], 可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md]

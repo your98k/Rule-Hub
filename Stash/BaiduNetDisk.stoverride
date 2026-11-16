@@ -6,8 +6,7 @@ homepage: 'https://github.com/harmonizr/loon-plugins'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/BaiduNetDisk.png'
 date: '2026-10-02 12:00'
 open-url: 'https://apps.apple.com/app/id547166701'
-category: #!replace
-  - '去广告, 解锁会员'
+category: '去广告, 解锁会员'
 # 由 Loon 插件自动转换：BaiduNetDisk.lpx
 # 上游主页：https://github.com/harmonizr/loon-plugins
 # 原作者：可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md], ddgksf2013[https://github.com/ddgksf2013], chxm1023[https://github.com/chxm1023]

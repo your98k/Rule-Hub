@@ -6,8 +6,7 @@ homepage: 'https://github.com/harmonizr/loon-plugins'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/WeiBo.png'
 date: '2026-10-19 20:00'
 open-url: 'https://apps.apple.com/app/id350962117'
-category: #!replace
-  - '去广告'
+category: '去广告'
 # 由 Loon 插件自动转换：WeiBo_ddgksf2013.lpx
 # 上游主页：https://github.com/harmonizr/loon-plugins
 # 原作者：ddgksf2013[https://github.com/ddgksf2013]

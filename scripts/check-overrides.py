@@ -66,6 +66,11 @@ def main():
         for k in ('name', 'desc'):
             if k not in d:
                 issues.append((f, k, '缺失'))
+        # 展示字段必须是字符串：Stash 遇到非字符串会直接报 value must be a string
+        for k in ('name', 'desc', 'author', 'category', 'date', 'version',
+                  'icon', 'openUrl', 'homepage'):
+            if k in d and not isinstance(d[k], str):
+                issues.append((f, k, f'必须是字符串，实际是 {type(d[k]).__name__}'))
         h = d.get('http') or {}
         hosts = [x.lstrip('-').lower() for x in (h.get('mitm') or [])]
 
@@ -132,6 +137,15 @@ def main():
                             r'syntax error|unexpected|Unterminated|Expected|unexpected end',
                             err, re.I):
                         issues.append((f, 'response-jq', 'jq 语法错误: ' + err.strip().split('\n')[0][:110]))
+
+        for i, sc in enumerate(h.get('script') or []):
+            for k in ('name', 'match', 'type', 'argument', 'engine'):
+                if k in sc and not isinstance(sc[k], str):
+                    issues.append((f, 'script', f'[{i}].{k} 必须是字符串'))
+        for i, mk in enumerate(h.get('mock') or []):
+            for k in ('match', 'text', 'base64'):
+                if k in mk and not isinstance(mk[k], str):
+                    issues.append((f, 'mock', f'[{i}].{k} 必须是字符串'))
 
         providers = d.get('script-providers') or {}
         for s in h.get('script') or []:

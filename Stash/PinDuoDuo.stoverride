@@ -6,8 +6,7 @@ homepage: 'https://github.com/harmonizr/loon-plugins'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/PinDuoDuo.png'
 date: '2026-10-02 12:00'
 open-url: 'https://apps.apple.com/app/id1044283059'
-category: #!replace
-  - '去广告'
+category: '去广告'
 # 由 Loon 插件自动转换：PinDuoDuo.lpx
 # 上游主页：https://github.com/harmonizr/loon-plugins
 # 原作者：sooyaaabo[https://github.com/sooyaaabo], ZenmoFeiShi[https://github.com/ZenmoFeiShi], RuCu6[https://github.com/RuCu6], ishowshu[https://github.com/ishowshu], 可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md]

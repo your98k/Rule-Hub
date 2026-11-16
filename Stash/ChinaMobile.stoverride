@@ -6,8 +6,7 @@ homepage: 'https://github.com/harmonizr/loon-plugins'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ChinaMobile.png'
 date: '2026-10-27 17:00'
 open-url: 'https://apps.apple.com/app/id583700738'
-category: #!replace
-  - '去广告, 功能增强'
+category: '去广告, 功能增强'
 # 由 Loon 插件自动转换：ChinaMobile.lpx
 # 上游主页：https://github.com/harmonizr/loon-plugins
 # 原作者：ccyykk666[https://github.com/ccyykk666], sooyaaabo[https://github.com/sooyaaabo], MaYIHEI[https://github.com/MaYIHEI]

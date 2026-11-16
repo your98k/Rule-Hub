@@ -6,8 +6,7 @@ homepage: 'https://github.com/harmonizr/loon-plugins'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ColorfulCloudsWeatherPro.png'
 date: '2026-10-02 12:00'
 open-url: 'https://apps.apple.com/app/id1067198688'
-category: #!replace
-  - '去广告, 解锁会员'
+category: '去广告, 解锁会员'
 # 由 Loon 插件自动转换：ColorfulCloudsWeatherPro.lpx
 # 上游主页：https://github.com/harmonizr/loon-plugins
 # 原作者：RuCu6[https://github.com/RuCu6], 可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md]

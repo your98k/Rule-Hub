@@ -6,8 +6,7 @@ homepage: 'https://github.com/harmonizr/loon-plugins'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/V2EX-03.png'
 date: '2026-10-02 12:00'
 open-url: 'https://v2ex.com/'
-category: #!replace
-  - '去广告'
+category: '去广告'
 # 由 Loon 插件自动转换：V2EX.lpx
 # 上游主页：https://github.com/harmonizr/loon-plugins
 # 原作者：ddgksf2013[https://github.com/ddgksf2013], curtinp118[https://github.com/curtinp118]

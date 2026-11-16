@@ -16,7 +16,11 @@ def fetch(url, with_ua=False):
     if with_ua:
         cmd += ['-A', UA_LOON]
     cmd.append(url)
-    out = subprocess.run(cmd, capture_output=True, text=True).stdout.strip()
+    try:
+        out = subprocess.run(cmd, capture_output=True, text=True).stdout.strip()
+    except (FileNotFoundError, PermissionError, OSError):
+        # 某些受限环境（如 iOS App 内）不允许 Python 起 curl 子进程
+        raise SystemExit('SKIP')
     parts = out.split(' ')
     code = parts[0] if parts else 'ERR'
     eff = parts[-1] if len(parts) >= 3 else url
@@ -56,4 +60,10 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except SystemExit as e:
+        if str(e) == 'SKIP':
+            print('跳过：当前环境不允许 Python 启动 curl 子进程，请在普通电脑或 box 上运行')
+            sys.exit(0)
+        raise
