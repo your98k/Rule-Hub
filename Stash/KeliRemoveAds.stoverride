@@ -1,9 +1,7 @@
 # 来源：https://github.com/fkingikelee/fkikelee/blob/main/lpx/Remove_ads_by_keli.lpx
 # 数组默认前插；不替换基础配置，不配置 CA 或全局 QUIC 拦截。
 name: 可莉广告过滤器
-desc: '拦截常见应用开屏、弹窗与推广，清理部分广告响应。
-
-  原生规则与响应改写，无远程脚本。'
+desc: 拦截常见应用开屏、弹窗与推广，清理部分广告响应；原生规则与响应改写，无远程脚本。
 category: 去广告
 icon: https://raw.githubusercontent.com/luestr/IconResource/main/Other_icon/120px/KeLee.png
 homepage: https://hub.kelee.one
