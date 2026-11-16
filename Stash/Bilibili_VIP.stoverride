@@ -1,0 +1,33 @@
+name: '哔哩哔哩VIP'
+desc: |-
+  哔哩哔哩大会员
+author: 'your98k'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/BilibiliBlue.png'
+date: '2026-10-05 00:00'
+open-url: 'https://apps.apple.com/app/id736536022'
+category: #!replace
+  - '去广告'
+# 由 Loon 插件自动转换：Bilibili_VIP.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：ddgksf2013[https://github.com/ddgksf2013]
+http:
+  mitm:
+    - 'grpc.biliapi.net'
+    - 'app.bilibili.com'
+  script:
+    - name: 'bilibili_vip'
+      match: '^https://(grpc\.biliapi\.net|app\.bilibili\.com)/bilibili\.app\.playerunite\.v1\.Player/PlayViewUnite'
+      type: 'request'
+      timeout: 60
+    - name: 'bili_myinfo_vip'
+      match: '^https?://app\.bilibili\.com/x/v2/account/'
+      type: 'response'
+      timeout: 60
+script-providers:
+  bilibili_vip:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/ddgksf2013.top/scripts/bilibili.vip.js'
+    interval: 86400
+  bili_myinfo_vip:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/ddgksf2013.top/scripts/bili_myinfo_vip.js'
+    interval: 86400
