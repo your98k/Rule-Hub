@@ -5,7 +5,7 @@ desc: 拦截常见应用开屏、弹窗与推广，清理部分广告响应；�
 category: 去广告
 icon: https://raw.githubusercontent.com/luestr/IconResource/main/Other_icon/120px/KeLee.png
 homepage: https://hub.kelee.one
-author: 可莉🅥（原规则）；Stash 原生适配
+author: your98k
 version: 1.0.0
 http:
   force-http-engine:
@@ -56,6 +56,7 @@ http:
   - cdke.youdao.com
   - cdn.cmgadx.com
   - cdn.web.chelaile.net.cn
+  - cdn.wup.huya.com
   - client-api-v2.oray.com
   - client.app.coc.10086.cn
   - cmds.omesoft.com
@@ -72,6 +73,7 @@ http:
   - m.qianbao.qq.com
   - mob.mddcloud.com.cn
   - mobads-pre-config.cdn.bcebos.com
+  - p.kuaidi100.com
   - p0.pipi.cn
   - qadx.qinlinad.com
   - qiye.gaoding.com
