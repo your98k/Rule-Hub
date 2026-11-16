@@ -1,37 +1,107 @@
 name: 'Spotify 去广告'
-desc: 'Spotify 去广告，拦截播放广告并补丁 Premium 状态，可单独关闭补丁排查跳歌。'
+desc: 'Spotify 去广告与解锁，拦截广告接口并补丁 Premium 配置，可隐藏三处入口。'
 openUrl: 'https://apps.apple.com/app/id324684580'
 author: 'your98k'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Spotify.png'
+icon: 'https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/App-Icons/spotify.png'
 category: '去广告'
 date: '2026-11-16'
-version: '1.1.0'
+version: '2.0.0'
 arguments-version: 1
 arguments:
-  Enabled:
+  HideDiscoveryFeed:
     type: switch
-    title: 启用 Premium 补丁
-    description: 关闭后只拦截播放广告接口，不打补丁。若开启时出现歌曲自动跳到下一首，可先关掉此项对比。
+    title: 隐藏发现页信息流
+    description: 隐藏正在播放页面下方的发现信息流。
     default: true
+  HideMembershipInfo:
+    type: switch
+    title: 隐藏会员信息
+    description: 隐藏设置页里的会员信息，仅影响显示。
+    default: true
+  HideAiDj:
+    type: switch
+    title: 隐藏 AI DJ
+    description: 屏蔽 AI DJ 入口，使其不再出现在 App 内。
+    default: true
+
+rules:
+  - 'AND,((DOMAIN-SUFFIX,spotify.com),(PROTOCOL,QUIC)),REJECT'
+  - 'DOMAIN,aet.spotify.com,REJECT'
 
 http:
   mitm:
-    - '*-spclient.spotify.com'
     - 'spclient.wg.spotify.com'
+    - '*spclient.spotify.com'
+  header-rewrite:
+    - '^https://(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)/user-customization-service/v1/customize request-del if-none-match'
+    - '^https://(?:spclient\.wg|[\w-]+-spclient)\.spotify\.com(?::443)?/(?:remote-config-resolver/v\d+/configuration|nebula/v\d+/configuration/attributes)(?:\?[^#]*)?$ request-del if-none-match'
   url-rewrite:
-    - '^https://(?:\w+-spclient|spclient\.wg)\.spotify\.com(?::443)?/pendragon/ - reject-dict'
+    - '^https://(spclient\.wg|.*-spclient)\.spotify\.com(:443)?/pendragon - reject-dict'
+    - '^https://(?:spclient\.wg|[\w-]+-spclient)\.spotify\.com(?::443)?/(?:ads/|ad-logic/|[^?#]*/ad-on-app-open|premium-marketing/upsellOffer) - reject'
   script:
-    - name: 'spotify-crack'
-      match: '^https://(?:\w+-spclient|spclient\.wg)\.spotify\.com(?::443)?/(?:bootstrap|user-customization-service)'
+    - name: spotify-gabo
+      match: '^https://(.*-spclient\.spotify\.com(:443)?|spclient\.wg\.spotify\.com)/gabo-receiver-service'
+      type: request
+      timeout: 10
+    - name: spotify-search-ad
+      match: '^https://(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)/browsita/v./browse'
       type: response
       require-body: true
       binary-mode: true
-      max-size: 10485760
       timeout: 10
-      engine: webkit
-      argument: '{"Enabled":${args.Enabled|json}}'
+    - name: spotify-home-ad
+      match: '^https://(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)/casita/v./home/'
+      type: response
+      require-body: true
+      binary-mode: true
+      timeout: 10
+    - name: spotify-scroll-ad
+      match: '^https://(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)/scrollsita/v./scroll/spotify'
+      type: response
+      require-body: true
+      binary-mode: true
+      timeout: 10
+    - name: spotify-proto
+      match: '^https://(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)/(bootstrap/v1/bootstrap|user-customization-service/v1/customize)(\?.*)?$'
+      type: response
+      require-body: true
+      binary-mode: true
+      timeout: 10
+    - name: spotify-proto
+      match: '^https://(?:spclient\.wg|[\w-]+-spclient)\.spotify\.com(?::443)?/(?:remote-config-resolver/v\d+/configuration|nebula/v\d+/configuration/attributes)(?:\?[^#]*)?$'
+      type: response
+      require-body: true
+      binary-mode: true
+      timeout: 10
+    - name: spotify-optional
+      match: '^https://(?:spclient\.wg|[\w-]+-spclient)\.spotify\.com(?::443)?/watch-feed-entrypoints/v\d+/discovery-from-seed'
+      type: request
+      argument: '{"HideDiscoveryFeed":${args.HideDiscoveryFeed|json},"HideMembershipInfo":${args.HideMembershipInfo|json},"HideAiDj":${args.HideAiDj|json}}'
+    - name: spotify-optional
+      match: '^https://[\w-]+-spclient\.spotify\.com(?::443)?/pam-view-service/'
+      type: request
+      argument: '{"HideDiscoveryFeed":${args.HideDiscoveryFeed|json},"HideMembershipInfo":${args.HideMembershipInfo|json},"HideAiDj":${args.HideAiDj|json}}'
+    - name: spotify-optional
+      match: '37i9dQZF1EYkqdzj48dyYq'
+      type: request
+      argument: '{"HideDiscoveryFeed":${args.HideDiscoveryFeed|json},"HideMembershipInfo":${args.HideMembershipInfo|json},"HideAiDj":${args.HideAiDj|json}}'
 
 script-providers:
-  spotify-crack:
-    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/spotify-crack.js'
+  spotify-gabo:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/spotify-gabo.js'
+    interval: 86400
+  spotify-search-ad:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/spotify-search-ad.js'
+    interval: 86400
+  spotify-home-ad:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/spotify-home-ad.js'
+    interval: 86400
+  spotify-scroll-ad:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/spotify-scroll-ad.js'
+    interval: 86400
+  spotify-proto:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/spotify-proto.js'
+    interval: 86400
+  spotify-optional:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/spotify-optional.js'
     interval: 86400

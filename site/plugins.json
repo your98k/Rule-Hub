@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16 12:37",
+  "generated_at": "2026-11-16 13:40",
   "repo": "https://github.com/your98k/Rule-Hub",
   "base": "https://your98k.github.io/Rule-Hub",
   "plugins": [
@@ -817,10 +817,10 @@
     {
       "id": "spotify-stash",
       "name": "Spotify 去广告",
-      "desc": "Spotify 去广告，拦截播放广告并补丁 Premium 状态，可单独关闭补丁排查跳歌。",
-      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Spotify.png",
+      "desc": "Spotify 去广告与解锁，拦截广告接口并补丁 Premium 配置，可隐藏三处入口。",
+      "icon": "https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/App-Icons/spotify.png",
       "date": "2026-11-16",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "tags": [
         "Stash 覆写",
         "去广告"
@@ -833,10 +833,10 @@
         }
       ],
       "homepage": "",
-      "rulesCount": 0,
+      "rulesCount": 2,
       "mitmHosts": [
-        "*-spclient.spotify.com",
-        "spclient.wg.spotify.com"
+        "spclient.wg.spotify.com",
+        "*spclient.spotify.com"
       ],
       "needsMitm": true,
       "urls": {
