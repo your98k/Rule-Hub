@@ -1,0 +1,112 @@
+name: '去上网 隔离测试（临时）'
+desc: |-
+  临时隔离测试：在完整广告拦截之外，额外拦自有 TCP 通道
+  用于判断开屏广告是否由 qudatcp / cuiniu 下发
+category: '去广告'
+openUrl: 'https://apps.apple.com/cn/app/id1215148253'
+date: '2026-11-16 19:50'
+version: '3.1-isolate'
+
+arguments-version: 1
+arguments:
+  block_mode:
+    type: select
+    title: 拦截方式
+    default: 'REJECT,pre-matching'
+    options:
+      - value: 'REJECT,pre-matching'
+        label: 建连前拦截（推荐，开屏快速失败）
+      - value: 'REJECT'
+        label: 建连后拦截（排查时用，可看连接记录）
+      - value: 'REJECT-DROP'
+        label: 静默丢弃（可能让开屏等待超时）
+  stats_action:
+    type: select
+    title: 统计埋点
+    default: DIRECT
+    options:
+      - value: DIRECT
+        label: 不拦截（只去广告）
+      - value: 'REJECT,pre-matching'
+        label: 一并拦截（更彻底）
+
+rules:
+  # ★ 隔离测试：拦自有 TCP 通道（可能影响上机状态/订单推送）
+  - 'DOMAIN,qudatcp.8quan.com,${args.block_mode}'
+  - 'DOMAIN,cuiniu.8quan.com,${args.block_mode}'
+  # ── 聚合配置下发层 ──
+  - 'DOMAIN-SUFFIX,shanghailingye.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,hzzfcm.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,adqtt.net,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,58iclick.com,${args.block_mode}'
+  # ── 穿山甲 Pangle ──
+  - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao1.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao-b.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,pglstatp-toutiao.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,ctobsnssdk.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,webcast-open.douyin.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,lf-cdn-tos.bytescm.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,tnc3-alisc1.zijieapi.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,vod-license-m.volccdn.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,vod-license-b.volccdn.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,yangyi02.com,${args.block_mode}'
+  # ── 优量汇 GDT ──
+  - 'DOMAIN-SUFFIX,gdt.qq.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,gdtimg.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,ugdtimg.com,${args.block_mode}'
+  - 'DOMAIN,pgdt.gtimg.cn,${args.block_mode}'
+  - 'DOMAIN,sdk.e.qq.com,${args.block_mode}'
+  - 'DOMAIN,sdkquic.e.qq.com,${args.block_mode}'
+  # ── AnyThink（TopOn）聚合 ──
+  - 'DOMAIN-SUFFIX,anythinktech.com,${args.block_mode}'
+  # ── 第一轮实测平台 ──
+  - 'DOMAIN-SUFFIX,buluken.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,adwangmai.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,66mobi.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,yunxish.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,iggrowth.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,fancyapi.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,fancydsp.com,${args.block_mode}'
+  - 'DOMAIN,fancydsp.oss-cn-beijing.aliyuncs.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,statisticslinks.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,halomobi.com,${args.block_mode}'
+  # ── 第二轮冷启动监控新发现（30+ 联盟成员）──
+  - 'DOMAIN-SUFFIX,shunchangzhixing.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,funmob.top,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,bwton.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,optimized-ai.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,dxunion.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,kakamobi.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,tapseek.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,yumobi.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,bjrenze.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,qingxuntech.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,inspmobi.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,adxyun.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,luanbird.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,futongjieti.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,9zadx.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,gravity-engine.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,xunruns.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,bluebellls.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,microengine.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,ilandou.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,u-mob.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,cyapi.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,adukwai.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,medproad.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,17admob.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,ibluefrog.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,zadervice.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,massx.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,yfzj.top,${args.block_mode}'
+  # 广告素材图片（精确到子域，避免误伤 UC 正常内容图）
+  - 'DOMAIN,image.uczzd.cn,${args.block_mode}'
+  # ── 统计埋点（默认不拦，由参数控制）──
+  - 'DOMAIN-SUFFIX,umeng.com,${args.stats_action}'
+  - 'DOMAIN-SUFFIX,umengcloud.com,${args.stats_action}'
+  - 'DOMAIN,logs.amap.com,${args.stats_action}'
+  - 'DOMAIN,dualstack-logs.amap.com,${args.stats_action}'
+  - 'DOMAIN,apmplus.volces.com,${args.stats_action}'
+  - 'DOMAIN,mssdk.volces.com,${args.stats_action}'
