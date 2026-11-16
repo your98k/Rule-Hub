@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16 13:40",
+  "generated_at": "2026-11-16 13:56",
   "repo": "https://github.com/your98k/Rule-Hub",
   "base": "https://your98k.github.io/Rule-Hub",
   "plugins": [
@@ -299,6 +299,63 @@
       },
       "install": {
         "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CosmosFM.stoverride"
+      }
+    },
+    {
+      "id": "didi-stash",
+      "name": "滴滴出行 去广告",
+      "desc": "滴滴出行 去广告，接口版本自适应，共 91 条规则。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DiDi.png",
+      "date": "2026-11-16",
+      "version": "1.1.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 44,
+      "mitmHosts": [
+        "112.53.55.225",
+        "113.46.225.*",
+        "116.85.*",
+        "117.51.168.*",
+        "120.241.142.*",
+        "120.241.143.*",
+        "123.207.209.*",
+        "139.199.240.84",
+        "162.14.157.*",
+        "api.udache.com",
+        "as.xiaojukeji.com",
+        "common.diditaxi.com.cn",
+        "conf.diditaxi.com.cn",
+        "ct.xiaojukeji.com",
+        "daijia.kuaidadi.com",
+        "ddpay.xiaojukeji.com",
+        "freight.xiaojukeji.com",
+        "lion.didialift.com",
+        "manhattan.webapp.xiaojukeji.com",
+        "mapi.xiaojukeji.com",
+        "res.xiaojukeji.com",
+        "travel-alioth.xiaojukeji.com",
+        "poi.map.xiaojukeji.com",
+        "htwkop-st.xiaojukeji.com",
+        "htwkop.xiaojukeji.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DiDi.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DiDi.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/DiDi.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DiDi.stoverride"
       }
     },
     {
@@ -1633,63 +1690,6 @@
       },
       "install": {
         "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DeWu.stoverride"
-      }
-    },
-    {
-      "id": "didi-stash",
-      "name": "滴滴出行 去广告",
-      "desc": "滴滴出行 去广告，共 91 条规则。",
-      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DiDi.png",
-      "date": "2026-11-15",
-      "version": "1.0.0",
-      "tags": [
-        "Stash 覆写",
-        "去广告"
-      ],
-      "type": "stash",
-      "authors": [
-        {
-          "name": "your98k",
-          "url": "https://github.com/your98k"
-        }
-      ],
-      "homepage": "",
-      "rulesCount": 43,
-      "mitmHosts": [
-        "112.53.55.225",
-        "113.46.225.*",
-        "116.85.*",
-        "117.51.168.*",
-        "120.241.142.*",
-        "120.241.143.*",
-        "123.207.209.*",
-        "139.199.240.84",
-        "162.14.157.*",
-        "api.udache.com",
-        "as.xiaojukeji.com",
-        "common.diditaxi.com.cn",
-        "conf.diditaxi.com.cn",
-        "ct.xiaojukeji.com",
-        "daijia.kuaidadi.com",
-        "ddpay.xiaojukeji.com",
-        "freight.xiaojukeji.com",
-        "lion.didialift.com",
-        "manhattan.webapp.xiaojukeji.com",
-        "mapi.xiaojukeji.com",
-        "res.xiaojukeji.com",
-        "travel-alioth.xiaojukeji.com",
-        "poi.map.xiaojukeji.com",
-        "htwkop-st.xiaojukeji.com",
-        "htwkop.xiaojukeji.com"
-      ],
-      "needsMitm": true,
-      "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DiDi.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DiDi.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/DiDi.stoverride"
-      },
-      "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DiDi.stoverride"
       }
     },
     {
