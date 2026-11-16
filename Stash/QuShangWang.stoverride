@@ -5,8 +5,8 @@ desc: |-
 category: '去广告'
 openUrl: 'https://apps.apple.com/cn/app/id1215148253'
 icon: 'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/32/d9/58/32d958a8-b679-84dd-52e8-385beaf47e19/AppIcon-0-0-1x_U007emarketing-0-6-0-85-220.png/512x512bb.jpg'
-date: '2026-11-16 19:40'
-version: '3.0'
+date: '2026-11-16 20:10'
+version: '3.1'
 
 arguments-version: 1
 arguments:
@@ -99,6 +99,18 @@ rules:
   - 'DOMAIN-SUFFIX,zadervice.com,${args.block_mode}'
   - 'DOMAIN-SUFFIX,massx.com,${args.block_mode}'
   - 'DOMAIN-SUFFIX,yfzj.top,${args.block_mode}'
+  # ── 二进制实测新增（抓包未出现、仅静态分析可见）──
+  # iytcdn：激励视频 SSP，含 /union/sdk/ad、/reward/token
+  - 'DOMAIN-SUFFIX,iytcdn.com,${args.block_mode}'
+  # 高德广告接口（adiu = 广告接口单元）
+  - 'DOMAIN,adiu.amap.com,${args.block_mode}'
+  - 'DOMAIN,dualstack-adiu.amap.com,${args.block_mode}'
+  # 头条 admsg 广告下发与配置
+  - 'DOMAIN,mon.toutiao.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,mon.toutiaocloud.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,mon.toutiaocloud.net,${args.block_mode}'
+  - 'DOMAIN,monsetting.toutiao.com,${args.block_mode}'
+  - 'DOMAIN,mon.snssdk.com,${args.block_mode}'
   # 广告素材图片（精确到子域，避免误伤 UC 正常内容图）
   - 'DOMAIN,image.uczzd.cn,${args.block_mode}'
   # ── 统计埋点（默认不拦，由参数控制）──
