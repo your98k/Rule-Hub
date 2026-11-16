@@ -1,0 +1,107 @@
+name: 'Soul 去广告'
+desc: |-
+  Soul 去广告，共 35 条规则。
+openUrl: 'https://apps.apple.com/app/id1032282853'
+author: 'your98k'
+category: '去广告'
+date: '2026-11-16'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'ssp.soulapp.cn'
+    - 'increase-openapi.soulapp.cn'
+    - 'post.soulapp.cn'
+    - 'api-account.soulapp.cn'
+    - 'api-a.soulapp.cn'
+    - 'gateway-mobile-gray.soulapp.cn'
+    - 'api-user.soulapp.cn'
+    - 'chat-live.soulapp.cn'
+    - 'api-chat.soulapp.cn'
+    - 'activity.soulapp.cn'
+    - '47.110.187.87'
+    - '47.75.72.47'
+    - '47.96.7.91'
+    - '47.96.11.46'
+    - '47.96.20.45'
+    - '47.97.215.55'
+    - '47.98.54.106'
+    - '47.98.137.249'
+    - '47.99.42.29'
+    - '114.215.255.94'
+    - '116.62.28.7'
+    - '116.62.47.28'
+    - '118.31.7.235'
+    - '118.31.112.221'
+    - '120.27.235.201'
+    - '120.55.55.115'
+    - '120.55.62.124'
+    - '121.196.197.147'
+    - '121.196.203.183'
+  url-rewrite:
+    - '^https://chat-live\.soulapp\.cn/live/planet/recListV2 - reject-200'
+    - '^https://ssp\.soulapp\.cn/api/q - reject-dict'
+    - '^https://47\.110\.187\.87/winterfell/(?:v2/)?getIpByDomain - reject-dict'
+    - '^https://post\.soulapp\.cn/v\d/post/homepage/guide/card - reject-dict'
+    - '^https://api-account\.soulapp\.cn/teenager/config - reject-dict'
+    - '^https://api-a\.soulapp\.cn/official/scene/module - reject-dict'
+    - '^https://api-user\.soulapp\.cn/furion/position/content - reject-dict'
+    - '^https://api-chat\.soulapp\.cn/addressBook/showBubblingEnter - reject'
+    - '^https://api-chat\.soulapp\.cn/chat/interact/getEmojiList - reject'
+    - '^https://increase-openapi\.soulapp\.cn/increase/fission/getHomePageRedIcon - reject'
+    - '^https://api-chat\.soulapp\.cn/similar/post/intersect/trigger - reject'
+    - '^https://api-chat\.soulapp\.cn/chat/guide/defaultWord - reject'
+    - '^https://api-chat\.soulapp\.cn/chat/emoji/recommend - reject'
+    - '^https://api-a\.soulapp\.cn/shara/app/url - reject'
+    - '^https://api-chat\.soulapp\.cn/chat/quick/menu - reject'
+    - '^https://api-chat\.soulapp\.cn/chat/session/quickButtonCheck - reject-dict'
+    - '^https://chat-live\.soulapp\.cn/live/config/rec-feedback - reject-dict'
+    - '^https://post\.soulapp\.cn/post/relationUser/chatRooms - reject-dict'
+    - '^https://increase-openapi\.soulapp\.cn/increase/dusting/getAddressBookDustings - reject-dict'
+    - '^https://chat-live\.soulapp\.cn/live/queryRelevantList - reject-dict'
+    - '^https://api-user\.soulapp\.cn/user/desc/getUserPersonalDesc - reject-dict'
+    - '^https://post\.soulapp\.cn/v1/post/homepage/ai/assistant/guide - reject-dict'
+    - '^https://api-chat\.soulapp\.cn/chatList/limitAvatar/entrance - reject-dict'
+    - '^https://api-chat\.soulapp\.cn/chatList/top/recommendList - reject-dict'
+    - '^https://activity\.soulapp\.cn/commercial/room/resources - reject-dict'
+    - '^https://chat-live\.soulapp\.cn/official/scene/module - reject-dict'
+  body-rewrite:
+    - '^https://chat-live\.soulapp\.cn/live/queryFollowRoomList response-jq .data.recUserFeedList = []'
+    - '^https://chat-live\.soulapp\.cn/square/relation/guideUserList response-jq .data.userDTOList = []'
+    - '^https://api-user\.soulapp\.cn/v6/planet/config response-jq .data.showRedMind = false | .data.showLuckyBag = false | .data.coreCards |= map(select(.type != 27))'
+    - '^https://chat-live\.soulapp\.cn/chatroom/chatClassifyRoomList response-jq .data.positionContentRespList = []'
+    - '^https://post\.soulapp\.cn/homepage/tabs/v2 response-jq .data.selectedTagPool = {} | .data.headTabDTOList |= map(select(.tabCode != "STAR_TRAILS"))'
+    - '^https://chat-live\.soulapp\.cn/chatroom/getRoomTagInfo response-jq .data.res |= map(.iconConfig = null)'
+  script:
+    - name: 'soul-0'
+      match: '^https://api-user\.soulapp\.cn/user/homepage/metrics'
+      type: response
+      require-body: true
+      max-size: 8388608
+      timeout: 10
+      engine: auto
+    - name: 'soul-1'
+      match: '^https://api-chat\.soulapp\.cn/chat/limitInfo'
+      type: response
+      require-body: true
+      max-size: 8388608
+      timeout: 10
+      engine: auto
+    - name: 'soul-2'
+      match: '^https://api-chat\.soulapp\.cn/snapchat/url'
+      type: response
+      require-body: true
+      max-size: 8388608
+      timeout: 10
+      engine: auto
+
+script-providers:
+  soul-0:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Soul.js'
+    interval: 86400
+  soul-1:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Soul.js'
+    interval: 86400
+  soul-2:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Soul.js'
+    interval: 86400
