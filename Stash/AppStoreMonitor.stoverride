@@ -1,0 +1,81 @@
+name: 'AppStore Monitor'
+desc: |-
+  定时监控App Store内App的更新状态。\n可输入多个AppID，可自定义查询区域顺序（不填则为默认顺序），均以逗号分隔。\n可填入Bark Key使用Bark推送通知，若不填则默认使用Loon推送通知。\n可填入Bark Group分组名称，默认为空值，无分组。\n可选择Bark推送通知音效，默认值为system，使用系统默认提醒音效。
+author: 'sooyaaabo[https://github.com/sooyaaabo]'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/AppStore-02.png'
+date: '2026-10-02 12:00'
+category: #!replace
+  - '功能增强, 定时任务'
+# 由 Loon 插件自动转换：AppStoreMonitor.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：sooyaaabo[https://github.com/sooyaaabo]
+arguments-version: 1
+arguments:
+  RunCron:
+    type: input
+    title: '监控定时参数'
+    default: "0 9 * * *"
+  app_ids:
+    type: input
+    title: 'AppStore AppID'
+    default: ""
+  regions:
+    type: input
+    title: 'AppStore Region'
+    default: ""
+  bark_key:
+    type: input
+    title: 'Bark Key'
+    default: ""
+  bark_group:
+    type: input
+    title: 'Bark Group'
+    default: ""
+  bark_sound:
+    type: select
+    title: 'Bark Sound'
+    default: "system"
+    options:
+      - value: 'system'
+      - value: 'alarm'
+      - value: 'anticipate'
+      - value: 'bell'
+      - value: 'birdsong'
+      - value: 'bloom'
+      - value: 'calypso'
+      - value: 'chime'
+      - value: 'choo'
+      - value: 'descent'
+      - value: 'electronic'
+      - value: 'fanfare'
+      - value: 'glass'
+      - value: 'gotosleep'
+      - value: 'healthnotification'
+      - value: 'horn'
+      - value: 'ladder'
+      - value: 'mailsent'
+      - value: 'minuet'
+      - value: 'multiwayinvitation'
+      - value: 'newmail'
+      - value: 'newsflash'
+      - value: 'noir'
+      - value: 'paymentsuccess'
+      - value: 'shake'
+      - value: 'sherwoodforest'
+      - value: 'silence'
+      - value: 'spell'
+      - value: 'suspense'
+      - value: 'telegraph'
+      - value: 'tiptoes'
+      - value: 'typewriters'
+      - value: 'update'
+cron:
+  script:
+    - name: 'AppStoreMonitor'
+      cron: '${args.RunCron}'
+      timeout: 60
+script-providers:
+  AppStoreMonitor:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/AppStoreMonitor.js'
+    interval: 86400

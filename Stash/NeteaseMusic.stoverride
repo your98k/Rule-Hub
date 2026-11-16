@@ -1,0 +1,168 @@
+name: '网易云音乐'
+desc: |-
+  网易云音乐全面净化，可自定义界面样式。
+author: 'RuCu6[https://github.com/RuCu6], Keywos[https://github.com/Keywos], 可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md]'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/NeteaseMusic.png'
+date: '2026-10-16 22:00'
+open-url: 'https://apps.apple.com/app/id590338362'
+category: #!replace
+  - '去广告, 解锁会员'
+# 由 Loon 插件自动转换：NeteaseMusic.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：RuCu6[https://github.com/RuCu6], Keywos[https://github.com/Keywos], 可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md]
+arguments-version: 1
+arguments:
+  FX:
+    type: switch
+    title: '隐藏[底部-发现]'
+    default: false
+  MY:
+    type: switch
+    title: '隐藏[底部-漫游]'
+    default: false
+  DT:
+    type: switch
+    title: '隐藏[底部-笔记]'
+    default: false
+  GZ:
+    type: switch
+    title: '隐藏[底部-关注]'
+    default: false
+  PRGG:
+    type: switch
+    title: '隐藏[首页-问候语]'
+    default: false
+  PRRK:
+    type: switch
+    title: '隐藏[首页-排行榜]'
+    default: false
+  PRDRD:
+    type: switch
+    title: '隐藏[首页-每日推荐]'
+    default: false
+  PRSCVPT:
+    type: switch
+    title: '隐藏[首页-推荐歌单]'
+    default: false
+  PRST:
+    type: switch
+    title: '隐藏[首页-最近常听]'
+    default: false
+  PRRR:
+    type: switch
+    title: '隐藏[首页-雷达歌单]'
+    default: false
+  HMPR:
+    type: switch
+    title: '隐藏[首页-音乐合伙人]'
+    default: false
+  PRMST:
+    type: switch
+    title: '隐藏[首页-推荐专属歌单]'
+    default: false
+  PRCN:
+    type: switch
+    title: '隐藏[首页-你的专属歌单]'
+    default: false
+  Music163_VIP_Shared:
+    type: switch
+    title: '启用[共享会员]'
+    default: false
+  Cookie:
+    type: input
+    title: 'Cookie'
+    default: ""
+  MConfigInfo:
+    type: input
+    title: 'MConfigInfo'
+    default: ""
+  UserAgent:
+    type: input
+    title: 'UserAgent'
+    default: ""
+http:
+  url-rewrite:
+    - '^https?://interface\d?\.music\.163\.com/x?e?api/ad - reject-dict'
+    - '^https?://interface\d?\.music\.163\.com/x?e?api/sp/flow/popup - reject-dict'
+    - '^https?://interface\d?\.music\.163\.com/x?e?api/delivery/(batch-deliver|deliver) - reject-dict'
+    - '^https?://interface\d?\.music\.163\.com/eapi/(?:delivery/(batch-)?deliver|moment/tab/info/|side-bar/mini-program/music-service/account|yunbei/account/entrance/) - reject-dict'
+    - '^https?://interface\d?\.music\.163\.com/eapi/(?:community/friends/fans-group/artist/group/|mine/applet/redpoint|music/songshare/text/recommend/|resniche/position/play/new/|resniche/tspopup/show|resource/comments?/musiciansaid/|user/sub/artist) - reject-dict'
+    - '^https?://interface\d?\.music\.163\.com/eapi/(?:ios/version|mlivestream/entrance/playpage/|link/position/show/strategy|link/scene/show/resource|v1/content/exposure/comment/banner/) - reject-dict'
+    - '^https?://interface\d?\.music\.163\.com/w?eapi/(?:activity/bonus/playpage/time/query|resource-exposure/|search/(?:chart/|rcmd/keyword/|specialkeyword/)) - reject-dict'
+    - '^https://interface\d\.music\.163\.com/eapi/my/podcast/tab/recommend - reject-dict'
+  mitm:
+    - 'interface*.music.163.com'
+    - 'ipv4.music.163.com'
+    - 'd.music.163.com'
+    - 'music.163.com'
+  script:
+    - name: 'CloudMusic_vip'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/eapi/(?:v1/artist/top/song|v3/discovery/recommend/songs)'
+      type: 'request'
+      argument: '{${args.Cookie},${args.MConfigInfo},${args.UserAgent}}'
+    - name: 'CloudMusic_vip'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/eapi/v3/song/detail'
+      type: 'request'
+      argument: '{${args.Cookie},${args.MConfigInfo},${args.UserAgent}}'
+    - name: 'CloudMusic_vip'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/eapi/song/(?:chorus|enhance/|play/|type/detail/get)'
+      type: 'request'
+      argument: '{${args.Cookie},${args.MConfigInfo},${args.UserAgent}}'
+    - name: 'CloudMusic_vip'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/eapi/playermode/'
+      type: 'request'
+      argument: '{${args.Cookie},${args.MConfigInfo},${args.UserAgent}}'
+    - name: 'CloudMusic_vip'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/eapi/search/(?:complex/page|complex/rec/song/get|song/list/page)'
+      type: 'request'
+      argument: '{${args.Cookie},${args.MConfigInfo},${args.UserAgent}}'
+    - name: 'CloudMusic_vip'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/eapi/vipnewcenter/app/resource/newaccountpage'
+      type: 'request'
+      argument: '{${args.Cookie},${args.MConfigInfo},${args.UserAgent}}'
+    - name: 'CloudMusic_vip'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/w?e?api/(?:homepage/|v6/)?playlist/(?!(?:delete|subscribe|unsubscribe))'
+      type: 'request'
+      argument: '{${args.Cookie},${args.MConfigInfo},${args.UserAgent}}'
+    - name: 'CloudMusic_vip'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/eapi/vipauth/app/auth/(soundquality/)?query'
+      type: 'request'
+      argument: '{${args.Cookie},${args.MConfigInfo},${args.UserAgent}}'
+    - name: 'NeteaseMusic_ads'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/eapi/(?:batch|v2/resource/comment/floor/get)'
+      type: 'response'
+    - name: 'NeteaseMusic_ads'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/eapi/(?:homepage/block/page|link/page/rcmd/(?:block/resource/multi/refresh|resource/show))'
+      type: 'response'
+      argument: '{${args.PRGG},${args.PRRK},${args.PRDRD},${args.PRSCVPT},${args.PRST},${args.PRRR},${args.HMPR},${args.PRMST},${args.PRCN}}'
+    - name: 'NeteaseMusic_ads'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/eapi/link/home/framework/tab'
+      type: 'response'
+      argument: '{${args.MY},${args.DT},${args.FX},${args.GZ}}'
+    - name: 'NeteaseMusic_ads'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/eapi/link/page/discovery/resource/show'
+      type: 'response'
+    - name: 'NeteaseMusic_ads'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/eapi/link/position/show/resource'
+      type: 'response'
+    - name: 'NeteaseMusic_ads'
+      match: '^https?://(ipv4|interface\d?)\.music\.163\.com/eapi/user/follow/users/mixed/get'
+      type: 'response'
+rules:
+  - 'DOMAIN, iadmat.nosdn.127.net, REJECT'
+  - 'DOMAIN, iadmatapk.nosdn.127.net, REJECT'
+  - 'DOMAIN, iadmusicmat.music.126.net, REJECT'
+  - 'DOMAIN, iadmusicmatvideo.music.126.net, REJECT'
+  - 'DOMAIN, ipv4.music.163.com, REJECT'
+  - 'DOMAIN, ipv6.music.163.com, REJECT'
+  - 'DOMAIN, iad.g.163.com, REJECT'
+  - 'DOMAIN, iad.service.163.org, REJECT'
+  - 'DOMAIN, bdlog.tanx.com, REJECT'
+script-providers:
+  CloudMusic_vip:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/CloudMusic.vip.js'
+    interval: 86400
+  NeteaseMusic_ads:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/NeteaseMusic.ads.js'
+    interval: 86400

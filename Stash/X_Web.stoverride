@@ -1,0 +1,37 @@
+name: 'X（Twitter）'
+desc: |-
+  过滤网页版X（Twitter）广告，支持自定义标签。\n所有标签：政治, 股票, 商业, 科学, AI, 加密, 新闻, 金融, 软件, 体育, 科技, 艺术, 电影与电视, 游戏, 橄榄球, 动漫, 旅行, 美食, 棒球, 篮球, 美妆, 拳击, 足球, 职业, 汽车, 宠物, 名人, 音乐, 乡村音乐, 舞蹈, 恋爱, 设计, 教育, 电音, 创业公司, 电子竞技, 家庭, 时尚, 流行音乐, 高尔夫, 韩流音乐, 表情包, 健康, 摔跤, 赛车, 摩托车, 自然, 曲棍球, 奥运会, 照片, 播客, 房地产, 机器人, 摇滚, 橄榄球, 购物, 冰雪运动, 太空, 网球, 首页, 板球, F1, 骑行, J-Pop, 音乐会, 嘻哈, 爵士乐, 犯罪, 选举, 生物技术, 心理健康, 数字艺术
+author: 'fmz200[https://github.com/fmz200], sooyaaabo[https://github.com/sooyaaabo]'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/X-01.png'
+date: '2026-10-02 12:00'
+open-url: 'https://apps.apple.com/app/id333903271'
+category: #!replace
+  - '去广告'
+# 由 Loon 插件自动转换：X_Web.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：fmz200[https://github.com/fmz200], sooyaaabo[https://github.com/sooyaaabo]
+arguments-version: 1
+arguments:
+  pinned_tags:
+    type: input
+    title: 'X_Web Tags'
+    default: ""
+http:
+  mitm:
+    - 'x.com'
+  script:
+    - name: 'X_ads'
+      match: '^https?://x\.com/i/api/graphql/[^/]+/(HomeTimeline|HomeLatestTimeline|TweetDetail)'
+      type: 'response'
+    - name: 'XWeb_enhance'
+      match: '^https?://x\.com/i/api/graphql/[^/]+/PinnedTimelines\?'
+      type: 'response'
+      argument: '{${args.pinned_tags}}'
+script-providers:
+  X_ads:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/X_ads.js'
+    interval: 86400
+  XWeb_enhance:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/XWeb.enhance.js'
+    interval: 86400

@@ -1,0 +1,81 @@
+name: 'NodeSeek & DeepFlood'
+desc: |-
+  NodeSeek、DeepFlood每日签到。\n登录账号进入个人页面以获取Cookie，成功后关闭Cookie脚本。\n支持设置签到鸡腿奖励模式，默认为固定5个鸡腿。
+author: 'sooyaaabo[https://github.com/sooyaaabo]'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/NodeSeek.png'
+date: '2026-10-02 12:00'
+category: #!replace
+  - '定时任务'
+# 由 Loon 插件自动转换：NodeSeek.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：sooyaaabo[https://github.com/sooyaaabo]
+arguments-version: 1
+arguments:
+  Cookie_NodeSeek:
+    type: switch
+    title: '[NodeSeek]每日签到Cookie'
+    default: true
+  Task_NodeSeek:
+    type: switch
+    title: '[NodeSeek]每日签到Task'
+    default: true
+  Cron_NodeSeek:
+    type: input
+    title: '[NodeSeek]定时参数Cron'
+    default: "0 0 1 * * *"
+  Mode_NodeSeek:
+    type: select
+    title: '[NodeSeek]奖励模式Mode'
+    default: "default"
+    options:
+      - value: 'default'
+      - value: 'random'
+  Cookie_DeepFlood:
+    type: switch
+    title: '[DeepFlood]每日签到Cookie'
+    default: true
+  Task_DeepFlood:
+    type: switch
+    title: '[DeepFlood]每日签到Task'
+    default: true
+  Cron_DeepFlood:
+    type: input
+    title: '[DeepFlood]定时参数Cron'
+    default: "0 0 1 * * *"
+  Mode_DeepFlood:
+    type: select
+    title: '[DeepFlood]奖励模式Mode'
+    default: "default"
+    options:
+      - value: 'default'
+      - value: 'random'
+http:
+  mitm:
+    - 'www.nodeseek.com'
+    - 'www.deepflood.com'
+  script:
+    - name: 'NodeSeek_checkin'
+      match: '^https://www\.nodeseek\.com/api/account/getInfo/\d+\?readme=1$'
+      type: 'request'
+    - name: 'DeepFlood_checkin'
+      match: '^https://www\.deepflood\.com/api/account/getInfo/\d+\?readme=1$'
+      type: 'request'
+rules:
+  - 'DOMAIN-SUFFIX, nodeseek.com, PROXY'
+  - 'DOMAIN-SUFFIX, deepflood.com, PROXY'
+cron:
+  script:
+    - name: 'NodeSeek_checkin'
+      cron: '0 9 * * *'
+      timeout: 60
+    - name: 'DeepFlood_checkin'
+      cron: '0 9 * * *'
+      timeout: 60
+script-providers:
+  NodeSeek_checkin:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/NodeSeek.checkin.js'
+    interval: 86400
+  DeepFlood_checkin:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/DeepFlood.checkin.js'
+    interval: 86400

@@ -1,0 +1,175 @@
+name: '中国移动'
+desc: |-
+  过滤中国移动广告，可自定义。\n支持Scripting中国移动小组件（https://www.imarkr.com/api/github/download/MaYIHEI/patch/scripting/cmcc.zip），使用前需获取Cookie，获取成功后可关闭Cookie脚本。
+author: 'ccyykk666[https://github.com/ccyykk666], sooyaaabo[https://github.com/sooyaaabo], MaYIHEI[https://github.com/MaYIHEI]'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ChinaMobile.png'
+date: '2026-10-27 17:00'
+open-url: 'https://apps.apple.com/app/id583700738'
+category: #!replace
+  - '去广告, 功能增强'
+# 由 Loon 插件自动转换：ChinaMobile.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：ccyykk666[https://github.com/ccyykk666], sooyaaabo[https://github.com/sooyaaabo], MaYIHEI[https://github.com/MaYIHEI]
+arguments-version: 1
+arguments:
+  BottomClean:
+    type: switch
+    title: '[底栏] 隐藏-AI灵犀'
+    default: true
+  SearchPageClean:
+    type: switch
+    title: '[搜索] 页面净化'
+    default: true
+  HomeBasicClean:
+    type: switch
+    title: '[首页] 基础净化'
+    default: true
+  HideTopFamily:
+    type: switch
+    title: '[首页] 隐藏-爱家'
+    default: false
+  HideTopAge:
+    type: switch
+    title: '[首页] 隐藏-网龄'
+    default: false
+  HideTopPhone:
+    type: switch
+    title: '[首页] 隐藏-手机'
+    default: false
+  HideTopNearby:
+    type: switch
+    title: '[首页] 隐藏-附近厅'
+    default: false
+  HideTopAI:
+    type: switch
+    title: '[首页] 隐藏-AI尝鲜'
+    default: false
+  HideTopEnterprise:
+    type: switch
+    title: '[首页] 隐藏-政企'
+    default: false
+  CommunicationAdClean:
+    type: switch
+    title: '[通信] 页面净化'
+    default: true
+  MineClean:
+    type: switch
+    title: '[我的] 基础净化'
+    default: true
+  ServicePageClean:
+    type: switch
+    title: '[我的] 我的服务-广告净化'
+    default: true
+  HideMyCheckIn:
+    type: switch
+    title: '[我的] 隐藏-签到浮窗'
+    default: false
+  HideMyMarketing:
+    type: switch
+    title: '[我的] 隐藏-营销区域'
+    default: false
+  HideMyServices:
+    type: switch
+    title: '[我的] 隐藏-我的服务'
+    default: false
+  HideMyFamilyCube:
+    type: switch
+    title: '[我的] 隐藏-我的家庭'
+    default: false
+  HideMyDevicesCube:
+    type: switch
+    title: '[我的] 隐藏-我的设备'
+    default: false
+  HideMyMiniProgram:
+    type: switch
+    title: '[我的] 隐藏-我的账户'
+    default: false
+  HideMyDigitalHuman:
+    type: switch
+    title: '[我的] 隐藏-AI智能助理'
+    default: false
+  HideMySelections:
+    type: switch
+    title: '[我的] 隐藏-我的优选'
+    default: false
+  HideMyGroup:
+    type: switch
+    title: '[我的] 隐藏-我的集团'
+    default: false
+  HideMyRingtone:
+    type: switch
+    title: '[我的] 隐藏-我的彩铃'
+    default: false
+  HideMyCloudDrive:
+    type: switch
+    title: '[我的] 隐藏-我的云盘'
+    default: false
+  HideMyToolbox:
+    type: switch
+    title: '[我的] 隐藏-百宝箱'
+    default: false
+  HideMyLifeServices:
+    type: switch
+    title: '[我的] 隐藏-生活服务'
+    default: false
+  CMCC_Cookie:
+    type: switch
+    title: '[小组件]获取Cookie'
+    default: false
+http:
+  url-rewrite:
+    - '^https?://(?:client\.app\.coc|app)\.10086\.cn/biz-orange/DN/(?:explorePage/getAdverList|init/startInit|emotionMarket)(?:\?.*)?$ - reject'
+    - '^https?://client\.app\.coc\.10086\.cn/biz-orange/(?:DN/(?:dropsAdverService/getDropsAdverNew|homepagePopup/getSortInfo|toast/getToastRule)|DH/toast/august/getToast|DA/liveSuspension/getPageCode)(?:\?.*)?$ - reject-dict'
+  body-rewrite:
+    - '^https://ad\.mcloud\.139\.com/advertapi/adv-filter/adv-filter/AdInfoFilter/getAdInfos(?:\?.*)?$ response-jq .body=[]'
+  mitm:
+    - 'client.app.coc.10086.cn'
+    - 'h.app.coc.10086.cn'
+    - 'app.10086.cn'
+    - 'touch.10086.cn'
+    - 'ad.mcloud.139.com'
+    - '10086.cn'
+    - 'clientaccess.10086.cn'
+    - 'h5.bj.10086.cn'
+  script:
+    - name: 'ChinaMobile_ads'
+      match: '^https://client\.app\.coc\.10086\.cn/biz-orange/DN/(?:homePage/getTopAreaList|multipleInterfaces/aggregationData|init/getNavigation|bottomNavigationService/getNavigationInfo)(?:\?.*)?$'
+      type: 'response'
+      timeout: 10
+      argument: '{${args.HomeBasicClean},${args.HideTopFamily},${args.HideTopAge},${args.HideTopPhone},${args.HideTopNearby},${args.HideTopAI},${args.HideTopEnterprise},${args.BottomClean}}'
+    - name: 'ChinaMobile_ads'
+      match: '^https://(?:client\.app\.coc\.10086\.cn/biz-orange/DN/searchWord/getSearchWordInfo|h\.app\.coc\.10086\.cn/ngpsie/psieapi/psiesearchsdkserver/search/homePage/(?:searchIndex|mobilePreferenceInfo))(?:\?.*)?$'
+      type: 'response'
+      timeout: 10
+      argument: '{${args.SearchPageClean}}'
+    - name: 'ChinaMobile_ads'
+      match: '^https://client\.app\.coc\.10086\.cn/biz-orange/DN/call/cson/nativeCallAct/queryPrompt(?:\?.*)?$'
+      type: 'response'
+      timeout: 10
+      argument: '{${args.CommunicationAdClean}}'
+    - name: 'ChinaMobile_ads'
+      match: '^https://(?:client\.app\.coc\.10086\.cn/biz-orange/DN/myPageNew/getMyPageNew|(?:client\.app\.coc\.10086\.cn|h\.app\.coc\.10086\.cn)/biz-orange/DA/baseServiceFunction/getAdverList)(?:\?.*)?$'
+      type: 'response'
+      timeout: 10
+      argument: '{${args.MineClean},${args.HideMyCheckIn},${args.HideMyMarketing},${args.HideMyServices},${args.HideMyFamilyCube},${args.HideMyDevicesCube},${args.HideMyMiniProgram},${args.HideMyDigitalHuman},${args.HideMySelections},${args.HideMyGroup},${args.HideMyRingtone},${args.HideMyCloudDrive},${args.HideMyToolbox},${args.HideMyLifeServices},${args.ServicePageClean}}'
+    - name: 'ChinaMobile_ads'
+      match: '^https://(?:(?:h\.app\.coc\.10086\.cn/biz-orange/DH/(?:message_query/message/query/list|myCardVoucher/getBannerList)|app\.10086\.cn/biz-orange/DA/commonBoard/getCommonBoard)(?:\?.*)?|(touch\.10086\.cn/i/v1/cust/(?:aiMainQry|iopBatchQry)/[^?]+(?:\?.*)?))$'
+      type: 'response'
+      timeout: 10
+    - name: 'cmcc'
+      match: '^https://client\.app\.coc\.10086\.cn/biz-orange/[LD]N/uam(onekey|randcode)login/autoLogin'
+      type: 'request'
+    - name: 'cmcc'
+      match: '^https://clientaccess\.10086\.cn/biz-orange/BN/scoreQueryService/getScoreQuery'
+      type: 'request'
+    - name: 'cmcc'
+      match: '^https://h5\.bj\.10086\.cn/ActSignIn2023/doPrize'
+      type: 'request'
+script-providers:
+  ChinaMobile_ads:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/ChinaMobile.ads.js'
+    interval: 86400
+  cmcc:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/cmcc.js'
+    interval: 86400

@@ -1,0 +1,144 @@
+name: 'Cookie & Task'
+desc: |-
+  定时每日签到任务，按需开启相应功能即可。
+author: 'FoKit[https://github.com/FoKit], GoodHolidays[https://github.com/GoodHolidays], ClydeTime[https://github.com/ClydeTime], MaYIHEI[https://github.com/MaYIHEI], sooyaaabo[https://github.com/sooyaaabo]'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Notifyman.png'
+date: '2026-10-02 12:00'
+category: #!replace
+  - '定时任务'
+# 由 Loon 插件自动转换：CookieTask.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：FoKit[https://github.com/FoKit], GoodHolidays[https://github.com/GoodHolidays], ClydeTime[https://github.com/ClydeTime], MaYIHEI[https://github.com/MaYIHEI], sooyaaabo[https://github.com/sooyaaabo]
+arguments-version: 1
+arguments:
+  Cookie_WeChatPay:
+    type: switch
+    title: '[微信支付有优惠]领金币Cookie'
+    default: false
+  Task_WeChatPay:
+    type: switch
+    title: '[微信支付有优惠]领金币Task'
+    default: false
+  Cron_WeChatPay:
+    type: input
+    title: '[微信支付有优惠]定时参数Cron'
+    default: "0 0 9 * * *"
+  Cookie_Weibo:
+    type: switch
+    title: '[微博]每日签到Cookie'
+    default: false
+  Task_Weibo:
+    type: switch
+    title: '[微博]每日签到Task'
+    default: false
+  Cron_Weibo:
+    type: input
+    title: '[微博]定时参数Cron'
+    default: "0 0 9 * * *"
+  Cookie_WeiboTalk:
+    type: switch
+    title: '[微博超话]每日签到Cookie'
+    default: false
+  Task_WeiboTalk:
+    type: switch
+    title: '[微博超话]每日签到Task'
+    default: false
+  Cron_WeiboTalk:
+    type: input
+    title: '[微博超话]定时参数Cron'
+    default: "0 0 9 * * *"
+  Cookie_BilibiliApp:
+    type: switch
+    title: '[哔哩哔哩App]每日等级任务Cookie'
+    default: false
+  Cookie_BilibiliQRCode:
+    type: switch
+    title: '[哔哩哔哩QR Code]每日等级任务Cookie'
+    default: false
+  Task_Bilibili:
+    type: switch
+    title: '[哔哩哔哩]每日等级任务Task'
+    default: false
+  Cron_Bilibili:
+    type: input
+    title: '[哔哩哔哩]定时参数Cron'
+    default: "0 0 9 * * *"
+  Cookie_WPS:
+    type: switch
+    title: '[WPS]每日签到Cookie'
+    default: false
+  Task_WPS:
+    type: switch
+    title: '[WPS]每日签到Task'
+    default: false
+  Cron_WPS:
+    type: input
+    title: '[WPS]定时参数Cron'
+    default: "0 0 9 * * *"
+http:
+  mitm:
+    - 'payapp.weixin.qq.com'
+    - 'api.weibo.cn'
+    - 'cm.bilibili.com'
+    - 'm.bilibili.com'
+    - 'personal-act.wps.cn'
+    - 'app.bilibili.com'
+  script:
+    - name: 'wechat_pay_coupon'
+      match: '^https://payapp\.weixin\.qq\.com/(coupon-center-user/home/login|coupon-center-award/award/detail)'
+      type: 'response'
+    - name: 'WeiboCookieTask'
+      match: '^https?://api\.weibo\.cn/\d/users/show'
+      type: 'request'
+    - name: 'weibotalk_cookie'
+      match: '^https://api\.weibo\.cn/2/(statuses/container_timeline_topicsub|page/button)'
+      type: 'request'
+    - name: 'BiliBiliDailyBonus'
+      match: '^https?://app\.bilibili\.com/x/resource/fingerprint\?'
+      type: 'request'
+    - name: 'BiliBiliDailyBonus'
+      match: '^https?://app\.bilibili\.com/x/resource/fingerprint\?'
+      type: 'response'
+    - name: 'wps_cookie'
+      match: '^https://personal-act\.wps\.cn/activity-rubik/activity/page_info'
+      type: 'request'
+cron:
+  script:
+    - name: 'wechat_pay_coupon'
+      cron: '0 9 * * *'
+      timeout: 60
+    - name: 'WeiboCookieTask'
+      cron: '0 9 * * *'
+      timeout: 60
+    - name: 'weibotalk'
+      cron: '0 9 * * *'
+      timeout: 60
+    - name: 'BiliBiliDailyBonus'
+      cron: '0 9 * * *'
+      timeout: 60
+    - name: 'wps'
+      cron: '0 9 * * *'
+      timeout: 60
+script-providers:
+  wechat_pay_coupon:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/wechat_pay_coupon.js'
+    interval: 86400
+  WeiboCookieTask:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/WeiboCookieTask.js'
+    interval: 86400
+  weibotalk_cookie:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/weibotalk.cookie.js'
+    interval: 86400
+  weibotalk:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/weibotalk.js'
+    interval: 86400
+  BiliBiliDailyBonus:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/BiliBiliDailyBonus.js'
+    interval: 86400
+  wps_cookie:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/wps.cookie.js'
+    interval: 86400
+  wps:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/wps.js'
+    interval: 86400

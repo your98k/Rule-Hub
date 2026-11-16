@@ -1,0 +1,40 @@
+name: 'UAPI热榜聚合'
+desc: |-
+  基于UAPI热榜接口定时推送多平台热榜数据。\n可选填UAPI Token，使用个人密钥将消耗积分。\n可设置热榜平台，建议避免配置过多以减少请求频率。\n可设置榜单条数，默认5条，最大10条。\n支持平台：哔哩哔哩 bilibili、A站 acfun、微博热搜 weibo、知乎热榜 zhihu、知乎日报 zhihu-daily、抖音 douyin、小红书 xiaohongshu、快手 kuaishou、豆瓣电影 douban-movie、豆瓣小组 douban-group、百度贴吧 tieba、虎扑 hupu、NGA论坛 ngabbs、V2EX v2ex、吾爱破解 52pojie、全球主机交流 hostloc、酷安 coolapk、百度热搜 baidu、澎湃新闻 thepaper、今日头条 toutiao、腾讯新闻 qq-news、新浪热搜 sina、新浪新闻 sina-news、网易新闻 netease-news、虎嗅 huxiu、爱范儿 ifanr、少数派 sspai、IT之家 ithome、IT之家喜加一 ithome-xijiayi、掘金 juejin、简书 jianshu、果壳 guokr、36氪 36kr、51CTO 51cto、CSDN csdn、NodeSeek nodeseek、HelloGitHub hellogithub、英雄联盟 lol、原神 genshin、崩坏3 honkai、星穹铁道 starrail、网易云音乐热歌榜 netease-music、QQ音乐热歌榜 qq-music、微信读书 weread、天气预警 weatheralarm、地震速报 earthquake、历史上的今天 history
+author: 'sooyaaabo[https://github.com/sooyaaabo]'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/Other/FlameFill.png'
+date: '2026-10-02 12:00'
+open-url: 'https://uapis.cn/hotboard'
+category: #!replace
+  - '定时任务'
+# 由 Loon 插件自动转换：UAPI_HotBoard.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：sooyaaabo[https://github.com/sooyaaabo]
+arguments-version: 1
+arguments:
+  uapi_cron:
+    type: input
+    title: '定时参数'
+    default: "0 9 * * *"
+  uapi_type:
+    type: input
+    title: '热榜平台'
+    default: ""
+  uapi_top:
+    type: input
+    title: '榜单条数'
+    default: ""
+  uapi_api:
+    type: input
+    title: 'UAPI Token'
+    default: ""
+cron:
+  script:
+    - name: 'UAPI_hotboard'
+      cron: '${args.uapi_cron}'
+      timeout: 60
+script-providers:
+  UAPI_hotboard:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/UAPI.hotboard.js'
+    interval: 86400
