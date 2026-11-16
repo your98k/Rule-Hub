@@ -1,0 +1,36 @@
+name: '123云盘 去广告'
+desc: |-
+  123云盘 去广告，共 3 条规则。
+openUrl: 'https://apps.apple.com/app/id1597682672'
+author: 'your98k'
+category: '去广告'
+date: '2026-11-16'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'www.123pan.com'
+  url-rewrite:
+    - '^https://www\.123pan\.com/api/config/get - reject-dict'
+  script:
+    - name: '123pan-0'
+      match: '^https?://www\.123pan\.com/s/[0-9a-zA-Z=_/-]+\.html'
+      type: response
+      require-body: true
+      max-size: 10485760
+      timeout: 60
+      engine: auto
+    - name: '123pan-1'
+      match: '^https?://www\.123pan\.com/b/api/share/download/info'
+      type: request
+      max-size: 10485760
+      timeout: 60
+      engine: auto
+
+script-providers:
+  123pan-0:
+    url: 'https://raw.githubusercontent.com/ddgksf2013/Scripts/master/123pan.js'
+    interval: 86400
+  123pan-1:
+    url: 'https://raw.githubusercontent.com/ddgksf2013/Scripts/master/123pan.js'
+    interval: 86400
