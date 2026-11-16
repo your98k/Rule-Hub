@@ -1,26 +1,41 @@
 name: '去上网 去广告'
 desc: |-
-  拦截去上网(去哒)的聚合广告联盟与开屏广告请求
-  覆盖实测 30+ 广告平台，不触碰 8quan.com 自有接口
+  拦截聚合广告联盟，并跳过自有加密接口下发的开屏广告
+  开屏通过替换接口响应实现，无需解密
 category: '去广告'
 openUrl: 'https://apps.apple.com/cn/app/id1215148253'
 icon: 'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/32/d9/58/32d958a8-b679-84dd-52e8-385beaf47e19/AppIcon-0-0-1x_U007emarketing-0-6-0-85-220.png/512x512bb.jpg'
-date: '2026-11-16 20:10'
-version: '3.1'
+date: '2026-11-16 20:32'
+version: '4.0'
 
 arguments-version: 1
 arguments:
+  skip_splash:
+    type: switch
+    title: 跳过开屏广告
+    default: true
+  spoof_size:
+    type: select
+    title: 开屏响应大小范围
+    default: '400-600'
+    options:
+      - value: '400-600'
+        label: 400-600 字节（实测有效，推荐）
+      - value: '<600'
+        label: 小于 600 字节（会误拦初始化响应，可能起不来）
+      - value: '<900'
+        label: 小于 900 字节（误伤更多，仅排查用）
   block_mode:
     type: select
-    title: 拦截方式
+    title: 广告域名拦截方式
     default: 'REJECT,pre-matching'
     options:
       - value: 'REJECT,pre-matching'
-        label: 建连前拦截（推荐，开屏快速失败）
+        label: 建连前拦截（推荐）
       - value: 'REJECT'
-        label: 建连后拦截（排查时用，可看连接记录）
+        label: 建连后拦截（可看连接记录）
       - value: 'REJECT-DROP'
-        label: 静默丢弃（可能让开屏等待超时）
+        label: 静默丢弃
   stats_action:
     type: select
     title: 统计埋点
@@ -29,7 +44,43 @@ arguments:
       - value: DIRECT
         label: 不拦截（只去广告）
       - value: 'REJECT,pre-matching'
-        label: 一并拦截（更彻底）
+        label: 一并拦截
+
+http:
+  force-http-engine:
+    - 'qudaapi.8quan.com:80'
+  mitm:
+    - '*.8quan.com'
+    - '*.yedone.com'
+  script:
+    - name: qd-skip-splash
+      match: '^http://qudaapi\.8quan\.com/index\.php'
+      type: response
+      require-body: true
+      max-size: 2097152
+      timeout: 3
+      engine: auto
+      argument: '{"skip":${args.skip_splash|json},"size":${args.spoof_size|json}}'
+
+script-providers:
+  qd-skip-splash:
+    payload: |
+      var cfg = {};
+      try { cfg = JSON.parse($argument || '{}'); } catch (e) { cfg = {}; }
+      if (cfg.skip !== true) { $done({}); }
+      var body = String(($response && $response.body) || '');
+      var len = body.length;
+      var rule = String(cfg.size || '400-600');
+      var hit = false;
+      if (rule === '<600') { hit = len < 600; }
+      else if (rule === '<900') { hit = len < 900; }
+      else { hit = (len >= 400 && len <= 600); }
+      if (hit) {
+        $persistentStore.write('spoofed len=' + len + ' rule=' + rule, 'qd_skip_log');
+        $done({ body: '{"time_stamp":1794825375,"p_encrypt":"","data":"","res":0,"msg":"\u64cd\u4f5c\u6210\u529f"}' });
+      } else {
+        $done({});
+      }
 
 rules:
   # ── 聚合配置下发层 ──
@@ -100,12 +151,9 @@ rules:
   - 'DOMAIN-SUFFIX,massx.com,${args.block_mode}'
   - 'DOMAIN-SUFFIX,yfzj.top,${args.block_mode}'
   # ── 二进制实测新增（抓包未出现、仅静态分析可见）──
-  # iytcdn：激励视频 SSP，含 /union/sdk/ad、/reward/token
   - 'DOMAIN-SUFFIX,iytcdn.com,${args.block_mode}'
-  # 高德广告接口（adiu = 广告接口单元）
   - 'DOMAIN,adiu.amap.com,${args.block_mode}'
   - 'DOMAIN,dualstack-adiu.amap.com,${args.block_mode}'
-  # 头条 admsg 广告下发与配置
   - 'DOMAIN,mon.toutiao.com,${args.block_mode}'
   - 'DOMAIN-SUFFIX,mon.toutiaocloud.com,${args.block_mode}'
   - 'DOMAIN-SUFFIX,mon.toutiaocloud.net,${args.block_mode}'
