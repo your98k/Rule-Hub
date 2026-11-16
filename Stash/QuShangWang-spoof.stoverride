@@ -4,20 +4,22 @@ desc: |-
   若 App 闪退属预期风险，关掉本覆写即可恢复
 category: '去广告'
 openUrl: 'https://apps.apple.com/cn/app/id1215148253'
-date: '2026-11-16 20:00'
-version: '4.0-spoof'
+date: '2026-11-16 20:15'
+version: '4.1-spoof'
 
 arguments-version: 1
 arguments:
   spoof_mode:
     type: select
     title: 伪造范围
-    default: small
+    default: range
     options:
+      - value: range
+        label: 仅 400-600 字节响应（实测开屏为 443，最精准）
       - value: small
-        label: 仅空响应体小于 600 字节的请求（保守，针对开屏）
+        label: 所有小于 600 字节响应（较激进）
       - value: all
-        label: 全部接口返回空 data（激进，用于验证容忍度）
+        label: 全部接口返回空 data（验证容忍度）
   ad_action:
     type: select
     title: 第三方广告域名
@@ -53,7 +55,9 @@ script-providers:
       var body = String(($response && $response.body) || '');
       var len = body.length;
       $persistentStore.write('hit mode=' + mode + ' len=' + len, 'qd_spoof_log');
-      var shouldSpoof = (mode === 'all') || (mode === 'small' && len < 600);
+      var shouldSpoof = (mode === 'all')
+        || (mode === 'small' && len < 600)
+        || (mode === 'range' && len >= 400 && len <= 600);
       if (shouldSpoof) {
         var empty = '{"time_stamp":1794825375,"p_encrypt":"","data":"","res":0,"msg":"操作成功"}';
         $done({ body: empty });
