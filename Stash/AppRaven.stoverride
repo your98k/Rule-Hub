@@ -1,5 +1,5 @@
 name: 'AppRaven 会员解锁'
-desc: 'AppRaven 会员功能解锁，脚本改写 GraphQL 响应。'
+desc: 'AppRaven 会员相关字段置为已购，纯声明式改写响应。'
 openUrl: 'https://apps.apple.com/app/id1532203205'
 author: 'your98k'
 category: '会员解锁'
@@ -9,18 +9,5 @@ version: '1.0.0'
 http:
   mitm:
     - 'appraven.net'
-  script:
-    - name: 'appraven-crack'
-      match: '^https://appraven\.net/appraven/graphql'
-      type: response
-      require-body: true
-      max-size: 8388608
-      timeout: 10
-      engine: auto
-
-script-providers:
-  appraven-crack:
-    url: 'https://loon.103516.xyz/Script/AppRaven/AppRaven.js'
-    interval: 86400
-    headers:
-      User-Agent: 'Loon/3.2.6 (iPhone; iOS 17.0)'
+  body-rewrite:
+    - '^https://appraven\.net/appraven/graphql response-replace-regex "premium":false "premium":true "hasInAppPurchases":false "hasInAppPurchases":true "youOwn":false "youOwn":true "arcade":false "arcade":true "preorder":false "preorder":true'

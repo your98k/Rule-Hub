@@ -18,5 +18,5 @@ http:
 
 script-providers:
   coolapk-redirect:
-    url: 'https://raw.githubusercontent.com/VenenoSix24/Ivy-Script/main/Loon/script/Coolapk_Redirect.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/CoolApkRedirect.js'
     interval: 86400

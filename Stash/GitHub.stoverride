@@ -18,7 +18,5 @@ http:
 
 script-providers:
   gh-raw-cdn:
-    url: 'https://loon.103516.xyz/Script/GitHub/GitRawAutoCDN.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/GitHubRawCDN.js'
     interval: 86400
-    headers:
-      User-Agent: 'Loon/3.2.6 (iPhone; iOS 17.0)'
