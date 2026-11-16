@@ -3,7 +3,7 @@ desc: |-
   过滤美团广告，需卸载重装。
 author: 'your98k'
 homepage: 'https://github.com/harmonizr/loon-plugins'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/MeiTuan.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/meituan.png
 date: '2026-10-25 21:00'
 openUrl: 'https://apps.apple.com/app/id423084029'
 category: '去广告'

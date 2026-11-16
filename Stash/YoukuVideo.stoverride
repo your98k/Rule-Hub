@@ -1,7 +1,7 @@
 name: '优酷视频 去广告'
 desc: '优酷视频 去广告，含广告域名拦截与播放页广告字段清理。'
 openUrl: 'https://apps.apple.com/app/id336141475'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/YoukuVideo.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/youkushipin.png
 author: 'your98k'
 category: '去广告'
 date: '2026-11-16'

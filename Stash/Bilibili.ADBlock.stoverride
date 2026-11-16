@@ -3,7 +3,7 @@ desc: '哔哩哔哩去广告，32 项原生参数，内置 8 条 QUIC 拦截。'
 openUrl: http://boxjs.com/#/app/BiliBili.ADBlock
 author: 'your98k'
 homepage: https://biliverse.github.io/guide/ad-block
-icon: https://github.com/Biliverse/ADBlock/raw/main/src/assets/icon_rounded.png
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/bilibili.png
 category: 🪐 Biliverse
 date: '2026-11-05 16:28:17'
 version: 0.7.5-native.6

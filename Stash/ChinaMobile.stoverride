@@ -2,7 +2,7 @@ name: '中国移动'
 desc: '中国移动 去广告，规则可自定义，支持桌面小组件。'
 author: 'your98k'
 homepage: 'https://github.com/harmonizr/loon-plugins'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ChinaMobile.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/yidong.png
 date: '2026-10-27 17:00'
 openUrl: 'https://apps.apple.com/app/id583700738'
 category: '去广告, 功能增强'

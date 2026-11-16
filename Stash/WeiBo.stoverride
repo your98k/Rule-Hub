@@ -3,7 +3,7 @@ desc: |-
   微博与微博国际版净化，原生实现，不依赖远程脚本
   覆盖信息流、详情页、评论、搜索、超话、开屏
 category: '去广告'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/WeiBo.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/weibo.png
 openUrl: 'https://apps.apple.com/cn/app/id350962117'
 date: '2026-11-16 23:00'
 version: '1.2'

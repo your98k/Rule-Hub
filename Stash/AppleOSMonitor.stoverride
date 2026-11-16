@@ -2,7 +2,7 @@ name: 'AppleOS Monitor'
 desc: 'Apple 系统版本更新监控，可选系统与版本类型。'
 author: 'your98k'
 homepage: 'https://github.com/harmonizr/loon-plugins'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/iBetame.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/apple.png
 date: '2026-10-02 12:00'
 category: '功能增强, 定时任务'
 # 由 Loon 插件自动转换：AppleOSMonitor.lpx

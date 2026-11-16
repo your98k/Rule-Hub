@@ -4,7 +4,7 @@ desc: '把 t.me 等网页链接交给指定的 Telegram 客户端。'
 openUrl: 'https://apps.apple.com/app/id686449807'
 author: 'your98k'
 homepage: 'https://loonlab.103516.xyz/Plugin/'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Telegram-01.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/telegram.png
 category: '功能增强'
 date: '2026-11-02'
 version: '1.1.0'

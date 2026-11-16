@@ -2,7 +2,7 @@ name: '红果短剧去广告'
 desc: '红果短剧 去广告，拦截自有 SDK 与穿山甲等广告域。'
 author: 'your98k'
 homepage: 'https://github.com/Tartarus2014/Loon-Script'
-icon: 'https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/hongguoduanju.png
 category: '去广告'
 date: '2026-10-20'
 version: '1.6.0'

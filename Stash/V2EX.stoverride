@@ -3,7 +3,7 @@ desc: |-
   过滤V2EX社区广告；V2EX每日签到，访问V2EX个人主页自动获取保存Cookie。
 author: 'your98k'
 homepage: 'https://github.com/harmonizr/loon-plugins'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/V2EX-03.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/V2ex.png
 date: '2026-10-02 12:00'
 openUrl: 'https://v2ex.com/'
 category: '去广告'

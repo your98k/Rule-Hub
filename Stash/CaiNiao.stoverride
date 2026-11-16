@@ -13,7 +13,7 @@ desc: '菜鸟 App 去广告（首页瀑布流、搜索栏、寄件券、发现�
 openUrl: 'https://apps.apple.com/app/id951610982'
 author: 'your98k'
 homepage: 'https://loonlab.103516.xyz/Plugin/'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/CaiNiao.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/cainiaoguoguo.png
 category: '去广告'
 date: '2026-11-14'
 version: '1.0.0'
