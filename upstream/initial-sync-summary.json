@@ -1,0 +1,280 @@
+{
+  "execution_context": {
+    "kind": "cloud-workspace-manual-run",
+    "tooling_commit": "a18777f2a1449fb080bc46fe92a0b3f8c9c59649",
+    "test_base": "ef4e24d0bfc747f71ff1c7d15d37929c6691339b",
+    "seeded_main_files_for_simulation": true,
+    "github_actions_enabled": false,
+    "no_override_updates": true
+  },
+  "coverage": {
+    "total": 126,
+    "by_mode": {
+      "merge": 68,
+      "review": 41,
+      "local": 16,
+      "specialized": 1
+    }
+  },
+  "rule_sync": {
+    "enrolled": 1,
+    "fetch-error": 3,
+    "local-only": 16,
+    "test-only": 9,
+    "unchanged": 106
+  },
+  "deterministic_rerun": {
+    "local-only": 16,
+    "test-only": 9,
+    "unchanged": 110
+  },
+  "resource_audit": {
+    "overrides": 135,
+    "total": 249,
+    "unique_external_urls": 140,
+    "errors": 33,
+    "by_status": {
+      "fetched": 112,
+      "self-mirror": 80,
+      "inline": 25,
+      "fetch-error": 23,
+      "html": 8,
+      "http-error": 1
+    }
+  },
+  "resource_findings": [
+    {
+      "override": "Stash/ChaoGeJiaoYu.stoverride",
+      "provider": null,
+      "status": "override-parse-failed",
+      "error": "duplicate YAML key: mock"
+    },
+    {
+      "override": "Stash/Bilibili.stoverride",
+      "provider": "bilibili.webpage",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/JingDong.stoverride",
+      "provider": "jd-remove-ads",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/JingDong.stoverride",
+      "provider": "jd-price-title-embed",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/JingDong.stoverride",
+      "provider": "jd-price-detail-notify",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/JingDong.stoverride",
+      "provider": "jd-price-detail-embed-table",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/JingDong.stoverride",
+      "provider": "jd-price-detail-embed-line",
+      "status": "html",
+      "error": "source returned HTML content type"
+    },
+    {
+      "override": "Stash/MyBlockAds.stoverride",
+      "provider": "a_12306",
+      "status": "html",
+      "error": "source returned HTML"
+    },
+    {
+      "override": "Stash/MyBlockAds.stoverride",
+      "provider": "adrive",
+      "status": "html",
+      "error": "source returned HTML"
+    },
+    {
+      "override": "Stash/MyBlockAds.stoverride",
+      "provider": "myblockads",
+      "status": "html",
+      "error": "source returned HTML"
+    },
+    {
+      "override": "Stash/MyBlockAds.stoverride",
+      "provider": "coolapk",
+      "status": "html",
+      "error": "source returned HTML"
+    },
+    {
+      "override": "Stash/Umetrip.stoverride",
+      "provider": "umetrip-0",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/WebPage.stoverride",
+      "provider": "baiduNoRedirect",
+      "status": "html",
+      "error": "source returned HTML"
+    },
+    {
+      "override": "Stash/WebPage.stoverride",
+      "provider": "myblockads",
+      "status": "html",
+      "error": "source returned HTML"
+    },
+    {
+      "override": "Stash/WebPage.stoverride",
+      "provider": "hanime",
+      "status": "html",
+      "error": "source returned HTML"
+    },
+    {
+      "override": "Stash/YouTube.stoverride",
+      "provider": "YouTube去广告",
+      "status": "http-error",
+      "error": "HTTP 403"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "usmile",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "12306",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "bilibili_protobuf_request",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "bilibili_protobuf_response",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "bilibiliManga",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "dianping",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "flyert",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "foliday",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "freshippo",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "alicdn",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "mafengwo",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "mdb",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "qmai",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "51job",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "tuhu",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "UnblockURLinWeChat",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    },
+    {
+      "override": "Stash/blockAds.stoverride",
+      "provider": "airchina",
+      "status": "fetch-error",
+      "error": "source DNS lookup failed"
+    }
+  ],
+  "source_findings": [
+    {
+      "target": "Stash/ChinaMobile.stoverride",
+      "mode": "review",
+      "status": "fetch-error",
+      "detail": "The read operation timed out"
+    },
+    {
+      "target": "Stash/KDocs.stoverride",
+      "mode": "merge",
+      "status": "fetch-error",
+      "detail": "The read operation timed out"
+    },
+    {
+      "target": "Stash/QQ.stoverride",
+      "mode": "review",
+      "status": "fetch-error",
+      "detail": "Remote end closed connection without response"
+    }
+  ],
+  "tests": {
+    "converter": 53,
+    "three_way_and_candidate_gate": 20,
+    "resources": 9,
+    "total": 82,
+    "result": "PASS"
+  },
+  "limitations": [
+    "Actions workflow not installed: GitHub MCP workflow scope missing",
+    "Review/local modes do not automatically regenerate customized overrides",
+    "Self-mirror audits inspect checkout copies, not original author freshness",
+    "Cloud DNS failures are observational failures, not proof of source deletion",
+    "No local Stash or target app validation performed"
+  ],
+  "baseline_enrolled_total": 110
+}
