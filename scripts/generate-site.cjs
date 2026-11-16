@@ -67,7 +67,7 @@ function parseAuthors(raw) {
   return out;
 }
 
-// Stash 覆写头部解析（容错支持块标量、跨行引号与纯多行折叠）
+// Stash 覆写头部解析（容错支持块标量、跨行文本）
 const BODY_KEYS = new Set([
   'rules', 'http', 'script', 'scripts', 'script-providers', 'proxies',
   'proxy-groups', 'proxy-providers', 'rule-providers', 'url-rewrite',
@@ -197,6 +197,34 @@ function collectStashOverrides() {
     });
 }
 
+// Feedback hooks are injected into the shared template without rewriting its layout.
+// Fail closed if a future template change removes an anchor, rather than dropping feedback silently.
+function withFeedback(template) {
+  const patches = [
+  [
+    "  <link rel=\"stylesheet\" href=\"./assets/tailwind.css\">",
+    "  <link rel=\"stylesheet\" href=\"./assets/tailwind.css\">\n  <link rel=\"stylesheet\" href=\"./assets/feedback.css\">"
+  ],
+  [
+    "            </div>\n          </article>\n",
+    "            </div>\n            <div class=\"feedback-card-actions\" onclick=\"event.stopPropagation()\">\n              <button type=\"button\" class=\"ios-btn feedback-card-button\" data-feedback-id=\"${plugin.id}\" aria-haspopup=\"dialog\">💬 反馈</button>\n              <a class=\"feedback-history-link\" data-feedback-history=\"${plugin.id}\" target=\"_blank\" rel=\"noopener noreferrer\">查看反馈 ↗</a>\n            </div>\n          </article>\n"
+  ],
+  [
+    "        <div class=\"mt-5 pt-4 border-t border-white/10 flex flex-wrap items-center justify-end gap-2.5\">\n",
+    "        <div class=\"mt-5 pt-4 border-t border-white/10 flex flex-wrap items-center justify-end gap-2.5\">\n          <button type=\"button\" class=\"ios-btn feedback-card-button\" data-feedback-id=\"${p.id}\" aria-haspopup=\"dialog\">💬 反馈此覆写</button>\n"
+  ],
+  [
+    "</body>\n",
+    "  <script src=\"./assets/feedback.js\" defer></script>\n</body>\n"
+  ]
+];
+  for (const [anchor, replacement] of patches) {
+    if (template.split(anchor).length !== 2) throw new Error('反馈模板锚点缺失或重复：' + anchor.slice(0, 60));
+    template = template.replace(anchor, () => replacement);
+  }
+  return template;
+}
+
 function main() {
   fs.rmSync(SITE, { recursive: true, force: true });
   fs.mkdirSync(path.join(SITE, 'files', 'Stash'), { recursive: true });
@@ -207,6 +235,13 @@ function main() {
     fs.copyFileSync(cssSource, path.join(SITE, 'assets', 'tailwind.css'));
   } else {
     console.warn('WARN: scripts/tailwind.css 不存在，页面样式会缺失');
+  }
+
+  for (const asset of ['feedback.css', 'feedback.js']) {
+    const source = path.join(__dirname, asset);
+    if (!fs.existsSync(source)) throw new Error(`缺少网页反馈资源：scripts/${asset}`);
+    fs.mkdirSync(path.join(SITE, 'assets'), { recursive: true });
+    fs.copyFileSync(source, path.join(SITE, 'assets', asset));
   }
 
   const plugins = collectStashOverrides();
@@ -230,7 +265,7 @@ function main() {
   fs.writeFileSync(path.join(SITE, 'plugins.json'), JSON.stringify(data, null, 2) + '\n');
 
   const templatePath = path.join(__dirname, 'site-template.html');
-  const template = fs.readFileSync(templatePath, 'utf8');
+  const template = withFeedback(fs.readFileSync(templatePath, 'utf8'));
   const marker = /window\.__PLUGINS_DATA__\s*=\s*\{[^;]*\};/;
   if (!marker.test(template)) throw new Error('site-template.html 缺少 window.__PLUGINS_DATA__ 占位');
 
