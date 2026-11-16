@@ -1,161 +1,343 @@
-name: '微博'
+name: '微博去广告'
 desc: |-
-  微博全面净化
-author: 'your98k'
-homepage: 'https://github.com/harmonizr/loon-plugins'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/WeiBo.png'
-date: '2026-10-19 15:00'
-openUrl: 'https://apps.apple.com/app/id350962117'
+  微博与微博国际版净化，原生实现，不依赖远程脚本
+  覆盖信息流、详情页、评论、搜索、超话、开屏
 category: '去广告'
-# 由 Loon 插件自动转换：WeiBo.lpx
-# 上游主页：https://github.com/harmonizr/loon-plugins
-# 原作者：RuCu6[https://github.com/RuCu6], fmz200[https://github.com/fmz200], zmqcherish[https://github.com/zmqcherish], 可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md]
+openUrl: 'https://apps.apple.com/cn/app/id350962117'
+date: '2026-11-16 22:45'
+version: '1.1'
+author: 'ddgksf2013 / zmqcherish（上游规则），Stash 原生重写'
+
 arguments-version: 1
 arguments:
-  MainTabFilter:
+  splash:
     type: switch
-    title: '顶部 Tab 过滤'
+    title: 开屏广告
     default: true
-    description: 开关：开启后过滤顶部多余 Tab。若某个你要用的入口消失，请关闭。
+  detail_extra:
+    type: switch
+    title: 详情页相关推荐/好物种草/打赏
+    default: true
+  comment_related:
+    type: switch
+    title: 评论区相关推荐
+    default: true
+  interest_user:
+    type: switch
+    title: 可能感兴趣的人/超话
+    default: true
+  home_vip:
+    type: switch
+    title: 个人页 VIP 卡片
+    default: true
+  lvzhou:
+    type: switch
+    title: 绿洲模块
+    default: true
+  debug:
+    type: switch
+    title: 输出调试日志
+    default: false
+
 http:
-  url-rewrite:
-    - '^https?://m?api\.weibo\.c(n|om)/2/logservice/service\? - reject'
-    - '^https://m?api\.weibo\.c(n|om)/2/(?:ug/checkin/list|push/daily|push/info) - reject-dict'
-    - '^https://m?api\.weibo\.c(n|om)/2/!/live/media_homelist\? - reject-dict'
-    - '^https://m?api\.weibo\.c(n|om)/2/comments/bullet_screens\? - reject-dict'
-    - '^https://m?api\.weibo\.c(n|om)/2/photo/info\? - reject-dict'
-    - '^https://m?api\.weibo\.c(n|om)/2/statuses/(?:container_positive|push_info) - reject-dict'
-    - '^https://m?api\.weibo\.c(n|om)/2/vote/get_vote_detail\? - reject-dict'
-    - '^https://m?api\.weibo\.c(n|om)/2/!/chaohua/discovery/home_bottom/switch\? - reject-dict'
-    - '^https://m?api\.weibo\.c(n|om)/2/!/huati/(?:discovery_home_bottom_channels|discovery_home_bottom_getdotinfo|mobile_discovery_searchchange) - reject-dict'
-    - '^https://m?api\.weibo\.c(n|om)/2/!/wbox/\w+/(?:home_bottom_modal|interest_category) - reject-dict'
-    - '^https://m?api\.weibo\.c(n|om)/2/search/(?:container_discover|finder_nav_polling)\? - reject-dict'
-    - '^https://m?api\.weibo\.c(n|om)/2/hot/hours_spotlight\? - reject-dict'
-    - '^https://m?api\.weibo\.c(n|om)/2/video/redpacket\? - reject-dict'
-    - '^https://m?api\.weibo\.c(n|om)/2/!/(?:search/finder_nav_polling|sug/list/finderchange|was/finder/searchbarchange)\? - reject-dict'
-    - '^https://m?api\.weibo\.c(n|om)/2/video/tiny_video_info_show\? - reject-dict'
-    - '^https://(?:bootrealtime|bootpreload)\.uve\.weibo\.com/v\d/ad/(?:realtime|preload) - reject-dict'
-    - '^https://sdkapp\.uve\.weibo\.com/interface/sdk/(?:get-lbs-cell-info\.php|sdkconfig\.php) - reject-dict'
-    - '^https://card\.weibo\.com/article/m/aj/(?:reward|uvead) - reject-dict'
-    - '^https://weibo\.com/ttarticle/x/m/aj/(?:reward|uvead) - reject-dict'
-  body-rewrite:
-    - '^https://m?api\.weibo\.c(n|om)/2/cardlist\? response-jq del(.items[] | select(.category == "group"))'
   mitm:
-    - '*.weibo.cn'
-    - '*.weibo.com'
-    - 'weibo.com'
+    - '*.api.weibo.cn'
+    - '*.api.weibo.com'
+    - '*.uve.weibo.com'
+    - 'api.weibo.cn'
+    - 'api.weibo.com'
+    - 'boot.biz.weibo.com'
+    - 'mapi.weibo.cn'
+    - 'mapi.weibo.com'
+    - 'new.vip.weibo.cn'
+    - 'weibointl.api.weibo.cn'
+    - 'weibointl.api.weibo.com'
+  url-rewrite:
+  - '^https?://api\.weibo\.cn/\d/statuses/container_positive - reject-200'
+  - '^https?://api\.weibo\.cn/\d/push/info - reject-200'
+  - '^https?://api\.weibo\.cn/.*account/recommend_interesttags - reject-dict'
+  - '^https?://api\.weibo\.cn/.*/media_homelist - reject-200'
+  - '^https?://api\.weibo\.cn/.*finder/searchbarchange - reject-200'
+  - '^https?://api\.weibo\.cn/\d/ad/preload - reject-dict'
+  - '^https?://api\.weibo\.cn/\d/profile/recommend_popuser - reject-dict'
+  - '^https?://boot.*weibo\.com/v\d/ad/realtime - reject-200'
+  - '^https?://api\.weibo\.cn/.*discovery_home_bottom_getdotinfo - reject-dict'
+  - '^https?://m?api\.weibo\.c(n|om)/\d/push/daily - reject-dict'
+  - '^https?://(preload-click|preload-impression)\.uve\.weibo\.com/(interface/wbpullad/wbpullad_click\.php|wbapplua/get_wbpullad_log\.lua) - reject'
+  - '^https?://sdkapp\.uve\.weibo\.com/interface/sdk/sdkconfig\.php - reject'
+  - '^https?://m?api\.weibo\.c(n|om)/\d/hot/hours_spotlight - reject-dict'
+  - '^https?://api\.weibo\.cn/\d/cardlist\?v_f=.*Weibo_intl - reject-dict'
+  - '^https?://weibointl\.api\.weibo\.c(n|om)/portal\.php\?a=hot_search_users - reject-dict'
+  - '^https?://m?api\.weibo\.c(n|om)/\d/ad/weibointl\? - reject-dict'
+  body-rewrite:
+  - '^https?://api\.weibo\.cn/\d/ug/checkin/stream response-jq .items |= map(select(.category != "card"))'
   script:
-    - name: 'weibo_ads'
-      match: '^https://m?api\.weibo\.c(n|om)/2/groups/allgroups/v2\?'
-      type: 'response'
-      timeout: 60
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/(?:checkin/show|client/publisher_list|push/active)'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/groups/allgroups/v2\?'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/(?:cardlist|page)'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/comments/build_comments\?'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/(?:container/asyn|flowlist|flowpage)'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/friendships/(?:create|destroy)'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/profile/(?:container_timeline|dealatt|me|statuses/tab|userinfo)'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/shproxy/chaohua/discovery/searchactive\?'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/statuses/(?:comments_expand_child|container_detail_comment)'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/statuses/(?:container_detail\?|container_timeline(?:_hot|_topic|_topicpage|_unread)?|repost_timeline|unread_hot_timeline)'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/statuses/(?:extend|show)\?'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/video/(?:full_screen_stream|tiny_stream_mid_detail|tiny_stream_video_list)\?'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/!/huati/discovery_home_bottom_channels\?'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/direct_messages/user_list\?'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/messageflow/notice\?'
-      type: 'response'
-    - name: 'WeiBo_ads'
-      match: '^https?://m?api\.weibo\.c(n|om)/2/search/(?:finder|container_timeline|container_discover)\?'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://m?api\.weibo\.cn/2/searchall\?'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://bootpreload\.uve\.weibo\.com/v[12]/ad/preload'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://sdkapp\.uve\.weibo\.com/interface/sdk/sdkad\.php'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://wbapp\.uve\.weibo\.com/(?:preload/get_ad|wbapplua/wbpullad\.lua)'
-      type: 'response'
-    - name: 'weibo'
-      match: '^https://new\.vip\.weibo\.cn/aj/appicon/list\?'
-      type: 'response'
-rules:
-  - 'DOMAIN-SUFFIX,alitui.weibo.com,REJECT'
-  - 'DOMAIN-SUFFIX,beacon.sina.com.cn,REJECT'
-  - 'DOMAIN-SUFFIX,biz.weibo.com,REJECT'
-  - 'DOMAIN,dns.weibo.cn,REJECT'
-  - 'DOMAIN,huodong.weibo.cn,REJECT'
-  - 'DOMAIN,sax.sina.com.cn,REJECT'
-  - 'DOMAIN,saxn.sina.com.cn,REJECT'
-  - 'DOMAIN,saxs.sina.com.cn,REJECT'
-  - 'DOMAIN,u1.img.mobile.sina.cn,REJECT'
-  - 'DOMAIN,bootpreload.uve.weibo.com,REJECT'
-  - 'DOMAIN-SUFFIX,fastimage.uve.weibo.com,REJECT'
-  - 'DOMAIN-SUFFIX,adimg.vue.weibo.com,REJECT'
-  - 'DOMAIN-SUFFIX,zymo.mps.weibo.com,REJECT'
-  - 'DOMAIN-SUFFIX,weibomingzi.com,REJECT'
-  - 'DOMAIN-SUFFIX,sdkapp.uve.weibo.com,REJECT'
-  - 'DOMAIN-SUFFIX,promote.biz.weibo.cn,REJECT'
-  - 'DOMAIN-SUFFIX,gw5.push.mcp.weibo.cn,REJECT'
-  - 'DOMAIN-SUFFIX,gw6.push.mcp.weibo.cn,REJECT'
-  - 'DOMAIN-SUFFIX,game.weibo.cn,REJECT'
-  - 'DOMAIN-SUFFIX,adimg.uve.weibo.com,REJECT'
-  - 'DOMAIN-SUFFIX,game.weibo.com,REJECT'
-  - 'DOMAIN-SUFFIX,ads.viber.com,REJECT'
-  - 'DOMAIN-SUFFIX,ads-d.viber.com,REJECT'
-  - 'DOMAIN-SUFFIX,ads.aws.viber.com,REJECT'
-  - 'DOMAIN-SUFFIX,dp.im.weibo.cn,REJECT'
-  - 'DOMAIN-SUFFIX,click.uve.weibo.com,REJECT'
-  - 'DOMAIN-SUFFIX,wax.weibo.com,REJECT'
-  - 'DOMAIN-SUFFIX,wbapp.uve.weibo.com,REJECT'
-  - 'DOMAIN-SUFFIX,widget.weibo.com,REJECT'
-  - 'DOMAIN-SUFFIX,dsp.edm.weibo.cn,REJECT'
-  - 'DOMAIN-SUFFIX,alitui.weibo.com.cn,REJECT'
-  - 'DOMAIN-SUFFIX,tui.weibo.com,REJECT'
-  - 'DOMAIN-SUFFIX,wax.weibo.com.cn,REJECT'
-  - 'DOMAIN-SUFFIX,ad.weibo.com,REJECT'
-  - 'DOMAIN,datacollection.uve.weibo.com,REJECT'
-  - 'DOMAIN,adpinpai.video.weibocdn.com,REJECT'
+    - name: weibo-clean
+      match: '^https?://[^/]+weibo\.(cn|com)/'
+      type: response
+      require-body: true
+      max-size: 8388608
+      timeout: 10
+      engine: auto
+      argument: '{"splash":${args.splash|json},"detail_extra":${args.detail_extra|json},"comment_related":${args.comment_related|json},"interest_user":${args.interest_user|json},"home_vip":${args.home_vip|json},"lvzhou":${args.lvzhou|json},"debug":${args.debug|json}}'
+
 script-providers:
-  weibo_ads:
-    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/weibo_ads.js'
-    interval: 86400
-  weibo:
-    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/weibo.js'
-    interval: 86400
-  WeiBo_ads:
-    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/WeiBo.ads.js'
-    interval: 86400
+  weibo-clean:
+    payload: |
+      var cfg = {};
+      try { cfg = JSON.parse($argument || '{}'); } catch (e) { cfg = {}; }
+      var url = $request.url || '';
+      var body = (typeof $response.body === 'string') ? $response.body : String($response.body || '');
+
+      function log(m) { if (cfg.debug) console.log('[weibo] ' + m); }
+
+      // 判据：一条 mblog / 卡片是否为广告
+      function isAd(m) {
+        if (!m) return false;
+        if (m.mblogtypename === '广告' || m.mblogtypename === '热推') return true;
+        if (m.promotion && m.promotion.type === 'ad') return true;
+        if (m.page_info && m.page_info.actionlog && m.page_info.actionlog.source === 'ad') return true;
+        if (m.content_auth_info && m.content_auth_info.content_auth_title === '广告') return true;
+        return false;
+      }
+
+      // 信息流：删 ads/advertises/trends/headers，过滤 statuses
+      function cleanTimeline(o) {
+        ['ad', 'advertises', 'trends', 'headers'].forEach(function (k) { if (o[k]) delete o[k]; });
+        if (Array.isArray(o.statuses)) {
+          o.statuses = o.statuses.filter(function (s) {
+            if (isAd(s)) return false;
+            if (cfg.lvzhou !== false && s.common_struct) delete s.common_struct;
+            return true;
+          });
+        }
+        log('timeline');
+        return o;
+      }
+
+      // 卡片列表（cardlist/page/searchall 等）
+      function cleanCards(o) {
+        if (o.hotwords) o.hotwords = [];
+        if (Array.isArray(o.cards)) {
+          o.cards = o.cards.filter(function (c) {
+            if ([9, 165].indexOf(c.card_type) >= 0) return !isAd(c.mblog);
+            if ([1007, 180].indexOf(c.card_type) >= 0) return false;
+            if (Array.isArray(c.card_group)) {
+              c.card_group = c.card_group.filter(function (g) {
+                if (g.card_type === 118) return false;
+                if (isAd(g.mblog)) return false;
+                try { if (JSON.stringify(g).indexOf('res_from:ads') >= 0) return false; } catch (e) {}
+                return true;
+              });
+            }
+            return true;
+          });
+        }
+        log('cards');
+        return o;
+      }
+
+      // 主页 timeline（container_timeline / 超话）
+      function cleanMainTab(o) {
+        if (o.loadedInfo && o.loadedInfo.headers) delete o.loadedInfo.headers;
+        if (Array.isArray(o.items)) {
+          o.items = o.items.filter(function (it) {
+            if (it.category === 'group') {
+              if (Array.isArray(it.items) && it.items.length) {
+                try { if (JSON.stringify(it.items).indexOf('profile_top') >= 0) return true; } catch (e) {}
+              }
+            }
+            if (it.data && isAd(it.data)) return false;
+            if (it.data && it.data.page_info && it.data.page_info.video_limit) delete it.data.page_info.video_limit;
+            if (it.data && it.data.common_struct && cfg.lvzhou !== false) delete it.data.common_struct;
+            return true;
+          });
+        }
+        log('mainTab');
+        return o;
+      }
+
+      // 详情页及评论区
+      function cleanComments(o) {
+        var bad = ['广告', '廣告', '相关内容', '推荐', '热推', '推薦', '荐读'];
+        if (o.pageHeader && o.pageHeader.data && Array.isArray(o.pageHeader.data.items)) {
+          o.pageHeader.data.items = o.pageHeader.data.items.filter(function (i) { return i.category === 'detail'; });
+        }
+        if (Array.isArray(o.items)) {
+          o.items = o.items.filter(function (i) {
+            var d = i.data || {};
+            if (cfg.comment_related === false) return true;
+            if (bad.indexOf(d.adType || '') >= 0) return false;
+            if (d.card_type === 6 || d.card_type === 236) return false;
+            return true;
+          });
+        }
+        if (cfg.comment_tip !== false && o.tip_msg) delete o.tip_msg;
+        log('comments');
+        return o;
+      }
+
+      // 详情页扩展（相关推荐 / 好物种草 / 关注 / 打赏）
+      function cleanExtend(o) {
+        if (cfg.detail_extra === false) return o;
+        try {
+          var t = o.trend && o.trend.titles && o.trend.titles.title;
+          if (t === '相关推荐' || t === '博主好物种草') delete o.trend;
+        } catch (e) {}
+        if (o.follow_data) o.follow_data = null;
+        if (o.reward_info) o.reward_info = null;
+        if (o.head_cards) delete o.head_cards;
+        if (o.page_alerts) o.page_alerts = null;
+        log('extend');
+        return o;
+      }
+
+      // 个人页
+      function cleanProfile(o) {
+        if (Array.isArray(o.items)) {
+          o.items = o.items.filter(function (it) {
+            var id = it.itemId || '';
+            if (id === '100505_-_newcreator' && it.type !== 'grid') {
+              return cfg.home_creator === true;
+            }
+            if (cfg.interest_user !== false && it.category === 'group') {
+              try {
+                if (it.items && it.items[0] && it.items[0].data && it.items[0].data.desc === '可能感兴趣的人') return false;
+              } catch (e) {}
+            }
+            return true;
+          });
+        }
+        if (cfg.home_vip !== false) {
+          o.items && o.items.forEach(function (it) {
+            if (it.itemId === 'profileme_mine' && it.header) {
+              if (it.header.vipView) it.header.vipView = null;
+              if (it.header.vipIcon) delete it.header.vipIcon;
+            }
+          });
+        }
+        log('profile');
+        return o;
+      }
+
+      // 开屏：preload（rpc 时间戳推远）
+      function cleanAdPreload(o) {
+        if (cfg.splash === false) return o;
+        if (Array.isArray(o.ads)) {
+          o.last_ad_show_interval = 86400;
+          o.ads.forEach(function (a) {
+            a.start_time = 2681574400; a.end_time = 2681660799;
+            a.display_duration = 0; a.daily_display_cnt = 0; a.total_display_cnt = 0;
+          });
+        }
+        log('adPreload');
+        return o;
+      }
+
+      // 开屏：sdkad.php
+      function cleanPhpSplash(o) {
+        if (cfg.splash === false) return o;
+        if (Array.isArray(o.ads)) {
+          o.show_push_splash_ad = false;
+          o.background_delay_display_time = 0;
+          o.lastAdShow_delay_display_time = 0;
+          o.realtime_ad_video_stall_time = 0;
+          o.realtime_ad_timeout_duration = 0;
+          o.ads.forEach(function (a) {
+            a.displaytime = 1; a.displayintervel = 86400;
+            a.allowdaydisplaynum = 0; a.displaynum = 0;
+            a.begintime = '2029-12-30 00:00:00'; a.endtime = '2029-12-30 23:59:59';
+          });
+        }
+        log('phpSplash');
+        return o;
+      }
+
+      // 开屏：lua 缓存
+      function cleanLuaSplash(o) {
+        if (cfg.splash === false) return o;
+        if (o.cached_ad && Array.isArray(o.cached_ad.ads)) {
+          o.cached_ad.ads.forEach(function (a) {
+            a.start_date = 1893254400; a.show_count = 0;
+            a.duration = 0; a.end_date = 1893340799;
+          });
+        }
+        log('luaSplash');
+        return o;
+      }
+
+      // ── 国际版 ──
+      // portal.php?a=open_app：帖子下方 banner
+      function cleanIntlBanner(o) {
+        if (o.data) {
+          if (o.data.close_ad_setting) delete o.data.close_ad_setting;
+          if (o.data.detail_banner_ad) o.data.detail_banner_ad = [];
+        }
+        log('intlBanner');
+        return o;
+      }
+
+      // portal.php?a=get_coopen_ads：开屏
+      function cleanIntlOpenAds(o) {
+        if (cfg.splash === false) return o;
+        if (o.data) o.data = { display_ad: 1 };
+        log('intlOpenAds');
+        return o;
+      }
+
+      // portal.php?a=search_topic：搜索页话题
+      function cleanSearchTopic(o) {
+        if (o.data && o.data.search_topic) {
+          var st = o.data.search_topic;
+          if (st.cards) {
+            st.cards = Object.keys(st.cards).map(function (k) { return st.cards[k]; })
+              .filter(function (c) { return c && c.type !== 'searchtop'; });
+          }
+          if (o.data.trending_topic) delete o.data.trending_topic;
+        }
+        log('searchTopic');
+        return o;
+      }
+
+      // 路由
+      var out = null;
+      try {
+        if (/portal\.php/.test(url)) {
+          if (/a=open_app/.test(url)) out = cleanIntlBanner;
+          else if (/a=get_coopen_ads/.test(url)) out = cleanIntlOpenAds;
+          else if (/a=search_topic/.test(url)) out = cleanSearchTopic;
+        }
+        else if (/ad\/preload/.test(url)) out = cleanAdPreload;
+        else if (/ad\/realtime/.test(url)) out = cleanAdPreload;
+        else if (/sdkad\.php/.test(url)) out = cleanPhpSplash;
+        else if (/wbpullad\.lua/.test(url)) out = cleanLuaSplash;
+        else if (/container_detail|container\/get_item/.test(url)) out = cleanComments;
+        else if (/statuses\/extend/.test(url)) out = cleanExtend;
+        else if (/profile\/(me|container_timeline)/.test(url)) out = cleanProfile;
+        else if (/container_timeline|groups\/timeline|unread_topic_timeline/.test(url)) out = cleanMainTab;
+        else if (/friends.*timeline|hot_timeline|video_mixtimeline|timeline/.test(url)) out = cleanTimeline;
+        else if (/cardlist|searchall|page\?|flowpage|search\/|finder/.test(url)) out = cleanCards;
+      } catch (e) { log('route err ' + e); }
+
+      if (!out) { $done({}); }
+      else {
+        try {
+          var m = body.match(/\{[\s\S]*\}/);
+          if (!m) { $done({}); }
+          else {
+            var data = JSON.parse(m[0]);
+            out(data);
+            var nb = JSON.stringify(data);
+            if (/sdkad\.php/.test(url)) nb += 'OK';
+            $done({ body: nb });
+          }
+        } catch (e) {
+          log('parse err ' + e);
+          $done({});
+        }
+      }
+
+rules:
+  - 'DOMAIN-SUFFIX,api.touch-moblie.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,adstrategy.biz.weibo.com,REJECT,pre-matching'
+  - 'DOMAIN,sdkapp.uve.weibo.com,DIRECT'
