@@ -21,6 +21,8 @@
 | YouTube 去广告增强版 | Stash 3.7+ | 12 项参数（10 开关 + 字幕/歌词翻译 + 首页补强），内嵌脚本 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube-ADBlock-Enhanced.stoverride) |
 | 哔哩哔哩去广告 | Stash 3.7+ | Biliverse v0.7.5 移植，32 项原生参数，无需 BoxJS；内置 8 条 QUIC 拦截 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
 | BiliBili Global 原生参数版 | Stash 3.7+ | Biliverse Global v0.9.3；10 项原生参数：CDN 类型、四地区开关、四地区策略名称及日志。内嵌核心脚本，固定版本 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BiliBili.Global.Native.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/BiliBili.Global.Native.stoverride) |
+| Biliverse Enhanced 原生参数版 | Stash 3.7+ | Biliverse Enhanced v0.6.4；21 项原生参数（首页顶栏/标签页/底部导航、分区、我的页、iPad 页、日志）。**默认保留 App 内「自定义标签页」保存的顺序**，需接管时打开「首页标签页优先采用本覆写参数」；另可选配置优先来源 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Biliverse.Enhanced.Native.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Biliverse.Enhanced.Native.stoverride) |
+| Biliverse Redirect 原生参数版 | Stash 3.7+ | Biliverse Redirect v0.2.25；5 项原生参数选港澳台 OverseaVideo / 国际版 BStar / 大陆 PCDN / MCDN 目标主机名。修正上游覆写残留的 Loon/Surge `header` 动作与 `{{{Host.X}}}` 模板，改为 Stash `transparent` 并保留原路径与签名 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Biliverse.Redirect.Native.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Biliverse.Redirect.Native.stoverride) |
 | 红果短剧去广告 | 通用 | 域名拦截，不改动全局 IPv6/DNS | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HongGuo.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HongGuo.stoverride) |
 | 番茄小说去广告 | 通用 | 50 条域名拦截（广告 SDK / 埋点上报 / 素材下发 / 抖音引流），全部 `no-track`；**不做 MitM 与改写**——该 App 有证书校验，一开 MitM 就断网 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DragonRead.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DragonRead.stoverride) |
 | Trakt 增强 | Stash 3.7+ | DemoJameson Loon 插件移植：页面与海报中文化、历史剧集按剧合并、详情页 Forward/Infuse/Rex 跳转；12 项原生参数，13 条脚本路由，脚本每日同步上游 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Trakt.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Trakt.stoverride) |
@@ -42,6 +44,8 @@
 - **YouTube**：默认关闭字幕/歌词翻译；介意字幕或歌词内容外发时请保持关闭。「首页信息流补强」误删正常卡片时可关闭；不要与其他 YouTube 去广告覆写同时启用。
 - **哔哩哔哩**：开屏广告若重新出现，多为 QUIC 绕过；覆写已内置 8 条 QUIC REJECT 规则。去广告未生效时，把「[调试] 日志等级」调到 INFO 查看脚本日志；不要与其他 B 站去广告覆写叠加。
 - **BiliBili Global**：在覆写「参数」中设置。大陆默认 DIRECT，港澳台填写现有节点或策略组名；开关开启但策略名为空时，该地区跳过自动探测。停用原版 Global，避免重复处理。核心脚本固定 v0.9.3，不随上游自动更新；文件约 1.16 MB。已完成静态与模拟测试，未做真机播放联调。
+- **Biliverse Enhanced**：需信任 MitM CA。首页标签页默认跟随 App 分区页「自定义标签页」保存的顺序；只有在参数里打开「首页标签页优先采用本覆写参数」后，才会用覆写里的标签参数覆盖。列表类参数（标签页、分区、我的页各项）用英文逗号分隔，可选值清单写在参数说明里——Stash 参数只有输入框/单选/开关三种控件，没法做勾选。界面没变化时先确认 App「我的 → Biliverse 哔哩万象」入口是否正常。
+- **Biliverse Redirect**：只改视频 CDN 主机名，不改分流规则。需要设备支持重定向主机名（Stash 走 `transparent`，无需额外开关）。港澳台、国际版、大陆 PCDN/MCDN 分开选，选到的域名必须是官方列表里的真实 CDN 主机名。与「链接重定向合集」（`Redirect.stoverride`）是两份不同东西，不冲突。
 - **腾讯视频**：首次使用需卸载重装 App，并冷启动 2–3 次；脚本每 24 小时自动拉取，无需手动更新。
 - **京东**：保持「获取慢慢买 Cookie」参数开启，在慢慢买 App「我的」页刷新一次即可获取 Cookie。
 - **usAge Pro**：需信任 MitM CA；启用后彻底结束 App 再重新打开。脚本由云端拉取、每 24 小时自动更新，无需手动改本地文件；与其他同名脚本（`usage-pro`）不要重复启用。
