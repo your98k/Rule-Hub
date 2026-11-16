@@ -1,0 +1,90 @@
+name: '闲鱼 去广告'
+desc: '闲鱼 去广告，含首页、搜索、同城、个人主页广告清理。'
+openUrl: 'https://apps.apple.com/app/id510909506'
+author: 'your98k'
+category: '去广告'
+date: '2026-11-16'
+version: '1.0.0'
+
+rules:
+  - 'DOMAIN-SUFFIX,iyes.youku.com,REJECT,no-track'
+  - 'AND,((URL-REGEX,^http://.+[/]amdc/mobileDispatch),(USER-AGENT,%E9%97%B2%E9%B1%BC.*)),REJECT,no-track'
+
+http:
+  mitm:
+    - 'acs.m.goofish.com'
+    - 'g-acs.m.goofish.com'
+  url-rewrite:
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlecommerce\.splash\.ads/ - reject-dict'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.item\.recommend\.list/ - reject-dict'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.local\.near\.by\.corner\.info/ - reject-dict'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.local\.home\.top/ - reject-dict'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.item\.buy\.feeds/ - reject-dict'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlemtopsearch\.search\.discover/1\.0 - reject-dict'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlemtopsearch\.item\.search\.activate/ - reject-dict'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.playboy\.recommend/1\.0 - reject'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.item\.resell\.recommendorhotcate/1\.0 - reject-dict'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlehome\.idle\.coin\.nextfresh/1\.0 - reject-dict'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.idle\.trade\.item\.recommend\.render/ - reject-dict'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlemtopsearch\.detailpage\.search\.shade/ - reject-dict'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlemessage\.user\.query\.top\.resource - reject-dict'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.item\.recommend\.tab - reject-dict'
+  body-rewrite:
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlehome\.widget\.refresh\.get/ response-jq .data.homeTopList = []'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.home\.whale\.modulet/ response-jq .data.container.sections |= ((. // []) | map(select(.template.name? == "fish_home_miniapp")))'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.user\.strategy\.list/ response-jq del(.data)'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.fun\.follow\.feed\.list/ response-jq .data.sections |= ((. // []) | map(select(.cardType? == 2001)))'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlehome\.home\.community/ response-jq .data.feedsList |= ((. // []) | map(select(.template.name? == "idlefish_home_new_commodity_card" or .template.name? == "idlefish_home_new_content_card")))'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlehome\.home\.newitem\.page/ response-jq .data.sections |= ((. // []) | map(select((.data.clickParam.args.cardType? // "") as $ct | $ct != "banner" and $ct != "mamaAD")))'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlemtopsearch\.search\.shade/ response-jq del(.data)'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlehome\.magic\.home\.page\.list/ response-json-del data.topList'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.trade\.full\.info/ response-jq .data.components |= ((. // []) | map(select(.render? != "recommendTabVO")))'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.group\.myself\.banner/ response-jq .data.bannerList = []'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.playboy\.recommend/2\.0 response-jq .data.recommends = [] | .data.items = [] | .data.next = false'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.fun\.follow\.often\.visit/ response-jq .data.sections = []'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.circle\.myself\.banner/1\.0 response-jq .data.bannerList = []'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.circle\.visited/1\.0 response-jq .data.visitedCircleList = []'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlemtopsearch\.search\.activate\.tablist/ response-jq .data.tabList = []'
+    - '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.trade\.order\.render/ response-jq del(.data.bottomBarVO.benefitPointAtmosphere) | .data.components |= ((. // []) | map(select(.render? != "meanTimeBuyVO")))'
+  script:
+    - name: goofish
+      match: '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlehome\.home\.nextfresh/'
+      type: response
+      require-body: true
+      max-size: 4194304
+    - name: goofish
+      match: '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.local\.home/'
+      type: response
+      require-body: true
+      max-size: 4194304
+    - name: goofish
+      match: '^https://acs\.m\.goofish\.com/gw/mtop\.idle\.user\.page\.my\.adapter/'
+      type: response
+      require-body: true
+      max-size: 4194304
+    - name: goofish
+      match: '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlehome\.home\.circle\.list/'
+      type: response
+      require-body: true
+      max-size: 4194304
+    - name: goofish
+      match: '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.local\.nearby\.itemdetail\.enter/'
+      type: response
+      require-body: true
+      max-size: 4194304
+    - name: goofish
+      match: '^https://g-acs\.m\.goofish\.com/gw/mtop\.taobao\.idlemtopsearch\.search/'
+      type: response
+      require-body: true
+      max-size: 4194304
+    - name: goofish
+      match: '^https://acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.local\.flow\.plat\.section/'
+      type: response
+      require-body: true
+      max-size: 4194304
+
+
+script-providers:
+  goofish:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Goofish.js'
+    interval: 86400
