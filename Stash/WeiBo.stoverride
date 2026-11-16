@@ -1,11 +1,11 @@
 name: '微博去广告'
 desc: |-
-  微博 / 微博国际版净化，原生实现，不依赖远程脚本
-  信息流、详情页、评论区、搜索页、开屏广告全覆盖
+  微博与微博国际版净化，原生实现，不依赖远程脚本
+  覆盖信息流、详情页、评论、搜索、超话、开屏
 category: '去广告'
 openUrl: 'https://apps.apple.com/cn/app/id350962117'
-date: '2026-11-16 22:20'
-version: '1.0'
+date: '2026-11-16 22:45'
+version: '1.1'
 author: 'ddgksf2013 / zmqcherish（上游规则），Stash 原生重写'
 
 arguments-version: 1
@@ -266,10 +266,48 @@ script-providers:
         return o;
       }
 
+      // ── 国际版 ──
+      // portal.php?a=open_app：帖子下方 banner
+      function cleanIntlBanner(o) {
+        if (o.data) {
+          if (o.data.close_ad_setting) delete o.data.close_ad_setting;
+          if (o.data.detail_banner_ad) o.data.detail_banner_ad = [];
+        }
+        log('intlBanner');
+        return o;
+      }
+
+      // portal.php?a=get_coopen_ads：开屏
+      function cleanIntlOpenAds(o) {
+        if (cfg.splash === false) return o;
+        if (o.data) o.data = { display_ad: 1 };
+        log('intlOpenAds');
+        return o;
+      }
+
+      // portal.php?a=search_topic：搜索页话题
+      function cleanSearchTopic(o) {
+        if (o.data && o.data.search_topic) {
+          var st = o.data.search_topic;
+          if (st.cards) {
+            st.cards = Object.keys(st.cards).map(function (k) { return st.cards[k]; })
+              .filter(function (c) { return c && c.type !== 'searchtop'; });
+          }
+          if (o.data.trending_topic) delete o.data.trending_topic;
+        }
+        log('searchTopic');
+        return o;
+      }
+
       // 路由
       var out = null;
       try {
-        if (/ad\/preload/.test(url)) out = cleanAdPreload;
+        if (/portal\.php/.test(url)) {
+          if (/a=open_app/.test(url)) out = cleanIntlBanner;
+          else if (/a=get_coopen_ads/.test(url)) out = cleanIntlOpenAds;
+          else if (/a=search_topic/.test(url)) out = cleanSearchTopic;
+        }
+        else if (/ad\/preload/.test(url)) out = cleanAdPreload;
         else if (/ad\/realtime/.test(url)) out = cleanAdPreload;
         else if (/sdkad\.php/.test(url)) out = cleanPhpSplash;
         else if (/wbpullad\.lua/.test(url)) out = cleanLuaSplash;
@@ -300,7 +338,6 @@ script-providers:
       }
 
 rules:
-  # 国际版开屏域名
   - 'DOMAIN-SUFFIX,api.touch-moblie.com,REJECT,pre-matching'
   - 'DOMAIN-SUFFIX,adstrategy.biz.weibo.com,REJECT,pre-matching'
   - 'DOMAIN,sdkapp.uve.weibo.com,DIRECT'
