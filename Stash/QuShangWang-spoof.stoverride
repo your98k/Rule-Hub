@@ -1,23 +1,25 @@
 name: '去上网 伪造测试（临时）'
 desc: |-
-  实验：用脚本把自有接口响应替换为空 data，验证开屏广告能否跳过
+  实验：把自有接口响应替换为空 data 或服务端错误分支，验证开屏广告能否跳过
   若 App 闪退属预期风险，关掉本覆写即可恢复
 category: '去广告'
 openUrl: 'https://apps.apple.com/cn/app/id1215148253'
-date: '2026-11-16 20:15'
-version: '4.1-spoof'
+date: '2026-11-16 20:25'
+version: '4.2-spoof'
 
 arguments-version: 1
 arguments:
   spoof_mode:
     type: select
     title: 伪造范围
-    default: range
+    default: error
     options:
+      - value: error
+        label: 返回服务端真实错误响应（跳过广告，最像正常状态）
       - value: range
-        label: 仅 400-600 字节响应（实测开屏为 443，最精准）
+        label: 仅 400-600 字节响应换成空 data（实测开屏为 443）
       - value: small
-        label: 所有小于 600 字节响应（较激进）
+        label: 所有小于 600 字节响应换成空 data（较激进）
       - value: all
         label: 全部接口返回空 data（验证容忍度）
   ad_action:
@@ -58,8 +60,18 @@ script-providers:
       var shouldSpoof = (mode === 'all')
         || (mode === 'small' && len < 600)
         || (mode === 'range' && len >= 400 && len <= 600);
-      if (shouldSpoof) {
+      var inRange = (len >= 400 && len <= 600);
+      if (mode === 'error') {
+        // 只对实测开屏那个响应返回服务端真实错误分支，其余全部放行
+        if (inRange) {
+          $persistentStore.write('spoofed=error len=' + len, 'qd_spoof_log');
+          $done({ body: '{"res":33011,"msg":"(\\u2299o\\u2299)\\u2026\\u597d\\u50cf\\u51fa\\u9519\\u4e86\\uff0c\\u4f11\\u606f\\u4e00\\u4e0b\\u5148"}' });
+        } else {
+          $done({});
+        }
+      } else if (shouldSpoof) {
         var empty = '{"time_stamp":1794825375,"p_encrypt":"","data":"","res":0,"msg":"操作成功"}';
+        $persistentStore.write('spoofed=empty len=' + len, 'qd_spoof_log');
         $done({ body: empty });
       } else {
         $done({});
