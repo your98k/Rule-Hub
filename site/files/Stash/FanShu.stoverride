@@ -1,6 +1,7 @@
 name: '帆书 去广告'
 desc: '帆书 去广告，共 9 条规则。'
 openUrl: 'https://apps.apple.com/app/id806183603'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/FanShu.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-15'

@@ -1,6 +1,7 @@
 name: '大麦 去广告'
 desc: '大麦 去广告，共 5 条规则。'
 openUrl: 'https://apps.apple.com/app/id491108899'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DaMai.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-15'

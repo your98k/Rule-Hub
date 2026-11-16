@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16 11:21",
+  "generated_at": "2026-11-16 12:25",
   "repo": "https://github.com/your98k/Rule-Hub",
   "base": "https://your98k.github.io/Rule-Hub",
   "plugins": [
@@ -7,7 +7,7 @@
       "id": "123pan-stash",
       "name": "123云盘 去广告",
       "desc": "123云盘 去广告，共 3 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/123Pan-01.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -40,7 +40,7 @@
       "id": "appraven-stash",
       "name": "AppRaven 会员解锁",
       "desc": "AppRaven 会员相关字段置为已购，纯声明式改写响应。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/AppRaven.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -73,7 +73,7 @@
       "id": "bodianmusic-stash",
       "name": "波点音乐 去广告",
       "desc": "波点音乐 去广告，共 19 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/BodianMusic.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -116,7 +116,7 @@
       "id": "cms-adblock-stash",
       "name": "CMS 资源站 去广告",
       "desc": "CMS 资源站去广告，清理 m3u8 播放列表内插广告，覆盖 20 个资源站。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/CMSPlayer.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -205,7 +205,7 @@
       "id": "coolapk-stash",
       "name": "酷安 链接重定向",
       "desc": "把酷安内的中间跳转链接直接改写到目标地址。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/CoolApk.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -238,7 +238,7 @@
       "id": "cosmosfm-stash",
       "name": "小宇宙 去广告",
       "desc": "小宇宙 去广告，移除开屏、AI 总结、搜索推荐与首页运营位。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/CosmosFM.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -271,7 +271,7 @@
       "id": "dingdongmaicai-stash",
       "name": "叮咚买菜 去广告",
       "desc": "叮咚买菜 去广告，共 23 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DingDongMaiCai.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -307,7 +307,7 @@
       "id": "djduoduo-stash",
       "name": "DJ多多 去广告",
       "desc": "DJ多多 去广告，移除开屏与歌单广告配置。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/DjDuoDuo.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -371,7 +371,7 @@
       "id": "ezviz-stash",
       "name": "萤石云视频 去广告",
       "desc": "萤石云视频 去广告，拦截推广、轮播与天气视频接口。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Ezviz.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -438,7 +438,7 @@
       "id": "github-stash",
       "name": "GitHub Raw 走 CDN",
       "desc": "把 raw.githubusercontent.com 的请求自动改写到可用的 CDN 加速地址。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/GitHub-01.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -471,7 +471,7 @@
       "id": "goofish-stash",
       "name": "闲鱼 去广告",
       "desc": "闲鱼 去广告，含首页、搜索、同城、个人主页广告清理。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Goofish.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -505,7 +505,7 @@
       "id": "iqiyi-stash",
       "name": "爱奇艺 去广告",
       "desc": "爱奇艺 去广告，清理首页焦点图、瀑布流、播放页与搜索广告位。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/IQIYI.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -541,7 +541,7 @@
       "id": "kuwomusic-stash",
       "name": "酷我音乐 去广告",
       "desc": "酷我音乐去广告，共 14 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/KuwoMusic.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -576,7 +576,7 @@
       "id": "listenify-stash",
       "name": "Listenify 增强",
       "desc": "Listenify 增强，共 1 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Listenify.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -609,7 +609,7 @@
       "id": "mangotv-stash",
       "name": "芒果TV 去广告",
       "desc": "芒果TV 去广告，共 14 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/MangoTV.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -650,7 +650,7 @@
       "id": "railway12306-stash",
       "name": "铁路12306 去广告",
       "desc": "铁路12306 去广告，共 3 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Railway12306.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -684,7 +684,7 @@
       "id": "revenuecat-baby-stash",
       "name": "RevenueCat 解锁",
       "desc": "RevenueCat 解锁，经由中转重放订阅响应，支持跳过指定 App。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/RevenueCat.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -723,7 +723,7 @@
       "id": "soul-stash",
       "name": "Soul 去广告",
       "desc": "Soul 去广告，共 35 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Soul.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -784,7 +784,7 @@
       "id": "taobao-stash",
       "name": "淘宝 去广告",
       "desc": "淘宝 去广告，拦截广告下发与推广图，含 HEIC 缩略图请求。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TaoBao.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -850,7 +850,7 @@
       "id": "testflight-stash",
       "name": "TestFlight 解除区域限制",
       "desc": "TestFlight 解除区域限制，改写安装请求的 storefrontId。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TestFlight-03.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -883,7 +883,7 @@
       "id": "thunderclouddisk-stash",
       "name": "迅雷 去广告",
       "desc": "迅雷 去广告，共 2 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ThunderCloudDisk.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -957,7 +957,7 @@
       "id": "umetrip-stash",
       "name": "航旅纵横 去广告",
       "desc": "航旅纵横 去广告，共 3 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Umetrip.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -999,7 +999,7 @@
       "id": "vvebo-stash",
       "name": "VVebo 修复",
       "desc": "VVebo 修复，修正用户主页时间线与我的页面加载异常。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/VVebo.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -1032,7 +1032,7 @@
       "id": "vistopia-stash",
       "name": "看理想 去广告",
       "desc": "看理想 去广告，清理开屏、弹窗与会员页购买区，修正音频下载与播放链路。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Vistopia.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -1066,7 +1066,7 @@
       "id": "xptv-stash",
       "name": "XPTV 伪 CMS 源",
       "desc": "XPTV 伪 CMS 源，配合订阅地址使用，修正美剧星球等源的播放链路。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/XPTV.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -1103,7 +1103,7 @@
       "id": "youkuvideo-stash",
       "name": "优酷视频 去广告",
       "desc": "优酷视频 去广告，含广告域名拦截与播放页广告字段清理。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/YoukuVideo.png",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
@@ -1137,7 +1137,7 @@
       "id": "iringo-weatherkit-stash",
       "name": "iRingo: WeatherKit",
       "desc": "解锁天气全功能，替换与补全天气、预警、降水和空气质量数据。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/AppleWeather.png",
       "date": "2026-11-16",
       "version": "1.0.0（上游 3.3.2）",
       "tags": [
@@ -1170,7 +1170,7 @@
       "id": "aihuishou-stash",
       "name": "爱回收 去广告",
       "desc": "爱回收 去广告，共 22 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/AiHuiShou.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1207,7 +1207,7 @@
       "id": "archimedesfm-stash",
       "name": "阿基米德 去广告",
       "desc": "阿基米德 去广告，共 4 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ArchimedesFM.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1242,7 +1242,7 @@
       "id": "baiduwenku-stash",
       "name": "百度文库 去广告",
       "desc": "百度文库 去广告，共 12 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/BaiduWenku.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1276,7 +1276,7 @@
       "id": "bank-stash",
       "name": "银行类 去广告",
       "desc": "银行类 去广告，共 66 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/Other/CNY.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1395,7 +1395,7 @@
       "id": "chaogejiaoyu-stash",
       "name": "超格教育 去广告",
       "desc": "超格教育 去广告，共 3 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ChaoGeJiaoYu.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1428,7 +1428,7 @@
       "id": "chelaile-stash",
       "name": "车来了 去广告",
       "desc": "车来了 去广告，共 5 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/CheLaiLe.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1467,7 +1467,7 @@
       "id": "chinabroadnet-stash",
       "name": "中国广电 去广告",
       "desc": "中国广电 去广告，共 3 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ChinaBroadnet.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1500,7 +1500,7 @@
       "id": "chinaunicom-stash",
       "name": "中国联通 去广告",
       "desc": "中国联通 去广告，共 10 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ChinaUnicom.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1534,7 +1534,7 @@
       "id": "damai-stash",
       "name": "大麦 去广告",
       "desc": "大麦 去广告，共 5 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DaMai.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1600,7 +1600,7 @@
       "id": "didi-stash",
       "name": "滴滴出行 去广告",
       "desc": "滴滴出行 去广告，共 91 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DiDi.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1691,7 +1691,7 @@
       "id": "douyin-hk-stash",
       "name": "抖音 去广告",
       "desc": "抖音 去广告，共 13 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TikTok-01.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1727,7 +1727,7 @@
       "id": "fanshu-stash",
       "name": "帆书 去广告",
       "desc": "帆书 去广告，共 9 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/FanShu.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1760,7 +1760,7 @@
       "id": "fenbi-stash",
       "name": "粉笔 去广告",
       "desc": "粉笔 去广告，共 15 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/FenBi.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1796,7 +1796,7 @@
       "id": "forward-stash",
       "name": "Forward 订阅转发",
       "desc": "Forward 订阅转发，共 1 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Forward.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1829,7 +1829,7 @@
       "id": "freshippo-stash",
       "name": "盒马 去广告",
       "desc": "盒马 去广告，共 12 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Freshippo.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1896,7 +1896,7 @@
       "id": "hok-gamehelper-stash",
       "name": "王者营地 去广告",
       "desc": "王者营地 去广告，共 3 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/HOK_GameHelper.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1929,7 +1929,7 @@
       "id": "himalayafm-stash",
       "name": "喜马拉雅 去广告",
       "desc": "喜马拉雅 去广告，共 22 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/HimalayaFM.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -1969,7 +1969,7 @@
       "id": "iqiyi-ssports-stash",
       "name": "爱奇艺体育 去广告",
       "desc": "爱奇艺体育 去广告，共 4 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/IQIYI_Ssports.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2003,7 +2003,7 @@
       "id": "jingdongwaimai-stash",
       "name": "京东外卖 去广告",
       "desc": "京东外卖 去广告，共 6 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/JingdongWaimai.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2037,7 +2037,7 @@
       "id": "kdocs-stash",
       "name": "金山文档 去广告",
       "desc": "金山文档 去广告，共 3 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/KDocs.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2071,7 +2071,7 @@
       "id": "keep-stash",
       "name": "Keep 去广告",
       "desc": "Keep 去广告，共 16 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Keep.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2106,7 +2106,7 @@
       "id": "kwai-stash",
       "name": "快手 去广告",
       "desc": "快手 去广告，共 10 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Kwai.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2145,7 +2145,7 @@
       "id": "luckincoffee-stash",
       "name": "瑞幸咖啡 去广告",
       "desc": "瑞幸咖啡 去广告，共 8 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/LuckinCoffee.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2211,7 +2211,7 @@
       "id": "maiduidui-stash",
       "name": "买单侠 去广告",
       "desc": "买单侠 去广告，共 7 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/MaiDuiDui.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2283,7 +2283,7 @@
       "id": "pandatv-stash",
       "name": "PandaTV 解除区域限制",
       "desc": "PandaTV 补 Origin 头绕过区域校验；路由规则需填入实际策略组后启用。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/PandaTV-02.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2352,7 +2352,7 @@
       "id": "qqmusic-stash",
       "name": "QQ音乐 去广告",
       "desc": "QQ音乐 去广告，共 11 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/QQMusic.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2416,7 +2416,7 @@
       "id": "quarkbrowser-stash",
       "name": "夸克浏览器 去广告",
       "desc": "夸克浏览器 去广告，共 3 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/QuarkBrowser.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2450,7 +2450,7 @@
       "id": "quarkscanking-stash",
       "name": "夸克扫描王 去广告",
       "desc": "夸克扫描王 去广告，共 2 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/QuarkScanKing.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2486,7 +2486,7 @@
       "id": "redirect-stash",
       "name": "链接重定向合集",
       "desc": "链接重定向合集，共 61 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/Other/Web_302.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2640,7 +2640,7 @@
       "id": "sf-express-stash",
       "name": "顺丰速运 去广告",
       "desc": "顺丰速运去广告；module-config 用空模块响应替代（原 mock 文本非法）。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/SF-Express.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2744,7 +2744,7 @@
       "id": "taopiaopiao-stash",
       "name": "淘票票 去广告",
       "desc": "淘票票 去广告，共 6 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TaoPiaoPiao.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2777,7 +2777,7 @@
       "id": "taobaotravel-stash",
       "name": "飞猪 去广告",
       "desc": "飞猪 去广告，共 5 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TaobaoTravel.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2844,7 +2844,7 @@
       "id": "weibo-intl-stash",
       "name": "微博轻享版 去广告",
       "desc": "微博轻享版 去广告，共 16 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/WeiBo_Intl.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2948,7 +2948,7 @@
       "id": "xueqiu-stash",
       "name": "雪球 去广告",
       "desc": "雪球 去广告，共 23 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/XueQiu.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -2995,7 +2995,7 @@
       "id": "zhuanzhuan-stash",
       "name": "转转 去广告",
       "desc": "转转 去广告，共 22 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ZhuanZhuan.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -3033,7 +3033,7 @@
       "id": "mihoyobbs-stash",
       "name": "米游社 去广告",
       "desc": "米游社 去广告，共 6 条规则。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/miHoYoBBS.png",
       "date": "2026-11-15",
       "version": "1.0.0",
       "tags": [
@@ -3402,7 +3402,7 @@
       "id": "txvideoad-stash",
       "name": "腾讯视频净化（Stash）",
       "desc": "腾讯视频净化（开屏、暂停、底栏广告）。",
-      "icon": "",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TencentVideo.png",
       "date": "2026-11-01",
       "version": "1.1.1",
       "tags": [

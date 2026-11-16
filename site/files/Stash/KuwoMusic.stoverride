@@ -2,6 +2,7 @@ name: '酷我音乐 去广告'
 desc: |-
   酷我音乐去广告，共 14 条规则。
 openUrl: 'https://apps.apple.com/app/id587673454'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/KuwoMusic.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-16'

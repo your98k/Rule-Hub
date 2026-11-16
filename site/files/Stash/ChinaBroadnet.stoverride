@@ -1,6 +1,7 @@
 name: '中国广电 去广告'
 desc: '中国广电 去广告，共 3 条规则。'
 openUrl: 'https://apps.apple.com/app/id1590128819'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ChinaBroadnet.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-15'

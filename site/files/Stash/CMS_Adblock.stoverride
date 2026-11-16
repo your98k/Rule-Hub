@@ -1,6 +1,7 @@
 name: 'CMS 资源站 去广告'
 desc: 'CMS 资源站去广告，清理 m3u8 播放列表内插广告，覆盖 20 个资源站。'
 openUrl: 'https://apps.apple.com/app/id6450680262'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/CMSPlayer.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-16'

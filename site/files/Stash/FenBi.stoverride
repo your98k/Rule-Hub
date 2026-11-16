@@ -1,6 +1,7 @@
 name: '粉笔 去广告'
 desc: '粉笔 去广告，共 15 条规则。'
 openUrl: 'https://apps.apple.com/cn/app/id1228600770'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/FenBi.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-15'

@@ -1,6 +1,7 @@
 name: 'iRingo: WeatherKit'
 desc: '解锁天气全功能，替换与补全天气、预警、降水和空气质量数据。'
 openUrl: 'https://boxjs.com/#/app/iRingo.WeatherKit'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/AppleWeather.png'
 author: 'your98k'
 category: '功能增强'
 date: '2026-11-16'

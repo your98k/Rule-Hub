@@ -1,6 +1,7 @@
 name: '链接重定向合集'
 desc: '链接重定向合集，共 61 条规则。'
 author: 'your98k'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/Other/Web_302.png'
 category: '去广告'
 date: '2026-11-15'
 version: '1.0.0'

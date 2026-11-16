@@ -1,6 +1,7 @@
 name: '抖音 去广告'
 desc: '抖音 去广告，共 13 条规则。'
 openUrl: 'https://apps.apple.com/app/id1142110895'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TikTok-01.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-15'
