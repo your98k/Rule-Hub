@@ -1,7 +1,7 @@
 name: '爱奇艺 去广告'
 desc: '爱奇艺 去广告，清理首页焦点图、瀑布流、播放页与搜索广告位。'
 openUrl: 'https://apps.apple.com/app/id393765873'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/IQIYI.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/aiqiyi(1).png
 author: 'your98k'
 category: '去广告'
 date: '2026-11-16'

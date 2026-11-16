@@ -1,7 +1,7 @@
 name: '京东外卖 去广告'
 desc: '京东外卖 去广告，共 6 条规则。'
 openUrl: 'https://apps.apple.com/app/id1661540519'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/JingdongWaimai.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/jingdong.png
 author: 'your98k'
 category: '去广告'
 date: '2026-11-15'

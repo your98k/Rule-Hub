@@ -2,7 +2,7 @@ name: '123云盘 去广告'
 desc: |-
   123云盘 去广告，共 3 条规则。
 openUrl: 'https://apps.apple.com/app/id1597682672'
-icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/123Pan-01.png'
+icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/123.png
 author: 'your98k'
 category: '去广告'
 date: '2026-11-16'
