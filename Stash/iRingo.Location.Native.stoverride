@@ -1,0 +1,109 @@
+name: ' iRingo: 📍 Location'
+desc: |-
+  自定义「定位服务」
+  通过「基于网络的地区检测」结果始终为用户设置的地区
+  注：该覆写包含代理规则。
+  自定义参数仅支持 Stash 3.7 及以上版本。
+openUrl: 'http://boxjs.com/#/app/iRingo.Location'
+author: 'VirgilClyne（原脚本）；Stash 原生参数适配'
+homepage: 'https://NSRingo.github.io/guide/GeoServices/location'
+icon: 'https://images.macrumors.com/article-new/2019/07/ios_location_services-250x250.jpg'
+category: ' iRingo'
+date: '2026-11-17 01:20'
+version: '4.3.2-native.1'
+
+arguments-version: 1
+arguments:
+  gcc:
+    type: select
+    title: 定位地区
+    description: 把网络地区检测结果固定为所选国家或地区代码；AUTO 表示保留 Apple 原始返回。
+    default: US
+    options:
+      - value: AUTO
+        label: 自动（保留原始结果）
+      - value: CN
+        label: 🇨🇳 中国大陆
+      - value: HK
+        label: 🇭🇰 中国香港
+      - value: MO
+        label: 🇲🇴 中国澳门
+      - value: TW
+        label: 中国台湾
+      - value: SG
+        label: 🇸🇬 新加坡
+      - value: JP
+        label: 🇯🇵 日本
+      - value: KR
+        label: 🇰🇷 韩国
+      - value: US
+        label: 🇺🇸 美国
+      - value: CA
+        label: 🇨🇦 加拿大
+      - value: GB
+        label: 🇬🇧 英国
+      - value: IE
+        label: 🇮🇪 爱尔兰
+      - value: DE
+        label: 🇩🇪 德国
+      - value: FR
+        label: 🇫🇷 法国
+      - value: NL
+        label: 🇳🇱 荷兰
+      - value: AU
+        label: 🇦🇺 澳大利亚
+      - value: NZ
+        label: 🇳🇿 新西兰
+      - value: TH
+        label: 🇹🇭 泰国
+      - value: MY
+        label: 🇲🇾 马来西亚
+      - value: ID
+        label: 🇮🇩 印度尼西亚
+  log_level:
+    type: select
+    title: 脚本日志等级
+    default: WARN
+    options:
+      - value: 'OFF'
+        label: 关闭
+      - value: ERROR
+        label: 错误
+      - value: WARN
+        label: 警告
+      - value: INFO
+        label: 信息
+      - value: DEBUG
+        label: 调试
+      - value: ALL
+        label: 全部
+
+rules:
+  # 📍 Country Code
+  - 'DOMAIN,gspe1-ssl.ls.apple.com,DIRECT'
+
+http:
+  mitm:
+    - 'gspe1-ssl.ls.apple.com'
+  script:
+    - match: '^https?:\/\/gspe1-ssl\.ls\.apple\.com\/pep\/gcc'
+      name: 'GeoServices.Location.response'
+      type: response
+      require-body: true
+      max-size: 65536
+      timeout: 10
+      engine: auto
+      # 上游 $argument 只解析查询串（key=value&…），不是 JSON，故此处不用 |json。
+      # Storage=Argument 让原生参数优先于历史 BoxJs 数据。
+      # 注：脚本仅在响应的 Content-Type 属于 XML/plist 族时才会改写
+      # （text/xml、text/html、text/plist、application/xml、application/plist、
+      # application/x-plist），这是上游实现本身的分支条件。
+      argument: 'Storage=Argument&PEP.GCC=${args.gcc}&LogLevel=${args.log_level}'
+
+script-providers:
+  # 上游 Location 覆写写的是 releases/latest，但 GeoServices 已并入 MapKit，
+  # latest 指向的 v4.6.1 已删除 /pep/gcc 处理，等于空跑。
+  # v4.3.2 是最后一个仍实现定位地区改写的版本，这里固定到该标签。
+  GeoServices.Location.response:
+    url: 'https://github.com/NSRingo/MapKit/releases/download/v4.3.2/response.bundle.js'
+    interval: 86400
