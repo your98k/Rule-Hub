@@ -1,0 +1,20 @@
+name: '去上网 诊断（临时）'
+desc: |-
+  临时诊断用：开启 MitM 与 HTTP 引擎，不拦截任何请求
+  开一次 App 即可定位开屏广告的真实接口
+category: '去广告'
+openUrl: 'https://apps.apple.com/cn/app/id1215148253'
+date: '2026-11-16 19:00'
+version: '0.1-diag'
+
+http:
+  # HTTP 明文请求默认走 TUN 不进引擎，这里强制拉进来
+  force-http-engine:
+    - 'qudaapi.8quan.com:80'
+    - 'qudatcp.8quan.com:12101'
+  # HTTPS 需解密才能看到响应体
+  mitm:
+    - '*.8quan.com'
+    - '*.yedone.com'
+    - 'qudatcp.8quan.com:*'
+    - 'qudaapi.8quan.com:*'
