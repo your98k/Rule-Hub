@@ -1,0 +1,24 @@
+name: 'GitHub Raw 走 CDN'
+desc: '把 raw.githubusercontent.com 的请求自动改写到可用的 CDN 加速地址。'
+openUrl: 'https://github.com'
+author: 'your98k'
+category: '功能增强'
+date: '2026-11-16'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'raw.githubusercontent.com'
+  script:
+    - name: 'gh-raw-cdn'
+      match: '^https?://raw\.githubusercontent\.com/.+'
+      type: request
+      timeout: 5
+      engine: auto
+
+script-providers:
+  gh-raw-cdn:
+    url: 'https://loon.103516.xyz/Script/GitHub/GitRawAutoCDN.js'
+    interval: 86400
+    headers:
+      User-Agent: 'Loon/3.2.6 (iPhone; iOS 17.0)'
