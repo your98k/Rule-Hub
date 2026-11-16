@@ -1,0 +1,64 @@
+name: 'XPTV 伪 CMS 源'
+desc: 'XPTV 伪 CMS 源，配合订阅地址使用，修正美剧星球等源的播放链路。'
+openUrl: 'https://apps.apple.com/app/id6459409368'
+author: 'your98k'
+category: '功能增强'
+date: '2026-11-16'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'ykusu.ykusu'
+    - 'tencent-1257389134.cos.ap-nanjing.myqcloud.com.qqhd.net'
+    - 'api.emasmr.com'
+    - 'ppvod01.blbtgg.com'
+    - 'vipcj.timizy.top'
+    - '42.157.129.29:2222'
+  script:
+    - name: xptv-spider
+      match: '^https?://ykusu\.ykusu/(.*)/provide/vod'
+      type: request
+    - name: xptv-spider
+      match: '^https?://ykusu\.ykusu/getJSON/(.*).json'
+      type: request
+    - name: xptv-misc
+      match: '^https://tencent-1257389134\.cos\.ap-nanjing\.myqcloud\.com\.qqhd\.net/fangdao\.php'
+      type: response
+      require-body: true
+      timeout: 10
+    - name: xptv-misc
+      match: '^https://api\.emasmr\.com.*mp4'
+      type: request
+      timeout: 10
+    - name: xptv-misc
+      match: '^https?://hd\.suxun\.site/api\.php/provide/vod(.*)&ids'
+      type: response
+      require-body: true
+      timeout: 10
+    - name: xptv-misc
+      match: '^https?://ppvod01\.blbtgg\.com.*(ts|m3u8)'
+      type: request
+      timeout: 10
+    - name: xptv-misc
+      match: '^https?://vipcj\.timizy\.top/api\.php/provide/vod/from/mgtv(.*)&ids'
+      type: response
+      require-body: true
+      timeout: 10
+    - name: xptv-misc
+      match: '^https?://dsakf23665\.com/api\.php/provide/vod(.*)&ids'
+      type: response
+      require-body: true
+      timeout: 10
+    - name: xptv-misc
+      match: '^https://42\.157\.129\.29:2222/.*\.png'
+      type: response
+      require-body: true
+      timeout: 10
+
+script-providers:
+  xptv-spider:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/xptv-spider.js'
+    interval: 86400
+  xptv-misc:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/xptv-misc.js'
+    interval: 86400
