@@ -1,11 +1,18 @@
 name: 'Spotify 去广告'
-desc: 'Spotify 去广告，共 2 条规则。'
+desc: 'Spotify 去广告，拦截播放广告并补丁 Premium 状态，可单独关闭补丁排查跳歌。'
 openUrl: 'https://apps.apple.com/app/id324684580'
 author: 'your98k'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Spotify.png'
 category: '去广告'
-date: '2026-11-15'
-version: '1.0.0'
+date: '2026-11-16'
+version: '1.1.0'
+arguments-version: 1
+arguments:
+  Enabled:
+    type: switch
+    title: 启用 Premium 补丁
+    description: 关闭后只拦截播放广告接口，不打补丁。若开启时出现歌曲自动跳到下一首，可先关掉此项对比。
+    default: true
 
 http:
   mitm:
@@ -22,8 +29,9 @@ http:
       max-size: 10485760
       timeout: 10
       engine: webkit
+      argument: '{"Enabled":${args.Enabled|json}}'
 
 script-providers:
   spotify-crack:
-    url: 'https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js'
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/spotify-crack.js'
     interval: 86400
