@@ -1,0 +1,36 @@
+name: '去上网 诊断2（临时）'
+desc: |-
+  临时诊断：读出自有接口响应体，判断广告是否由 qudaapi 下发
+  不拦截任何请求
+category: '去广告'
+openUrl: 'https://apps.apple.com/cn/app/id1215148253'
+date: '2026-11-16 19:10'
+version: '0.2-diag'
+
+http:
+  force-http-engine:
+    - 'qudaapi.8quan.com:80'
+  mitm:
+    - '*.8quan.com'
+    - '*.yedone.com'
+  script:
+    - name: qd-dump
+      match: '^http://qudaapi\.8quan\.com/index\.php'
+      type: response
+      require-body: true
+      max-size: 2097152
+      timeout: 8
+      engine: auto
+
+script-providers:
+  qd-dump:
+    payload: |
+      try {
+        var b = $response.body;
+        var s = (typeof b === 'string') ? b : String(b);
+        console.log('QD_BODY_LEN=' + s.length);
+        console.log('QD_BODY_HEAD=' + s.slice(0, 1200));
+      } catch (e) {
+        console.log('QD_ERR=' + e);
+      }
+      $done({});
