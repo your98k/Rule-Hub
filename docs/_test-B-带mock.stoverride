@@ -1,0 +1,9 @@
+name: '测试 B：加一个 mock'
+desc: '比 A 多一个 http.mock，验证 mock 段是否被接受。'
+http:
+  mitm:
+    - 'example.invalid'
+  mock:
+    - match: '^https://example\.invalid/ping'
+      text: '{"ok":true}'
+      status-code: 200
