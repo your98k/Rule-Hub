@@ -1,6 +1,6 @@
 name: 虎扑去广告
 desc: '虎扑去广告，用 Stash 原生 mock 实现。'
-author: '群友投稿（未署名）；Stash 适配：ChatGPT'
+author: 'your98k'
 category: 去广告
 version: '0.1.1'
 date: '2026-11-01'

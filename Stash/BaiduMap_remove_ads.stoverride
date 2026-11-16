@@ -1,6 +1,6 @@
 name: "百度地图"
 desc: '百度地图去广告与我的页精简，需信任 MitM 证书。'
-author: "原 Loon 插件：可莉🅥；Stash 适配：your98k"
+author: 'your98k'
 homepage: "https://kelee.one/Tool/Loon/Lpx/BaiduMap_remove_ads.lpx"
 icon: "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/BaiduMap.png"
 category: "去广告"

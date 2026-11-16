@@ -1,10 +1,6 @@
 name: 'Trakt 增强'
-desc: |-
-  Trakt 各页面英译简中/港台繁体（含海报）、历史剧集按剧合并、详情页 Forward/Infuse/Rex 跳转按钮，兼容其它使用 Trakt API 的应用。
-  移植自 DemoJameson 的 Loon 插件，脚本沿用上游、每日自动更新。
-  自定义参数仅支持 Stash 3.7 及以上版本。
-  注：走 HTTP/3 的请求不会被解密，脚本对这类请求不生效。
-author: 'DemoJameson（Stash 适配）'
+desc: 'Trakt 去广告。'
+author: 'your98k'
 homepage: 'https://github.com/DemoJameson/Proxy.Modules'
 icon: 'https://raw.githubusercontent.com/DemoJameson/Proxy.Modules/main/trakt_simplified_chinese/images/trakt.webp'
 openUrl: 'https://apps.apple.com/app/id1514873602'

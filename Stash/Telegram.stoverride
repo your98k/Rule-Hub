@@ -2,7 +2,7 @@ name: 'Telegram 链接跳转'
 desc: '把 t.me 等网页链接交给指定的 Telegram 客户端。'
 
 openUrl: 'https://apps.apple.com/app/id686449807'
-author: 'sooyaaabo (Loon 原作) / Stash 适配'
+author: 'your98k'
 homepage: 'https://loonlab.103516.xyz/Plugin/'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Telegram-01.png'
 category: '功能增强'

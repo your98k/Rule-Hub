@@ -1,9 +1,6 @@
 name: '番茄小说去广告'
-desc: |-
-  番茄小说去广告：字节系广告 SDK、埋点、素材与引流入口的域名拦截。
-  纯域名规则，不含 MitM 与改写（App 有证书校验，改写会导致无网络）。
-  与「红果短剧」同开为完全体。
-author: 'TomCatXue / 可莉🅥'
+desc: '番茄小说去广告与阅读页净化。'
+author: 'your98k'
 homepage: 'https://github.com/TomCatXue/MyCookieCenter'
 icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/DragonRead.png'
 openUrl: 'https://apps.apple.com/app/id1468454200'
