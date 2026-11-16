@@ -34,10 +34,18 @@ def main():
             if not url:
                 continue
             total += 1
-            ua = bool((prov.get('headers') or {}).get('User-Agent'))
-            code, eff = fetch(url, ua)
-            if code != '200':
-                code, eff = fetch(url, True)
+            # 判定标准要贴合 Stash 的真实行为：默认不带任何自定义 UA。
+            # 只有覆写里显式配了 UA 头，才用 Loon UA 再试一次。
+            has_ua = bool((prov.get('headers') or {}).get('User-Agent'))
+            code, eff = fetch(url, has_ua)
+            if not has_ua and code != '200':
+                # 无 UA 失败时不伪装成功，但要提示可加 UA 头修复
+                code2, eff2 = fetch(url, True)
+                if code2 == '200' and 't.me' not in eff2 and 'telegram' not in eff2:
+                    bad += 1
+                    print(f'NEEDS-UA {os.path.basename(p)} [{name}]')
+                    print('     未配 UA 头时拉不到；加上 headers.User-Agent 即可')
+                    continue
             ok = code == '200' and 't.me' not in eff and 'telegram' not in eff
             if not ok:
                 bad += 1
