@@ -1,0 +1,70 @@
+name: '去上网 诊断3（临时）'
+desc: |-
+  临时诊断：拦截全部已知广告域名（建连后拦截，可在连接列表观察）
+  同时把自有接口响应体写入 persistentStore 供读取
+category: '去广告'
+openUrl: 'https://apps.apple.com/cn/app/id1215148253'
+date: '2026-11-16 19:20'
+version: '0.3-diag'
+
+http:
+  force-http-engine:
+    - 'qudaapi.8quan.com:80'
+  mitm:
+    - '*.8quan.com'
+    - '*.yedone.com'
+  script:
+    - name: qd-dump
+      match: '^http://qudaapi\.8quan\.com/index\.php'
+      type: response
+      require-body: true
+      max-size: 2097152
+      timeout: 8
+      engine: auto
+
+rules:
+  # 用 REJECT（非 pre-matching），命中会出现在连接列表
+  - 'DOMAIN-SUFFIX,shanghailingye.cn,REJECT'
+  - 'DOMAIN-SUFFIX,hzzfcm.com,REJECT'
+  - 'DOMAIN-SUFFIX,adqtt.net,REJECT'
+  - 'DOMAIN-SUFFIX,58iclick.com,REJECT'
+  - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT'
+  - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao1.com,REJECT'
+  - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao-b.com,REJECT'
+  - 'DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT'
+  - 'DOMAIN-SUFFIX,ctobsnssdk.com,REJECT'
+  - 'DOMAIN-SUFFIX,webcast-open.douyin.com,REJECT'
+  - 'DOMAIN-SUFFIX,lf-cdn-tos.bytescm.com,REJECT'
+  - 'DOMAIN-SUFFIX,tnc3-alisc1.zijieapi.com,REJECT'
+  - 'DOMAIN-SUFFIX,vod-license-m.volccdn.com,REJECT'
+  - 'DOMAIN-SUFFIX,vod-license-b.volccdn.com,REJECT'
+  - 'DOMAIN-SUFFIX,yangyi02.com,REJECT'
+  - 'DOMAIN-SUFFIX,gdt.qq.com,REJECT'
+  - 'DOMAIN-SUFFIX,gdtimg.com,REJECT'
+  - 'DOMAIN-SUFFIX,ugdtimg.com,REJECT'
+  - 'DOMAIN,pgdt.gtimg.cn,REJECT'
+  - 'DOMAIN,sdk.e.qq.com,REJECT'
+  - 'DOMAIN,sdkquic.e.qq.com,REJECT'
+  - 'DOMAIN-SUFFIX,anythinktech.com,REJECT'
+  - 'DOMAIN-SUFFIX,buluken.com,REJECT'
+  - 'DOMAIN-SUFFIX,adwangmai.com,REJECT'
+  - 'DOMAIN-SUFFIX,66mobi.com,REJECT'
+  - 'DOMAIN-SUFFIX,yunxish.com,REJECT'
+  - 'DOMAIN-SUFFIX,iggrowth.cn,REJECT'
+  - 'DOMAIN-SUFFIX,fancyapi.com,REJECT'
+  - 'DOMAIN-SUFFIX,fancydsp.com,REJECT'
+  - 'DOMAIN,fancydsp.oss-cn-beijing.aliyuncs.com,REJECT'
+  - 'DOMAIN-SUFFIX,statisticslinks.com,REJECT'
+  - 'DOMAIN-SUFFIX,halomobi.com,REJECT'
+
+script-providers:
+  qd-dump:
+    payload: |
+      try {
+        var s = String(($response && $response.body) || '');
+        $persistentStore.write(s.length + '|' + s.slice(0, 60000), 'qd_body');
+        $persistentStore.write(String(s.length), 'qd_len');
+      } catch (e) {
+        $persistentStore.write('ERR ' + e, 'qd_body');
+      }
+      $done({});
