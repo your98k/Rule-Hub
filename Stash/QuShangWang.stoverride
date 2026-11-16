@@ -1,0 +1,72 @@
+name: '去上网 去广告'
+desc: |-
+  拦截去上网(去哒)的聚合广告配置与穿山甲/优量汇等开屏广告请求
+  依据 HAR 实测域名，不触碰 8quan.com 自有接口
+category: '去广告'
+openUrl: 'https://apps.apple.com/cn/app/id1215148253'
+icon: 'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/32/d9/58/32d958a8-b679-84dd-52e8-385beaf47e19/AppIcon-0-0-1x_U007emarketing-0-6-0-85-220.png/512x512bb.jpg'
+date: '2026-11-16 18:45'
+version: '2.0'
+
+arguments-version: 1
+arguments:
+  block_mode:
+    type: select
+    title: 拦截方式
+    default: 'REJECT,pre-matching'
+    options:
+      - value: 'REJECT,pre-matching'
+        label: 建连前拦截（推荐，开屏快速失败）
+      - value: 'REJECT'
+        label: 建连后拦截（可在连接列表观察）
+      - value: 'REJECT-DROP'
+        label: 静默丢弃（可能让开屏等待超时）
+  stats_action:
+    type: select
+    title: 统计埋点
+    default: DIRECT
+    options:
+      - value: DIRECT
+        label: 不拦截（只去广告）
+      - value: 'REJECT,pre-matching'
+        label: 一并拦截（更彻底）
+
+rules:
+  # 聚合广告配置下发（拦掉可让下游 SDK 拿不到广告位配置）
+  - 'DOMAIN-SUFFIX,shanghailingye.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,hzzfcm.com,${args.block_mode}'
+  # 穿山甲 Pangle
+  - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao1.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,pangolin-sdk-toutiao-b.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,pglstatp-toutiao.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,ctobsnssdk.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,webcast-open.douyin.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,lf-cdn-tos.bytescm.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,tnc3-alisc1.zijieapi.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,vod-license-m.volccdn.com,${args.block_mode}'
+  # 优量汇 GDT
+  - 'DOMAIN-SUFFIX,gdt.qq.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,gdtimg.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,ugdtimg.com,${args.block_mode}'
+  - 'DOMAIN,pgdt.gtimg.cn,${args.block_mode}'
+  - 'DOMAIN,sdk.e.qq.com,${args.block_mode}'
+  # AnyThink（TopOn）聚合
+  - 'DOMAIN-SUFFIX,anythinktech.com,${args.block_mode}'
+  # 其它实测广告平台
+  - 'DOMAIN-SUFFIX,buluken.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,adwangmai.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,66mobi.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,yunxish.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,iggrowth.cn,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,fancyapi.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,fancydsp.com,${args.block_mode}'
+  - 'DOMAIN,fancydsp.oss-cn-beijing.aliyuncs.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,statisticslinks.com,${args.block_mode}'
+  - 'DOMAIN-SUFFIX,halomobi.com,${args.block_mode}'
+  # 统计埋点（默认不拦，由参数控制）
+  - 'DOMAIN-SUFFIX,umeng.com,${args.stats_action}'
+  - 'DOMAIN-SUFFIX,umengcloud.com,${args.stats_action}'
+  - 'DOMAIN,dualstack-logs.amap.com,${args.stats_action}'
+  - 'DOMAIN,apmplus.volces.com,${args.stats_action}'
+  - 'DOMAIN,mssdk.volces.com,${args.stats_action}'
