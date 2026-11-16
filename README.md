@@ -33,6 +33,7 @@
 | Reven 内购解锁 | Stash 3.7+ | 移植 reven.lpx；RevenueCat / Superwall / Adapty 三框架通杀，2 项原生参数（跳过指定 App、注入策略）；MitM 解密后由内嵌脚本透明转发到 Reven 服务替换订阅响应 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Reven.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Reven.stoverride) |
 | 水印猫会员信息解锁 | iOS/tvOS 3.2.5+ | 移植 89996462/Quantumult-X 的 sym.js；实测 App 接口域名为 watersymaoa.zijiemofang.cn（上游的 yunxiaoguo.cn 已弃用，两个域名均已覆盖）；需 MitM，脚本每日同步 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ShuiYinMao.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ShuiYinMao.stoverride) |
 | 去上网 去广告 | Stash 3.7+ | 76 条域名拦截（实测 30+ 广告联盟，含二进制静态分析才可见的 iytcdn/adiu.amap/mon.toutiao）；开屏广告由自有接口 AES 下发，改为替换响应为空 data 让 App 直接跳过，不破解密钥；4 项原生参数 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/QuShangWang.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/QuShangWang.stoverride) |
+| 可莉广告平台拦截器 | 通用 | 330 条规则拦截广告 SDK 域名/IP（穿山甲/优量汇/快手/百度/友盟/汇量/AppLovin 等近百平台）+ 4 条拼多多路径；纯声明式无脚本。**依赖型**：只拦广告平台本身，需配合其他去广告覆写并排在前面 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/KeliBlockAdvertisers.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/KeliBlockAdvertisers.stoverride) |
 
 ## 使用要点
 
@@ -48,6 +49,7 @@
 - **番茄小说**：纯域名拦截，无需 MitM，不改 DNS/IPv6。**该 App 有 SSL Pinning**：一旦覆写里出现 `mitm`（哪怕只列域名、没有任何改写动作），App 就会报「网络出错，请点击重试」。所以路径级秒拒与响应体清理都上不了，只保留域名层。开屏、章末这类走自己接口的广告去不掉；广告 SDK、埋点、素材、引流入口已全部拦死。
 - **去上网**：开屏广告由 App 自有接口 `qudaapi.8quan.com` 下发，响应为 AES-CBC 密文（密钥运行时绑定，静态拿不到）。覆写不对抗加密，而是把 400–600 字节的那个响应替换成空 `data` 的合法 JSON，App 解密时无内容可显示，直接跳过开屏。**范围别调宽**：`<600` 会连 190 字节的初始化响应一起替换，可能导致 App 起不来。脚本会把最后一次命中的长度写进 `qd_skip_log`；若 App 更新后开屏复活，先读这个值再按实际长度调整。
 - **Trakt**：需信任 MitM CA 并开启 MitM，否则脚本不触发。12 项参数与上游 Loon 插件一一对应；「篡改应用授权」默认关闭，仅在第三方 App 报连接数超限时开启。「翻译引擎」选 DeepLX 可免翻墙但较慢。不要与 Loon 版 Trakt 插件同时启用——同名请求会被两边各改写一次。
+- **可莉广告平台拦截器**：依赖型插件，只拦广告平台自身的域名与 IP，不针对具体 App，所以装上后单靠它不会让某个 App 变干净。关键是在覆写列表里**排到其他去广告覆写前面**，否则广告平台的连接会先被后面的覆写按域名放行。330 条规则里含 12 条 `DOMAIN-KEYWORD`，其中 `adstrategy` 较宽、另有几条写的其实是完整域名（如 `trace.qq.com`），均为上游原样保留。只有 4 条拼多多路径拦截需要 MitM，其余纯域名/IP 规则不需要。
 - **水印猫**：只改写会员字段（isPurchasedSubscribe、waterVipInfo、maskMobile、nickName），需信任 MitM CA；脚本每 24 小时从仓库内的 `Stash/ShuiYinMao.stash.js` 同步，内嵌 payload 仅作离线兜底。**域名会变**：上游脚本写的是 yunxiaoguo.cn，实测 App 已改用 zijiemofang.cn，覆写已同时覆盖两者；若日后又失效，先在 Stash 的连接记录里看 App 实际连哪个域名，再据此调整 mitm 与 match，不要只信脚本注释。
 
 ## 鸣谢
