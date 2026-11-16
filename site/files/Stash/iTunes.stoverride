@@ -15,14 +15,17 @@ arguments:
     type: switch
     title: 'iTunes-chxm1023'
     default: false
+    description: 开关：按作者分包，开启后对 chxm1023 提供的目标 App 生效。若某 App 崩溃或报错，先关闭此项排除。默认关闭。
   iTunes_ddgksf2013:
     type: switch
     title: 'iTunes-ddgksf2013'
     default: false
+    description: 开关：按作者分包，开启后对 ddgksf2013 提供的目标 App 生效。若某 App 崩溃或报错，先关闭此项排除。默认关闭。
   iTunes_Guding88:
     type: switch
     title: 'iTunes-Guding88'
     default: false
+    description: 开关：按作者分包，开启后对 Guding88 提供的目标 App 生效。若某 App 崩溃或报错，先关闭此项排除。默认关闭。
 http:
   mitm:
     - 'buy.itunes.apple.com'

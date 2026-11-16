@@ -15,106 +15,132 @@ arguments:
     type: switch
     title: '[底栏] 隐藏-AI灵犀'
     default: true
+    description: 开关：开启后隐藏「AI灵犀」。若该入口是你常用功能，请保持关闭。
   SearchPageClean:
     type: switch
     title: '[搜索] 页面净化'
     default: true
+    description: 开关：控制「搜索 页面净化」。关闭后该项不再处理，出现异常可改回默认。
   HomeBasicClean:
     type: switch
     title: '[首页] 基础净化'
     default: true
+    description: 开关：控制「首页 基础净化」。关闭后该项不再处理，出现异常可改回默认。
   HideTopFamily:
     type: switch
     title: '[首页] 隐藏-爱家'
     default: false
+    description: 开关：开启后隐藏「爱家」。若该入口是你常用功能，请保持关闭。
   HideTopAge:
     type: switch
     title: '[首页] 隐藏-网龄'
     default: false
+    description: 开关：开启后隐藏「网龄」。若该入口是你常用功能，请保持关闭。
   HideTopPhone:
     type: switch
     title: '[首页] 隐藏-手机'
     default: false
+    description: 开关：开启后隐藏「手机」。若该入口是你常用功能，请保持关闭。
   HideTopNearby:
     type: switch
     title: '[首页] 隐藏-附近厅'
     default: false
+    description: 开关：开启后隐藏「附近厅」。若该入口是你常用功能，请保持关闭。
   HideTopAI:
     type: switch
     title: '[首页] 隐藏-AI尝鲜'
     default: false
+    description: 开关：开启后隐藏「AI尝鲜」。若该入口是你常用功能，请保持关闭。
   HideTopEnterprise:
     type: switch
     title: '[首页] 隐藏-政企'
     default: false
+    description: 开关：开启后隐藏「政企」。若该入口是你常用功能，请保持关闭。
   CommunicationAdClean:
     type: switch
     title: '[通信] 页面净化'
     default: true
+    description: 开关：控制「通信 页面净化」。关闭后该项不再处理，出现异常可改回默认。
   MineClean:
     type: switch
     title: '[我的] 基础净化'
     default: true
+    description: 开关：控制「我的 基础净化」。关闭后该项不再处理，出现异常可改回默认。
   ServicePageClean:
     type: switch
     title: '[我的] 我的服务-广告净化'
     default: true
+    description: 开关：控制「我的 我的服务-广告净化」。关闭后该项不再处理，出现异常可改回默认。
   HideMyCheckIn:
     type: switch
     title: '[我的] 隐藏-签到浮窗'
     default: false
+    description: 开关：开启后隐藏「签到浮窗」。若该入口是你常用功能，请保持关闭。
   HideMyMarketing:
     type: switch
     title: '[我的] 隐藏-营销区域'
     default: false
+    description: 开关：开启后隐藏「营销区域」。若该入口是你常用功能，请保持关闭。
   HideMyServices:
     type: switch
     title: '[我的] 隐藏-我的服务'
     default: false
+    description: 开关：开启后隐藏「我的服务」。若该入口是你常用功能，请保持关闭。
   HideMyFamilyCube:
     type: switch
     title: '[我的] 隐藏-我的家庭'
     default: false
+    description: 开关：开启后隐藏「我的家庭」。若该入口是你常用功能，请保持关闭。
   HideMyDevicesCube:
     type: switch
     title: '[我的] 隐藏-我的设备'
     default: false
+    description: 开关：开启后隐藏「我的设备」。若该入口是你常用功能，请保持关闭。
   HideMyMiniProgram:
     type: switch
     title: '[我的] 隐藏-我的账户'
     default: false
+    description: 开关：开启后隐藏「我的账户」。若该入口是你常用功能，请保持关闭。
   HideMyDigitalHuman:
     type: switch
     title: '[我的] 隐藏-AI智能助理'
     default: false
+    description: 开关：开启后隐藏「AI智能助理」。若该入口是你常用功能，请保持关闭。
   HideMySelections:
     type: switch
     title: '[我的] 隐藏-我的优选'
     default: false
+    description: 开关：开启后隐藏「我的优选」。若该入口是你常用功能，请保持关闭。
   HideMyGroup:
     type: switch
     title: '[我的] 隐藏-我的集团'
     default: false
+    description: 开关：开启后隐藏「我的集团」。若该入口是你常用功能，请保持关闭。
   HideMyRingtone:
     type: switch
     title: '[我的] 隐藏-我的彩铃'
     default: false
+    description: 开关：开启后隐藏「我的彩铃」。若该入口是你常用功能，请保持关闭。
   HideMyCloudDrive:
     type: switch
     title: '[我的] 隐藏-我的云盘'
     default: false
+    description: 开关：开启后隐藏「我的云盘」。若该入口是你常用功能，请保持关闭。
   HideMyToolbox:
     type: switch
     title: '[我的] 隐藏-百宝箱'
     default: false
+    description: 开关：开启后隐藏「百宝箱」。若该入口是你常用功能，请保持关闭。
   HideMyLifeServices:
     type: switch
     title: '[我的] 隐藏-生活服务'
     default: false
+    description: 开关：开启后隐藏「生活服务」。若该入口是你常用功能，请保持关闭。
   CMCC_Cookie:
     type: switch
     title: '[小组件]获取Cookie'
     default: false
+    description: 开关：开启后抓取并保存 Cookie；关闭则不再更新，仍使用已保存的值。Cookie 失效时相关功能会失败。
 http:
   url-rewrite:
     - '^https?://(?:client\.app\.coc|app)\.10086\.cn/biz-orange/DN/(?:explorePage/getAdverList|init/startInit|emotionMarket)(?:\?.*)?$ - reject'

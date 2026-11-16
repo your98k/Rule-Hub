@@ -16,6 +16,7 @@ arguments:
     type: switch
     title: '首页笔记标题前显示时间'
     default: false
+    description: 开关：开启后在笔记标题前显示发布时间。仅影响显示，不影响功能。默认关闭。
 http:
   url-rewrite:
     - '^https?://ci\.(?:xiaohongshu|rnote)\.com/system_config/watermark - reject-img'

@@ -14,18 +14,22 @@ arguments:
     type: switch
     title: '[NodeSeek]每日签到Cookie'
     default: true
+    description: 开关：开启后抓取并保存 Cookie；关闭则不再更新，仍使用已保存的值。Cookie 失效时相关功能会失败。
   Task_NodeSeek:
     type: switch
     title: '[NodeSeek]每日签到Task'
     default: true
+    description: 开关：开启后执行对应自动任务；关闭则不再执行，不影响已保存的 Cookie。
   Cron_NodeSeek:
     type: input
     title: '[NodeSeek]定时参数Cron'
     default: "0 0 1 * * *"
+    description: cron 表达式，默认「0 0 1 * * *」。格式写错会导致任务不执行，且通常没有任何报错。
   Mode_NodeSeek:
     type: select
     title: '[NodeSeek]奖励模式Mode'
     default: "default"
+    description: 不同选项行为不同，出现异常先改回默认值。
     options:
       - value: 'default'
       - value: 'random'
@@ -33,18 +37,22 @@ arguments:
     type: switch
     title: '[DeepFlood]每日签到Cookie'
     default: true
+    description: 开关：开启后抓取并保存 Cookie；关闭则不再更新，仍使用已保存的值。Cookie 失效时相关功能会失败。
   Task_DeepFlood:
     type: switch
     title: '[DeepFlood]每日签到Task'
     default: true
+    description: 开关：开启后执行对应自动任务；关闭则不再执行，不影响已保存的 Cookie。
   Cron_DeepFlood:
     type: input
     title: '[DeepFlood]定时参数Cron'
     default: "0 0 1 * * *"
+    description: cron 表达式，默认「0 0 1 * * *」。格式写错会导致任务不执行，且通常没有任何报错。
   Mode_DeepFlood:
     type: select
     title: '[DeepFlood]奖励模式Mode'
     default: "default"
+    description: 不同选项行为不同，出现异常先改回默认值。
     options:
       - value: 'default'
       - value: 'random'

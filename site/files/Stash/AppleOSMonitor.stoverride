@@ -14,38 +14,47 @@ arguments:
     type: input
     title: '定时参数'
     default: "0 9 * * *"
+    description: cron 表达式，默认「0 9 * * *」。格式写错会导致任务不执行，且通常没有任何报错。
   enable_ios:
     type: switch
     title: 'iOS'
     default: true
+    description: 开关：控制「iOS」。关闭后该项不再处理，出现异常可改回默认。
   enable_ipados:
     type: switch
     title: 'iPadOS'
     default: true
+    description: 开关：控制「iPadOS」。关闭后该项不再处理，出现异常可改回默认。
   enable_macos:
     type: switch
     title: 'macOS'
     default: true
+    description: 开关：控制「macOS」。关闭后该项不再处理，出现异常可改回默认。
   enable_tvos:
     type: switch
     title: 'tvOS'
     default: true
+    description: 开关：控制「tvOS」。关闭后该项不再处理，出现异常可改回默认。
   enable_visionos:
     type: switch
     title: 'visionOS'
     default: true
+    description: 开关：控制「visionOS」。关闭后该项不再处理，出现异常可改回默认。
   enable_watchos:
     type: switch
     title: 'watchOS'
     default: true
+    description: 开关：控制「watchOS」。关闭后该项不再处理，出现异常可改回默认。
   system:
     type: input
     title: '系统版本'
     default: ""
+    description: 按插件说明填写；填错通常表现为该功能不生效。
   version:
     type: select
     title: '版本类型'
     default: "all"
+    description: 不同选项行为不同，出现异常先改回默认值。
     options:
       - value: 'all'
       - value: 'official'
@@ -54,14 +63,17 @@ arguments:
     type: input
     title: 'Bark Key'
     default: ""
+    description: 接口令牌，留空则走公共接口。公共接口有限速，可能失败或返回不全。
   bark_group:
     type: input
     title: 'Bark Group'
     default: ""
+    description: 推送分组名，留空表示不分组。填错只影响通知归类，不影响功能。
   bark_sound:
     type: select
     title: 'Bark Sound'
     default: "system"
+    description: 不同选项行为不同，出现异常先改回默认值。
     options:
       - value: 'system'
       - value: 'alarm'

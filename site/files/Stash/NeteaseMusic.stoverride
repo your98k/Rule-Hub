@@ -16,70 +16,87 @@ arguments:
     type: switch
     title: '隐藏[底部-发现]'
     default: false
+    description: 开关：开启后隐藏「底部-发现」。若该入口是你常用功能，请保持关闭。
   MY:
     type: switch
     title: '隐藏[底部-漫游]'
     default: false
+    description: 开关：开启后隐藏「底部-漫游」。若该入口是你常用功能，请保持关闭。
   DT:
     type: switch
     title: '隐藏[底部-笔记]'
     default: false
+    description: 开关：开启后隐藏「底部-笔记」。若该入口是你常用功能，请保持关闭。
   GZ:
     type: switch
     title: '隐藏[底部-关注]'
     default: false
+    description: 开关：开启后隐藏「底部-关注」。若该入口是你常用功能，请保持关闭。
   PRGG:
     type: switch
     title: '隐藏[首页-问候语]'
     default: false
+    description: 开关：开启后隐藏「首页-问候语」。若该入口是你常用功能，请保持关闭。
   PRRK:
     type: switch
     title: '隐藏[首页-排行榜]'
     default: false
+    description: 开关：开启后隐藏「首页-排行榜」。若该入口是你常用功能，请保持关闭。
   PRDRD:
     type: switch
     title: '隐藏[首页-每日推荐]'
     default: false
+    description: 开关：开启后隐藏「首页-每日推荐」。若该入口是你常用功能，请保持关闭。
   PRSCVPT:
     type: switch
     title: '隐藏[首页-推荐歌单]'
     default: false
+    description: 开关：开启后隐藏「首页-推荐歌单」。若该入口是你常用功能，请保持关闭。
   PRST:
     type: switch
     title: '隐藏[首页-最近常听]'
     default: false
+    description: 开关：开启后隐藏「首页-最近常听」。若该入口是你常用功能，请保持关闭。
   PRRR:
     type: switch
     title: '隐藏[首页-雷达歌单]'
     default: false
+    description: 开关：开启后隐藏「首页-雷达歌单」。若该入口是你常用功能，请保持关闭。
   HMPR:
     type: switch
     title: '隐藏[首页-音乐合伙人]'
     default: false
+    description: 开关：开启后隐藏「首页-音乐合伙人」。若该入口是你常用功能，请保持关闭。
   PRMST:
     type: switch
     title: '隐藏[首页-推荐专属歌单]'
     default: false
+    description: 开关：开启后隐藏「首页-推荐专属歌单」。若该入口是你常用功能，请保持关闭。
   PRCN:
     type: switch
     title: '隐藏[首页-你的专属歌单]'
     default: false
+    description: 开关：开启后隐藏「首页-你的专属歌单」。若该入口是你常用功能，请保持关闭。
   Music163_VIP_Shared:
     type: switch
     title: '启用[共享会员]'
     default: false
+    description: 开关：开启后使用共享会员配置。共享池可能失效或在线冲突，出现播放异常请关闭。默认关闭。
   Cookie:
     type: input
     title: 'Cookie'
     default: ""
+    description: 必填。用于接口鉴权；Cookie 过期或缺字段会导致请求失败，表现为签到不成功、功能无响应。
   MConfigInfo:
     type: input
     title: 'MConfigInfo'
     default: ""
+    description: 按插件说明填写；填错通常表现为该功能不生效。
   UserAgent:
     type: input
     title: 'UserAgent'
     default: ""
+    description: 自定义 User-Agent。留空用默认值；填错可能被服务端拒绝。
 http:
   url-rewrite:
     - '^https?://interface\d?\.music\.163\.com/x?e?api/ad - reject-dict'

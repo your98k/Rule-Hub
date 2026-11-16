@@ -16,14 +16,17 @@ arguments:
     type: switch
     title: '[V2EX]每日签到Cookie'
     default: true
+    description: 开关：开启后抓取并保存 Cookie；关闭则不再更新，仍使用已保存的值。Cookie 失效时相关功能会失败。
   Task_V2EX:
     type: switch
     title: '[V2EX]每日签到Task'
     default: true
+    description: 开关：开启后执行对应自动任务；关闭则不再执行，不影响已保存的 Cookie。
   Cron_V2EX:
     type: input
     title: '[V2EX]定时参数Cron'
     default: "0 0 9 * * *"
+    description: cron 表达式，默认「0 0 9 * * *」。格式写错会导致任务不执行，且通常没有任何报错。
 http:
   mitm:
     - '*.v2ex.com'

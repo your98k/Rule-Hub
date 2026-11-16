@@ -15,22 +15,27 @@ arguments:
     type: switch
     title: '捕获账号令牌'
     default: false
+    description: 开关：控制「捕获账号令牌」。关闭后该项不再处理，出现异常可改回默认。
   RunJoin:
     type: switch
     title: 'TestFlight自动加入'
     default: false
+    description: 开关：控制「TestFlight自动加入」。关闭后该项不再处理，出现异常可改回默认。
   RunMonitor:
     type: switch
     title: 'TestFlight自动监控'
     default: false
+    description: 开关：控制「TestFlight自动监控」。关闭后该项不再处理，出现异常可改回默认。
   JoinCron:
     type: input
     title: '加入TestFlight定时参数'
     default: "0 0/3 * * * ?"
+    description: cron 表达式，默认「0 0/3 * * * ?」。格式写错会导致任务不执行，且通常没有任何报错。
   MonitorCron:
     type: input
     title: '监控TestFlight定时参数'
     default: "0 * * * * ?"
+    description: cron 表达式，默认「0 * * * * ?」。格式写错会导致任务不执行，且通常没有任何报错。
 http:
   mitm:
     - 'testflight.apple.com'
