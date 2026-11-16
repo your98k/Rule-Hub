@@ -15,6 +15,7 @@ arguments:
     type: input
     title: 'X_Web Tags'
     default: ""
+    description: 按插件说明填写；填错通常表现为该功能不生效。
 http:
   mitm:
     - 'x.com'

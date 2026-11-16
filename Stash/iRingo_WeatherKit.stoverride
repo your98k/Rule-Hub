@@ -30,6 +30,7 @@ arguments:
     type: select
     title: 天气预警数据源
     default: QWeatherWeb
+    description: 数据源选择。切换后该数据的来源与精度会变；某项无数据时先换回默认。
     options:
       - value: QWeatherWeb
       - value: WeatherKit
@@ -41,6 +42,7 @@ arguments:
     type: select
     title: 未来一小时降水源
     default: ColorfulClouds
+    description: 数据源选择。切换后该数据的来源与精度会变；某项无数据时先换回默认。
     options:
       - value: ColorfulClouds
         label: 彩云天气
@@ -51,6 +53,7 @@ arguments:
     type: select
     title: 今日污染物源
     default: ColorfulClouds
+    description: 数据源选择。切换后该数据的来源与精度会变；某项无数据时先换回默认。
     options:
       - value: ColorfulClouds
         label: 彩云天气
@@ -79,14 +82,17 @@ arguments:
     type: input
     title: 彩云天气令牌
     default: ''
+    description: 接口令牌，留空则走公共接口。公共接口有限速，可能失败或返回不全。
   API_QWeather_Host:
     type: input
     title: 和风天气主机
     default: devapi.qweather.com
+    description: 接口令牌，留空则走公共接口。公共接口有限速，可能失败或返回不全。
   API_QWeather_Token:
     type: input
     title: 和风天气令牌
     default: ''
+    description: 接口令牌，留空则走公共接口。公共接口有限速，可能失败或返回不全。
   API_WAQI_Token:
     type: input
     title: WAQI 令牌
@@ -108,6 +114,7 @@ arguments:
     type: select
     title: 日志等级
     default: WARN
+    description: 日志等级。调高会写更多日志，仅排查时使用，长期开启略耗电。
     options:
       - value: 'OFF'
       - value: ERROR

@@ -15,66 +15,82 @@ arguments:
     type: switch
     title: '[微信支付有优惠]领金币Cookie'
     default: false
+    description: 开关：开启后抓取并保存 Cookie；关闭则不再更新，仍使用已保存的值。Cookie 失效时相关功能会失败。
   Task_WeChatPay:
     type: switch
     title: '[微信支付有优惠]领金币Task'
     default: false
+    description: 开关：开启后执行对应自动任务；关闭则不再执行，不影响已保存的 Cookie。
   Cron_WeChatPay:
     type: input
     title: '[微信支付有优惠]定时参数Cron'
     default: "0 0 9 * * *"
+    description: cron 表达式，默认「0 0 9 * * *」。格式写错会导致任务不执行，且通常没有任何报错。
   Cookie_Weibo:
     type: switch
     title: '[微博]每日签到Cookie'
     default: false
+    description: 开关：开启后抓取并保存 Cookie；关闭则不再更新，仍使用已保存的值。Cookie 失效时相关功能会失败。
   Task_Weibo:
     type: switch
     title: '[微博]每日签到Task'
     default: false
+    description: 开关：开启后执行对应自动任务；关闭则不再执行，不影响已保存的 Cookie。
   Cron_Weibo:
     type: input
     title: '[微博]定时参数Cron'
     default: "0 0 9 * * *"
+    description: cron 表达式，默认「0 0 9 * * *」。格式写错会导致任务不执行，且通常没有任何报错。
   Cookie_WeiboTalk:
     type: switch
     title: '[微博超话]每日签到Cookie'
     default: false
+    description: 开关：开启后抓取并保存 Cookie；关闭则不再更新，仍使用已保存的值。Cookie 失效时相关功能会失败。
   Task_WeiboTalk:
     type: switch
     title: '[微博超话]每日签到Task'
     default: false
+    description: 开关：开启后执行对应自动任务；关闭则不再执行，不影响已保存的 Cookie。
   Cron_WeiboTalk:
     type: input
     title: '[微博超话]定时参数Cron'
     default: "0 0 9 * * *"
+    description: cron 表达式，默认「0 0 9 * * *」。格式写错会导致任务不执行，且通常没有任何报错。
   Cookie_BilibiliApp:
     type: switch
     title: '[哔哩哔哩App]每日等级任务Cookie'
     default: false
+    description: 开关：开启后抓取并保存 Cookie；关闭则不再更新，仍使用已保存的值。Cookie 失效时相关功能会失败。
   Cookie_BilibiliQRCode:
     type: switch
     title: '[哔哩哔哩QR Code]每日等级任务Cookie'
     default: false
+    description: 开关：开启后抓取并保存 Cookie；关闭则不再更新，仍使用已保存的值。Cookie 失效时相关功能会失败。
   Task_Bilibili:
     type: switch
     title: '[哔哩哔哩]每日等级任务Task'
     default: false
+    description: 开关：开启后执行对应自动任务；关闭则不再执行，不影响已保存的 Cookie。
   Cron_Bilibili:
     type: input
     title: '[哔哩哔哩]定时参数Cron'
     default: "0 0 9 * * *"
+    description: cron 表达式，默认「0 0 9 * * *」。格式写错会导致任务不执行，且通常没有任何报错。
   Cookie_WPS:
     type: switch
     title: '[WPS]每日签到Cookie'
     default: false
+    description: 开关：开启后抓取并保存 Cookie；关闭则不再更新，仍使用已保存的值。Cookie 失效时相关功能会失败。
   Task_WPS:
     type: switch
     title: '[WPS]每日签到Task'
     default: false
+    description: 开关：开启后执行对应自动任务；关闭则不再执行，不影响已保存的 Cookie。
   Cron_WPS:
     type: input
     title: '[WPS]定时参数Cron'
     default: "0 0 9 * * *"
+    description: cron 表达式，默认「0 0 9 * * *」。格式写错会导致任务不执行，且通常没有任何报错。
 http:
   mitm:
     - 'payapp.weixin.qq.com'

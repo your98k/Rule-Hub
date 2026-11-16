@@ -15,18 +15,22 @@ arguments:
     type: input
     title: '定时参数'
     default: "0 9 * * *"
+    description: cron 表达式，默认「0 9 * * *」。格式写错会导致任务不执行，且通常没有任何报错。
   uapi_type:
     type: input
     title: '热榜平台'
     default: ""
+    description: 平台标识，多个用逗号分隔，名称需与接口一致。写错或不支持的平台不会返回数据。
   uapi_top:
     type: input
     title: '榜单条数'
     default: ""
+    description: 榜单条数，需为整数。填太大可能触发接口限流。
   uapi_api:
     type: input
     title: 'UAPI Token'
     default: ""
+    description: 接口令牌，留空则走公共接口。公共接口有限速，可能失败或返回不全。
 cron:
   script:
     - name: 'UAPI_hotboard'

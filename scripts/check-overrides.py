@@ -163,6 +163,11 @@ def main():
         for i, r in enumerate(d.get('rules') or []):
             if isinstance(r, str) and ', ' in r:
                 issues.append((f, 'rules', f'[{i}] 逗号后不要留空格: {r[:40]}'))
+        # 每个参数必须有说明：参数面板里只显示 title 会让用户不知道副作用
+        for an, av in (d.get('arguments') or {}).items():
+            if isinstance(av, dict):
+                if not (av.get('description') or '').strip():
+                    issues.append((f, 'arguments', f'{an} 缺少 description（需写明开启/关闭的影响与可能的异常）'))
         # arguments 的 label/value 必须是字符串，否则 YAML 会把 yes/no 解析成布尔
         for an, spec in (d.get('arguments') or {}).items():
             if not isinstance(spec, dict):

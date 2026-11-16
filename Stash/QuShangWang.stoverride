@@ -13,10 +13,12 @@ arguments:
     type: switch
     title: 跳过开屏广告
     default: true
+    description: 开关：控制「跳过开屏广告」。关闭后该项不再处理，出现异常可改回默认。
   spoof_size:
     type: select
     title: 开屏响应大小范围
     default: '400-600'
+    description: 开屏响应大小匹配范围。范围过大可能误拦正常响应，过小会漏拦。
     options:
       - value: '400-600'
         label: 400-600 字节（实测有效，推荐）
@@ -28,6 +30,7 @@ arguments:
     type: select
     title: 广告域名拦截方式
     default: 'REJECT,pre-matching'
+    description: 广告域名拦截方式。pre-matching 最省资源且不进 HTTP 引擎；REJECT-DROP 会静默丢弃，排查时看不到连接记录。
     options:
       - value: 'REJECT,pre-matching'
         label: 建连前拦截（推荐）
@@ -39,6 +42,7 @@ arguments:
     type: select
     title: 统计埋点
     default: DIRECT
+    description: 统计埋点处理方式。DIRECT 放行，拦截会丢弃埋点请求。
     options:
       - value: DIRECT
         label: 不拦截（只去广告）

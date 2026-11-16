@@ -16,6 +16,7 @@ arguments:
     type: switch
     title: '顶部 Tab 过滤'
     default: true
+    description: 开关：开启后过滤顶部多余 Tab。若某个你要用的入口消失，请关闭。
 http:
   url-rewrite:
     - '^https?://m?api\.weibo\.c(n|om)/2/logservice/service\? - reject'
