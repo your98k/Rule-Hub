@@ -1,0 +1,97 @@
+name: Sync all upstreams to test
+
+on:
+  schedule:
+    - cron: '10 19 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rule-hub-upstream-sync-test
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: tooling
+      - uses: actions/checkout@v4
+        with:
+          ref: test
+          path: work
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install validators
+        run: |
+          python -m pip install -r tooling/scripts/sync-requirements.txt
+          sudo apt-get update -qq
+          sudo apt-get install -y jq
+      - name: Refresh tooling and seed missing test files
+        run: |
+          mkdir -p work/upstream work/scripts
+          cp tooling/scripts/sync-upstreams.py tooling/scripts/loon_adapter.py tooling/scripts/test_loon_adapter.py tooling/scripts/test-sync-upstreams.py tooling/scripts/check-overrides.py tooling/scripts/upstream-resources.py tooling/scripts/test-upstream-resources.py work/scripts/
+          cp tooling/upstream/sources.json work/upstream/
+          python - <<'PY'
+          from pathlib import Path
+          import shutil
+          for area in ('Stash', 'Script'):
+              for source in (Path('tooling') / area).rglob('*'):
+                  if source.is_file():
+                      target = Path('work') / source.relative_to('tooling')
+                      if not target.exists():
+                          target.parent.mkdir(parents=True, exist_ok=True)
+                          shutil.copyfile(source, target)
+          PY
+      - name: Unit and negative regression tests
+        run: |
+          python tooling/scripts/test-sync-upstreams.py
+          python -m unittest discover -s tooling/scripts -p 'test_loon_adapter.py'
+          python tooling/scripts/test-upstream-resources.py
+      - name: Synchronize upstreams
+        id: sync
+        continue-on-error: true
+        working-directory: work
+        run: |
+          test "$(git branch --show-current)" = test
+          python scripts/sync-upstreams.py --apply
+      - name: Audit remote and inline resources
+        id: resources
+        continue-on-error: true
+        working-directory: work
+        run: python scripts/upstream-resources.py --root . --report upstream/resource-report.json --state upstream/resource-state.json
+      - name: Commit validated candidates to test only
+        working-directory: work
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = test
+          git add Stash Script upstream scripts/sync-upstreams.py scripts/loon_adapter.py scripts/test_loon_adapter.py scripts/test-sync-upstreams.py scripts/check-overrides.py scripts/upstream-resources.py scripts/test-upstream-resources.py
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'sync: validated upstream candidates and coverage report [test only]'
+          git push origin HEAD:refs/heads/test
+      - name: Upload complete sync report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: upstream-sync-report
+          path: |
+            work/upstream/sync-report.json
+            work/upstream/resource-report.json
+          if-no-files-found: warn
+      - name: Surface blocked or failed sources
+        if: steps.sync.outcome == 'failure' || steps.resources.outcome == 'failure'
+        run: |
+          echo 'Some upstreams need review or failed to fetch. See the report; last good outputs and baselines were retained.'
+          exit 1
