@@ -1,6 +1,7 @@
 name: 'XPTV 伪 CMS 源'
 desc: 'XPTV 伪 CMS 源，配合订阅地址使用，修正美剧星球等源的播放链路。'
 openUrl: 'https://apps.apple.com/app/id6459409368'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/XPTV.png'
 author: 'your98k'
 category: '功能增强'
 date: '2026-11-16'

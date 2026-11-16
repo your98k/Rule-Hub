@@ -1,6 +1,7 @@
 name: '夸克扫描王 去广告'
 desc: '夸克扫描王 去广告，共 2 条规则。'
 openUrl: 'https://apps.apple.com/app/id1542030138'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/QuarkScanKing.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-15'

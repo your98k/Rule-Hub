@@ -1,6 +1,7 @@
 name: 'PandaTV 解除区域限制'
 desc: 'PandaTV 补 Origin 头绕过区域校验；路由规则需填入实际策略组后启用。'
 openUrl: 'https://apps.apple.com/app/id1487958527'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/PandaTV-02.png'
 author: 'your98k'
 category: '功能增强'
 date: '2026-11-15'

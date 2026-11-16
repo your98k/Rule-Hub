@@ -1,6 +1,7 @@
 name: 'GitHub Raw 走 CDN'
 desc: '把 raw.githubusercontent.com 的请求自动改写到可用的 CDN 加速地址。'
 openUrl: 'https://github.com'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/GitHub-01.png'
 author: 'your98k'
 category: '功能增强'
 date: '2026-11-16'

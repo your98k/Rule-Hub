@@ -1,6 +1,7 @@
 name: '看理想 去广告'
 desc: '看理想 去广告，清理开屏、弹窗与会员页购买区，修正音频下载与播放链路。'
 openUrl: 'https://apps.apple.com/app/id1342118033'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Vistopia.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-16'

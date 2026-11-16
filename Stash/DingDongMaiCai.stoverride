@@ -2,6 +2,7 @@ name: '叮咚买菜 去广告'
 desc: |-
   叮咚买菜 去广告，共 23 条规则。
 openUrl: 'https://apps.apple.com/app/id1222783123'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DingDongMaiCai.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-16'

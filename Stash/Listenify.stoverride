@@ -2,6 +2,7 @@ name: 'Listenify 增强'
 desc: |-
   Listenify 增强，共 1 条规则。
 author: 'your98k'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Listenify.png'
 category: '去广告'
 date: '2026-11-16'
 version: '1.0.0'

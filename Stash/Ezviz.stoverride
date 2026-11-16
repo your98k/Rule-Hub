@@ -1,6 +1,7 @@
 name: '萤石云视频 去广告'
 desc: '萤石云视频 去广告，拦截推广、轮播与天气视频接口。'
 openUrl: 'https://apps.apple.com/app/id571195405'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Ezviz.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-16'

@@ -2,6 +2,7 @@ name: '芒果TV 去广告'
 desc: |-
   芒果TV 去广告，共 14 条规则。
 openUrl: 'https://apps.apple.com/app/id1103571623'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/MangoTV.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-16'

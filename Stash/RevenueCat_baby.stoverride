@@ -1,6 +1,7 @@
 name: 'RevenueCat 解锁'
 desc: 'RevenueCat 解锁，经由中转重放订阅响应，支持跳过指定 App。'
 author: 'your98k'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/RevenueCat.png'
 category: '解锁会员'
 date: '2026-11-16'
 version: '1.0.0'

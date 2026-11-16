@@ -1,6 +1,7 @@
 name: '淘宝 去广告'
 desc: '淘宝 去广告，拦截广告下发与推广图，含 HEIC 缩略图请求。'
 openUrl: 'https://apps.apple.com/app/id387682726'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TaoBao.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-16'

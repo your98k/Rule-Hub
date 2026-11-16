@@ -2,6 +2,7 @@ name: '航旅纵横 去广告'
 desc: |-
   航旅纵横 去广告，共 3 条规则。
 openUrl: 'https://apps.apple.com/app/id458527711'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Umetrip.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-16'

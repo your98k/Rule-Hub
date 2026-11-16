@@ -1,6 +1,7 @@
 name: '中国联通 去广告'
 desc: '中国联通 去广告，共 10 条规则。'
 openUrl: 'https://apps.apple.com/app/id392397057'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ChinaUnicom.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-15'

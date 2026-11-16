@@ -1,6 +1,7 @@
 name: '阿基米德 去广告'
 desc: '阿基米德 去广告，共 4 条规则。'
 openUrl: 'https://apps.apple.com/app/id519588844'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ArchimedesFM.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-15'

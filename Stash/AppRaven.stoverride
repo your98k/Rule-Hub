@@ -1,6 +1,7 @@
 name: 'AppRaven 会员解锁'
 desc: 'AppRaven 会员相关字段置为已购，纯声明式改写响应。'
 openUrl: 'https://apps.apple.com/app/id1532203205'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/AppRaven.png'
 author: 'your98k'
 category: '会员解锁'
 date: '2026-11-16'

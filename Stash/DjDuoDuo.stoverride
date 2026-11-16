@@ -1,6 +1,7 @@
 name: 'DJ多多 去广告'
 desc: 'DJ多多 去广告，移除开屏与歌单广告配置。'
 openUrl: 'https://apps.apple.com/app/id1039764887'
+icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/DjDuoDuo.png'
 author: 'your98k'
 category: '去广告'
 date: '2026-11-16'
