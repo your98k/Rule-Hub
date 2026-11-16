@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16 13:56",
+  "generated_at": "2026-11-16 14:07",
   "repo": "https://github.com/your98k/Rule-Hub",
   "base": "https://your98k.github.io/Rule-Hub",
   "plugins": [
@@ -307,7 +307,7 @@
       "desc": "滴滴出行 去广告，接口版本自适应，共 91 条规则。",
       "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DiDi.png",
       "date": "2026-11-16",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "tags": [
         "Stash 覆写",
         "去广告"

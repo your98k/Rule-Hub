@@ -5,7 +5,26 @@ icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DiDi.png
 author: 'your98k'
 category: '去广告'
 date: '2026-11-16'
-version: '1.1.0'
+version: '1.2.0'
+arguments-version: 1
+arguments:
+  BlockDaijiaGateway:
+    type: switch
+    title: 强拦截代驾主网关
+    description: |-
+      上游 snippet 会整段拦截 daijia.kuaidadi.com/gateway，这里做成开关。
+      开启后可能出现：代驾下单或行程页加载失败、代驾页面空白、喇叭/计价信息不显示；
+      同时本覆写里 apolloConfig、apolloToggle 两条改写会因为请求被拦截而失效。
+      默认关闭。开之前建议先在代驾页面确认关闭时功能正常。
+    default: false
+  LegacyInTripFix:
+    type: switch
+    title: 按下标清理行程页组件
+    description: |-
+      上游写法是 del(.data.order_components[8].data)，按下标删第 9 个组件的数据，这里做成开关。
+      开启后可能出现：行程页订单卡片信息缺失或空白；滴滴调整组件顺序时会删错对象，
+      表现为该显示的信息整块不见。默认关闭。
+    default: false
 
 rules:
   - 'DOMAIN,as.xiaojukeji.com,REJECT'
@@ -129,3 +148,25 @@ http:
     - '^https://poi\.map\.xiaojukeji\.com/mapapi/startinfo\?api_version response-jq del(.rec_destination)'
     - '^https://poi\.map\.xiaojukeji\.com/mapapi/poiinfo\?product_id response-jq del(.rec_destination)'
     - '^https://common\.diditaxi\.com\.cn/user_common/itineraryList\? response-jq del(.data.tab_nav[]?.tab_param)'
+
+  script:
+    - name: didi-extra
+      match: '^https://daijia\.kuaidadi\.com(:443)?/gateway'
+      type: request
+      argument: '{"BlockDaijiaGateway":${args.BlockDaijiaGateway|json},"LegacyInTripFix":${args.LegacyInTripFix|json}}'
+    - name: didi-extra
+      match: '^https://api\.udache\.com/gulfstream/passenger-center/v2/other/pInTripLayout'
+      type: response
+      require-body: true
+      argument: '{"BlockDaijiaGateway":${args.BlockDaijiaGateway|json},"LegacyInTripFix":${args.LegacyInTripFix|json}}'
+
+script-providers:
+  didi-extra:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/didi-extra.js'
+    interval: 86400
+
+# 说明（可选参数）：
+# 本覆写默认不含任何有副作用的行为。两个参数都默认关闭，只在用户明确开启时生效：
+#   BlockDaijiaGateway：整段拦截 daijia 主网关，可能影响代驾下单/行程显示
+#   LegacyInTripFix   ：按下标删除行程页第 9 个组件的数据，结构变化时会删错
+# 若开启后滴滴出现功能异常，先关掉对应开关复测，再判断是否为本覆写导致。
