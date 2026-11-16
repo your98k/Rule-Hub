@@ -1,0 +1,52 @@
+name: 'GLaDOS'
+desc: |-
+  GLaDOS每日签到。访问网页登录账号，进入账户页面后，手动刷新一次网页自动获取保存Cookie。Cookie存在有效期，失效后需重新获取。
+author: 'curtinp118[https://github.com/curtinp118]'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/Airport/GLaDOS-01.png'
+date: '2026-10-02 12:00'
+openUrl: 'https://glados.cloud/'
+category: '定时任务'
+# 由 Loon 插件自动转换：GLaDOS.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：curtinp118[https://github.com/curtinp118]
+arguments-version: 1
+arguments:
+  Cookie_GLaDOS:
+    type: switch
+    title: '[GLaDOS]每日签到Cookie'
+    default: true
+  Task_GLaDOS:
+    type: switch
+    title: '[GLaDOS]每日签到Task'
+    default: true
+  Cron_GLaDOS:
+    type: input
+    title: '[GLaDOS]定时参数Cron'
+    default: "0 0 9 * * *"
+http:
+  mitm:
+    - 'glados.cloud'
+    - 'glados.network'
+    - 'glados.one'
+    - 'glados.space'
+    - 'glados.vip'
+  script:
+    - name: 'GLaDOS_checkin'
+      match: '^https://glados\.(?:cloud|network|one|space|vip)/console/account$'
+      type: 'request'
+rules:
+  - 'DOMAIN-SUFFIX,glados.cloud,PROXY'
+  - 'DOMAIN-SUFFIX,glados.network,PROXY'
+  - 'DOMAIN-SUFFIX,glados.one,PROXY'
+  - 'DOMAIN-SUFFIX,glados.space,PROXY'
+  - 'DOMAIN-SUFFIX,glados.vip,PROXY'
+cron:
+  script:
+    - name: 'GLaDOS_checkin'
+      cron: '0 9 * * *'
+      timeout: 60
+script-providers:
+  GLaDOS_checkin:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/GLaDOS.checkin.js'
+    interval: 86400

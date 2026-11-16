@@ -1,0 +1,38 @@
+name: '阿里云盘'
+desc: |-
+  过滤阿里云盘广告
+author: 'RuCu6[https://github.com/RuCu6], 可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md]'
+homepage: 'https://loonlab.103516.xyz/Plugin/'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Alipan-01.png'
+date: '2026-11-02 21:00'
+openUrl: 'https://apps.apple.com/app/id1494661473'
+category: '去广告'
+# 由 Loon 插件自动转换：Alipan.lpx
+# 上游主页：https://loonlab.103516.xyz/Plugin/
+# 原作者：RuCu6[https://github.com/RuCu6], 可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md]
+http:
+  url-rewrite:
+    - '^https://member\.alipan\.com/v2/activity/sign_in_luckyBottle - reject-dict'
+    - '^https://api\.alipan\.com/adrive/v1/file/getTopFolders - reject-dict'
+  body-rewrite:
+    - '^https://(biz)?api\.alipan\.com/apps/v\d/users?/home/news response-jq if .result|length>0 then .result|=map(select(.code|contains("productUpdate")|not)) else . end'
+    - '^https://(biz)?api\.alipan\.com/apps/v\d/users?/home/widgets response-jq delpaths([["album"],["banners"],["coreFeatures"],["introduceAlipan"],["minorBackup"]])'
+    - '^https://member\.alipan\.com/v1/users/onboard_list response-jq if .result|length>0 then .result|=map(select(.anchor|IN("backup_list_under_mydevice_banner","backup_top_banner","home_bulletin_board","home_top_banner","resource_top_banner","video_top_banner")|not)) else . end'
+  mitm:
+    - '*api.alipan.com'
+    - '*api.aliyundrive.com'
+    - 'member.alipan.com'
+    - 'member.aliyundrive.com'
+  script:
+    - name: 'Alipan'
+      match: '^https://(biz)?api\.alipan\.com/apps/v\d/users?/home/(?:news|widgets)'
+      type: 'response'
+    - name: 'Alipan'
+      match: '^https://member\.alipan\.com/v1/users/onboard_list'
+      type: 'response'
+rules:
+  - 'IP-CIDR,203.107.1.1/24,REJECT,no-resolve'
+script-providers:
+  Alipan:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Alipan.js'
+    interval: 86400

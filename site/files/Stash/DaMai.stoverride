@@ -1,0 +1,18 @@
+name: '大麦 去广告'
+desc: '大麦 去广告，共 5 条规则。'
+openUrl: 'https://apps.apple.com/app/id491108899'
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'acs.m.taobao.com'
+  url-rewrite:
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.damai\.wireless\.home\.welcome/ - reject-dict'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.damai\.mec\.popup\.get/ - reject-dict'
+  body-rewrite:
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.damai\.wireless\.user\.my\.content\.get/ response-jq del(.data.banner, .data.performFilmVip.userProfitList)'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.damai\.wireless\.mypage\.feed/ response-jq del(.data.feedCard)'
+    - '^https://acs\.m\.taobao\.com/gw/mtop\.damai\.mec\.aristotle\.get/ response-jq del(.data.data.top.keywords)'

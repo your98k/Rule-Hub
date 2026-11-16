@@ -1,0 +1,48 @@
+name: 'V2EX'
+desc: |-
+  过滤V2EX社区广告；V2EX每日签到，访问V2EX个人主页自动获取保存Cookie。
+author: 'your98k'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/V2EX-03.png'
+date: '2026-10-02 12:00'
+openUrl: 'https://v2ex.com/'
+category: '去广告'
+# 由 Loon 插件自动转换：V2EX.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：ddgksf2013[https://github.com/ddgksf2013], curtinp118[https://github.com/curtinp118]
+arguments-version: 1
+arguments:
+  Cookie_V2EX:
+    type: switch
+    title: '[V2EX]每日签到Cookie'
+    default: true
+  Task_V2EX:
+    type: switch
+    title: '[V2EX]每日签到Task'
+    default: true
+  Cron_V2EX:
+    type: input
+    title: '[V2EX]定时参数Cron'
+    default: "0 0 9 * * *"
+http:
+  mitm:
+    - '*.v2ex.com'
+    - 'pagead*.googlesyndication.com'
+    - 'v2ex.com'
+  script:
+    - name: 'v2ex'
+      match: '^https?://www\.v2ex\.com/(mission|member).*$'
+      type: 'request'
+      timeout: 10
+    - name: 'v2ex_ads'
+      match: '^https?://.*v2ex\.com/(?!(.*(api|login|cdn-cgi|verify|auth|captch|(\.(js|css|jpg|jpeg|png|webp|gif|zip|woff|woff2|m3u8|mp4|mov|m4v|avi|mkv|flv|rmvb|wmv|rm|asf|asx|mp3|json|ico|otf|ttf)))))'
+      type: 'response'
+rules:
+  - 'DOMAIN-SUFFIX,v2ex.com,PROXY'
+script-providers:
+  v2ex:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/raw.githubusercontent.com/curtinp118__Scripthub/main/scripts/v2ex/v2ex.js'
+    interval: 86400
+  v2ex_ads:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/ddgksf2013.top/scripts/v2ex.ads.js'
+    interval: 86400

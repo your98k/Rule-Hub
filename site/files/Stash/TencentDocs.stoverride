@@ -1,0 +1,16 @@
+name: '腾讯文档 去广告'
+desc: '腾讯文档 去广告，共 2 条规则。'
+openUrl: 'https://apps.apple.com/app/id1370780836'
+author: 'your98k'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TencentDocs.png'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'tianshu.qq.com'
+    - 'h5.qzone.qq.com'
+  url-rewrite:
+    - '^https://tianshu\.qq\.com/open/ts_access/GetAds\? - reject-dict'
+    - '^https://h5\.qzone\.qq\.com/p/adboss/api/json/ts_access/GetAds$ - reject-dict'

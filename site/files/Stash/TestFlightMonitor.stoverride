@@ -1,0 +1,61 @@
+name: 'TestFlight Monitor'
+desc: |-
+  1.自动监控TestFlight，手动填写应用APP_ID，一旦有空余名额会自动通知，点击通知即可跳转加入；\n2.自动加入TestFlight，需先获取账号令牌[添加主机名testflight.apple.com]，一旦有空余名额会自动加入。
+author: 'fmz200[https://github.com/fmz200], DecoAri[https://github.com/DecoAri], xream[https://github.com/xream]'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TestFlight-04.png'
+date: '2026-10-02 12:00'
+openUrl: 'https://apps.apple.com/app/id899247664'
+category: '功能增强, 定时任务'
+# 由 Loon 插件自动转换：TestFlightMonitor.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：fmz200[https://github.com/fmz200], DecoAri[https://github.com/DecoAri], xream[https://github.com/xream]
+arguments-version: 1
+arguments:
+  CaptureAccountToken:
+    type: switch
+    title: '捕获账号令牌'
+    default: false
+  RunJoin:
+    type: switch
+    title: 'TestFlight自动加入'
+    default: false
+  RunMonitor:
+    type: switch
+    title: 'TestFlight自动监控'
+    default: false
+  JoinCron:
+    type: input
+    title: '加入TestFlight定时参数'
+    default: "0 0/3 * * * ?"
+  MonitorCron:
+    type: input
+    title: '监控TestFlight定时参数'
+    default: "0 * * * * ?"
+http:
+  mitm:
+    - 'testflight.apple.com'
+  script:
+    - name: 'AutoJoinTFKeys'
+      match: '^https?://testflight\.apple\.com/v3/accounts/.*/apps$'
+      type: 'request'
+rules:
+  - 'DOMAIN,testflight.apple.com,PROXY'
+cron:
+  script:
+    - name: 'AutoJoinTF'
+      cron: '${args.JoinCron}'
+      timeout: 60
+    - name: 'AutoMonitorTF'
+      cron: '${args.MonitorCron}'
+      timeout: 60
+script-providers:
+  AutoJoinTFKeys:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/AutoJoinTFKeys.js'
+    interval: 86400
+  AutoJoinTF:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/AutoJoinTF.js'
+    interval: 86400
+  AutoMonitorTF:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/AutoMonitorTF.js'
+    interval: 86400

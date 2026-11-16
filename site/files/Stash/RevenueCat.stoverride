@@ -1,0 +1,64 @@
+name: 'RevenueCat'
+desc: |-
+  RevenueCat系列解锁合集，在设置中选择需要使用的原作者脚本以使用此插件。
+author: 'your98k'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/RevenueCat.png'
+date: '2026-10-02 12:00'
+category: '解锁会员'
+# 由 Loon 插件自动转换：RevenueCat.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：chxm1023[https://github.com/chxm1023], ddgksf2013[https://github.com/ddgksf2013], Guding88[https://github.com/Guding88]
+arguments-version: 1
+arguments:
+  RevenueCat_chxm1023:
+    type: switch
+    title: 'RevenueCat-chxm1023'
+    default: false
+  RevenueCat_Guding88:
+    type: switch
+    title: 'RevenueCat-Guding88'
+    default: false
+  RevenueCat_ddgksf2013:
+    type: switch
+    title: 'RevenueCat-ddgksf2013'
+    default: false
+http:
+  url-rewrite:
+    - '^https://api\.lianjiu\.fun/app/api/v1/profile - reject'
+  mitm:
+    - 'api.revenuecat.com'
+    - 'api.rc-backup.com'
+    - 'api.lianjiu.fun'
+  script:
+    - name: 'Reheji'
+      match: '^https://api\.(revenuecat|rc-backup)\.com/.+/(receipts$|subscribers/?(.*?)*$)'
+      type: 'response'
+    - name: 'Reheji'
+      match: '^https://api\.(revenuecat|rc-backup)\.com/.+/(receipts$|subscribers/?(.*?)*$)'
+      type: 'request'
+    - name: 'APPheji_Revenuecat'
+      match: '^https?://api\.(revenuecat|rc-backup)\.com/v1/(subscribers/[^/]+$|receipts$)'
+      type: 'response'
+    - name: 'APPheji_Revenuecat'
+      match: '^https?://api\.(revenuecat|rc-backup)\.com/v1/(subscribers/[^/]+$|receipts$)'
+      type: 'request'
+    - name: 'revenuecat_vip'
+      match: '^https://api\.(revenuecat|rc-backup)\.com/.+/(receipts$|subscribers/?(.*?)*$)'
+      type: 'response'
+    - name: 'deleteHeader'
+      match: '^https://api\.(revenuecat|rc-backup)\.com/.+/(receipts$|subscribers/?(.*?)*$)'
+      type: 'request'
+script-providers:
+  Reheji:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/raw.githubusercontent.com/chxm1023__Rewrite/main/Reheji.js'
+    interval: 86400
+  APPheji_Revenuecat:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/raw.githubusercontent.com/Guding88__Script/main/APPheji_Revenuecat.js'
+    interval: 86400
+  revenuecat_vip:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/ddgksf2013.top/scripts/revenuecat.vip.js'
+    interval: 86400
+  deleteHeader:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/raw.githubusercontent.com/ddgksf2013__Scripts/master/deleteHeader.js'
+    interval: 86400

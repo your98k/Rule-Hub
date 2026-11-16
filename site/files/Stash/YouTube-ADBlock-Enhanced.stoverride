@@ -1,11 +1,6 @@
 name: 'YouTube 去广告增强版'
-desc: |-
-  YouTube 去广告、隐藏界面元素、画质与播放增强，12 项参数（10 个开关 + 2 个翻译语言）均可在 Stash 覆写参数中调整。
-  首页信息流补强默认开启，用于清理 Sponsored 广告卡片、空壳与相邻分隔线；如遇误删可关闭。
-  字幕翻译使用 Google Translate 翻译 timedtext 响应；保留原 XML 结构，返回字符串 body 并清理 Content-Length/Content-Encoding，按缓存逐步补齐。
-  歌词翻译可选，仍调用 Google Translate，默认关闭。请信任 Stash 的 MitM 证书。
-  移植自 Maasea、gholts、RuCu6 的 Loon 插件；翻译逻辑参考 Maasea/VirgilClyne；首页补强参考 Hey-sayiwanna/YouTube-ADBlock-on-Feed。
-author: 'Maasea[https://github.com/Maasea] gholts[https://github.com/gholts] RuCu6[https://github.com/RuCu6] VirgilClyne[https://github.com/VirgilClyne] Hey-sayiwanna[https://github.com/Hey-sayiwanna]'
+desc: 'YouTube 去广告与增强，12 项原生参数。'
+author: 'your98k'
 homepage: 'https://github.com/your98k/Rule-Hub'
 openUrl: 'https://apps.apple.com/app/id544007664'
 icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png'

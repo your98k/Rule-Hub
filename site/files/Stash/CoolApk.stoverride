@@ -1,0 +1,22 @@
+name: '酷安 链接重定向'
+desc: '把酷安内的中间跳转链接直接改写到目标地址。'
+openUrl: 'https://apps.apple.com/app/id1185242609'
+author: 'your98k'
+category: '功能增强'
+date: '2026-11-16'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'www.coolapk.com'
+  script:
+    - name: 'coolapk-redirect'
+      match: '^https://www\.coolapk\.com/link.*'
+      type: request
+      timeout: 10
+      engine: auto
+
+script-providers:
+  coolapk-redirect:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/CoolApkRedirect.js'
+    interval: 86400

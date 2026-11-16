@@ -1,0 +1,29 @@
+name: 'Spotify 去广告'
+desc: 'Spotify 去广告，共 2 条规则。'
+openUrl: 'https://apps.apple.com/app/id324684580'
+author: 'your98k'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Spotify.png'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - '*-spclient.spotify.com'
+    - 'spclient.wg.spotify.com'
+  url-rewrite:
+    - '^https://(?:\w+-spclient|spclient\.wg)\.spotify\.com(?::443)?/pendragon/ - reject-dict'
+  script:
+    - name: 'spotify-crack'
+      match: '^https://(?:\w+-spclient|spclient\.wg)\.spotify\.com(?::443)?/(?:bootstrap|user-customization-service)'
+      type: response
+      require-body: true
+      binary-mode: true
+      max-size: 10485760
+      timeout: 10
+      engine: webkit
+
+script-providers:
+  spotify-crack:
+    url: 'https://raw.githubusercontent.com/001ProMax/Surge/main/Script/Spotify.Crack.Dev.js'
+    interval: 86400

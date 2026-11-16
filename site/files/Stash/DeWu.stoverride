@@ -1,0 +1,24 @@
+name: '得物 去广告'
+desc: '得物 去广告，共 10 条规则。'
+openUrl: 'https://apps.apple.com/app/id1012871328'
+author: 'your98k'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DeWu.png'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'app.dewu.com'
+  url-rewrite:
+    - '^https://app\.dewu\.com/api/v1/app/advertisement/ - reject-dict'
+    - '^https://app\.dewu\.com/hacking-newbie/v1/app/coupon/module\? - reject-dict'
+    - '^https://app\.dewu\.com/api/v1/app/search/lexicon/v3/background_words\? - reject-dict'
+    - '^https://app\.dewu\.com/api/v1/app/search/lexicon/v1/rank_words\? - reject-dict'
+    - '^https://app\.dewu\.com/sns-rec/v1/attention/feed\? - reject-dict'
+    - '^https://app\.dewu\.com/sns-rec/v1/search/word-skip/new-list\? - reject-dict'
+    - '^https://app\.dewu\.com/sns-rec/v1/search/hotword-list\? - reject-dict'
+  body-rewrite:
+    - '^https://app\.dewu\.com/api/v1/app/biz-aggregate/me/user-index\? response-jq .data.modules |= map(if .key == "wallet" then .data.menus |= map(select(.key == "coupon" or .key == "allowance" or .key == "gift" or .key == "balance")) else . end) | .data.modules |= map(select(.key != "merchant" and .key != "discountCoupon"))'
+    - '^https://app\.dewu\.com/api/v1/app/account/wallet/page/entrance\? response-jq .data.groupInfoDTOS |= map(.moduleInfoDTO = {assetModule: .moduleInfoDTO.assetModule}) | .data.moduleNames = [.data.moduleNames[] | select(. == "assetModule")] | .data.groupNames |= (map(select(. == "MAIN" or . == "ASYNC_COMMON" or . == "ASYNC_GOODS_FEEDS")))'
+    - '^https://app\.dewu\.com/identify-discovery/v1/discovery/index\? response-jq .data.groups |= map(.items |= map(select(.title == "消息中心")))'

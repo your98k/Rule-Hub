@@ -1,0 +1,31 @@
+name: '微博轻享版 去广告'
+desc: '微博轻享版 去广告，共 16 条规则。'
+openUrl: 'https://apps.apple.com/app/id1474038908'
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'bootpreload.uve.weibo.com'
+    - 'weibointl.api.weibo.cn'
+    - 'api.weibo.cn'
+  url-rewrite:
+    - '^https?://api\.weibo\.c(n|om)/\d/(cardlist\?v_f=\d|ad/weibointl\?) - reject-dict'
+    - '^https?://weibointl\.api\.weibo\.c(n|om)/portal\.php\?a=(hot_search_users|treehole&auth=) - reject-dict'
+    - '^https://bootpreload\.uve\.weibo\.com/v1/ad/preload$ - reject-dict'
+    - '^https://api\.weibo\.cn/2/cardlist\?v_f=2 - reject-dict'
+    - '^https://api\.weibo\.cn/2/ad/ - reject-dict'
+    - '^https://weibointl\.api\.weibo\.cn/portal\.php\?a=get_searching_info - reject-dict'
+  body-rewrite:
+    - '^https://weibointl\.api\.weibo\.cn/portal\.php\?a=trends response-jq del(.data.banner, .data.discover, .data.user_footprint, .data.profile_accessrecord, .data.native_content, .data.topics)'
+    - '^https://weibointl\.api\.weibo\.cn/portal\.php\?a=trends response-jq .data.discover |= map(select(.schema != "尊享会员"))'
+    - '^https://api\.weibo\.cn/2/statuses/friends/timeline$ response-jq del(.advertises, .ad, .ad_version_2_weibo)'
+    - '^https://api\.weibo\.cn/2/statuses/friends/timeline$ response-jq .statuses|=map(select(.ad_marked!=true))'
+    - '^https://api\.weibo\.cn/2/statuses/unread_hot_timeline$ response-jq del(.ad, .ad_version_2_weibo)'
+    - '^https://api\.weibo\.cn/2/statuses/unread_hot_timeline$ response-jq .statuses|=map(select(.ad_marked!=true))'
+    - '^https://api\.weibo\.cn/2/comments/build_comments\? response-jq .datas[].data.ad_from_comment? = true'
+    - '^https://api\.weibo\.cn/2/statuses/container_detail\? response-jq .pageHeader.data.items |= (if . == null then [] else map(select(.data.itemid != "top_searching")) end)'
+    - '^https://api\.weibo\.cn/2/cardlist\?aid= response-jq .cards |= map(select((.mblog?|(.ad_marked?|type=="boolean")and.ad_marked==true)or(.card_group?|type=="array"and any(.[]?;.mblog?|(.ad_marked?|type=="boolean")and.ad_marked==true))|not))'
+    - '^https://weibointl\.api\.weibo\.cn/portal\.php\? response-jq .data.cards |= map(.items |= map(if .type == "personal_vip" then .right_text = "" else . end))'

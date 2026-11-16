@@ -1,0 +1,30 @@
+name: 'IPA Manager'
+desc: |-
+  下载IPA文件实现降级应用安装、已购下架应用安装。\n本插件依赖Scripting App且需解锁Pro权限。
+author: 'githubdulong[https://github.com/githubdulong]'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/iAppStore-03.png'
+date: '2026-10-02 12:00'
+openUrl: 'https://apps.apple.com/app/id6479691128'
+category: '功能增强'
+# 由 Loon 插件自动转换：IPAManager.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：githubdulong[https://github.com/githubdulong]
+http:
+  mitm:
+    - 'apple-api.com'
+    - 'xiaobai.app'
+  script:
+    - name: 'AppleStoreAPI'
+      match: '^https://apple-api\.com'
+      type: 'request'
+    - name: 'InstallApp'
+      match: '^https://xiaobai\.app'
+      type: 'request'
+script-providers:
+  AppleStoreAPI:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/AppleStoreAPI.js'
+    interval: 86400
+  InstallApp:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/InstallApp.js'
+    interval: 86400

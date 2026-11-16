@@ -1,0 +1,44 @@
+name: '咪咕视频'
+desc: |-
+  过滤咪咕视频广告
+author: 'your98k'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/MiguVideo.png'
+date: '2026-10-02 12:00'
+openUrl: 'https://apps.apple.com/app/id787130974'
+category: '去广告, 解锁会员'
+# 由 Loon 插件自动转换：MiguVideo.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：ddgksf2013[https://github.com/ddgksf2013]
+http:
+  url-rewrite:
+    - '^https://.*miguvideo\.com/request/sdk - reject'
+    - '^https://.*miguvideo\.com/deliver/site/batchMatch/mergeSpot/miguvideo - reject'
+  body-rewrite:
+    - '^https://.*miguvideo\.com/recommend-dynamic/dataSource/v\d/recommend response-jq .body.data=[]'
+    - '^https://.*migu\.cn/search/hotword response-jq .body={}'
+  mitm:
+    - '*.miguvideo.com'
+    - '*.migu.cn'
+    - 'migu.cn'
+    - 'miguvideo.com'
+  script:
+    - name: 'migu_vip'
+      match: '^https?://(play|play-pre|v|v[0-9]?-sc|vmesh|app-sc|vms-sc|display(-sc)?|common-sc|program-sc|d[0-9]-sc|fs-sc|fsdv-sc|mp-user|recommend-dy|chat|chat-wx|public-deliver[0-9]?|public-operbiz[0-9]?|public-img)\.miguvideo\.com/.+'
+      type: 'request'
+    - name: 'migu_vip'
+      match: '^https?://(passport|uem|push|jadeite|jadeiteapp|hound|feedback|rcsdk)\.migu\.cn/.+'
+      type: 'request'
+    - name: 'migu_ads'
+      match: '^https://.*miguvideo\.com/app-management/v\d/staticcache/navigation-list/miguvideo/ios'
+      type: 'response'
+    - name: 'migu_ads'
+      match: '^https://.*miguvideo\.com/display/v\d/static/PERSONAL_CENTER'
+      type: 'response'
+script-providers:
+  migu_vip:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/raw.githubusercontent.com/ZenmoFeiShi__Qx/main/migu_vip.js'
+    interval: 86400
+  migu_ads:
+    url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/ddgksf2013.top/scripts/migu.ads.js'
+    interval: 86400

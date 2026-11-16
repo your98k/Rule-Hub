@@ -1,12 +1,6 @@
 name: 虎扑去广告
-desc: |-
-  将群友提供的 getOther 广告接口方案适配为 Stash 原生 Mock。
-  仅处理 goblin.hupu.com 的 interfaceAd/getOther 接口，本地返回无广告 JSON。
-  匹配请求无需等待该接口的上游响应；无 JS、无 jq、无远程脚本。
-  需启用 MitM，并安装、完全信任 Stash CA 证书。
-  测试前禁用原虎扑覆写及其他重复规则，不要叠加。
-  已在本地实测生效；仍不保证覆盖全部广告位或消除所有启动等待。
-author: '群友投稿（未署名）；Stash 适配：ChatGPT'
+desc: '虎扑去广告，用 Stash 原生 mock 实现。'
+author: 'your98k'
 category: 去广告
 version: '0.1.1'
 date: '2026-11-01'

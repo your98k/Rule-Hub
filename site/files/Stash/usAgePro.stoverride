@@ -1,0 +1,24 @@
+name: usAge Pro
+desc: '解锁 usAge Pro 的账号权益字段。'
+author: 'your98k'
+category: 解锁会员
+version: '1.0.1'
+date: '2026-11-14'
+icon: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/assets/icons/usAgePro.svg'
+
+http:
+  mitm:
+    - 'usage.o-c.do'
+  script:
+    - name: usage-pro
+      match: '^https:\/\/usage\.o-c\.do\/api\/v1\/(me(\/entitlements)?|auth\/apple)($|\?)'
+      type: response
+      require-body: true
+      max-size: 2097152
+      binary-mode: false
+      engine: auto
+
+script-providers:
+  usage-pro:
+    url: 'https://api.pastes.dev/4Q0mPDXj39'
+    interval: 86400

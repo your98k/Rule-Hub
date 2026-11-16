@@ -1,12 +1,2604 @@
 {
-  "generated_at": "2026-11-14 09:55",
+  "generated_at": "2026-11-16 07:01",
   "repo": "https://github.com/your98k/Rule-Hub",
   "base": "https://your98k.github.io/Rule-Hub",
   "plugins": [
     {
+      "id": "123pan-stash",
+      "name": "123云盘 去广告",
+      "desc": "123云盘 去广告，共 3 条规则。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "www.123pan.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/123Pan.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/123Pan.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/123Pan.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/123Pan.stoverride"
+      }
+    },
+    {
+      "id": "appraven-stash",
+      "name": "AppRaven 会员解锁",
+      "desc": "AppRaven 会员相关字段置为已购，纯声明式改写响应。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "解锁会员"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "appraven.net"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/AppRaven.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/AppRaven.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/AppRaven.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/AppRaven.stoverride"
+      }
+    },
+    {
+      "id": "bodianmusic-stash",
+      "name": "波点音乐 去广告",
+      "desc": "波点音乐 去广告，共 19 条规则。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "39.156.123.46",
+        "*.kuwo.*",
+        "*.l.qq.com",
+        "ab-bodian.kuwo.cn",
+        "ad.tencentmusic.com",
+        "bd-api.kuwo.cn",
+        "bd-api.kuwo.com",
+        "bodianimgcdn.kuwo.cn",
+        "h5app.kuwo.cn",
+        "h5s.kuwo.cn",
+        "xs.gdt.qq.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BodianMusic.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/BodianMusic.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/BodianMusic.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BodianMusic.stoverride"
+      }
+    },
+    {
+      "id": "camscanner-stash",
+      "name": "扫描全能王 会员解锁",
+      "desc": "解锁扫描全能王高级特权，会员信息接口返回固定有效期。",
+      "icon": "https://raw.githubusercontent.com/deezertidal/private/main/icons/cs.png",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "解锁会员"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "ap*.intsig.net"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CamScanner.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/CamScanner.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/CamScanner.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CamScanner.stoverride"
+      }
+    },
+    {
+      "id": "coolapk-stash",
+      "name": "酷安 链接重定向",
+      "desc": "把酷安内的中间跳转链接直接改写到目标地址。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "功能增强"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "www.coolapk.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CoolApk.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/CoolApk.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/CoolApk.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CoolApk.stoverride"
+      }
+    },
+    {
+      "id": "dragonread-stash",
+      "name": "番茄小说去广告",
+      "desc": "番茄小说去广告与阅读页净化。",
+      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/DragonRead.png",
+      "date": "2026-11-16",
+      "version": "2026-11-15",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://github.com/TomCatXue/MyCookieCenter",
+      "rulesCount": 50,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DragonRead.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DragonRead.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/DragonRead.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DragonRead.stoverride"
+      }
+    },
+    {
+      "id": "filmix-stash",
+      "name": "Filmix 会员解锁",
+      "desc": "解锁 Filmix 影视库会员标识，改写用户信息接口的 VIP 字段。",
+      "icon": "https://github.com/Toperlock/Quantumult/raw/main/icon/Doraemon/Doraemon-1071.png",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "解锁会员"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "appv3.filmix.com.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Filmix.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Filmix.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Filmix.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Filmix.stoverride"
+      }
+    },
+    {
+      "id": "github-stash",
+      "name": "GitHub Raw 走 CDN",
+      "desc": "把 raw.githubusercontent.com 的请求自动改写到可用的 CDN 加速地址。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "功能增强"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "raw.githubusercontent.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/GitHub.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/GitHub.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/GitHub.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/GitHub.stoverride"
+      }
+    },
+    {
+      "id": "kuwomusic-stash",
+      "name": "酷我音乐 去广告",
+      "desc": "酷我音乐去广告，共 14 条规则。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 1,
+      "mitmHosts": [
+        "*.kuwo.cn",
+        "ad.tencentmusic.com",
+        "abt-kuwo.tencentmusic.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/KuwoMusic.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/KuwoMusic.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/KuwoMusic.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/KuwoMusic.stoverride"
+      }
+    },
+    {
+      "id": "listenify-stash",
+      "name": "Listenify 增强",
+      "desc": "Listenify 增强，共 1 条规则。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "api.lrc.cx"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Listenify.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Listenify.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Listenify.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Listenify.stoverride"
+      }
+    },
+    {
+      "id": "mangotv-stash",
+      "name": "芒果TV 去广告",
+      "desc": "芒果TV 去广告，共 14 条规则。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "mobileso.bz.mgtv.com",
+        "damang.api.mgtv.com",
+        "hb-boom.api.mgtv.com",
+        "mobile.api.mgtv.com",
+        "mobile.api.hunantv.com",
+        "me.bz.mgtv.com",
+        "mobile-thor.api.mgtv.com",
+        "*mgtv.com",
+        "mobile-stream.api.mgtv.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MangoTV.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/MangoTV.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/MangoTV.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MangoTV.stoverride"
+      }
+    },
+    {
+      "id": "soul-stash",
+      "name": "Soul 去广告",
+      "desc": "Soul 去广告，共 35 条规则。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "ssp.soulapp.cn",
+        "increase-openapi.soulapp.cn",
+        "post.soulapp.cn",
+        "api-account.soulapp.cn",
+        "api-a.soulapp.cn",
+        "gateway-mobile-gray.soulapp.cn",
+        "api-user.soulapp.cn",
+        "chat-live.soulapp.cn",
+        "api-chat.soulapp.cn",
+        "activity.soulapp.cn",
+        "47.110.187.87",
+        "47.75.72.47",
+        "47.96.7.91",
+        "47.96.11.46",
+        "47.96.20.45",
+        "47.97.215.55",
+        "47.98.54.106",
+        "47.98.137.249",
+        "47.99.42.29",
+        "114.215.255.94",
+        "116.62.28.7",
+        "116.62.47.28",
+        "118.31.7.235",
+        "118.31.112.221",
+        "120.27.235.201",
+        "120.55.55.115",
+        "120.55.62.124",
+        "121.196.197.147",
+        "121.196.203.183"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Soul.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Soul.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Soul.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Soul.stoverride"
+      }
+    },
+    {
+      "id": "telegram-stash",
+      "name": "Telegram 链接跳转",
+      "desc": "把 t.me 等网页链接交给指定的 Telegram 客户端。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "",
+      "tags": [
+        "Stash 覆写"
+      ],
+      "type": "stash",
+      "authors": [],
+      "homepage": "",
+      "rulesCount": 10,
+      "mitmHosts": [
+        "t.me",
+        "telegram.me",
+        "telegram.dog"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Telegram.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride"
+      }
+    },
+    {
+      "id": "thunderclouddisk-stash",
+      "name": "迅雷 去广告",
+      "desc": "迅雷 去广告，共 2 条规则。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "conf-m-ssl.xunlei.com",
+        "api-shoulei-ssl.xunlei.com",
+        "xluser-ssl.xunlei.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ThunderCloudDisk.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ThunderCloudDisk.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/ThunderCloudDisk.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ThunderCloudDisk.stoverride"
+      }
+    },
+    {
+      "id": "trakt-stash",
+      "name": "Trakt 增强",
+      "desc": "Trakt 去广告。",
+      "icon": "https://raw.githubusercontent.com/DemoJameson/Proxy.Modules/main/trakt_simplified_chinese/images/trakt.webp",
+      "date": "2026-11-16",
+      "version": "2026-11-15",
+      "tags": [
+        "Stash 覆写",
+        "功能增强"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://github.com/DemoJameson/Proxy.Modules",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "apiz.trakt.tv",
+        "api.trakt.tv",
+        "auth.trakt.tv",
+        "trakt.tv",
+        "api.themoviedb.org",
+        "image.tmdb.org",
+        "proxy-modules.demojameson.de5.net"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Trakt.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Trakt.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Trakt.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Trakt.stoverride"
+      }
+    },
+    {
+      "id": "umetrip-stash",
+      "name": "航旅纵横 去广告",
+      "desc": "航旅纵横 去广告，共 3 条规则。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "umerp.umetrip.com",
+        "umerp.umetrip.com.cn",
+        "home.umetrip.com",
+        "bkclient.umetrip.com.cn",
+        "discardrp.umetrip.com",
+        "startup.umetrip.com",
+        "oss.umetrip.com",
+        "umehome.umetrip.com",
+        "sns.umetrip.com",
+        "appmsg.umetrip.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Umetrip.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Umetrip.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Umetrip.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Umetrip.stoverride"
+      }
+    },
+    {
+      "id": "out12-dingdongmaicai-stash",
+      "name": "叮咚买菜 去广告",
+      "desc": "叮咚买菜 去广告，共 23 条规则。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 3,
+      "mitmHosts": [
+        "119.29.29.*",
+        "maicai.api.ddxq.mobi",
+        "user.api.ddxq.mobi",
+        "gw.api.ddxq.mobi"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/out12_DingDongMaiCai.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/out12_DingDongMaiCai.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/out12_DingDongMaiCai.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/out12_DingDongMaiCai.stoverride"
+      }
+    },
+    {
+      "id": "out12-railway12306-stash",
+      "name": "铁路12306 去广告",
+      "desc": "铁路12306 去广告，共 3 条规则。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 1,
+      "mitmHosts": [
+        "ad.12306.cn",
+        "mobile.12306.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/out12_Railway12306.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/out12_Railway12306.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/out12_Railway12306.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/out12_Railway12306.stoverride"
+      }
+    },
+    {
+      "id": "aihuishou-stash",
+      "name": "爱回收 去广告",
+      "desc": "爱回收 去广告，共 22 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "dubai-app.aihuishou.com",
+        "dubai.aihuishou.com",
+        "bi-log.aihuishou.com",
+        "ahs-sentry.aihuishou.com",
+        "wirelessgate.aihuishou.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/AiHuiShou.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/AiHuiShou.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/AiHuiShou.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/AiHuiShou.stoverride"
+      }
+    },
+    {
+      "id": "archimedesfm-stash",
+      "name": "阿基米德 去广告",
+      "desc": "阿基米德 去广告，共 4 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "a.ajmide.com",
+        "s.ajmide.com",
+        "upload-qn.ajmide.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ArchimedesFM.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ArchimedesFM.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/ArchimedesFM.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ArchimedesFM.stoverride"
+      }
+    },
+    {
+      "id": "baiduwenku-stash",
+      "name": "百度文库 去广告",
+      "desc": "百度文库 去广告，共 12 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "appwk.baidu.com",
+        "tanbi.baidu.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BaiduWenku.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/BaiduWenku.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/BaiduWenku.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BaiduWenku.stoverride"
+      }
+    },
+    {
+      "id": "bank-stash",
+      "name": "银行类 去广告",
+      "desc": "银行类 去广告，共 66 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 1,
+      "mitmHosts": [
+        "static.95508.com",
+        "mps.95508.com",
+        "unionsr.chinalifeonline.com.cn",
+        "imcs.citicbank.com",
+        "autoload.bank.ecitic.com",
+        "wap.bank.ecitic.com",
+        "lban.spdb.com.cn",
+        "wap.spdb.com.cn",
+        "image.spdbccc.com.cn",
+        "s3gw.cmbimg.com",
+        "webappcfg.paas.cmbchina.com",
+        "mbmodule-openapi.paas.cmbchina.com",
+        "image1.ccb.com",
+        "download1.bankcomm.com",
+        "mres.aibank.com",
+        "cdnmobibank.bankofbeijing.com.cn",
+        "cdn-xyk-app.bankofbeijing.com.cn",
+        "mobile.cebbank.com",
+        "yghsh.cebbank.com",
+        "pv.elife.icbc.com.cn",
+        "mbank.grcbank.com",
+        "static.creditcard.hxb.com.cn",
+        "m.prod.app.hsbcfts.com.cn",
+        "cdn.jlbank.com.cn",
+        "yunbusiness.ccb.com",
+        "waimai-guide.ele.me",
+        "www.cmbc.com.cn",
+        "midc.cdn-static.abchina.com.cn",
+        "enjoy.cdn-static.abchina.com",
+        "firefly.abchina.com.cn",
+        "cdn.sdb.com.cn",
+        "mobile.1qianbao.com",
+        "pacdn.m.stock.pingan.com",
+        "cgbank.oss-cn-shenzhen.aliyuncs.com",
+        "chl.tf.cn",
+        "wechat.tf.cn",
+        "images.cib.com.cn",
+        "file.cibfintech.com",
+        "static.xyzq.cn",
+        "static.psbc.com",
+        "mcc.psbc.com",
+        "d.psbc.com",
+        "static.mobile-bank.psbc.com",
+        "mlife.jf365.boc.cn",
+        "mbasecc.bas.cmbchina.com",
+        "mbasecc.bcs.cmbchina.com",
+        "intellicc.bas.cmbchina.com",
+        "intellicc.bcs.cmbchina.com",
+        "direct.z-bank.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bank.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bank.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Bank.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bank.stoverride"
+      }
+    },
+    {
+      "id": "caixin-stash",
+      "name": "财新 去广告",
+      "desc": "财新 去广告，共 10 条规则。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/CaiXin.png",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 2,
+      "mitmHosts": [
+        "cxdata.caixin.com",
+        "entities.caixin.com",
+        "gateway.caixin.com",
+        "www.caixin.com",
+        "msgapi.caixin.com",
+        "mappsv5.caixin.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CaiXin.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/CaiXin.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/CaiXin.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CaiXin.stoverride"
+      }
+    },
+    {
+      "id": "chaogejiaoyu-stash",
+      "name": "超格教育 去广告",
+      "desc": "超格教育 去广告，共 3 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "mapi.chaogejiaoyu.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ChaoGeJiaoYu.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ChaoGeJiaoYu.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/ChaoGeJiaoYu.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ChaoGeJiaoYu.stoverride"
+      }
+    },
+    {
+      "id": "chelaile-stash",
+      "name": "车来了 去广告",
+      "desc": "车来了 去广告，共 5 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "ad.chelaile.net.cn",
+        "atrace.chelaile.net.cn",
+        "api.chelaile.net.cn",
+        "cdn.api.chelaile.net.cn",
+        "cdn.api.chelaileapp.cn",
+        "web.chelaile.net.cn",
+        "cdn.*.chelaileapp.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CheLaiLe.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/CheLaiLe.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/CheLaiLe.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CheLaiLe.stoverride"
+      }
+    },
+    {
+      "id": "chinabroadnet-stash",
+      "name": "中国广电 去广告",
+      "desc": "中国广电 去广告，共 3 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "app.10099.com.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ChinaBroadnet.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ChinaBroadnet.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/ChinaBroadnet.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ChinaBroadnet.stoverride"
+      }
+    },
+    {
+      "id": "chinaunicom-stash",
+      "name": "中国联通 去广告",
+      "desc": "中国联通 去广告，共 10 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 1,
+      "mitmHosts": [
+        "m.client.10010.com",
+        "img.client.10010.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ChinaUnicom.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ChinaUnicom.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/ChinaUnicom.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ChinaUnicom.stoverride"
+      }
+    },
+    {
+      "id": "damai-stash",
+      "name": "大麦 去广告",
+      "desc": "大麦 去广告，共 5 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "acs.m.taobao.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DaMai.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DaMai.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/DaMai.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DaMai.stoverride"
+      }
+    },
+    {
+      "id": "dewu-stash",
+      "name": "得物 去广告",
+      "desc": "得物 去广告，共 10 条规则。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DeWu.png",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "app.dewu.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DeWu.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DeWu.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/DeWu.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DeWu.stoverride"
+      }
+    },
+    {
+      "id": "didi-stash",
+      "name": "滴滴出行 去广告",
+      "desc": "滴滴出行 去广告，共 91 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 43,
+      "mitmHosts": [
+        "112.53.55.225",
+        "113.46.225.*",
+        "116.85.*",
+        "117.51.168.*",
+        "120.241.142.*",
+        "120.241.143.*",
+        "123.207.209.*",
+        "139.199.240.84",
+        "162.14.157.*",
+        "api.udache.com",
+        "as.xiaojukeji.com",
+        "common.diditaxi.com.cn",
+        "conf.diditaxi.com.cn",
+        "ct.xiaojukeji.com",
+        "daijia.kuaidadi.com",
+        "ddpay.xiaojukeji.com",
+        "freight.xiaojukeji.com",
+        "lion.didialift.com",
+        "manhattan.webapp.xiaojukeji.com",
+        "mapi.xiaojukeji.com",
+        "res.xiaojukeji.com",
+        "travel-alioth.xiaojukeji.com",
+        "poi.map.xiaojukeji.com",
+        "htwkop-st.xiaojukeji.com",
+        "htwkop.xiaojukeji.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DiDi.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DiDi.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/DiDi.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DiDi.stoverride"
+      }
+    },
+    {
+      "id": "douban-stash",
+      "name": "豆瓣 去广告",
+      "desc": "豆瓣 去广告，共 3 条规则。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/DouBan.png",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "*.360buyimg.com",
+        "api.douban.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DouBan.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DouBan.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/DouBan.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DouBan.stoverride"
+      }
+    },
+    {
+      "id": "douyin-hk-stash",
+      "name": "抖音 去广告",
+      "desc": "抖音 去广告，共 13 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 6,
+      "mitmHosts": [
+        "aweme.snssdk.com",
+        "api5-normal-m.amemv.com",
+        "api5-normal-lq.amemv.com",
+        "zlink.ugsdk.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Douyin_HK.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Douyin_HK.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Douyin_HK.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Douyin_HK.stoverride"
+      }
+    },
+    {
+      "id": "fanshu-stash",
+      "name": "帆书 去广告",
+      "desc": "帆书 去广告，共 9 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "g*.dushu365.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/FanShu.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/FanShu.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/FanShu.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/FanShu.stoverride"
+      }
+    },
+    {
+      "id": "fenbi-stash",
+      "name": "粉笔 去广告",
+      "desc": "粉笔 去广告，共 15 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "keapi.fenbi.com",
+        "market-api.fenbi.com",
+        "ke.fenbi.com",
+        "hera-webapp.fenbi.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/FenBi.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/FenBi.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/FenBi.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/FenBi.stoverride"
+      }
+    },
+    {
+      "id": "forward-stash",
+      "name": "Forward 订阅转发",
+      "desc": "Forward 订阅转发，共 1 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "功能增强"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "fluxapi.vvebo.vip"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Forward.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Forward.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Forward.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Forward.stoverride"
+      }
+    },
+    {
+      "id": "freshippo-stash",
+      "name": "盒马 去广告",
+      "desc": "盒马 去广告，共 12 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "acs-m.freshippo.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Freshippo.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Freshippo.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Freshippo.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Freshippo.stoverride"
+      }
+    },
+    {
+      "id": "google-stash",
+      "name": "Google CN 域名跳转",
+      "desc": "Google CN 域名跳转，共 3 条规则。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Google.png",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "功能增强"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "*.google.cn",
+        "*.g.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Google.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Google.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Google.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Google.stoverride"
+      }
+    },
+    {
+      "id": "hok-gamehelper-stash",
+      "name": "王者营地 去广告",
+      "desc": "王者营地 去广告，共 3 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "app.mval.qq.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HOK_GameHelper.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HOK_GameHelper.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/HOK_GameHelper.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HOK_GameHelper.stoverride"
+      }
+    },
+    {
+      "id": "himalayafm-stash",
+      "name": "喜马拉雅 去广告",
+      "desc": "喜马拉雅 去广告，共 22 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "gslbali.ximalaya.com",
+        "search.ximalaya.com",
+        "searchwsa.ximalaya.com",
+        "mobile.ximalaya.com",
+        "mobilehera.ximalaya.com",
+        "mobwsa.ximalaya.com",
+        "m.ximalaya.com",
+        "mwsa.ximalaya.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HimalayaFM.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/HimalayaFM.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/HimalayaFM.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/HimalayaFM.stoverride"
+      }
+    },
+    {
+      "id": "iqiyi-ssports-stash",
+      "name": "爱奇艺体育 去广告",
+      "desc": "爱奇艺体育 去广告，共 4 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "json.ssports.com",
+        "show.ssports.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/IQIYI_Ssports.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/IQIYI_Ssports.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/IQIYI_Ssports.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/IQIYI_Ssports.stoverride"
+      }
+    },
+    {
+      "id": "jingdongwaimai-stash",
+      "name": "京东外卖 去广告",
+      "desc": "京东外卖 去广告，共 6 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "color.jddj.com",
+        "api.m.jd.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingdongWaimai.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/JingdongWaimai.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/JingdongWaimai.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/JingdongWaimai.stoverride"
+      }
+    },
+    {
+      "id": "kdocs-stash",
+      "name": "金山文档 去广告",
+      "desc": "金山文档 去广告，共 3 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "www.kdocs.cn",
+        "f-api.kdocs.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/KDocs.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/KDocs.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/KDocs.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/KDocs.stoverride"
+      }
+    },
+    {
+      "id": "keep-stash",
+      "name": "Keep 去广告",
+      "desc": "Keep 去广告，共 16 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "42.187.199.248",
+        "api.gotokeep.com",
+        "kad.gotokeep.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Keep.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Keep.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Keep.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Keep.stoverride"
+      }
+    },
+    {
+      "id": "kwai-stash",
+      "name": "快手 去广告",
+      "desc": "快手 去广告，共 10 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "az*-api.ksapisrv.com",
+        "az4-api-idc.ksapisrv.com",
+        "az*-api-idc.ksapisrv.com",
+        "apissl.gifshow.com",
+        "apissl.ksapisrv.com",
+        "az*-api-js.gifshow.com",
+        "az*-live.ksapisrv.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Kwai.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Kwai.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Kwai.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Kwai.stoverride"
+      }
+    },
+    {
+      "id": "luckincoffee-stash",
+      "name": "瑞幸咖啡 去广告",
+      "desc": "瑞幸咖啡 去广告，共 8 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "capi.lkcoffee.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/LuckinCoffee.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/LuckinCoffee.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/LuckinCoffee.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/LuckinCoffee.stoverride"
+      }
+    },
+    {
+      "id": "mafengwo-stash",
+      "name": "马蜂窝 去广告",
+      "desc": "马蜂窝 去广告，共 4 条规则。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/MaFengWo.png",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 1,
+      "mitmHosts": [
+        "mapi.mafengwo.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MaFengWo.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/MaFengWo.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/MaFengWo.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MaFengWo.stoverride"
+      }
+    },
+    {
+      "id": "maiduidui-stash",
+      "name": "买单侠 去广告",
+      "desc": "买单侠 去广告，共 7 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 1,
+      "mitmHosts": [
+        "mob.mddcloud.com.cn",
+        "maiduidui.*.saas.sensorsdata.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MaiDuiDui.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/MaiDuiDui.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/MaiDuiDui.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MaiDuiDui.stoverride"
+      }
+    },
+    {
+      "id": "meetyou-stash",
+      "name": "美柚 去广告",
+      "desc": "美柚 去广告，共 11 条规则。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/MeetYou.png",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 6,
+      "mitmHosts": [
+        "circle.seeyouyima.com",
+        "circle.xmseeyouyima.com",
+        "common.seeyouyima.com",
+        "sub.seeyouyima.com",
+        "users.seeyouyima.com",
+        "config-service.seeyouyima.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MeetYou.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/MeetYou.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/MeetYou.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MeetYou.stoverride"
+      }
+    },
+    {
+      "id": "pandatv-stash",
+      "name": "PandaTV 解除区域限制",
+      "desc": "PandaTV 补 Origin 头绕过区域校验；路由规则需填入实际策略组后启用。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "功能增强"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "live-video.net",
+        "*.live-video.net"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/PandaTV.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/PandaTV.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/PandaTV.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/PandaTV.stoverride"
+      }
+    },
+    {
+      "id": "qq-stash",
+      "name": "QQ 链接解锁",
+      "desc": "QQ 链接解锁，共 1 条规则。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/QQ.png",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "功能增强"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "c.pc.qq.com",
+        "pingtas.qq.com",
+        "cgi.connect.qq.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/QQ.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/QQ.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/QQ.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/QQ.stoverride"
+      }
+    },
+    {
+      "id": "qqmusic-stash",
+      "name": "QQ音乐 去广告",
+      "desc": "QQ音乐 去广告，共 11 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 11,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/QQMusic.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/QQMusic.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/QQMusic.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/QQMusic.stoverride"
+      }
+    },
+    {
+      "id": "qweather-stash",
+      "name": "和风天气 去广告",
+      "desc": "和风天气 去广告，共 1 条规则。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/QWeather.png",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "hfapp-service.qweather.net"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/QWeather.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/QWeather.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/QWeather.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/QWeather.stoverride"
+      }
+    },
+    {
+      "id": "quarkbrowser-stash",
+      "name": "夸克浏览器 去广告",
+      "desc": "夸克浏览器 去广告，共 3 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "open-cms-api.quark.cn",
+        "stars.shuqireader.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/QuarkBrowser.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/QuarkBrowser.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/QuarkBrowser.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/QuarkBrowser.stoverride"
+      }
+    },
+    {
+      "id": "quarkscanking-stash",
+      "name": "夸克扫描王 去广告",
+      "desc": "夸克扫描王 去广告，共 2 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "open-cms-api.quark.cn",
+        "stars.shuqireader.com",
+        "scan-order.quark.cn",
+        "open-cms-api.uc.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/QuarkScanKing.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/QuarkScanKing.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/QuarkScanKing.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/QuarkScanKing.stoverride"
+      }
+    },
+    {
+      "id": "redirect-stash",
+      "name": "链接重定向合集",
+      "desc": "链接重定向合集，共 61 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "abbyychina.com",
+        "aicoin.cn",
+        "alienskins.cn",
+        "anydeskchina.cn",
+        "app.biliintl.com",
+        "bartender.cc",
+        "beyondcompare.cc",
+        "bingdianhuanyuan.cn",
+        "chemdraw.com.cn",
+        "cn.ultraiso.net",
+        "codesoftchina.com",
+        "coreldrawchina.com",
+        "crossoverchina.com",
+        "ditu.google.cn",
+        "dongmansoft.com",
+        "earmasterchina.cn",
+        "easyrecoverychina.com",
+        "ediuschina.com",
+        "firefox.com.cn",
+        "flstudiochina.com",
+        "folxchina.cn",
+        "formysql.com",
+        "g.cn",
+        "google.cn",
+        "guitarpro.cc",
+        "huishenghuiying.com.cn",
+        "hypeapp.cn",
+        "hypersnap.mairuan.com",
+        "iconworkshop.cn",
+        "idmchina.net",
+        "ign.xn--fiqs8s",
+        "imazingchina.com",
+        "imindmap.cc",
+        "jd.com",
+        "jihehuaban.com.cn",
+        "kingdeecn.cn",
+        "logoshejishi.com",
+        "logoshejishi.mairuan.com",
+        "luping.net.cn",
+        "map.google.cn",
+        "mathtype.cn",
+        "mi.com",
+        "mindmanager.cc",
+        "mindmanager.cn",
+        "mindmapper.cc",
+        "mycleanmymac.com",
+        "nicelabel.cc",
+        "ntfsformac.cn",
+        "officesoftcn.com",
+        "overturechina.com",
+        "passport.biliintl.com",
+        "passwordrecovery.cn",
+        "pdfexpert.cc",
+        "photozoomchina.com",
+        "shankejingling.com",
+        "suning.com",
+        "taobao.com",
+        "vegaschina.cn",
+        "www.abbyychina.com",
+        "www.aicoin.cn",
+        "www.alienskins.cn",
+        "www.anydeskchina.cn",
+        "www.bartender.cc",
+        "www.betterzip.com",
+        "www.betterzip.net",
+        "www.betterzipcn.com",
+        "www.betterzipcn.net",
+        "www.beyondcompare.cc",
+        "www.bingdianhuanyuan.cn",
+        "www.chemdraw.com.cn",
+        "www.codesoftchina.com",
+        "www.coreldrawchina.com",
+        "www.crossoverchina.com",
+        "www.dongmansoft.com",
+        "www.earmasterchina.cn",
+        "www.easyrecoverychina.com",
+        "www.ediuschina.com",
+        "www.firefox.com.cn",
+        "www.flstudiochina.com",
+        "www.folxchina.cn",
+        "www.formysql.com",
+        "www.g.cn",
+        "www.google.cn",
+        "www.guitarpro.cc",
+        "www.huishenghuiying.com.cn",
+        "www.hypeapp.cn",
+        "www.iconworkshop.cn",
+        "www.idmchina.net",
+        "www.ign.xn--fiqs8s",
+        "www.imazingchina.com",
+        "www.imindmap.cc",
+        "www.jd.com",
+        "www.jihehuaban.com.cn",
+        "www.kingdeecn.cn",
+        "www.logoshejishi.com",
+        "www.luping.net.cn",
+        "www.mathtype.cn",
+        "www.mi.com",
+        "www.mindmanager.cc",
+        "www.mindmanager.cn",
+        "www.mindmapper.cc",
+        "www.mycleanmymac.com",
+        "www.nicelabel.cc",
+        "www.ntfsformac.cn",
+        "www.officesoftcn.com",
+        "www.overturechina.com",
+        "www.passwordrecovery.cn",
+        "www.pdfexpert.cc",
+        "www.photozoomchina.com",
+        "www.shankejingling.com",
+        "www.suning.com",
+        "www.xitongqingli.com",
+        "www.xshellcn.com",
+        "www.yhd.com",
+        "www.yuanchengxiezuo.com",
+        "www.zbrushcn.com",
+        "xitongqingli.com",
+        "xshellcn.com",
+        "yhd.com",
+        "you.163.com",
+        "yuanchengxiezuo.com",
+        "zbrushcn.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Redirect.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Redirect.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Redirect.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Redirect.stoverride"
+      }
+    },
+    {
+      "id": "sf-express-stash",
+      "name": "顺丰速运 去广告",
+      "desc": "顺丰速运去广告；module-config 用空模块响应替代（原 mock 文本非法）。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "ccsp-egmas.sf-express.com",
+        "ucmp.sf-express.com",
+        "ucmp-static.sf-express.com",
+        "mapi.sfbest.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/SF-Express.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/SF-Express.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/SF-Express.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/SF-Express.stoverride"
+      }
+    },
+    {
+      "id": "shuiyinmao-stash",
+      "name": "水印猫会员信息解锁（Stash）",
+      "desc": "水印猫会员字段解锁（脚本改写响应）。",
+      "icon": "https://github.com/Toperlock/Quantumult/raw/main/icon/Doraemon/Doraemon-1045.png",
+      "date": "2026-11-15",
+      "version": "1.0.3",
+      "tags": [
+        "Stash 覆写",
+        "脚本改写"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://github.com/89996462/Quantumult-X",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "watersymaoa.zijiemofang.cn",
+        "watersymaoa.yunxiaoguo.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ShuiYinMao.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ShuiYinMao.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/ShuiYinMao.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ShuiYinMao.stoverride"
+      }
+    },
+    {
+      "id": "spotify-stash",
+      "name": "Spotify 去广告",
+      "desc": "Spotify 去广告，共 2 条规则。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Spotify.png",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "*-spclient.spotify.com",
+        "spclient.wg.spotify.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Spotify.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Spotify.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Spotify.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Spotify.stoverride"
+      }
+    },
+    {
+      "id": "taopiaopiao-stash",
+      "name": "淘票票 去广告",
+      "desc": "淘票票 去广告，共 6 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "acs.m.taobao.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TaoPiaoPiao.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TaoPiaoPiao.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/TaoPiaoPiao.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TaoPiaoPiao.stoverride"
+      }
+    },
+    {
+      "id": "taobaotravel-stash",
+      "name": "飞猪 去广告",
+      "desc": "飞猪 去广告，共 5 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "acs.m.taobao.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TaobaoTravel.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TaobaoTravel.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/TaobaoTravel.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TaobaoTravel.stoverride"
+      }
+    },
+    {
+      "id": "tencentdocs-stash",
+      "name": "腾讯文档 去广告",
+      "desc": "腾讯文档 去广告，共 2 条规则。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TencentDocs.png",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "tianshu.qq.com",
+        "h5.qzone.qq.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TencentDocs.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TencentDocs.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/TencentDocs.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TencentDocs.stoverride"
+      }
+    },
+    {
+      "id": "weibo-intl-stash",
+      "name": "微博轻享版 去广告",
+      "desc": "微博轻享版 去广告，共 16 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "bootpreload.uve.weibo.com",
+        "weibointl.api.weibo.cn",
+        "api.weibo.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WeiBo_Intl.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/WeiBo_Intl.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/WeiBo_Intl.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WeiBo_Intl.stoverride"
+      }
+    },
+    {
+      "id": "xiaocan-stash",
+      "name": "小蚕惠生活 去广告",
+      "desc": "小蚕惠生活 去广告，共 6 条规则。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/XiaoCan.png",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "gw.xiaocantech.com",
+        "web2.realtech-inc.com",
+        "web.xinyifm.cn",
+        "sdk.1rtb.net"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/XiaoCan.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/XiaoCan.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/XiaoCan.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/XiaoCan.stoverride"
+      }
+    },
+    {
+      "id": "xiaoheihe-stash",
+      "name": "小黑盒 去广告",
+      "desc": "小黑盒 去广告，共 2 条规则。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/XiaoHeiHe.png",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "api.xiaoheihe.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/XiaoHeiHe.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/XiaoHeiHe.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/XiaoHeiHe.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/XiaoHeiHe.stoverride"
+      }
+    },
+    {
+      "id": "xueqiu-stash",
+      "name": "雪球 去广告",
+      "desc": "雪球 去广告，共 23 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "qmas.xueqiu.com",
+        "api.xueqiu.com",
+        "open.xueqiu.com",
+        "stock.xueqiu.com",
+        "fund.xueqiu.com",
+        "39.103.79.14",
+        "39.106.97.84",
+        "47.95.49.75",
+        "101.201.62.20",
+        "101.201.62.26",
+        "101.201.175.228",
+        "124.250.48.3",
+        "182.92.145.50",
+        "182.92.251.113",
+        "47.75.231.220"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/XueQiu.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/XueQiu.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/XueQiu.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/XueQiu.stoverride"
+      }
+    },
+    {
+      "id": "zhuanzhuan-stash",
+      "name": "转转 去广告",
+      "desc": "转转 去广告，共 22 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "app.zhuanzhuan.com",
+        "lego.zhuanzhuan.com",
+        "lego-tech.zhuanzhuan.com",
+        "sentry.zhuanzhuan.com",
+        "wkdcm1.tingyun.com",
+        "wkrt.tingyun.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ZhuanZhuan.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ZhuanZhuan.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/ZhuanZhuan.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ZhuanZhuan.stoverride"
+      }
+    },
+    {
+      "id": "mihoyobbs-stash",
+      "name": "米游社 去广告",
+      "desc": "米游社 去广告，共 6 条规则。",
+      "icon": "",
+      "date": "2026-11-15",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "bbs-api.miyoushe.com",
+        "bbs-api-ab.miyoushe.com",
+        "bbs-api-static.miyoushe.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/miHoYoBBS.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/miHoYoBBS.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/miHoYoBBS.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/miHoYoBBS.stoverride"
+      }
+    },
+    {
+      "id": "cainiao-stash",
+      "name": "菜鸟",
+      "desc": "菜鸟 App 去广告（首页瀑布流、搜索栏、寄件券、发现页）。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/CaiNiao.png",
+      "date": "2026-11-14",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://loonlab.103516.xyz/Plugin/",
+      "rulesCount": 1,
+      "mitmHosts": [
+        "netflow-mtop.cainiao.com",
+        "nbcps-mtop.cainiao.com",
+        "cn-acs.m.cainiao.com",
+        "e2e-mtop.cainiao.com",
+        "longquan-mtop.cainiao.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CaiNiao.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/CaiNiao.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/CaiNiao.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CaiNiao.stoverride"
+      }
+    },
+    {
       "id": "porntube-stash",
       "name": "Porntube VIP 解锁（Stash 参数版）",
-      "desc": "跟随 Yu9191/Rewrite 新版 porntube.conf（Build 2026-11-14，4 脚本）。\n功能：VIP 解锁 + 去广告；视频页内嵌播放器按钮（网页播放/lenna/SenPlayer/Infuse/\nVLC/自定义/更多），自定义 Scheme 直接在网页填写保存，不再依赖 BoxJS。\n新增页面请求脚本剥离条件请求头，修复返回主页整页刷新。\n使用前需在 Stash 中安装并信任 MitM CA 证书；脚本更新间隔 86400 秒。",
+      "desc": "Porntube VIP 解锁与去广告，四脚本版。",
       "icon": "https://raw.githubusercontent.com/fishdown/Icon/master/app/porntube.png",
       "date": "2026-11-14",
       "version": "2.0.0",
@@ -17,8 +2609,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "Yu9191 Rewrite（Stash 适配）",
-          "url": ""
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/Yu9191/Rewrite",
@@ -88,18 +2680,96 @@
       }
     },
     {
-      "id": "bilibili-adblock-stash",
-      "name": "📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)",
-      "desc": "'哔哩哔哩：去广告",
-      "icon": "",
-      "date": "2026-11-08",
-      "version": "",
+      "id": "reven-stash",
+      "name": "Reven",
+      "desc": "解锁 RevenueCat / Superwall / Adapty 三个订阅框架的内购。",
+      "icon": "https://raw.githubusercontent.com/fishdown/Icon/refs/heads/master/app/RevenueCat.png",
+      "date": "2026-11-14",
+      "version": "1.0.0",
       "tags": [
-        "Stash 覆写"
+        "Stash 覆写",
+        "解锁会员"
       ],
       "type": "stash",
-      "authors": [],
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
       "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "api.revenuecat.com",
+        "api.rc-backup.com",
+        "rc.visionarytech.ltd",
+        "revenue.cuto.app",
+        "proxy.linearity.io",
+        "subscriptions-api.superwall.com",
+        "api.adapty.io"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Reven.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Reven.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Reven.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Reven.stoverride"
+      }
+    },
+    {
+      "id": "usagepro-stash",
+      "name": "usAge Pro",
+      "desc": "解锁 usAge Pro 的账号权益字段。",
+      "icon": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/assets/icons/usAgePro.svg",
+      "date": "2026-11-14",
+      "version": "1.0.1",
+      "tags": [
+        "Stash 覆写",
+        "解锁会员"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "usage.o-c.do"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/usAgePro.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/usAgePro.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/usAgePro.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/usAgePro.stoverride"
+      }
+    },
+    {
+      "id": "bilibili-adblock-stash",
+      "name": "📺 BiliBili: 🛡️ ADBlock (Stash 原生参数版)",
+      "desc": "哔哩哔哩去广告，32 项原生参数，内置 8 条 QUIC 拦截。",
+      "icon": "https://github.com/Biliverse/ADBlock/raw/main/src/assets/icon_rounded.png",
+      "date": "2026-11-05 16:28:17",
+      "version": "0.7.5-native.6",
+      "tags": [
+        "Stash 覆写",
+        "🪐 Biliverse"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://biliverse.github.io/guide/ad-block",
       "rulesCount": 8,
       "mitmHosts": [],
       "needsMitm": false,
@@ -115,7 +2785,7 @@
     {
       "id": "wloc-stash",
       "name": "Apple WLOC 定位修改（参数版）",
-      "desc": "适用于 Stash iOS/tvOS 3.7+、macOS 4.4+。在覆写详情的「参数」中设置经纬度、精度、扰动半径和日志级别，保存并应用即可，无需编辑源码。\n坐标填写 WGS84 十进制度数。在线选点/快捷指令保存的坐标及对应精度、扰动设置优先于本表单；要使用表单值，请先清除在线保存的位置。\n保留上游安全默认值：没有在线保存的位置且经纬度仍为默认组合时，不修改定位。清除在线位置后，如本表单使用了自定义坐标，会回退到自定义坐标；需恢复真实定位时，停用本覆写最直接。\n仅修改网络定位响应，并非全局 GPS 修改；需启用 MitM 并完全信任自己的 CA。上游提示 iOS 27 beta 6 起部分定位域名无法被 MitM，本参数适配不能绕过系统限制。\n在线选点：https://wloc-pages.pages.dev/\n设置位置快捷指令：https://www.icloud.com/shortcuts/a82717d8fdad4e6280866fcf911173f7\n清除在线位置快捷指令：https://www.icloud.com/shortcuts/f42632d406504f24a2cd163af4fe012f",
+      "desc": "修改 Apple 网络定位，经纬度等可在参数中设置。",
       "icon": "https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/wloc.jpg",
       "date": "2026-11-04",
       "version": "1.0.0",
@@ -126,8 +2796,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "Yu9191；Stash 参数适配：your98k",
-          "url": ""
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/your98k/Rule-Hub",
@@ -150,44 +2820,49 @@
       }
     },
     {
-      "id": "telegram-stash",
-      "name": "Telegram 链接跳转",
-      "desc": "将 t.me / telegram.me / telegram.dog 网页链接交给指定客户端，支持 Telegram、Swiftgram、Nagram、Turrit、iMe、Nicegram、Lingogram，默认官方 Telegram。\n\n使用说明：\n· 需要安装并信任 Stash 的 MitM CA 证书；参数修改后请「保存并应用」\n· 支持用户名、消息、话题、邀请、机器人参数等常见链接；不识别的网页路径原样放行\n· 默认 307 直接跳转；若浏览器拦截，请将「打开方式」改为「兼容打开页」，再点击页面按钮\n· 仅阻止上述三个域名的 QUIC，让网页请求回落到可改写的 TCP；不会全局禁用 QUIC\n· 「代理指向的策略」须为当前配置中已存在的策略组或节点名\n· iOS Universal Links 或 App 内部直接唤起客户端、不发出网页请求时，Stash 无法接管；可复制链接到 Safari 地址栏回车测试",
-      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Telegram-01.png",
-      "date": "2026-11-02",
-      "version": "1.1.0",
+      "id": "alipan-stash",
+      "name": "阿里云盘",
+      "desc": "过滤阿里云盘广告",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Alipan-01.png",
+      "date": "2026-11-02 21:00",
+      "version": "",
       "tags": [
         "Stash 覆写",
-        "功能增强"
+        "去广告"
       ],
       "type": "stash",
       "authors": [
         {
-          "name": "sooyaaabo (Loon 原作) / Stash 适配",
-          "url": ""
+          "name": "RuCu6",
+          "url": "https://github.com/RuCu6"
+        },
+        {
+          "name": ", 可莉🅥",
+          "url": "https://github.com/luestr/ProxyResource/blob/main/README.md"
         }
       ],
       "homepage": "https://loonlab.103516.xyz/Plugin/",
-      "rulesCount": 10,
+      "rulesCount": 1,
       "mitmHosts": [
-        "t.me",
-        "telegram.me",
-        "telegram.dog"
+        "*api.alipan.com",
+        "*api.aliyundrive.com",
+        "member.alipan.com",
+        "member.aliyundrive.com"
       ],
       "needsMitm": true,
       "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Telegram.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Telegram.stoverride"
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Alipan.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Alipan.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Alipan.stoverride"
       },
       "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Telegram.stoverride"
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Alipan.stoverride"
       }
     },
     {
       "id": "hupu-stash",
       "name": "虎扑去广告",
-      "desc": "将群友提供的 getOther 广告接口方案适配为 Stash 原生 Mock。\n仅处理 goblin.hupu.com 的 interfaceAd/getOther 接口，本地返回无广告 JSON。\n匹配请求无需等待该接口的上游响应；无 JS、无 jq、无远程脚本。\n需启用 MitM，并安装、完全信任 Stash CA 证书。\n测试前禁用原虎扑覆写及其他重复规则，不要叠加。\n已在本地实测生效；仍不保证覆盖全部广告位或消除所有启动等待。",
+      "desc": "虎扑去广告，用 Stash 原生 mock 实现。",
       "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/HUPU.png",
       "date": "2026-11-01",
       "version": "0.1.1",
@@ -198,8 +2873,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "群友投稿（未署名）；Stash 适配：ChatGPT",
-          "url": ""
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "",
@@ -220,7 +2895,7 @@
     {
       "id": "txvideoad-stash",
       "name": "腾讯视频净化（Stash）",
-      "desc": "适配 ZenmoFeiShi 的腾讯视频净化规则，保留开屏/播放前广告过滤、底栏精简及我的页面净化逻辑。\n单文件内嵌脚本，需要 Stash 3.2.5+；已适配 Stash 的二进制 body 接口。\n使用前请卸载腾讯视频后重新安装；安装后冷启动腾讯视频 2–3 次，使配置生效。\n已适配上游 2026-11-01 脚本更新：底栏切割白名单由 0;2;4 调整为 0;4。\n历史适配：2026-10-27 新增暂停广告（JCE 129196）与瀑布流合并广告过滤。\n已补 QUIC 拦截，防止开屏广告经 UDP 443 绕过 MitM。\n请启用 MITM，并安装、完全信任你自己生成的 CA 证书。\n脚本由 script-providers 每 24h 从 Stash/txvideo-ad.stash.js 自动更新；内嵌 payload 仅作离线兜底。实际效果取决于腾讯视频版本。",
+      "desc": "腾讯视频净化（开屏、暂停、底栏广告）。",
       "icon": "",
       "date": "2026-11-01",
       "version": "1.1.1",
@@ -230,8 +2905,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "TG@ZenMoFiShi（原作者）",
-          "url": ""
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "",
@@ -255,7 +2930,7 @@
     {
       "id": "youtube-adblock-enhanced-stash",
       "name": "YouTube 去广告增强版",
-      "desc": "YouTube 去广告、隐藏界面元素、画质与播放增强，12 项参数（10 个开关 + 2 个翻译语言）均可在 Stash 覆写参数中调整。\n首页信息流补强默认开启，用于清理 Sponsored 广告卡片、空壳与相邻分隔线；如遇误删可关闭。\n字幕翻译使用 Google Translate 翻译 timedtext 响应；保留原 XML 结构，返回字符串 body 并清理 Content-Length/Content-Encoding，按缓存逐步补齐。\n歌词翻译可选，仍调用 Google Translate，默认关闭。请信任 Stash 的 MitM 证书。\n移植自 Maasea、gholts、RuCu6 的 Loon 插件；翻译逻辑参考 Maasea/VirgilClyne；首页补强参考 Hey-sayiwanna/YouTube-ADBlock-on-Feed。",
+      "desc": "YouTube 去广告与增强，12 项原生参数。",
       "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png",
       "date": "2026-11-01",
       "version": "1.3.4",
@@ -266,24 +2941,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "Maasea",
-          "url": "https://github.com/Maasea"
-        },
-        {
-          "name": "gholts",
-          "url": "https://github.com/gholts"
-        },
-        {
-          "name": "RuCu6",
-          "url": "https://github.com/RuCu6"
-        },
-        {
-          "name": "VirgilClyne",
-          "url": "https://github.com/VirgilClyne"
-        },
-        {
-          "name": "Hey-sayiwanna",
-          "url": "https://github.com/Hey-sayiwanna"
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/your98k/Rule-Hub",
@@ -307,7 +2966,7 @@
     {
       "id": "baidumap-remove-ads-stash",
       "name": "百度地图",
-      "desc": "移除开屏广告、出行页面推广、周边页面推广、打车页面推广，并精简「我的」页面。需开启 MitM 并信任 Stash 证书；百度地图校验 HTTPS 证书，须使用去除 SSL Pinning 的签名 IPA，App Store 原版无法生效。",
+      "desc": "百度地图去广告与我的页精简，需信任 MitM 证书。",
       "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/BaiduMap.png",
       "date": "2026-10-31 23:12",
       "version": "1.0.0",
@@ -318,8 +2977,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "原 Loon 插件：可莉🅥；Stash 适配：your98k",
-          "url": ""
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://kelee.one/Tool/Loon/Lpx/BaiduMap_remove_ads.lpx",
@@ -342,9 +3001,114 @@
       }
     },
     {
+      "id": "webpage-stash",
+      "name": "WebPage",
+      "desc": "过滤部分网页广告",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Alook.png",
+      "date": "2026-10-31 22:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 9,
+      "mitmHosts": [
+        "asserts.avple.tv",
+        "e-hentai.org",
+        "exhentai.org",
+        "*.pornhub.com",
+        "boxer.baidu.com",
+        "m.baidu.com",
+        "www.baidu.com",
+        "zhidao.baidu.com",
+        "www.hgeme.com",
+        "www.xn--wcv59z.com",
+        "yhg007.com",
+        "18hlw.com",
+        "8olbt.imsatcmn.cc",
+        "javranking.cc",
+        "miniapp2.52ywy.com",
+        "*.zimuquan*.top",
+        "*.zimuquan*.uk",
+        "*.zimuquan*.com",
+        "hanime1.me",
+        "javdb.com",
+        "missav.ai",
+        "missav.fans",
+        "missav.ws",
+        "baidu.com",
+        "d.xyz"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WebPage.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/WebPage.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/WebPage.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WebPage.stoverride"
+      }
+    },
+    {
+      "id": "chinamobile-stash",
+      "name": "中国移动",
+      "desc": "过滤中国移动广告，可自定义。\\n支持Scripting中国移动小组件（https://www.imarkr.com/api/github/download/MaYIHEI/patch/scripting/cmcc.zip），使用前需获取Cookie，获取成功后可关闭Cookie脚本。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ChinaMobile.png",
+      "date": "2026-10-27 17:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "ccyykk666",
+          "url": "https://github.com/ccyykk666"
+        },
+        {
+          "name": ", sooyaaabo",
+          "url": "https://github.com/sooyaaabo"
+        },
+        {
+          "name": ", MaYIHEI",
+          "url": "https://github.com/MaYIHEI"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "client.app.coc.10086.cn",
+        "h.app.coc.10086.cn",
+        "app.10086.cn",
+        "touch.10086.cn",
+        "ad.mcloud.139.com",
+        "10086.cn",
+        "clientaccess.10086.cn",
+        "h5.bj.10086.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ChinaMobile.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ChinaMobile.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/ChinaMobile.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ChinaMobile.stoverride"
+      }
+    },
+    {
       "id": "jingdong-stash",
       "name": "京东",
-      "desc": "1. 过滤京东广告；2. 历史比价信息，任选其一即可。\n首次使用保持 Stash 连接，打开【慢慢买】APP →【我的】并刷新，提示【获取ck成功】后返回京东查看比价。\n此插件仅支持京东标准模式。\n——\n适配自 Loon 插件 JingDong.lpx（原作：RuCu6、Maasea、MuTu、苍井灰灰、mw418、可莉）。\n需要 Stash iOS/tvOS 3.7+ 或 macOS 4.4+，并已在 Stash 内生成、安装并信任 CA 证书。\n比价各版本在「覆写参数」中开关：通知版与嵌入版互斥、表格图与折线图互斥，请勿同时开启。",
+      "desc": "京东去广告与历史比价。",
       "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/JingDong.png",
       "date": "2026-10-26",
       "version": "1.0.1",
@@ -353,7 +3117,12 @@
         "去广告"
       ],
       "type": "stash",
-      "authors": [],
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
       "homepage": "https://loonlab.103516.xyz/Plugin/",
       "rulesCount": 1,
       "mitmHosts": [
@@ -373,12 +3142,12 @@
       }
     },
     {
-      "id": "hongguo-stash",
-      "name": "红果短剧广告拦截",
-      "desc": "红果短剧核心广告与穿山甲/字节系兜底拦截规则（已去重合并）。\n采用默认前插合并，不改动现有 DNS 与 IPv6 全局设置。",
-      "icon": "https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png",
-      "date": "2026-10-20",
-      "version": "1.5.0",
+      "id": "meituan-stash",
+      "name": "美团",
+      "desc": "过滤美团广告，需卸载重装。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/MeiTuan.png",
+      "date": "2026-10-25 21:00",
+      "version": "",
       "tags": [
         "Stash 覆写",
         "去广告"
@@ -386,12 +3155,52 @@
       "type": "stash",
       "authors": [
         {
-          "name": "Tartarus2014 & Customized",
-          "url": ""
+          "name": "ZenmoFeiShi",
+          "url": "https://github.com/ZenmoFeiShi"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 46,
+      "mitmHosts": [
+        "apimobile.meituan.com",
+        "feedguess.meituan.com",
+        "mop.meituan.com",
+        "mt-personalcenter.meituan.com",
+        "assistify.meituan.com",
+        "httpdns.meituan.com",
+        "httpdnsmultiapi.meituan.com",
+        "meituan.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MeiTuan.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/MeiTuan.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/MeiTuan.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MeiTuan.stoverride"
+      }
+    },
+    {
+      "id": "hongguo-stash",
+      "name": "红果短剧去广告",
+      "desc": "红果短剧去广告：域名拦截（hongguoapp / hongguosdk / 穿山甲 / 字节广告域）。\n与「番茄小说」同开为完全体。",
+      "icon": "https://raw.githubusercontent.com/Tartarus2014/For-own-use/refs/heads/master/Color/HongGuoDuanJu.png",
+      "date": "2026-10-20",
+      "version": "1.6.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/Tartarus2014/Loon-Script",
-      "rulesCount": 11,
+      "rulesCount": 15,
       "mitmHosts": [],
       "needsMitm": false,
       "urls": {
@@ -404,9 +3213,902 @@
       }
     },
     {
+      "id": "weibo-ddgksf2013-stash",
+      "name": "微博",
+      "desc": "微博增强",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/WeiBo.png",
+      "date": "2026-10-19 20:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "api.weibo.cn",
+        "bootpreload.uve.weibo.com",
+        "wbapp.uve.weibo.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WeiBo_ddgksf2013.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/WeiBo_ddgksf2013.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/WeiBo_ddgksf2013.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WeiBo_ddgksf2013.stoverride"
+      }
+    },
+    {
+      "id": "weibo-stash",
+      "name": "微博",
+      "desc": "微博全面净化",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/WeiBo.png",
+      "date": "2026-10-19 15:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "RuCu6",
+          "url": "https://github.com/RuCu6"
+        },
+        {
+          "name": ", fmz200",
+          "url": "https://github.com/fmz200"
+        },
+        {
+          "name": ", zmqcherish",
+          "url": "https://github.com/zmqcherish"
+        },
+        {
+          "name": ", 可莉🅥",
+          "url": "https://github.com/luestr/ProxyResource/blob/main/README.md"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 36,
+      "mitmHosts": [
+        "*.weibo.cn",
+        "*.weibo.com",
+        "weibo.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WeiBo.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/WeiBo.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/WeiBo.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/WeiBo.stoverride"
+      }
+    },
+    {
+      "id": "neteasemusic-stash",
+      "name": "网易云音乐",
+      "desc": "网易云音乐全面净化，可自定义界面样式。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/NeteaseMusic.png",
+      "date": "2026-10-16 22:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "RuCu6",
+          "url": "https://github.com/RuCu6"
+        },
+        {
+          "name": ", Keywos",
+          "url": "https://github.com/Keywos"
+        },
+        {
+          "name": ", 可莉🅥",
+          "url": "https://github.com/luestr/ProxyResource/blob/main/README.md"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 9,
+      "mitmHosts": [
+        "interface*.music.163.com",
+        "ipv4.music.163.com",
+        "d.music.163.com",
+        "music.163.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/NeteaseMusic.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/NeteaseMusic.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/NeteaseMusic.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/NeteaseMusic.stoverride"
+      }
+    },
+    {
+      "id": "myblockads-stash",
+      "name": "MyBlockAds",
+      "desc": "Walalala自用去广告合集",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/Other/MyBlockAds.png",
+      "date": "2026-10-08 10:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 223,
+      "mitmHosts": [
+        "ad.12306.cn",
+        "mobile.12306.cn",
+        "list-app-m.i4.cn",
+        "*api.alipan.com",
+        "member.alipan.com",
+        "acs.m.taobao.com",
+        "gw.alicdn.com",
+        "heic.alicdn.com",
+        "guide-acs.m.taobao.com",
+        "poplayer.template.alibaba.com",
+        "pan.baidu.com",
+        "2023.redircdn.com",
+        "www.washpayer.com",
+        "oneapph5.dongfeng-nissan.com.cn",
+        "api.douban.com",
+        "img3.doubanio.com",
+        "qnmob3.doubanio.com",
+        "image.mybank.icbc.com.cn",
+        "hfapp-service.qweather.net",
+        "acs-m.freshippo.com",
+        "gab.122.gov.cn",
+        "api.coolapk.com",
+        "adserviceretry.kglink.cn",
+        "gateway.kugou.com",
+        "p0.pipi.cn",
+        "mme.api.moji.com",
+        "sns.api.moji.com",
+        "flowplus.meituan.net",
+        "img.meituan.net",
+        "s3plus.meituan.net",
+        "home.mi.com",
+        "gql.reddit.com",
+        "gql-fed.reddit.com",
+        "a.cpiccdn.com",
+        "osg-service.sgcc.com.cn",
+        "api.xiachufang.com",
+        "mp.weixin.qq.com",
+        "weixin110.qq.com",
+        "security.wechat.com",
+        "marketing-aibox.v.mitvos.com",
+        "api.m.mi.com",
+        "shop-api.retail.mi.com",
+        "xiaomishop.retail.mi.com",
+        "gateway.sccncdn.com",
+        "gateway.starcharge.com",
+        "api-gateway-pan.xunlei.com",
+        "api-shoulei-ssl.xunlei.com",
+        "conf-m-ssl.xunlei.com",
+        "login-service.mobile-bank.psbc.com",
+        "wallet.95516.com",
+        "mobilepaas.abchina.com.cn",
+        "ad.mcloud.139.com",
+        "jzts.cmpassport.com",
+        "3.doubanio.com",
+        "ad.5tao5ai.com",
+        "alicdn.com",
+        "api.alipan.com",
+        "app-cdn.2q10.com",
+        "image1.ccb.com",
+        "reddit.com",
+        "wmapi.meituan.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MyBlockAds.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/MyBlockAds.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/MyBlockAds.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MyBlockAds.stoverride"
+      }
+    },
+    {
+      "id": "appstoremonitor-stash",
+      "name": "AppStore Monitor",
+      "desc": "定时监控App Store内App的更新状态。\\n可输入多个AppID，可自定义查询区域顺序（不填则为默认顺序），均以逗号分隔。\\n可填入Bark Key使用Bark推送通知，若不填则默认使用Loon推送通知。\\n可填入Bark Group分组名称，默认为空值，无分组。\\n可选择Bark推送通知音效，默认值为system，使用系统默认提醒音效。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/AppStore-02.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "定时任务"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "sooyaaabo",
+          "url": "https://github.com/sooyaaabo"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 0,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/AppStoreMonitor.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/AppStoreMonitor.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/AppStoreMonitor.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/AppStoreMonitor.stoverride"
+      }
+    },
+    {
+      "id": "appleosmonitor-stash",
+      "name": "AppleOS Monitor",
+      "desc": "定时监控Apple系统的版本更新。\\n可自定义选择需要监控的设备系统。\\n可输入多个OS版本，不填则默认所有OS版本，以逗号分隔。\\n可选择版本类型，默认为all即所有版本。\\n可填入Bark Group分组名称，默认为空值，无分组。\\n可填入Bark Key使用Bark推送通知，不填则默认使用Loon推送通知。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/iBetame.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "定时任务"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "sooyaaabo",
+          "url": "https://github.com/sooyaaabo"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 0,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/AppleOSMonitor.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/AppleOSMonitor.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/AppleOSMonitor.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/AppleOSMonitor.stoverride"
+      }
+    },
+    {
+      "id": "baidunetdisk-stash",
+      "name": "百度网盘",
+      "desc": "过滤百度网盘广告，解锁部分SVIP功能。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/BaiduNetDisk.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "pan.baidu.com",
+        "afd.baidu.com",
+        "baidu.com",
+        "zhangyuyidong.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BaiduNetDisk.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/BaiduNetDisk.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/BaiduNetDisk.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/BaiduNetDisk.stoverride"
+      }
+    },
+    {
+      "id": "colorfulcloudsweatherpro-stash",
+      "name": "彩云天气Pro",
+      "desc": "过滤彩云天气广告，解锁SVIP功能。\\nApp版本低于7.20.2。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ColorfulCloudsWeatherPro.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "RuCu6",
+          "url": "https://github.com/RuCu6"
+        },
+        {
+          "name": ", 可莉🅥",
+          "url": "https://github.com/luestr/ProxyResource/blob/main/README.md"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 3,
+      "mitmHosts": [
+        "api.caiyunapp.com",
+        "*.cyapi.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ColorfulCloudsWeatherPro.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ColorfulCloudsWeatherPro.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/ColorfulCloudsWeatherPro.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ColorfulCloudsWeatherPro.stoverride"
+      }
+    },
+    {
+      "id": "cookietask-stash",
+      "name": "Cookie & Task",
+      "desc": "定时每日签到任务，按需开启相应功能即可。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Notifyman.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "定时任务"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "FoKit",
+          "url": "https://github.com/FoKit"
+        },
+        {
+          "name": ", GoodHolidays",
+          "url": "https://github.com/GoodHolidays"
+        },
+        {
+          "name": ", ClydeTime",
+          "url": "https://github.com/ClydeTime"
+        },
+        {
+          "name": ", MaYIHEI",
+          "url": "https://github.com/MaYIHEI"
+        },
+        {
+          "name": ", sooyaaabo",
+          "url": "https://github.com/sooyaaabo"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "payapp.weixin.qq.com",
+        "api.weibo.cn",
+        "cm.bilibili.com",
+        "m.bilibili.com",
+        "personal-act.wps.cn",
+        "app.bilibili.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CookieTask.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/CookieTask.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/CookieTask.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CookieTask.stoverride"
+      }
+    },
+    {
+      "id": "glados-stash",
+      "name": "GLaDOS",
+      "desc": "GLaDOS每日签到。访问网页登录账号，进入账户页面后，手动刷新一次网页自动获取保存Cookie。Cookie存在有效期，失效后需重新获取。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/Airport/GLaDOS-01.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "定时任务"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "curtinp118",
+          "url": "https://github.com/curtinp118"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 5,
+      "mitmHosts": [
+        "glados.cloud",
+        "glados.network",
+        "glados.one",
+        "glados.space",
+        "glados.vip"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/GLaDOS.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/GLaDOS.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/GLaDOS.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/GLaDOS.stoverride"
+      }
+    },
+    {
+      "id": "ipamanager-stash",
+      "name": "IPA Manager",
+      "desc": "下载IPA文件实现降级应用安装、已购下架应用安装。\\n本插件依赖Scripting App且需解锁Pro权限。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/iAppStore-03.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "功能增强"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "githubdulong",
+          "url": "https://github.com/githubdulong"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "apple-api.com",
+        "xiaobai.app"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/IPAManager.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/IPAManager.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/IPAManager.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/IPAManager.stoverride"
+      }
+    },
+    {
+      "id": "miguvideo-stash",
+      "name": "咪咕视频",
+      "desc": "过滤咪咕视频广告",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/MiguVideo.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "*.miguvideo.com",
+        "*.migu.cn",
+        "migu.cn",
+        "miguvideo.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MiguVideo.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/MiguVideo.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/MiguVideo.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/MiguVideo.stoverride"
+      }
+    },
+    {
+      "id": "nodeseek-stash",
+      "name": "NodeSeek & DeepFlood",
+      "desc": "NodeSeek、DeepFlood每日签到。\\n登录账号进入个人页面以获取Cookie，成功后关闭Cookie脚本。\\n支持设置签到鸡腿奖励模式，默认为固定5个鸡腿。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/NodeSeek.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "定时任务"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "sooyaaabo",
+          "url": "https://github.com/sooyaaabo"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 2,
+      "mitmHosts": [
+        "www.nodeseek.com",
+        "www.deepflood.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/NodeSeek.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/NodeSeek.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/NodeSeek.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/NodeSeek.stoverride"
+      }
+    },
+    {
+      "id": "pinduoduo-stash",
+      "name": "拼多多",
+      "desc": "过滤拼多多广告",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/PinDuoDuo.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 14,
+      "mitmHosts": [
+        "api.pinduoduo.com",
+        "api.yangkeduo.com",
+        "m.pinduoduo.net"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/PinDuoDuo.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/PinDuoDuo.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/PinDuoDuo.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/PinDuoDuo.stoverride"
+      }
+    },
+    {
+      "id": "rednote-stash",
+      "name": "小红书",
+      "desc": "过滤小红书广告，去除水印",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/RedNote.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "RuCu6",
+          "url": "https://github.com/RuCu6"
+        },
+        {
+          "name": ", fmz200",
+          "url": "https://github.com/fmz200"
+        },
+        {
+          "name": ", meichiny",
+          "url": "https://github.com/meichiny"
+        },
+        {
+          "name": ", 可莉🅥",
+          "url": "https://github.com/luestr/ProxyResource/blob/main/README.md"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 5,
+      "mitmHosts": [
+        "ci.xiaohongshu.com",
+        "edith.xiaohongshu.com",
+        "rec.xiaohongshu.com",
+        "www.xiaohongshu.com",
+        "so.xiaohongshu.com",
+        "ci.rnote.com",
+        "edith.rnote.com",
+        "rec.rnote.com",
+        "www.rnote.com",
+        "so.rnote.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/RedNote.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/RedNote.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/RedNote.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/RedNote.stoverride"
+      }
+    },
+    {
+      "id": "revenuecat-stash",
+      "name": "RevenueCat",
+      "desc": "RevenueCat系列解锁合集，在设置中选择需要使用的原作者脚本以使用此插件。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/RevenueCat.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "解锁会员"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "api.revenuecat.com",
+        "api.rc-backup.com",
+        "api.lianjiu.fun"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/RevenueCat.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/RevenueCat.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/RevenueCat.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/RevenueCat.stoverride"
+      }
+    },
+    {
+      "id": "testflightmonitor-stash",
+      "name": "TestFlight Monitor",
+      "desc": "1.自动监控TestFlight，手动填写应用APP_ID，一旦有空余名额会自动通知，点击通知即可跳转加入；\\n2.自动加入TestFlight，需先获取账号令牌[添加主机名testflight.apple.com]，一旦有空余名额会自动加入。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TestFlight-04.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "定时任务"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "fmz200",
+          "url": "https://github.com/fmz200"
+        },
+        {
+          "name": ", DecoAri",
+          "url": "https://github.com/DecoAri"
+        },
+        {
+          "name": ", xream",
+          "url": "https://github.com/xream"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 1,
+      "mitmHosts": [
+        "testflight.apple.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TestFlightMonitor.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/TestFlightMonitor.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/TestFlightMonitor.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/TestFlightMonitor.stoverride"
+      }
+    },
+    {
+      "id": "uapi-hotboard-stash",
+      "name": "UAPI热榜聚合",
+      "desc": "基于UAPI热榜接口定时推送多平台热榜数据。\\n可选填UAPI Token，使用个人密钥将消耗积分。\\n可设置热榜平台，建议避免配置过多以减少请求频率。\\n可设置榜单条数，默认5条，最大10条。\\n支持平台：哔哩哔哩 bilibili、A站 acfun、微博热搜 weibo、知乎热榜 zhihu、知乎日报 zhihu-daily、抖音 douyin、小红书 xiaohongshu、快手 kuaishou、豆瓣电影 douban-movie、豆瓣小组 douban-group、百度贴吧 tieba、虎扑 hupu、NGA论坛 ngabbs、V2EX v2ex、吾爱破解 52pojie、全球主机交流 hostloc、酷安 coolapk、百度热搜 baidu、澎湃新闻 thepaper、今日头条 toutiao、腾讯新闻 qq-news、新浪热搜 sina、新浪新闻 sina-news、网易新闻 netease-news、虎嗅 huxiu、爱范儿 ifanr、少数派 sspai、IT之家 ithome、IT之家喜加一 ithome-xijiayi、掘金 juejin、简书 jianshu、果壳 guokr、36氪 36kr、51CTO 51cto、CSDN csdn、NodeSeek nodeseek、HelloGitHub hellogithub、英雄联盟 lol、原神 genshin、崩坏3 honkai、星穹铁道 starrail、网易云音乐热歌榜 netease-music、QQ音乐热歌榜 qq-music、微信读书 weread、天气预警 weatheralarm、地震速报 earthquake、历史上的今天 history",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/Other/FlameFill.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "定时任务"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "sooyaaabo",
+          "url": "https://github.com/sooyaaabo"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 0,
+      "mitmHosts": [],
+      "needsMitm": false,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/UAPI_HotBoard.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/UAPI_HotBoard.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/UAPI_HotBoard.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/UAPI_HotBoard.stoverride"
+      }
+    },
+    {
+      "id": "v2ex-stash",
+      "name": "V2EX",
+      "desc": "过滤V2EX社区广告；V2EX每日签到，访问V2EX个人主页自动获取保存Cookie。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/V2EX-03.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 1,
+      "mitmHosts": [
+        "*.v2ex.com",
+        "pagead*.googlesyndication.com",
+        "v2ex.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/V2EX.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/V2EX.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/V2EX.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/V2EX.stoverride"
+      }
+    },
+    {
+      "id": "x-web-stash",
+      "name": "X（Twitter）",
+      "desc": "过滤网页版X（Twitter）广告，支持自定义标签。\\n所有标签：政治, 股票, 商业, 科学, AI, 加密, 新闻, 金融, 软件, 体育, 科技, 艺术, 电影与电视, 游戏, 橄榄球, 动漫, 旅行, 美食, 棒球, 篮球, 美妆, 拳击, 足球, 职业, 汽车, 宠物, 名人, 音乐, 乡村音乐, 舞蹈, 恋爱, 设计, 教育, 电音, 创业公司, 电子竞技, 家庭, 时尚, 流行音乐, 高尔夫, 韩流音乐, 表情包, 健康, 摔跤, 赛车, 摩托车, 自然, 曲棍球, 奥运会, 照片, 播客, 房地产, 机器人, 摇滚, 橄榄球, 购物, 冰雪运动, 太空, 网球, 首页, 板球, F1, 骑行, J-Pop, 音乐会, 嘻哈, 爵士乐, 犯罪, 选举, 生物技术, 心理健康, 数字艺术",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/X-01.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "fmz200",
+          "url": "https://github.com/fmz200"
+        },
+        {
+          "name": ", sooyaaabo",
+          "url": "https://github.com/sooyaaabo"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "x.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/X_Web.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/X_Web.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/X_Web.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/X_Web.stoverride"
+      }
+    },
+    {
+      "id": "zhihu-stash",
+      "name": "知乎",
+      "desc": "过滤知乎广告",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/ZhiHu.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 11,
+      "mitmHosts": [
+        "*.zhihu.com",
+        "zhihu.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ZhiHu.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ZhiHu.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/ZhiHu.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ZhiHu.stoverride"
+      }
+    },
+    {
+      "id": "itunes-stash",
+      "name": "iTunes",
+      "desc": "iTunes系列解锁合集，在设置中选择需要使用的原作者脚本以使用此插件。",
+      "icon": "https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/iTunes.png",
+      "date": "2026-10-02 12:00",
+      "version": "",
+      "tags": [
+        "Stash 覆写",
+        "解锁会员"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "chxm1023",
+          "url": "https://github.com/chxm1023"
+        },
+        {
+          "name": ", ddgksf2013",
+          "url": "https://github.com/ddgksf2013"
+        },
+        {
+          "name": ", Guding88",
+          "url": "https://github.com/Guding88"
+        }
+      ],
+      "homepage": "https://github.com/harmonizr/loon-plugins",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "buy.itunes.apple.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/iTunes.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/iTunes.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/iTunes.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/iTunes.stoverride"
+      }
+    },
+    {
       "id": "amap-stash",
       "name": "高德地图",
-      "desc": "过滤高德地图广告；部分广告需卸载重装或清除缓存后才会彻底消失。需要开启 MITM 并信任 Stash 证书。",
+      "desc": "高德地图去广告，需信任 MitM 证书。",
       "icon": "https://github.com/ishowshu/loon/raw/refs/heads/main/icon/gaode.png",
       "date": "2026-09-19 11:41",
       "version": "1.0.0",
@@ -417,8 +4119,8 @@
       "type": "stash",
       "authors": [
         {
-          "name": "原 Loon 插件：树先生（ishowshu）；Stash 适配：your98k",
-          "url": ""
+          "name": "your98k",
+          "url": "https://github.com/your98k"
         }
       ],
       "homepage": "https://github.com/ishowshu/loon",

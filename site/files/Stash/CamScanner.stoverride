@@ -1,0 +1,17 @@
+name: '扫描全能王 会员解锁'
+desc: '解锁扫描全能王高级特权，会员信息接口返回固定有效期。'
+icon: 'https://raw.githubusercontent.com/deezertidal/private/main/icons/cs.png'
+author: 'your98k'
+category: '会员解锁'
+date: '2026-11-16'
+version: '1.0.0'
+
+http:
+  mitm:
+    - 'ap*.intsig.net'
+  mock:
+    - match: '^https?://(?:api|api-cs)\.intsig\.net/purchase/cs/query_property\?'
+      text: '{"data":{"psnl_vip_property":{"expiry":"2013017600"}}}'
+      status-code: 200
+      headers:
+        Content-Type: 'application/json'

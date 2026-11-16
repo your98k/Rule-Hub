@@ -1,0 +1,23 @@
+name: '买单侠 去广告'
+desc: '买单侠 去广告，共 7 条规则。'
+openUrl: 'https://apps.apple.com/app/id1440046879'
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+rules:
+  - 'DOMAIN,ubixioe.com,REJECT'
+
+http:
+  mitm:
+    - 'mob.mddcloud.com.cn'
+    - 'maiduidui.*.saas.sensorsdata.cn'
+  url-rewrite:
+    - '^https?://maiduidui.*sensorsdata\.cn/api/v\d/sfo/(user_)?popup_displays - reject-200'
+    - '^https?://mob\.mddcloud\.com\.cn/adApi - reject-200'
+  body-rewrite:
+    - '^https?://mob\.mddcloud\.com\.cn/api/app/getConfigList396\.action response-jq .data.appOprConfigs=[]'
+    - '^https?://mob\.mddcloud\.com\.cn/api/module/listTabModules\.action response-jq .data |= map(select(.moduleType!=16)) | .data |= map(if .moduleType==21 then .moduleData |= map(select(.redirectType == 2)) else . end)'
+    - '^https?://mob\.mddcloud\.com\.cn/api/layout/info response-jq .data.layoutInfo.entranceList |= map(select(.name | IN("首页", "会员")))'
+    - '^https?://mob\.mddcloud\.com\.cn/api/search/hotKeyword\.action response-jq .data=[{"isAppointRedirect":0,"iconImg":"","category":11,"keyword":"搜索","uuid":"","seq":1}]'

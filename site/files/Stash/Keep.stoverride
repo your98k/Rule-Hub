@@ -1,0 +1,31 @@
+name: 'Keep 去广告'
+desc: 'Keep 去广告，共 16 条规则。'
+openUrl: 'https://apps.apple.com/app/id952694580'
+author: 'your98k'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+http:
+  mitm:
+    - '42.187.199.248'
+    - 'api.gotokeep.com'
+    - 'kad.gotokeep.com'
+  url-rewrite:
+    - '^https://(api|kad)\.gotokeep\.com/op-engine-webapp/v\d/ad/ - reject-dict'
+    - '^https://api\.gotokeep\.com/search/v\d/default/keyword/list\? - reject-dict'
+    - '^https://api\.gotokeep\.com/twins/v\d/feed/followPage\? - reject-dict'
+    - '^https://api\.gotokeep\.com/twins/union/feed/function\? - reject-dict'
+    - '^https://api\.gotokeep\.com/guide-webapp/v\d/popup/getPopUp\? - reject-dict'
+    - '^https://api\.gotokeep\.com/anno/v1/upgrade/check$ - reject-dict'
+    - '^https://api\.gotokeep\.com/search/v\d/hotCourse/list$ - reject-dict'
+    - '^https://api\.gotokeep\.com/search/v\d/hotHashtag/list$ - reject-dict'
+    - '^https://api\.gotokeep\.com/search/v\d/hotword/list\? - reject-dict'
+    - '^https://api\.gotokeep\.com/messenger/v\d/conversations/unread - reject-dict'
+  body-rewrite:
+    - '^https://api\.gotokeep\.com/op-engine-webapp/v\d/configs$ response-jq del(.data.adTimeoutReport, .data.spotShowReport, .data.adSupplementIntervalMinutes, .data.adSupplementSwitch, .data.hotFeedSpotAdRequestMoment, .data.activityBrandFeedSpotAdRequestMoment, .data.searchFeedSpotAdRequestMoment, .data.feedDetailSpotAdRequestMoment, .data.homePageFeedSpotAdRequestMoment, .data.followFeedSpotAdRequestMoment, .data.hotFeedRecommendSpotAdRequestMoment, .data.activityFeedSpotAdRequestMoment, .data.hotFeedFindSpotAdRequestMoment, .data.hotFeedSpotFixedPositionSecond, .data.searchFeedSpotFixedPositionSecond, .data.followFeedSpotFixedPositionSecond, .data.activityFeedSpotFixedPositionSecond, .data.searchFeedSpotFixedPositionThird, .data.hotFeedFindSpotFixedPositionSecond, .data.hotFeedFindSpotFixedPositionThird, .data.activityFeedSpotFixedPositionInitial, .data.activityFeedSpotFixedPositionThird, .data.hotFeedDynamicSpotPosition, .data.feedDetailDynamicSpotPosition, .data.hotFeedRecommendDynamicSpotPosition, .data.hotFeedFindDynamicSpotPosition, .data.homePageFeedDynamicSpotPosition, .data.followFeedDynamicSpotPosition, .data.searchFeedSpotPositionDynamic, .data.activityFeedSpotPositionDynamic, .data.activityBrandFeedSpotPositionDynamic, .data.splashAdLoadTimeLimit, .data.courseAdLoadTimeLimit, .data.feedAdLoadTimeLimit, .data.aliHCSpotConfig, .data.gdtSpotConfig, .data.pugcThresholdPercent, .data.pugcStepMinSeconds, .data.pugcStepMaxSeconds, .data.pugcPreLoadEarlySeconds, .data.pugcLoadPostPreRolls, .data.closeConfirmButtonText)'
+    - '^https://api\.gotokeep\.com/twins/union/feed/union_feed_all$ response-jq .data.modules |= map(select(.code == "unionFeedEntry"))'
+    - '^https://api\.gotokeep\.com/twins/v\d/feed/entryDetail\? response-json-replace data {}'
+    - '^https://api\.gotokeep\.com/config/v\d/basic\? response-jq .data.bottomBarControl.defaultTab = "dynamic_sports" | .data.discoverPageConfigs.toolsBar = [] | .data.bottomBarControl.tabs |= map(select(.tabType == "schedule" or .tabType == "dynamic_sports" or .tabType == "discover" or .tabType == "personal")) | .data.discoverPageConfigs.discoverTabs |= map(select(.type == "socialTab" or .type == "union_feed_all" or .type == "union_feed_feed_activity" or .type == "union_feed_marathon_icon" or .type == "product") | .default = (.type == "union_feed_all") | if has("showAd") then .showAd = false else . end)'
+    - '^https://api\.gotokeep\.com/pencil-webapp/play/v\d/games\? response-jq .data.games[].microGames[] |= if .leftIcon? and .leftIcon.type == "aiMode" then del(.leftIcon) else . end'
+    - '^https://api\.gotokeep\.com/twins/v\d/social/tab/friends response-jq .data.modules |= map(select(.positions | type == "object" and (has("recommendReason") | not) and (has("recommendUsers") | not)))'

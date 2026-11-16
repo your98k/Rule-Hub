@@ -1,0 +1,64 @@
+name: '叮咚买菜 去广告'
+desc: |-
+  叮咚买菜 去广告，共 23 条规则。
+openUrl: 'https://apps.apple.com/app/id1222783123'
+author: 'your98k'
+category: '去广告'
+date: '2026-11-16'
+version: '1.0.0'
+
+rules:
+  - 'DOMAIN,trackercollect.ddxq.mobi,REJECT'
+  - 'DOMAIN,ddfs-public.ddimg.mobi,REJECT'
+  - 'DOMAIN,rttrack.ddxq.mobi,REJECT'
+
+http:
+  mitm:
+    - '119.29.29.*'
+    - 'maicai.api.ddxq.mobi'
+    - 'user.api.ddxq.mobi'
+    - 'gw.api.ddxq.mobi'
+    - 'user.api.ddxq.mobi'
+  url-rewrite:
+    - '^https?://119\.29\.29\.\d+/d - reject-200'
+    - '^https?://maicai\.api\.ddxq\.mobi/advert/ - reject'
+    - '^https?://maicai\.api\.ddxq\.mobi/homeApi/getHomeAdPop - reject'
+    - '^https://maicai\.api\.ddxq\.mobi/vip/getVipAd/\? - reject-dict'
+    - '^https://maicai\.api\.ddxq\.mobi/homeApi/marketingNotice\? - reject-dict'
+    - '^https://maicai\.api\.ddxq\.mobi/search/rollHotKeyword\? - reject-dict'
+    - '^https://maicai\.api\.ddxq\.mobi/search/rankingList\? - reject-dict'
+    - '^https://maicai\.api\.ddxq\.mobi/search/hotKeyword\? - reject-dict'
+    - '^https://maicai\.api\.ddxq\.mobi/order/getRecommend$ - reject-dict'
+    - '^https://maicai\.api\.ddxq\.mobi/homeApi/userLike\? - reject-dict'
+    - '^https://user\.api\.ddxq\.mobi/userportal-service/api/v1/user/queryMyPage/\? - reject-dict'
+    - '^https://maicai\.api\.ddxq\.mobi/guide-service/userLike/flowData$ - reject-dict'
+    - '^https?://gw\.api\.ddxq\.mobi/vip-app-service/vip/my/page/advertising - reject'
+    - '^https://maicai\.api\.ddxq\.mobi/homeApi/queryMyPagePopup - reject-dict'
+    - '^https?://maicai\.api\.ddxq\.mobi/cart/vipGuide - reject-dict'
+  body-rewrite:
+    - '^https?://maicai\.api\.ddxq\.mobi/homeApi/newDetails\? response-jq .data.list |= map(select(has("capsule_freedom_zone") | not))'
+    - '^https?://maicai\.api\.ddxq\.mobi/homeApi/bottomNavi response-jq del(.data.adId?) | if (.data.bottom_list? | length > 0) then .data.bottom_list |= map(select(.type != "eatwhat")) else . end'
+    - '^https?://maicai\.api\.ddxq\.mobi/homeApi/homeFlowDetail response-jq walk(if type == "object" and has("list") then .list |= map(if type == "object" and has("multi_advertise_data_list") then del(.multi_advertise_data_list) else . end) else . end)'
+  script:
+    - name: 'ddxq-0'
+      match: '^https?://maicai\.api\.ddxq\.mobi/tool/getConfig'
+      type: response
+      require-body: true
+      max-size: 10485760
+      timeout: 10
+      engine: auto
+    - name: 'ddxq-1'
+      match: '^https?://user\.api\.ddxq\.mobi/userportal-service/api/v\d/user/queryMyPage'
+      type: response
+      require-body: true
+      max-size: 10485760
+      timeout: 10
+      engine: auto
+
+script-providers:
+  ddxq-0:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/DingDongMaiCai.js'
+    interval: 86400
+  ddxq-1:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/DingDongMaiCai.js'
+    interval: 86400

@@ -1,0 +1,48 @@
+name: 'iTunes'
+desc: |-
+  iTunes系列解锁合集，在设置中选择需要使用的原作者脚本以使用此插件。
+author: 'chxm1023[https://github.com/chxm1023], ddgksf2013[https://github.com/ddgksf2013], Guding88[https://github.com/Guding88]'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/iTunes.png'
+date: '2026-10-02 12:00'
+category: '解锁会员'
+# 由 Loon 插件自动转换：iTunes.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：chxm1023[https://github.com/chxm1023], ddgksf2013[https://github.com/ddgksf2013], Guding88[https://github.com/Guding88]
+arguments-version: 1
+arguments:
+  iTunes_chxm1023:
+    type: switch
+    title: 'iTunes-chxm1023'
+    default: false
+  iTunes_ddgksf2013:
+    type: switch
+    title: 'iTunes-ddgksf2013'
+    default: false
+  iTunes_Guding88:
+    type: switch
+    title: 'iTunes-Guding88'
+    default: false
+http:
+  mitm:
+    - 'buy.itunes.apple.com'
+  script:
+    - name: 'iTunes'
+      match: '^https?://buy\.itunes\.apple\.com/verifyReceipt$'
+      type: 'response'
+    - name: 'iTunes_ddgksf2013'
+      match: '^https?://buy\.itunes\.apple\.com/verifyReceipt$'
+      type: 'response'
+    - name: 'APPheji_iTunes'
+      match: '^https?://buy\.itunes\.apple\.com/verifyReceipt$'
+      type: 'response'
+script-providers:
+  iTunes:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/iTunes.js'
+    interval: 86400
+  iTunes_ddgksf2013:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/iTunes.ddgksf2013.js'
+    interval: 86400
+  APPheji_iTunes:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/APPheji_iTunes.js'
+    interval: 86400

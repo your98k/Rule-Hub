@@ -1,0 +1,35 @@
+name: '财新 去广告'
+desc: '财新 去广告，共 10 条规则。'
+openUrl: 'https://apps.apple.com/app/id519983645'
+author: 'your98k'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/CaiXin.png'
+category: '去广告'
+date: '2026-11-15'
+version: '1.0.0'
+
+rules:
+  - 'DOMAIN,dolphin.caixin.com,REJECT'
+  - 'DOMAIN,gg.caixin.com,REJECT'
+
+http:
+  mitm:
+    - 'cxdata.caixin.com'
+    - 'entities.caixin.com'
+    - 'gateway.caixin.com'
+    - 'www.caixin.com'
+    - 'msgapi.caixin.com'
+    - 'mappsv5.caixin.com'
+  url-rewrite:
+    - '^https://cxdata\.caixin\.com/api/dataplus/stkData/list - reject-dict'
+    - '^https://entities\.caixin\.com/api/public/push/appIndex\?target=index - reject-dict'
+    - '^https://gateway\.caixin\.com/api/app-api/search/getkeyword - reject-dict'
+    - '^https://gateway\.caixin\.com/api/app-api/caixinminiapp/appinfo - reject-dict'
+    - '^https://gateway\.caixin\.com/api/app-api/articlesHotRecommend/getHotRecommendArticles - reject-dict'
+    - '^https://www\.caixin\.com/ai/question.+ - reject-dict'
+    - '^https?://(msgapi|mappsv5|gateway|entities)\.caixin\.com/(msg_api/annmsg/annlist|channelv5/article_ad_ios_info\.json) - reject-dict'
+  mock:
+    - match: '^https?://(msgapi|mappsv5|gateway|entities)\.caixin\.com/(api/app-api/cxAdInfo/selectIndexAdInfo|api/app-api/search/getkeyword|api/public/recommendNews|api/public/push/appIndex|api/app-api/caixinminiapp/appinfo)'
+      text: '{"msg":"SUCESS","code":0}'
+      status-code: 200
+      headers:
+        Content-Type: 'application/json'
