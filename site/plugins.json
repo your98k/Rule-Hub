@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16 07:13",
+  "generated_at": "2026-11-16 07:23",
   "repo": "https://github.com/your98k/Rule-Hub",
   "base": "https://your98k.github.io/Rule-Hub",
   "plugins": [
@@ -179,6 +179,75 @@
       }
     },
     {
+      "id": "cosmosfm-stash",
+      "name": "小宇宙 去广告",
+      "desc": "小宇宙 去广告，移除开屏、AI 总结、搜索推荐与首页运营位。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "api.xiaoyuzhoufm.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CosmosFM.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/CosmosFM.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/CosmosFM.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CosmosFM.stoverride"
+      }
+    },
+    {
+      "id": "dingdongmaicai-stash",
+      "name": "叮咚买菜 去广告",
+      "desc": "叮咚买菜 去广告，共 23 条规则。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 3,
+      "mitmHosts": [
+        "119.29.29.*",
+        "maicai.api.ddxq.mobi",
+        "user.api.ddxq.mobi",
+        "gw.api.ddxq.mobi"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DingDongMaiCai.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/DingDongMaiCai.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/DingDongMaiCai.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DingDongMaiCai.stoverride"
+      }
+    },
+    {
       "id": "dragonread-stash",
       "name": "番茄小说去广告",
       "desc": "番茄小说去广告与阅读页净化。",
@@ -207,6 +276,40 @@
       },
       "install": {
         "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/DragonRead.stoverride"
+      }
+    },
+    {
+      "id": "ezviz-stash",
+      "name": "萤石云视频 去广告",
+      "desc": "萤石云视频 去广告，拦截推广、轮播与天气视频接口。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 0,
+      "mitmHosts": [
+        "api.ys7.com",
+        "i.ys7.com"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Ezviz.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Ezviz.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Ezviz.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Ezviz.stoverride"
       }
     },
     {
@@ -419,6 +522,40 @@
       }
     },
     {
+      "id": "railway12306-stash",
+      "name": "铁路12306 去广告",
+      "desc": "铁路12306 去广告，共 3 条规则。",
+      "icon": "",
+      "date": "2026-11-16",
+      "version": "1.0.0",
+      "tags": [
+        "Stash 覆写",
+        "去广告"
+      ],
+      "type": "stash",
+      "authors": [
+        {
+          "name": "your98k",
+          "url": "https://github.com/your98k"
+        }
+      ],
+      "homepage": "",
+      "rulesCount": 1,
+      "mitmHosts": [
+        "ad.12306.cn",
+        "mobile.12306.cn"
+      ],
+      "needsMitm": true,
+      "urls": {
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Railway12306.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Railway12306.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/Railway12306.stoverride"
+      },
+      "install": {
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Railway12306.stoverride"
+      }
+    },
+    {
       "id": "soul-stash",
       "name": "Soul 去广告",
       "desc": "Soul 去广告，共 35 条规则。",
@@ -625,15 +762,15 @@
       }
     },
     {
-      "id": "out12-dingdongmaicai-stash",
-      "name": "叮咚买菜 去广告",
-      "desc": "叮咚买菜 去广告，共 23 条规则。",
+      "id": "vvebo-stash",
+      "name": "VVebo 修复",
+      "desc": "VVebo 修复，修正用户主页时间线与我的页面加载异常。",
       "icon": "",
       "date": "2026-11-16",
       "version": "1.0.0",
       "tags": [
         "Stash 覆写",
-        "去广告"
+        "功能增强"
       ],
       "type": "stash",
       "authors": [
@@ -643,27 +780,24 @@
         }
       ],
       "homepage": "",
-      "rulesCount": 3,
+      "rulesCount": 0,
       "mitmHosts": [
-        "119.29.29.*",
-        "maicai.api.ddxq.mobi",
-        "user.api.ddxq.mobi",
-        "gw.api.ddxq.mobi"
+        "api.weibo.cn"
       ],
       "needsMitm": true,
       "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/out12_DingDongMaiCai.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/out12_DingDongMaiCai.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/out12_DingDongMaiCai.stoverride"
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/VVebo.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/VVebo.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/VVebo.stoverride"
       },
       "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/out12_DingDongMaiCai.stoverride"
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/VVebo.stoverride"
       }
     },
     {
-      "id": "out12-railway12306-stash",
-      "name": "铁路12306 去广告",
-      "desc": "铁路12306 去广告，共 3 条规则。",
+      "id": "youkuvideo-stash",
+      "name": "优酷视频 去广告",
+      "desc": "优酷视频 去广告，含广告域名拦截与播放页广告字段清理。",
       "icon": "",
       "date": "2026-11-16",
       "version": "1.0.0",
@@ -679,19 +813,19 @@
         }
       ],
       "homepage": "",
-      "rulesCount": 1,
+      "rulesCount": 22,
       "mitmHosts": [
-        "ad.12306.cn",
-        "mobile.12306.cn"
+        "push.m.youku.com",
+        "un-acs.youku.com"
       ],
       "needsMitm": true,
       "urls": {
-        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/out12_Railway12306.stoverride",
-        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/out12_Railway12306.stoverride",
-        "page": "https://your98k.github.io/Rule-Hub/files/Stash/out12_Railway12306.stoverride"
+        "raw": "https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YoukuVideo.stoverride",
+        "cdn": "https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YoukuVideo.stoverride",
+        "page": "https://your98k.github.io/Rule-Hub/files/Stash/YoukuVideo.stoverride"
       },
       "install": {
-        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/out12_Railway12306.stoverride"
+        "stash": "https://link.stash.ws/install-override/raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YoukuVideo.stoverride"
       }
     },
     {
