@@ -1,0 +1,108 @@
+name: 'AppleOS Monitor'
+desc: |-
+  定时监控Apple系统的版本更新。\n可自定义选择需要监控的设备系统。\n可输入多个OS版本，不填则默认所有OS版本，以逗号分隔。\n可选择版本类型，默认为all即所有版本。\n可填入Bark Group分组名称，默认为空值，无分组。\n可填入Bark Key使用Bark推送通知，不填则默认使用Loon推送通知。
+author: 'sooyaaabo[https://github.com/sooyaaabo]'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/iBetame.png'
+date: '2026-10-02 12:00'
+category: '功能增强, 定时任务'
+# 由 Loon 插件自动转换：AppleOSMonitor.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：sooyaaabo[https://github.com/sooyaaabo]
+arguments-version: 1
+arguments:
+  RunCron:
+    type: input
+    title: '定时参数'
+    default: "0 9 * * *"
+  enable_ios:
+    type: switch
+    title: 'iOS'
+    default: true
+  enable_ipados:
+    type: switch
+    title: 'iPadOS'
+    default: true
+  enable_macos:
+    type: switch
+    title: 'macOS'
+    default: true
+  enable_tvos:
+    type: switch
+    title: 'tvOS'
+    default: true
+  enable_visionos:
+    type: switch
+    title: 'visionOS'
+    default: true
+  enable_watchos:
+    type: switch
+    title: 'watchOS'
+    default: true
+  system:
+    type: input
+    title: '系统版本'
+    default: ""
+  version:
+    type: select
+    title: '版本类型'
+    default: "all"
+    options:
+      - value: 'all'
+      - value: 'official'
+      - value: 'beta'
+  bark_key:
+    type: input
+    title: 'Bark Key'
+    default: ""
+  bark_group:
+    type: input
+    title: 'Bark Group'
+    default: ""
+  bark_sound:
+    type: select
+    title: 'Bark Sound'
+    default: "system"
+    options:
+      - value: 'system'
+      - value: 'alarm'
+      - value: 'anticipate'
+      - value: 'bell'
+      - value: 'birdsong'
+      - value: 'bloom'
+      - value: 'calypso'
+      - value: 'chime'
+      - value: 'choo'
+      - value: 'descent'
+      - value: 'electronic'
+      - value: 'fanfare'
+      - value: 'glass'
+      - value: 'gotosleep'
+      - value: 'healthnotification'
+      - value: 'horn'
+      - value: 'ladder'
+      - value: 'mailsent'
+      - value: 'minuet'
+      - value: 'multiwayinvitation'
+      - value: 'newmail'
+      - value: 'newsflash'
+      - value: 'noir'
+      - value: 'paymentsuccess'
+      - value: 'shake'
+      - value: 'sherwoodforest'
+      - value: 'silence'
+      - value: 'spell'
+      - value: 'suspense'
+      - value: 'telegraph'
+      - value: 'tiptoes'
+      - value: 'typewriters'
+      - value: 'update'
+cron:
+  script:
+    - name: 'AppleOSMonitor'
+      cron: '${args.RunCron}'
+      timeout: 60
+script-providers:
+  AppleOSMonitor:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/AppleOSMonitor.js'
+    interval: 86400
