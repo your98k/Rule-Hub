@@ -2,7 +2,7 @@ name: Apple WLOC 定位修改（参数版）
 desc: '修改 Apple 网络定位，经纬度等可在参数中设置。'
 author: 'your98k'
 homepage: https://github.com/your98k/Rule-Hub
-icon: https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/wloc.jpg
+icon: https://raw.githubusercontent.com/fishdown/Icon/master/app/wloc.png
 category: Tools
 version: '1.0.0'
 date: '2026-11-04'
