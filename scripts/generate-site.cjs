@@ -67,7 +67,7 @@ function parseAuthors(raw) {
   return out;
 }
 
-// Stash 覆写头部解析（容错支持块标量、跨行文本）
+// Stash 覆写头部解析（容错支持块标量、跨行引号与纯多行折叠）
 const BODY_KEYS = new Set([
   'rules', 'http', 'script', 'scripts', 'script-providers', 'proxies',
   'proxy-groups', 'proxy-providers', 'rule-providers', 'url-rewrite',
