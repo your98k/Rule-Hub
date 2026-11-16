@@ -1,0 +1,51 @@
+name: 'RevenueCat 解锁'
+desc: 'RevenueCat 解锁，经由中转重放订阅响应，支持跳过指定 App。'
+author: 'your98k'
+category: '解锁会员'
+date: '2026-11-16'
+version: '1.0.0'
+arguments-version: 1
+arguments:
+  Bypass:
+    type: input
+    title: 跳过指定 App
+    description: 对修改响应会报错的 App，填 UA 关键词跳过解锁；多个用逗号分隔。默认 - 表示全部解锁。
+    default: '-'
+  Strategy:
+    type: select
+    title: 解锁策略
+    description: auto 使用官方规范；lifetime_sub 兼容旧版 App；year/month 仅注入对应期限。
+    default: auto
+    options:
+      - value: auto
+        label: auto（推荐）
+      - value: lifetime_sub
+        label: lifetime_sub（兼容旧版）
+      - value: year
+        label: 仅年订阅
+      - value: month
+        label: 仅月订阅
+      - value: all
+        label: 注入全部 PID
+
+http:
+  mitm:
+    - 'api.revenuecat.com'
+    - 'api.rc-backup.com'
+    - 'rc.visionarytech.ltd'
+    - 'revenue.cuto.app'
+    - 'proxy.linearity.io'
+    - 'subscriptions-api.superwall.com'
+    - 'api.adapty.io'
+  script:
+    - name: revenuecat-relay
+      match: '^https://(api\.revenuecat\.com|api\.rc-backup\.com|rc\.visionarytech\.ltd|revenue\.cuto\.app|proxy\.linearity\.io|subscriptions-api\.superwall\.com|api\.adapty\.io)/'
+      type: request
+      require-body: true
+      argument: 'Bypass=${args.Bypass}&Strategy=${args.Strategy}'
+      timeout: 20
+
+script-providers:
+  revenuecat-relay:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/revenuecat-relay.js'
+    interval: 86400
