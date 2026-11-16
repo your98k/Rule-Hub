@@ -1,0 +1,158 @@
+name: 'iRingo: WeatherKit'
+desc: '解锁天气全功能，替换与补全天气、预警、降水和空气质量数据。'
+openUrl: 'https://boxjs.com/#/app/iRingo.WeatherKit'
+author: 'your98k'
+category: '功能增强'
+date: '2026-11-16'
+version: '1.0.0（上游 3.3.2）'
+arguments-version: 1
+arguments:
+  DataSets:
+    type: input
+    title: 数据集
+    description: 需要解析处理的数据集，逗号分隔；未列出的数据槽原样透传。
+    default: 'airQuality, currentWeather, forecastDaily, forecastHourly, forecastNextHour, weatherAlerts'
+    max-length: 512
+  Weather_Provider:
+    type: select
+    title: 天气数据源
+    description: 使用选定的数据源替换天气数据。
+    default: ColorfulClouds
+    options:
+      - value: ColorfulClouds
+        label: 彩云天气
+      - value: WeatherKit
+        label: WeatherKit
+      - value: QWeather
+        label: 和风天气
+  WeatherAlerts_Provider:
+    type: select
+    title: 天气预警数据源
+    default: QWeatherWeb
+    options:
+      - value: QWeatherWeb
+      - value: WeatherKit
+      - value: QWeather
+        label: 和风天气
+      - value: ColorfulClouds
+        label: 彩云天气
+  NextHour_Provider:
+    type: select
+    title: 未来一小时降水源
+    default: ColorfulClouds
+    options:
+      - value: ColorfulClouds
+        label: 彩云天气
+      - value: WeatherKit
+      - value: QWeather
+        label: 和风天气
+  AirQuality_Pollutants_Provider:
+    type: select
+    title: 今日污染物源
+    default: ColorfulClouds
+    options:
+      - value: ColorfulClouds
+        label: 彩云天气
+      - value: QWeather
+        label: 和风天气
+  AirQuality_Algorithm:
+    type: select
+    title: 空气指数算法
+    description: 用内置算法由污染物本地计算空气指数。
+    default: EU_EAQI
+    options:
+      - value: EU_EAQI
+      - value: 'None'
+        label: 不计算
+      - value: UBA
+      - value: WAQI_InstantCast_US
+      - value: WAQI_InstantCast_CN
+      - value: WAQI_InstantCast_CN_25_DRAFT
+      - value: CA_AQHI
+      - value: HK_AQHI
+      - value: AQHI_Multi_CN
+      - value: AQHI_Multi_CN_HK
+      - value: CN_DEATH_AQHI
+      - value: CN_DEATH_HK_AQHI
+  API_ColorfulClouds_Token:
+    type: input
+    title: 彩云天气令牌
+    default: ''
+  API_QWeather_Host:
+    type: input
+    title: 和风天气主机
+    default: devapi.qweather.com
+  API_QWeather_Token:
+    type: input
+    title: 和风天气令牌
+    default: ''
+  API_WAQI_Token:
+    type: input
+    title: WAQI 令牌
+    description: 填写后自动使用 WAQI 高级 API。
+    default: ''
+  Storage:
+    type: select
+    title: 配置来源
+    description: 选 Argument 时以本覆写参数为准。
+    default: Argument
+    options:
+      - value: Argument
+        label: 覆写参数
+      - value: PersistentStore
+        label: BoxJS / 持久化存储
+      - value: database
+        label: 内置默认值
+  LogLevel:
+    type: select
+    title: 日志等级
+    default: WARN
+    options:
+      - value: 'OFF'
+      - value: ERROR
+      - value: WARN
+      - value: INFO
+      - value: DEBUG
+      - value: ALL
+
+rules:
+  - 'DOMAIN,weather-analytics-events.apple.com,REJECT-DROP'
+  - 'DOMAIN-SUFFIX,tthr.apple.com,REJECT-DROP'
+  - 'DOMAIN,tether.edge.apple,REJECT-DROP'
+  - 'AND,((OR,((IP-ASN,714,no-resolve),(IP-ASN,6185,no-resolve))),(PROTOCOL,QUIC)),REJECT-DROP'
+
+http:
+  mitm:
+    - 'weatherkit.apple.com'
+  script:
+    - name: iringo-weatherkit-response
+      match: '^https?://weatherkit\.apple\.com/api/v1/availability/'
+      type: response
+      require-body: true
+      argument: '{"DataSets":${args.DataSets|json},"Weather.Provider":${args.Weather_Provider|json},"WeatherAlerts.Provider":${args.WeatherAlerts_Provider|json},"NextHour.Provider":${args.NextHour_Provider|json},"AirQuality.Current.Pollutants.Provider":${args.AirQuality_Pollutants_Provider|json},"AirQuality.Calculate.Algorithm":${args.AirQuality_Algorithm|json},"API.ColorfulClouds.Token":${args.API_ColorfulClouds_Token|json},"API.QWeather.Host":${args.API_QWeather_Host|json},"API.QWeather.Token":${args.API_QWeather_Token|json},"API.WAQI.Token":${args.API_WAQI_Token|json},"Storage":${args.Storage|json},"LogLevel":${args.LogLevel|json}}'
+    - name: iringo-weatherkit-request
+      match: '^https?://weatherkit\.apple\.com/api/v1/airQualityScale/'
+      type: request
+      argument: '{"DataSets":${args.DataSets|json},"Weather.Provider":${args.Weather_Provider|json},"WeatherAlerts.Provider":${args.WeatherAlerts_Provider|json},"NextHour.Provider":${args.NextHour_Provider|json},"AirQuality.Current.Pollutants.Provider":${args.AirQuality_Pollutants_Provider|json},"AirQuality.Calculate.Algorithm":${args.AirQuality_Algorithm|json},"API.ColorfulClouds.Token":${args.API_ColorfulClouds_Token|json},"API.QWeather.Host":${args.API_QWeather_Host|json},"API.QWeather.Token":${args.API_QWeather_Token|json},"API.WAQI.Token":${args.API_WAQI_Token|json},"Storage":${args.Storage|json},"LogLevel":${args.LogLevel|json}}'
+    - name: iringo-weatherkit-request
+      match: '^https?://weatherkit\.apple\.com/api/v1/weatherAlerts\?[^#]*&ids=[^&#]*-[0-9]{9}(?:&|$)'
+      type: request
+      argument: '{"DataSets":${args.DataSets|json},"Weather.Provider":${args.Weather_Provider|json},"WeatherAlerts.Provider":${args.WeatherAlerts_Provider|json},"NextHour.Provider":${args.NextHour_Provider|json},"AirQuality.Current.Pollutants.Provider":${args.AirQuality_Pollutants_Provider|json},"AirQuality.Calculate.Algorithm":${args.AirQuality_Algorithm|json},"API.ColorfulClouds.Token":${args.API_ColorfulClouds_Token|json},"API.QWeather.Host":${args.API_QWeather_Host|json},"API.QWeather.Token":${args.API_QWeather_Token|json},"API.WAQI.Token":${args.API_WAQI_Token|json},"Storage":${args.Storage|json},"LogLevel":${args.LogLevel|json}}'
+    - name: iringo-weatherkit-request
+      match: '^https?://weatherkit\.apple\.com/api/v1/weatherAlerts\?[^#]*&ids=-?[0-9]+(?:\.[0-9]+)?,-?[0-9]+(?:\.[0-9]+)?(?:&|$)'
+      type: request
+      argument: '{"DataSets":${args.DataSets|json},"Weather.Provider":${args.Weather_Provider|json},"WeatherAlerts.Provider":${args.WeatherAlerts_Provider|json},"NextHour.Provider":${args.NextHour_Provider|json},"AirQuality.Current.Pollutants.Provider":${args.AirQuality_Pollutants_Provider|json},"AirQuality.Calculate.Algorithm":${args.AirQuality_Algorithm|json},"API.ColorfulClouds.Token":${args.API_ColorfulClouds_Token|json},"API.QWeather.Host":${args.API_QWeather_Host|json},"API.QWeather.Token":${args.API_QWeather_Token|json},"API.WAQI.Token":${args.API_WAQI_Token|json},"Storage":${args.Storage|json},"LogLevel":${args.LogLevel|json}}'
+    - name: iringo-weatherkit-response
+      match: '^https?://weatherkit\.apple\.com/api/v2/weather/'
+      type: response
+      require-body: true
+      binary-mode: true
+      argument: '{"DataSets":${args.DataSets|json},"Weather.Provider":${args.Weather_Provider|json},"WeatherAlerts.Provider":${args.WeatherAlerts_Provider|json},"NextHour.Provider":${args.NextHour_Provider|json},"AirQuality.Current.Pollutants.Provider":${args.AirQuality_Pollutants_Provider|json},"AirQuality.Calculate.Algorithm":${args.AirQuality_Algorithm|json},"API.ColorfulClouds.Token":${args.API_ColorfulClouds_Token|json},"API.QWeather.Host":${args.API_QWeather_Host|json},"API.QWeather.Token":${args.API_QWeather_Token|json},"API.WAQI.Token":${args.API_WAQI_Token|json},"Storage":${args.Storage|json},"LogLevel":${args.LogLevel|json}}'
+
+script-providers:
+  iringo-weatherkit-response:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/iringo-weatherkit-response.js'
+    interval: 86400
+  iringo-weatherkit-request:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/iringo-weatherkit-request.js'
+    interval: 86400
