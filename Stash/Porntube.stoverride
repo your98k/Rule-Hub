@@ -18,7 +18,7 @@ arguments:
       - value: 'info'
         label: info
       - value: 'off'
-        label: off
+        label: 'off'
       - value: 'error'
         label: error
       - value: 'warn'
@@ -60,9 +60,9 @@ arguments:
       - value: 'default'
         label: default
       - value: 'yes'
-        label: yes
+        label: 'yes'
       - value: 'no'
-        label: no
+        label: 'no'
   jump:
     type: select
     title: 播放器跳转
@@ -70,9 +70,9 @@ arguments:
     default: 'no'
     options:
       - value: 'yes'
-        label: yes
+        label: 'yes'
       - value: 'no'
-        label: no
+        label: 'no'
 
 http:
   mitm:

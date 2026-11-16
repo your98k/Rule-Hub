@@ -5,7 +5,7 @@ author: 'RuCu6[https://github.com/RuCu6], 可莉🅥[https://github.com/luestr/P
 homepage: 'https://loonlab.103516.xyz/Plugin/'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/Alipan-01.png'
 date: '2026-11-02 21:00'
-open-url: 'https://apps.apple.com/app/id1494661473'
+openUrl: 'https://apps.apple.com/app/id1494661473'
 category: '去广告'
 # 由 Loon 插件自动转换：Alipan.lpx
 # 上游主页：https://loonlab.103516.xyz/Plugin/
@@ -31,7 +31,7 @@ http:
       match: '^https://member\.alipan\.com/v1/users/onboard_list'
       type: 'response'
 rules:
-  - 'IP-CIDR, 203.107.1.1/24, REJECT, no-resolve'
+  - 'IP-CIDR,203.107.1.1/24,REJECT,no-resolve'
 script-providers:
   Alipan:
     url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/Alipan.js'

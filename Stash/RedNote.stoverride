@@ -5,7 +5,7 @@ author: 'RuCu6[https://github.com/RuCu6], fmz200[https://github.com/fmz200], mei
 homepage: 'https://github.com/harmonizr/loon-plugins'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/RedNote.png'
 date: '2026-10-02 12:00'
-open-url: 'https://apps.apple.com/app/id741292507'
+openUrl: 'https://apps.apple.com/app/id741292507'
 category: '去广告'
 # 由 Loon 插件自动转换：RedNote.lpx
 # 上游主页：https://github.com/harmonizr/loon-plugins
@@ -79,11 +79,11 @@ http:
       match: '^https://edith\.(?:xiaohongshu|rnote)\.com/api/sns/(?:v1/interaction/comment/video/download|v5/note/comment/list|v3/note/comment/sub_comments)'
       type: 'response'
 rules:
-  - 'DOMAIN, ads-img-al.xhscdn.com, REJECT'
-  - 'DOMAIN, ads-img-qc.xhscdn.com, REJECT'
-  - 'DOMAIN, ads-video-al.xhscdn.com, REJECT'
-  - 'DOMAIN, ads-video-qc.xhscdn.com, REJECT'
-  - 'DOMAIN, t-ads.xiaohongshu.com, REJECT'
+  - 'DOMAIN,ads-img-al.xhscdn.com,REJECT'
+  - 'DOMAIN,ads-img-qc.xhscdn.com,REJECT'
+  - 'DOMAIN,ads-video-al.xhscdn.com,REJECT'
+  - 'DOMAIN,ads-video-qc.xhscdn.com,REJECT'
+  - 'DOMAIN,t-ads.xiaohongshu.com,REJECT'
 script-providers:
   xiaohongshu:
     url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/xiaohongshu-raw.js'

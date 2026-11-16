@@ -142,6 +142,23 @@ def main():
             for k in ('name', 'match', 'type', 'argument', 'engine'):
                 if k in sc and not isinstance(sc[k], str):
                     issues.append((f, 'script', f'[{i}].{k} 必须是字符串'))
+        # 顶层字段名校验：Loon 的 open-url 在 Stash 里叫 openUrl
+        if 'open-url' in d:
+            issues.append((f, 'open-url', '字段名应为 openUrl'))
+        # 规则条目不能带 ", "（Loon 风格的空格会让策略名解析出错）
+        for i, r in enumerate(d.get('rules') or []):
+            if isinstance(r, str) and ', ' in r:
+                issues.append((f, 'rules', f'[{i}] 逗号后不要留空格: {r[:40]}'))
+        # arguments 的 label/value 必须是字符串，否则 YAML 会把 yes/no 解析成布尔
+        for an, spec in (d.get('arguments') or {}).items():
+            if not isinstance(spec, dict):
+                continue
+            for oi, opt in enumerate(spec.get('options') or []):
+                if isinstance(opt, dict):
+                    for k in ('label', 'value'):
+                        if k in opt and not isinstance(opt[k], str):
+                            issues.append((f, 'arguments', f'{an}.options[{oi}].{k} 必须是字符串（yes/no 要加引号）'))
+
         for i, mk in enumerate(h.get('mock') or []):
             for k in ('match', 'text', 'base64'):
                 if k in mk and not isinstance(mk[k], str):

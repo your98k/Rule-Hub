@@ -5,7 +5,7 @@ author: 'fmz200[https://github.com/fmz200], DecoAri[https://github.com/DecoAri],
 homepage: 'https://github.com/harmonizr/loon-plugins'
 icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/TestFlight-04.png'
 date: '2026-10-02 12:00'
-open-url: 'https://apps.apple.com/app/id899247664'
+openUrl: 'https://apps.apple.com/app/id899247664'
 category: '功能增强, 定时任务'
 # 由 Loon 插件自动转换：TestFlightMonitor.lpx
 # 上游主页：https://github.com/harmonizr/loon-plugins
@@ -40,7 +40,7 @@ http:
       match: '^https?://testflight\.apple\.com/v3/accounts/.*/apps$'
       type: 'request'
 rules:
-  - 'DOMAIN, testflight.apple.com, PROXY'
+  - 'DOMAIN,testflight.apple.com,PROXY'
 cron:
   script:
     - name: 'AutoJoinTF'

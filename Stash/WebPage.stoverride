@@ -107,15 +107,15 @@ http:
       type: 'response'
       timeout: 10
 rules:
-  - 'DOMAIN-SUFFIX, creative.myavlive.com, REJECT'
-  - 'DOMAIN-SUFFIX, trackwilltrk.com, REJECT'
-  - 'DOMAIN-SUFFIX, tsyndicate.com, REJECT'
-  - 'DOMAIN-SUFFIX, jads.co, REJECT'
-  - 'DOMAIN-SUFFIX, juicyads.com, REJECT'
-  - 'DOMAIN-SUFFIX, mnaspm.com, REJECT'
-  - 'DOMAIN, 18hlw.com, PROXY'
-  - 'DOMAIN, 8olbt.imsatcmn.cc, PROXY'
-  - 'DOMAIN, yhg007.com, PROXY'
+  - 'DOMAIN-SUFFIX,creative.myavlive.com,REJECT'
+  - 'DOMAIN-SUFFIX,trackwilltrk.com,REJECT'
+  - 'DOMAIN-SUFFIX,tsyndicate.com,REJECT'
+  - 'DOMAIN-SUFFIX,jads.co,REJECT'
+  - 'DOMAIN-SUFFIX,juicyads.com,REJECT'
+  - 'DOMAIN-SUFFIX,mnaspm.com,REJECT'
+  - 'DOMAIN,18hlw.com,PROXY'
+  - 'DOMAIN,8olbt.imsatcmn.cc,PROXY'
+  - 'DOMAIN,yhg007.com,PROXY'
 script-providers:
   webpage_hanime:
     url: 'https://raw.githubusercontent.com/harmonizr/loon-plugins/main/scripts/raw.githubusercontent.com/kokoryh__Sparkle/master/dist/webpage.hanime.js'

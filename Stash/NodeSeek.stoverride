@@ -61,8 +61,8 @@ http:
       match: '^https://www\.deepflood\.com/api/account/getInfo/\d+\?readme=1$'
       type: 'request'
 rules:
-  - 'DOMAIN-SUFFIX, nodeseek.com, PROXY'
-  - 'DOMAIN-SUFFIX, deepflood.com, PROXY'
+  - 'DOMAIN-SUFFIX,nodeseek.com,PROXY'
+  - 'DOMAIN-SUFFIX,deepflood.com,PROXY'
 cron:
   script:
     - name: 'NodeSeek_checkin'
