@@ -1,0 +1,93 @@
+name: '小红书'
+desc: |-
+  过滤小红书广告，去除水印
+author: 'RuCu6[https://github.com/RuCu6], fmz200[https://github.com/fmz200], meichiny[https://github.com/meichiny], 可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md]'
+homepage: 'https://github.com/harmonizr/loon-plugins'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/RedNote.png'
+date: '2026-10-02 12:00'
+openUrl: 'https://apps.apple.com/app/id741292507'
+category: '去广告'
+# 由 Loon 插件自动转换：RedNote.lpx
+# 上游主页：https://github.com/harmonizr/loon-plugins
+# 原作者：RuCu6[https://github.com/RuCu6], fmz200[https://github.com/fmz200], meichiny[https://github.com/meichiny], 可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md]
+arguments-version: 1
+arguments:
+  rednote_feedtime:
+    type: switch
+    title: '首页笔记标题前显示时间'
+    default: false
+http:
+  url-rewrite:
+    - '^https?://ci\.(?:xiaohongshu|rnote)\.com/system_config/watermark - reject-img'
+    - '^https://edith\.(?:xiaohongshu|rnote)\.com/api/sns/v1/surprisebox/(?:get_style|open|submit_action) - reject-dict'
+    - '^https://www\.(?:xiaohongshu|rnote)\.com/api/marketing/box/trigger\? - reject-dict'
+    - '^https://edith\.(?:xiaohongshu|rnote)\.com/api/sns/v\d+/(?:guide/user_banner|note/guide) - reject-dict'
+    - '^https://www\.(?:xiaohongshu|rnote)\.com/api/sns/v\d+/(?:ads/resource|hey/\w+/hey_gallery) - reject-dict'
+  body-rewrite:
+    - '^https://edith\.(?:xiaohongshu|rnote)\.com/api/sns/v1/search/banner_list$ response-jq .data={}'
+    - '^https://edith\.(?:xiaohongshu|rnote)\.com/api/sns/v1/search/hot_list$ response-jq .data.items=[]'
+    - '^https://edith\.(?:xiaohongshu|rnote)\.com/api/sns/v4/search/hint response-jq .data.hint_words=[]'
+  mitm:
+    - 'ci.xiaohongshu.com'
+    - 'edith.xiaohongshu.com'
+    - 'rec.xiaohongshu.com'
+    - 'www.xiaohongshu.com'
+    - 'so.xiaohongshu.com'
+    - 'ci.rnote.com'
+    - 'edith.rnote.com'
+    - 'rec.rnote.com'
+    - 'www.rnote.com'
+    - 'so.rnote.com'
+  script:
+    - name: 'xiaohongshu'
+      match: '^https://edith\.(?:xiaohongshu|rnote)\.com/api/sns/v1/system/service/ui/config\?'
+      type: 'response'
+    - name: 'xiaohongshu'
+      match: '^https://edith\.(?:xiaohongshu|rnote)\.com/api/sns/v1/system_service/config\?'
+      type: 'response'
+    - name: 'xiaohongshu'
+      match: '^https://edith\.(?:xiaohongshu|rnote)\.com/api/sns/v2/system_service/splash_config'
+      type: 'response'
+    - name: 'xiaohongshu'
+      match: '^https://edith\.(?:xiaohongshu|rnote)\.com/api/sns/v2/(?:note/widgets|user/followings/followfeed)'
+      type: 'response'
+    - name: 'xiaohongshu'
+      match: '^https://edith\.(?:xiaohongshu|rnote)\.com/api/sns/v5/recommend/user/follow_recommend\?'
+      type: 'response'
+    - name: 'RedNote_feedtime'
+      match: '^https://(?:edith|rec|www)\.(?:xiaohongshu|rnote)\.com/api/sns/v6/homefeed\?'
+      type: 'response'
+    - name: 'xiaohongshu'
+      match: '^https://(?:edith|rec|www)\.(?:xiaohongshu|rnote)\.com/api/sns/v4/followfeed\?'
+      type: 'response'
+    - name: 'xiaohongshu'
+      match: '^https://(?:edith|rec|www)\.(?:xiaohongshu|rnote)\.com/api/sns/v6/homefeed\?'
+      type: 'response'
+    - name: 'xiaohongshu'
+      match: '^https://(?:edith|so)\.(?:xiaohongshu|rnote)\.com/api/sns/v10/search/notes\?'
+      type: 'response'
+    - name: 'xiaohongshu'
+      match: '^https://(?:edith|rec|www)\.(?:xiaohongshu|rnote)\.com/api/sns/v1/note/(?:imagefeed|live_photo/save)'
+      type: 'response'
+    - name: 'xiaohongshu'
+      match: '^https://(?:edith|rec|www)\.(?:xiaohongshu|rnote)\.com/api/sns/(?:v2/note/feed|v3/note/videofeed)'
+      type: 'response'
+    - name: 'xiaohongshu'
+      match: '^https://(?:edith|rec|www)\.(?:xiaohongshu|rnote)\.com/api/sns/(?:v4/note/videofeed|v10/note/video/save)'
+      type: 'response'
+    - name: 'xiaohongshu'
+      match: '^https://edith\.(?:xiaohongshu|rnote)\.com/api/sns/(?:v1/interaction/comment/video/download|v5/note/comment/list|v3/note/comment/sub_comments)'
+      type: 'response'
+rules:
+  - 'DOMAIN, ads-img-al.xhscdn.com, REJECT'
+  - 'DOMAIN, ads-img-qc.xhscdn.com, REJECT'
+  - 'DOMAIN, ads-video-al.xhscdn.com, REJECT'
+  - 'DOMAIN, ads-video-qc.xhscdn.com, REJECT'
+  - 'DOMAIN, t-ads.xiaohongshu.com, REJECT'
+script-providers:
+  xiaohongshu:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/xiaohongshu-raw.js'
+    interval: 86400
+  RedNote_feedtime:
+    url: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/Script/RedNote.feedtime.js'
+    interval: 86400
