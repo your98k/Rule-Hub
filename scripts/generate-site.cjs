@@ -82,6 +82,8 @@ function parseStashHeader(text) {
   while (i < lines.length && (lines[i].startsWith('#') || lines[i].trim() === '')) i++;
   while (i < lines.length) {
     const line = lines[i];
+    // 空行在 YAML 映射里合法，跳过而不是终止头部解析
+    if (line.trim() === '') { i++; continue; }
     const match = line.match(/^([A-Za-z][\w-]*):\s*(.*)$/);
     if (!match) break;
     const key = match[1];
