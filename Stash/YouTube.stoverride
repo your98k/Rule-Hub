@@ -1,11 +1,8 @@
 name: 'YouTube 去广告 · 可调参数'
-desc: |-
-  沿用原 YouTube / YouTube Music 去广告脚本。
-  支持手动设置上传按钮、Shorts 按钮、选段按钮、
-  字幕翻译语言、歌词翻译语言和调试模式。
-  使用前需启用 MITM，并安装、信任相应证书。
+desc: 'YouTube 与 YouTube Music 去广告，支持界面净化与字幕参数。'
 version: '1.0.0'
-author: 'Maasea[https://github.com/Maasea], VirgilClyne[https://github.com/VirgilClyne], Choler[https://github.com/Choler], DivineEngine[https://github.com/DivineEngine], app2smile[https://github.com/app2smile]'
+author: 'your98k'
+# 原作者：'Maasea[https://github.com/Maasea], VirgilClyne[https://github.com/VirgilClyne], Choler[https://github.com/Choler], DivineEngine[https://github.com/DivineEngine], app2smile[https://github.com/app2smile]'
 homepage: 'https://hub.kelee.one'
 openUrl: 'https://apps.apple.com/app/id544007664'
 icon: 'https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/YouTube.png'
@@ -102,5 +99,5 @@ rules:
 
 script-providers:
   YouTube去广告:
-    url: 'https://kelee.one/Resource/JavaScript/YouTube/YouTube_remove_ads/YouTube_remove_ads_response.js'
+    url: 'https://raw.githubusercontent.com/fkingikelee/fkikelee/main/Resource/kelee/JavaScript/YouTube/YouTube_remove_ads/YouTube_remove_ads_response.js'
     interval: 86400

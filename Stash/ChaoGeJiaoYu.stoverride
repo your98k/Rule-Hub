@@ -19,13 +19,11 @@ http:
       status-code: 200
       headers:
         Content-Type: 'application/json'
-  mock:
     - match: '^https://mapi\.chaogejiaoyu\.com/api/outline/getAppBanner\?(?:[^#]*&)?adv_flag=1(?:&|$)'
       text: '{"status":0,"message":"success","data":[]}'
       status-code: 200
       headers:
         Content-Type: 'application/json'
-  mock:
     - match: '^https://mapi\.chaogejiaoyu\.com/api/course/getOpenCourseColumnInfo(?:\?|$)'
       text: '{"status":0,"message":"success","data":{}}'
       status-code: 200

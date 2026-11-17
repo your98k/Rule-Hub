@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import concurrent.futures
 import hashlib
+import inspect as _inspect
 import ipaddress
 import json
 import re
@@ -28,6 +29,80 @@ import yaml
 MAX_BYTES = 8 * 1024 * 1024
 SUCCESS = {"fetched", "self-mirror", "inline"}
 REPO = ("your98k", "rule-hub")
+AUDIT_UA = "Rule-Hub-Resource-Audit/1.0"
+SENSITIVE = ("authorization", "proxy-authorization", "cookie", "set-cookie",
+             "x-api-key", "api-key", "token", "secret", "password")
+_HEADER_NAME = re.compile(r"^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$")
+# Headers the auditor sets itself; a provider may override them explicitly.
+_BASE_HEADERS = {"User-Agent": AUDIT_UA, "Cache-Control": "no-cache"}
+
+
+def _headers_of(spec):
+    """Validated provider headers from a script-providers entry, as str->str."""
+    raw = spec.get("headers") if isinstance(spec, dict) else None
+    if raw is None:
+        return {}
+    if not isinstance(raw, dict):
+        raise SourceError("invalid-headers", "provider headers must be a mapping")
+    out = {}
+    for name, value in raw.items():
+        name = str(name)
+        if not _HEADER_NAME.match(name):
+            raise SourceError("invalid-headers", "provider header name is not a valid token")
+        if isinstance(value, (list, tuple)):
+            value = ", ".join(str(v) for v in value)
+        value = str(value)
+        if any(ord(c) < 32 or ord(c) == 127 for c in value):
+            raise SourceError("invalid-headers", "provider header value has control characters")
+        if name.lower() in {k.lower() for k in out}:
+            raise SourceError("invalid-headers", "provider headers repeat a name with different case")
+        out[name] = value
+    return out
+
+
+def _header_digest(headers):
+    """Stable identity for a header set; same URL with other headers is a new request."""
+    canonical = sorted((str(k).lower(), str(v)) for k, v in (headers or {}).items())
+    return hashlib.sha256(json.dumps(canonical, ensure_ascii=False, separators=(",", ":")).encode()).hexdigest()
+
+
+def cache_key(url, headers=None):
+    """Fetch-cache identity: URL plus normalized headers, never the URL alone."""
+    return str(url) + "\n" + _header_digest(headers)
+
+
+def _redact(headers):
+    """Report headers but never a credential value."""
+    out = {}
+    for name, value in (headers or {}).items():
+        low = str(name).lower()
+        out[str(name)] = "<redacted>" if any(word in low for word in SENSITIVE) else str(value)
+    return out
+
+
+def request_headers(headers=None):
+    """Provider headers merged over the auditor defaults, audited last."""
+    merged = {k: v for k, v in _BASE_HEADERS.items()}
+    for name, value in (headers or {}).items():
+        for existing in [k for k in merged if k.lower() == str(name).lower()]:
+            del merged[existing]
+        merged[str(name)] = str(value)
+    return merged
+
+
+def _accepts_headers(fetcher):
+    """Custom fetchers keep their one-argument contract; only 2+ positional get headers."""
+    try:
+        signature = _inspect.signature(fetcher)
+    except (TypeError, ValueError):
+        return False
+    positional = 0
+    for parameter in signature.parameters.values():
+        if parameter.kind is parameter.VAR_POSITIONAL:
+            return True
+        if parameter.kind in (parameter.POSITIONAL_ONLY, parameter.POSITIONAL_OR_KEYWORD):
+            positional += 1
+    return positional >= 2
 
 
 class SourceError(ValueError):
@@ -141,8 +216,24 @@ def _type(url):
     return "direct"
 
 
-def default_fetcher(url):
-    """Bounded HTTPS fetch; every redirect must also resolve to public addresses."""
+def call_fetcher(fetcher, url, headers=None):
+    """Invoke a fetcher, passing headers only to fetchers that accept them.
+
+    Custom fetchers (including test doubles) written against the original
+    one-argument protocol keep working unchanged.
+    """
+    if headers and _accepts_headers(fetcher):
+        return fetcher(url, headers)
+    return fetcher(url)
+
+
+def default_fetcher(url, headers=None):
+    """Bounded HTTPS fetch; every redirect must also resolve to public addresses.
+
+    ``headers`` are the provider's own headers (for example a User-Agent some
+    hosts require before serving JavaScript). They are merged over the auditor
+    defaults instead of overriding every request with one blanket agent.
+    """
     _url_parts(url, resolve=True)
 
     class Redirect(urllib.request.HTTPRedirectHandler):
@@ -152,7 +243,7 @@ def default_fetcher(url):
                 raise SourceError("self-redirect", "external source redirected into Rule-Hub; local mapping required")
             return super().redirect_request(req, fp, code, msg, headers, newurl)
 
-    request = urllib.request.Request(url, headers={"User-Agent": "Rule-Hub-Resource-Audit/1.0", "Cache-Control": "no-cache"})
+    request = urllib.request.Request(url, headers=request_headers(headers))
     try:
         with urllib.request.build_opener(Redirect()).open(request, timeout=25) as response:
             _url_parts(response.url, resolve=True)
@@ -212,7 +303,7 @@ def inspect(root, fetcher, previous=None):
     """
     root = Path(root).resolve()
     prior = {r["resource_key"]: r for r in (previous or {}).get("resources", []) if isinstance(r, dict) and r.get("resource_key")}
-    rows, parse_errors = [], []
+    rows, parse_errors, fetched_headers = [], [], {}
     files = sorted((root / "Stash").glob("*.stoverride"))
     if not (root / "Stash").is_dir():
         parse_errors.append({"source_status": "inventory-missing", "error": "Stash directory is missing"})
@@ -246,7 +337,8 @@ def inspect(root, fetcher, previous=None):
                        "source_url": value if kind == "url" and isinstance(value, str) else None,
                        "source_type": "inline" if kind == "payload" else None,
                        "source_status": "pending", "sha256": None, "bytes": None,
-                       "node_check": "not-run", "baseline_preserved": False}
+                       "node_check": "not-run", "baseline_preserved": False,
+                       "request_headers": None, "headers_digest": None}
                 if error:
                     row.update(source_status=error, error="provider has no valid url/payload" if error == "missing-source" else "provider must be a mapping")
                 elif kind == "payload":
@@ -261,6 +353,10 @@ def inspect(root, fetcher, previous=None):
                         if not isinstance(value, str) or not value.strip() or value != value.strip():
                             raise SourceError("invalid-url", "url must be a nonempty, unpadded string")
                         _url_parts(value)
+                        provider_headers = _headers_of(spec)
+                        row["request_headers"] = _redact(provider_headers)
+                        row["headers_digest"] = _header_digest(provider_headers)
+                        fetched_headers[row["resource_key"]] = provider_headers
                         row["source_type"] = _type(value)
                         if row["source_type"] == "self-mirror":
                             relative = _mirror_path(value)
@@ -275,25 +371,31 @@ def inspect(root, fetcher, previous=None):
                         row.update(source_status=getattr(problem, "status", "self-mirror-read-error"), error=str(problem))
                 rows.append(row)
 
-    urls = sorted({r["source_url"] for r in rows if r["source_status"] == "pending"})
+    pending = [r for r in rows if r["source_status"] == "pending"]
+    targets, urls = {}, sorted({r["source_url"] for r in pending})
+    for row in pending:
+        headers = fetched_headers.get(row["resource_key"]) or {}
+        targets[cache_key(row["source_url"], headers)] = (row["source_url"], headers)
 
-    def fetch_one(url):
+    def fetch_one(item):
+        key, (url, headers) = item
         try:
-            result = _check(_bytes(fetcher(url)))
-            return {**result, "source_status": "fetched"}
+            content = call_fetcher(fetcher, url, headers)
+            return key, {**_check(_bytes(content)), "source_status": "fetched"}
         except urllib.error.HTTPError as error:
-            return {"source_status": "not-found" if error.code == 404 else "http-error", "error": "HTTP " + str(error.code)}
+            return key, {"source_status": "not-found" if error.code == 404 else "http-error", "error": "HTTP " + str(error.code)}
         except Exception as error:
-            return {"source_status": getattr(error, "status", "fetch-error"), "error": str(error)}
+            return key, {"source_status": getattr(error, "status", "fetch-error"), "error": str(error)}
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
-        observations = dict(zip(urls, pool.map(fetch_one, urls)))
+        observations = dict(pool.map(fetch_one, targets.items()))
     for row in rows:
         if row["source_status"] == "pending":
-            row.update(observations[row["source_url"]])
+            row.update(observations[cache_key(row["source_url"], fetched_headers.get(row["resource_key"]) or {})])
         old = prior.get(row["resource_key"], {})
         if row["source_status"] not in SUCCESS and old.get("sha256"):
-            if (old.get("source_url"), old.get("source_type")) == (row.get("source_url"), row.get("source_type")):
+            if ((old.get("source_url"), old.get("source_type"), old.get("headers_digest"))
+                    == (row.get("source_url"), row.get("source_type"), row.get("headers_digest"))):
                 row.update(sha256=old["sha256"], bytes=old.get("bytes"), baseline_preserved=True,
                            baseline_source_url=old.get("baseline_source_url", old.get("source_url")))
             else:
@@ -305,7 +407,8 @@ def inspect(root, fetcher, previous=None):
     for row in rows:
         counts[row["source_status"]] = counts.get(row["source_status"], 0) + 1
     return {"version": 1, "resources": rows, "override_errors": parse_errors, "errors": errors,
-            "summary": {"overrides": len(files), "total": len(rows), "unique_external_urls": len(urls), "errors": len(errors), "by_status": counts}}
+            "summary": {"overrides": len(files), "total": len(rows), "unique_external_urls": len(urls),
+                        "unique_requests": len(targets), "errors": len(errors), "by_status": counts}}
 
 
 def main():

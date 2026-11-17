@@ -169,5 +169,141 @@ class ResourceTests(unittest.TestCase):
         self.assertEqual(before, (self.root / 'upstream/resource-report.json').read_bytes())
 
 
+    # --- provider headers: one host, several agents -------------------------
+
+    def test_provider_headers_reach_fetcher(self):
+        seen = {}
+
+        def fetcher(url, headers=None):
+            seen['headers'] = dict(headers or {})
+            return b'const ok = 1;'
+
+        self.override({'a': {'url': 'https://example.com/a.js',
+                             'headers': {'User-Agent': 'Loon/3.2.4'}}})
+        report = resources.inspect(self.root, fetcher)
+        self.assertEqual(report['summary']['errors'], 0)
+        self.assertEqual(seen['headers']['User-Agent'], 'Loon/3.2.4')
+
+    def test_request_headers_merge_keeps_audit_defaults(self):
+        merged = resources.request_headers({'User-Agent': 'Loon/3.2.4'})
+        self.assertEqual(merged['User-Agent'], 'Loon/3.2.4')
+        self.assertEqual(merged['Cache-Control'], 'no-cache')
+        self.assertEqual(list(merged).count('User-Agent'), 1)
+        # No provider headers: the auditor's own agent, never a blanket Loon UA.
+        self.assertEqual(resources.request_headers()['User-Agent'], resources.AUDIT_UA)
+
+    def test_same_url_different_headers_are_separate_requests(self):
+        calls = []
+
+        def fetcher(url, headers=None):
+            agent = (headers or {}).get('User-Agent', '')
+            calls.append((url, agent))
+            return ('const agent = %s;' % len(calls)).encode() if agent else b'<!DOCTYPE html><html>blocked</html>'
+
+        self.override({'plain': {'url': 'https://example.com/a.js'},
+                       'loon': {'url': 'https://example.com/a.js',
+                                'headers': {'User-Agent': 'Loon/3.2.4'}},
+                       'other': {'url': 'https://example.com/a.js',
+                                 'headers': {'User-Agent': 'Surge/5.0'}}})
+        report = resources.inspect(self.root, fetcher)
+        self.assertEqual(len(calls), 3)
+        self.assertEqual(report['summary']['unique_external_urls'], 1)
+        self.assertEqual(report['summary']['unique_requests'], 3)
+        rows = {r['provider']: r for r in report['resources']}
+        self.assertEqual(rows['loon']['source_status'], 'fetched')
+        self.assertEqual(rows['other']['source_status'], 'fetched')
+        self.assertEqual(rows['plain']['source_status'], 'html')
+        self.assertNotEqual(rows['loon']['sha256'], rows['other']['sha256'])
+
+    def test_missing_provider_ua_still_fails(self):
+        """The fix must not paper over a provider that omitted its own headers."""
+        def fetcher(url, headers=None):
+            agent = (headers or {}).get('User-Agent', '')
+            if agent.startswith('Loon/'):
+                return b'const ok = 1;'
+            return b'<!DOCTYPE html><html>needs a client agent</html>'
+
+        self.override({'no_headers': {'url': 'https://example.com/a.js'}})
+        report = resources.inspect(self.root, fetcher)
+        self.assertEqual(report['summary']['errors'], 1)
+        self.assertEqual(report['resources'][0]['source_status'], 'html')
+
+    def test_static_header_is_allowed(self):
+        def fetcher(url, headers=None):
+            self.assertEqual(headers.get('Accept'), 'application/javascript')
+            return b'const ok = 1;'
+
+        self.override({'a': {'url': 'https://example.com/a.js',
+                             'headers': {'Accept': 'application/javascript',
+                                         'Referer': 'https://example.com/'}}})
+        report = resources.inspect(self.root, fetcher)
+        self.assertEqual(report['summary']['errors'], 0)
+        self.assertEqual(report['resources'][0]['request_headers']['Accept'], 'application/javascript')
+
+    def test_sensitive_header_values_never_reach_the_report(self):
+        secret = 'Bearer supersecretvalue'
+        def fetcher(url, headers=None):
+            self.assertEqual(headers.get('Authorization'), secret)
+            return b'const ok = 1;'
+
+        real = {'User-Agent': 'Loon/3.2.4', 'Authorization': secret, 'X-Api-Key': 'anothersecret'}
+        self.override({'a': {'url': 'https://example.com/a.js', 'headers': real}})
+        report = resources.inspect(self.root, fetcher)
+        self.assertEqual(report['summary']['errors'], 0)
+        blob = json.dumps(report, ensure_ascii=False)
+        self.assertNotIn('supersecretvalue', blob)
+        self.assertNotIn('anothersecret', blob)
+        row = report['resources'][0]
+        self.assertEqual(row['request_headers']['Authorization'], '<redacted>')
+        self.assertEqual(row['request_headers']['X-Api-Key'], '<redacted>')
+        # Identity is derived from the real headers, so redaction cannot weaken it.
+        self.assertEqual(row['headers_digest'], resources._header_digest(real))
+        self.assertNotEqual(row['headers_digest'], resources._header_digest(row['request_headers']))
+        rotated = dict(real, Authorization='Bearer rotatedsecret')
+        self.assertNotEqual(row['headers_digest'], resources._header_digest(rotated))
+        self.assertEqual(resources._redact(rotated), resources._redact(real))
+
+    def test_invalid_headers_are_rejected(self):
+        self.override({'newline': {'url': 'https://example.com/a.js',
+                                   'headers': {'User-Agent': 'Loon\r\nX: y'}},
+                       'notmap': {'url': 'https://example.com/b.js', 'headers': 'Loon/3.2.4'},
+                       'badname': {'url': 'https://example.com/c.js',
+                                   'headers': {'Bad Name': 'v'}}})
+        report = resources.inspect(self.root, self.no_fetch)
+        self.assertEqual(report['summary']['errors'], 3)
+        self.assertTrue(all(r['source_status'] == 'invalid-headers' for r in report['resources']))
+
+    def test_cache_key_separates_headers(self):
+        url = 'https://example.com/a.js'
+        self.assertEqual(resources.cache_key(url, {'User-Agent': 'Loon/3.2.4'}),
+                         resources.cache_key(url, {'user-agent': 'Loon/3.2.4'}))
+        self.assertEqual(resources.cache_key(url, {'A': '1', 'B': '2'}),
+                         resources.cache_key(url, {'B': '2', 'A': '1'}))
+        self.assertNotEqual(resources.cache_key(url, {'User-Agent': 'Loon/3.2.4'}),
+                            resources.cache_key(url, {'User-Agent': 'Surge/5.0'}))
+        self.assertNotEqual(resources.cache_key(url), resources.cache_key(url, {'User-Agent': 'Loon/3.2.4'}))
+
+    def test_changed_headers_do_not_inherit_old_baseline(self):
+        url = 'https://example.com/a.js'
+        self.override({'a': {'url': url, 'headers': {'User-Agent': 'Loon/3.2.4'}}})
+        previous = resources.inspect(self.root, lambda u, headers=None: b'const ok = 1;')
+        self.override({'a': {'url': url, 'headers': {'User-Agent': 'Surge/5.0'}}})
+        def broken(u, headers=None):
+            raise urllib.error.HTTPError(u, 500, 'boom', {}, None)
+        row = resources.inspect(self.root, broken, previous)['resources'][0]
+        self.assertIsNone(row['sha256'])
+        self.assertFalse(row['baseline_preserved'])
+        self.assertTrue(row['previous_source_changed'])
+
+    def test_one_argument_fetchers_keep_working(self):
+        """Custom fetchers written against the old protocol still receive one URL."""
+        seen = []
+        self.override({'a': {'url': 'https://example.com/a.js',
+                             'headers': {'User-Agent': 'Loon/3.2.4'}}})
+        report = resources.inspect(self.root, lambda u: (seen.append(u), b'const ok = 1;')[1])
+        self.assertEqual(seen, ['https://example.com/a.js'])
+        self.assertEqual(report['summary']['errors'], 0)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
