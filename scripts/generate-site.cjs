@@ -180,6 +180,7 @@ function collectStashOverrides() {
         name: (meta.name || path.basename(file, path.extname(file))).trim(),
         desc: (meta.desc || '').trim(),
         icon: (meta.icon || '').trim(),
+        iconUrl: (meta.icon || '').trim(),
         date,
         version: (meta.version || '').trim(),
         tags: normalizeTags(meta.category || meta.tag),
@@ -225,7 +226,63 @@ function withFeedback(template) {
   return template;
 }
 
-function main() {
+const ICON_DIR = path.join(SITE, 'assets', 'icons');
+const ICON_CACHE = path.join(ROOT, 'assets', 'icon-cache');
+
+function iconFileName(url) {
+  const clean = url.split('?')[0].split('#')[0];
+  const base = path.basename(clean);
+  const ext = (base.match(/\.[A-Za-z0-9]+$/) || ['.png'])[0].toLowerCase();
+  const stem = base.slice(0, base.length - ext.length).replace(/[^A-Za-z0-9._-]+/g, '-').slice(0, 60) || 'icon';
+  return require('crypto').createHash('sha1').update(url).digest('hex').slice(0, 10) + '-' + stem + ext;
+}
+
+function safeExt(buf) {
+  if (buf.slice(0, 8).equals(Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]))) return 'png';
+  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return 'jpg';
+  if (buf.slice(0, 3).toString() === 'GIF') return 'gif';
+  if (buf.slice(0, 4).toString() === 'RIFF' && buf.slice(8, 12).toString() === 'WEBP') return 'webp';
+  const head = buf.slice(0, 200).toString('utf8').trimStart();
+  if (head.startsWith('<?xml') || head.startsWith('<svg')) return 'svg';
+  return null;
+}
+
+// 复用已有缓存,避免每次构建都重新下载 120+ 图标;下载失败保留远程地址作回退。
+async function localizeIcons(plugins) {
+  fs.mkdirSync(ICON_DIR, { recursive: true });
+  fs.mkdirSync(ICON_CACHE, { recursive: true });
+  let localized = 0, cached = 0, failed = 0;
+  for (const plugin of plugins) {
+    const url = (plugin.iconUrl || '').trim();
+    if (!/^https?:\/\//.test(url)) continue;
+    const name = iconFileName(url);
+    const cachePath = path.join(ICON_CACHE, name);
+    const sitePath = path.join(ICON_DIR, name);
+    try {
+      let buf = null;
+      if (fs.existsSync(cachePath)) { buf = fs.readFileSync(cachePath); cached++; }
+      else {
+        const res = await fetch(url, { headers: { 'User-Agent': 'Rule-Hub-Icon-Builder/1.0', Accept: 'image/*' } });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        buf = Buffer.from(await res.arrayBuffer());
+        if (buf.length < 64 || buf.length > 512 * 1024) throw new Error('size ' + buf.length);
+        const ext = safeExt(buf);
+        if (!ext) throw new Error('not an image');
+        fs.writeFileSync(cachePath, buf);
+        localized++;
+      }
+      if (!safeExt(buf)) throw new Error('not an image');
+      fs.writeFileSync(sitePath, buf);
+      plugin.imageUrl = './assets/icons/' + name;
+    } catch (error) {
+      failed++;
+      console.warn(`WARN: 图标本地化失败 ${plugin.name}: ${error.message};保留远程地址`);
+    }
+  }
+  console.log(`图标:本地化 ${localized},缓存复用 ${cached},失败回退远程 ${failed}`);
+}
+
+async function main() {
   fs.rmSync(SITE, { recursive: true, force: true });
   fs.mkdirSync(path.join(SITE, 'files', 'Stash'), { recursive: true });
 
@@ -246,6 +303,7 @@ function main() {
 
   const plugins = collectStashOverrides();
   plugins.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  await localizeIcons(plugins);
 
   const stashDir = path.join(ROOT, 'Stash');
   if (fs.existsSync(stashDir)) {
@@ -283,4 +341,4 @@ function main() {
   for (const plugin of plugins) console.log(`  ${plugin.name} | ${plugin.date} | ${plugin.tags.join(',')}`);
 }
 
-main();
+main().catch((error) => { console.error(error); process.exit(1); });

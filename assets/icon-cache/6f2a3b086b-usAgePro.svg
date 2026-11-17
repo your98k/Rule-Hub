@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" gradientUnits="userSpaceOnUse" x1="512" y1="0" x2="512" y2="1024">
+      <stop offset="0" stop-color="#2a2a2a"/>
+      <stop offset=".5" stop-color="#191919"/>
+      <stop offset="1" stop-color="#0b0b0b"/>
+    </linearGradient>
+    <linearGradient id="bl" gradientUnits="userSpaceOnUse" x1="0" y1="552" x2="0" y2="716">
+      <stop offset="0" stop-color="#5aa6ff"/>
+      <stop offset="1" stop-color="#1f6de2"/>
+    </linearGradient>
+    <linearGradient id="gr" gradientUnits="userSpaceOnUse" x1="0" y1="440" x2="0" y2="704">
+      <stop offset="0" stop-color="#b4e36f"/>
+      <stop offset="1" stop-color="#79bb3d"/>
+    </linearGradient>
+    <linearGradient id="bar" gradientUnits="userSpaceOnUse" x1="0" y1="740" x2="0" y2="880">
+      <stop offset="0" stop-color="#4f9ef8"/>
+      <stop offset="1" stop-color="#2a70d8"/>
+    </linearGradient>
+    <linearGradient id="barg" gradientUnits="userSpaceOnUse" x1="0" y1="740" x2="0" y2="880">
+      <stop offset="0" stop-color="#b4e36f"/>
+      <stop offset="1" stop-color="#79bb3d"/>
+    </linearGradient>
+    <linearGradient id="bard" gradientUnits="userSpaceOnUse" x1="0" y1="740" x2="0" y2="880">
+      <stop offset="0" stop-color="#4d4d4d"/>
+      <stop offset="1" stop-color="#2b2b2b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="228" fill="url(#bg)"/>
+  <g stroke="#0b0b0b" stroke-width="4" fill="url(#bl)">
+    <!-- u -->
+    <rect x="92" y="560" width="26" height="66" rx="13"/>
+    <rect x="92" y="646" width="26" height="66" rx="13"/>
+    <rect x="158" y="560" width="26" height="66" rx="13"/>
+    <rect x="158" y="646" width="26" height="66" rx="13"/>
+    <rect x="92" y="686" width="92" height="26" rx="13"/>
+    <!-- s -->
+    <rect x="222" y="560" width="64" height="26" rx="13"/>
+    <rect x="208" y="560" width="26" height="66" rx="13"/>
+    <rect x="222" y="623" width="64" height="26" rx="13"/>
+    <rect x="274" y="646" width="26" height="66" rx="13"/>
+    <rect x="222" y="686" width="64" height="26" rx="13"/>
+    <!-- g -->
+    <rect x="510" y="560" width="64" height="26" rx="13"/>
+    <rect x="496" y="560" width="26" height="66" rx="13"/>
+    <rect x="562" y="560" width="26" height="66" rx="13"/>
+    <rect x="510" y="623" width="64" height="26" rx="13"/>
+    <rect x="562" y="646" width="26" height="50" rx="13"/>
+    <!-- e -->
+    <rect x="618" y="560" width="64" height="26" rx="13"/>
+    <rect x="604" y="560" width="26" height="66" rx="13"/>
+    <rect x="604" y="646" width="26" height="66" rx="13"/>
+    <rect x="618" y="623" width="64" height="26" rx="13"/>
+    <rect x="618" y="686" width="64" height="26" rx="13"/>
+  </g>
+  <g stroke="#0b0b0b" stroke-width="5" fill="url(#gr)">
+    <!-- A -->
+    <rect x="350" y="456" width="80" height="34" rx="17"/>
+    <rect x="316" y="456" width="34" height="101" rx="17"/>
+    <rect x="316" y="591" width="34" height="101" rx="17"/>
+    <rect x="430" y="456" width="34" height="101" rx="17"/>
+    <rect x="430" y="591" width="34" height="101" rx="17"/>
+    <rect x="330" y="551" width="120" height="34" rx="17"/>
+  </g>
+  <g stroke="#0b0b0b" stroke-width="4">
+    <rect x="92" y="748" width="32" height="120" rx="9" fill="url(#bar)"/>
+    <rect x="140" y="748" width="32" height="120" rx="9" fill="url(#bar)"/>
+    <rect x="188" y="748" width="32" height="120" rx="9" fill="url(#bar)"/>
+    <rect x="236" y="748" width="32" height="120" rx="9" fill="url(#bar)"/>
+    <rect x="284" y="748" width="32" height="120" rx="9" fill="url(#bar)"/>
+    <rect x="332" y="748" width="32" height="120" rx="9" fill="url(#bar)"/>
+    <rect x="380" y="730" width="32" height="138" rx="9" fill="url(#barg)"/>
+    <rect x="428" y="748" width="32" height="120" rx="9" fill="url(#bar)"/>
+    <rect x="476" y="748" width="32" height="120" rx="9" fill="url(#bar)"/>
+    <rect x="524" y="754" width="32" height="120" rx="9" fill="url(#bard)"/>
+    <rect x="572" y="754" width="32" height="120" rx="9" fill="url(#bard)"/>
+    <rect x="620" y="754" width="32" height="120" rx="9" fill="url(#bard)"/>
+    <rect x="668" y="754" width="32" height="120" rx="9" fill="url(#bard)"/>
+  </g>
+</svg>

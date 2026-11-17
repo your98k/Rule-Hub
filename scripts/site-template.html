@@ -814,13 +814,30 @@
         "from-teal-400 via-cyan-500 to-blue-600",
         "from-orange-500 via-amber-500 to-yellow-500"
       ];
+      // 图标加载:先试同源本地副本,失败回退远程原始地址,再失败用 emoji 兜底;
+      // 不移除 img,避免整块变成纯渐变底色。
+      window.handleIconError = function (img) {
+        const fallback = img.dataset.fallback || "";
+        if (fallback && img.src !== fallback) {
+          img.dataset.fallback = "";
+          img.src = fallback;
+          return;
+        }
+        const parent = img.parentElement;
+        if (!parent) return;
+        img.remove();
+        if (!parent.dataset.emojiFallback) {
+          parent.dataset.emojiFallback = "1";
+          parent.textContent = "📦";
+        }
+      };
       const tagIcons = { "去广告": "🛡️", "功能增强": "⚡", "解锁会员": "👑", "定时任务": "⏰" };
       const firstTag = (raw.tags || []).find(t => tagIcons[t]);
       return {
         id: raw.id || ("stash-override-" + i),
         name: raw.name || "未命名覆写",
         icon: firstTag ? tagIcons[firstTag] : "📦",
-        imageUrl: raw.icon || "",
+        imageUrl: raw.imageUrl || raw.icon || "",
         gradient: gradients[i % gradients.length],
         category: (raw.tags || [])[1] || "Stash 覆写",
         tags: raw.tags || [],
@@ -1060,7 +1077,7 @@
                 <div class="flex items-center gap-3.5 min-w-0 flex-1">
                   <div class="w-[52px] h-[52px] ios-squircle bg-gradient-to-br ${plugin.gradient} flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
                     ${plugin.imageUrl
-                      ? `<img src="${plugin.imageUrl}" alt="" loading="lazy" class="w-full h-full object-cover" onerror="this.remove()" />`
+                      ? `<img src="${plugin.imageUrl}" alt="" decoding="async" class="w-full h-full object-cover" data-fallback="${plugin.iconUrl || ''}" onerror="handleIconError(this)" />`
                       : plugin.icon}
                   </div>
                   <div class="min-w-0 flex-1">
@@ -1493,7 +1510,7 @@ function openInspector(pluginId, event) {
         <div class="flex items-start justify-between gap-4 pb-4 border-b border-white/10">
           <div class="flex items-center gap-3.5">
             <div class="w-14 h-14 ios-squircle bg-gradient-to-br ${p.gradient} flex items-center justify-center text-3xl shrink-0 overflow-hidden">
-              ${p.imageUrl ? `<img src="${p.imageUrl}" alt="" class="w-full h-full object-cover" onerror="this.remove()" />` : p.icon}
+              ${p.imageUrl ? `<img src="${p.imageUrl}" alt="" decoding="async" class="w-full h-full object-cover" data-fallback="${p.iconUrl || ''}" onerror="handleIconError(this)" />` : p.icon}
             </div>
             <div>
               <div class="flex items-center gap-2 flex-wrap">
