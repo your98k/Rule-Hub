@@ -1,0 +1,25 @@
+# 来源：https://github.com/fkingikelee/fkikelee/blob/f4fe63f75e8dba21382929e8b1d0d2f2e0ca5091/lpx/CoolApk_remove_ads.lpx
+name: '酷安去广告'
+desc: |-
+  清理搜索热词、首页推广、帖子商品和评论广告。
+category: '去广告'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/CoolApk.png'
+openUrl: 'https://apps.apple.com/app/id1422581869'
+author: 'RuCu6、可莉（上游规则）；Stash 原生适配'
+homepage: 'https://hub.kelee.one'
+
+http:
+  mitm:
+    - 'api.coolapk.com'
+  url-rewrite:
+    # 搜索热词请求返回空对象。
+    - '(?i)^https://api\.coolapk\.com/v6/search\?.*type=hotSearch - reject-dict'
+  body-rewrite:
+    # 原逻辑：清理缺少 id 的热门/置顶评论，以及商品与赞助卡片。
+    - '(?i)^https://api\.coolapk\.com/v6/feed/detail\? response-jq if (.data | type) == "object" then (.data.hotReplyRows |= if type == "array" then map(select(type == "object" and .id?)) else . end) | (.data.topReplyRows |= if type == "array" then map(select(type == "object" and .id?)) else . end) | reduce ("detailSponsorCard", "include_goods", "include_goods_ids") as $key (.; .data[$key]=[]) else . end'
+    - '(?i)^https://api\.coolapk\.com/v6/feed/replyList response-jq if (.data | type) == "array" then .data |= map(select(type == "object" and .id?)) else . end'
+    - '(?i)^https://api\.coolapk\.com/v6/main/dataList response-jq if (.data | type) == "array" then .data |= map(select(type != "object" or ((.entityTemplate != "sponsorCard") and (.title != "精选配件")))) else . end'
+    - '(?i)^https://api\.coolapk\.com/v6/page/dataList response-jq if (.data | type) == "array" then .data |= map(select(type != "object" or ((.title != "酷安热搜") and (.entityTemplate != "imageScaleCard") and (.entityTemplate != "sponsorCard")))) else . end'
+    # 将 entityId 捕获为变量，避免 jq 在 index() 中丢失当前对象上下文。
+    - '(?i)^https://api\.coolapk\.com/v6/main/indexV8 response-jq if (.data | type) == "array" then .data |= map(select(type != "object" or ((.entityId as $id | ([8639,29349,33006,32557] | index($id) | not)) and (.entityTemplate != "sponsorCard") and ((if (.title | type) == "string" then .title else "" end | test("值得买|红包")) | not)))) else . end'
+    - '(?i)^https://api\.coolapk\.com/v6/main/init response-jq if (.data | type) == "array" then .data |= map(select(type != "object" or (.entityId as $id | ([944,945,6390] | index($id) | not))) | if type == "object" and .entityId == 20131 and (.entities | type) == "array" then .entities |= map(select(type != "object" or .title != "酷品")) else . end) else . end'
