@@ -1,21 +1,17 @@
 name: Sync all upstreams to test
-
 on:
   schedule:
-    - cron: '10 19 * * *'
+    - cron: '10 19 * * 0'
   workflow_dispatch:
-
 permissions:
   contents: write
-
 concurrency:
-  group: rule-hub-upstream-sync-test
+  group: rule-hub-upstream-sync
   cancel-in-progress: false
-
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,51 +33,82 @@ jobs:
           python -m pip install -r tooling/scripts/sync-requirements.txt
           sudo apt-get update -qq
           sudo apt-get install -y jq
-      - name: Refresh tooling and seed missing test files
+      - name: Refresh tooling without replacing test overrides
         run: |
-          mkdir -p work/upstream work/scripts
-          cp tooling/scripts/sync-upstreams.py tooling/scripts/loon_adapter.py tooling/scripts/test_loon_adapter.py tooling/scripts/test-sync-upstreams.py tooling/scripts/check-overrides.py tooling/scripts/upstream-resources.py tooling/scripts/test-upstream-resources.py work/scripts/
+          cp tooling/scripts/sync-upstreams.py tooling/scripts/loon_adapter.py tooling/scripts/test_loon_adapter.py tooling/scripts/test-sync-upstreams.py tooling/scripts/check-overrides.py tooling/scripts/upstream-resources.py tooling/scripts/test-upstream-resources.py tooling/scripts/promote-upstreams.py tooling/scripts/test-promote-upstreams.py work/scripts/
           cp tooling/upstream/sources.json work/upstream/
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          path=Path('work/upstream/sync-state.json')
+          if path.exists():
+              state=json.loads(path.read_text())
+              for name,row in state['sources'].items():
+                  queued=row.get('pending_publish')
+                  target=Path('tooling')/name
+                  if queued and target.is_file() and hashlib.sha256(target.read_bytes()).hexdigest()==queued['after_sha256']:
+                      row.pop('pending_publish')
+              path.write_text(json.dumps(state,ensure_ascii=False,indent=2)+'\n')
+          PY
           python - <<'PY'
           from pathlib import Path
           import shutil
-          for area in ('Stash', 'Script'):
-              for source in (Path('tooling') / area).rglob('*'):
-                  if source.is_file():
-                      target = Path('work') / source.relative_to('tooling')
-                      if not target.exists():
-                          target.parent.mkdir(parents=True, exist_ok=True)
-                          shutil.copyfile(source, target)
+          for area in ('Stash','Script'):
+              for source in (Path('tooling')/area).rglob('*'):
+                  target=Path('work')/source.relative_to('tooling')
+                  if source.is_file() and not target.exists():
+                      target.parent.mkdir(parents=True,exist_ok=True)
+                      shutil.copyfile(source,target)
           PY
-      - name: Unit and negative regression tests
+      - name: Test synchronization and negative cases
         run: |
           python tooling/scripts/test-sync-upstreams.py
-          python -m unittest discover -s tooling/scripts -p 'test_loon_adapter.py'
+          python -m unittest discover -s tooling/scripts -p test_loon_adapter.py
           python tooling/scripts/test-upstream-resources.py
-      - name: Synchronize upstreams
+          python tooling/scripts/test-promote-upstreams.py
+      - name: Detect upstream changes and validate candidates
         id: sync
         continue-on-error: true
         working-directory: work
-        run: |
-          test "$(git branch --show-current)" = test
-          python scripts/sync-upstreams.py --apply
-      - name: Audit remote and inline resources
-        id: resources
-        continue-on-error: true
+        run: python scripts/sync-upstreams.py --apply
+      - name: Select this run's content changes
+        id: changes
         working-directory: work
-        run: python scripts/upstream-resources.py --root . --report upstream/resource-report.json --state upstream/resource-state.json
-      - name: Commit validated candidates to test only
+        run: |
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          report=json.loads(Path('upstream/sync-report.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('changed='+str(bool(report['changed'])).lower()+'\n')
+          print('Validated content changes:',len(report['changed']))
+          PY
+      - name: Commit tested candidates to test
+        if: steps.changes.outputs.changed == 'true'
         working-directory: work
         run: |
           set -euo pipefail
           test "$(git branch --show-current)" = test
-          git add Stash Script upstream scripts/sync-upstreams.py scripts/loon_adapter.py scripts/test_loon_adapter.py scripts/test-sync-upstreams.py scripts/check-overrides.py scripts/upstream-resources.py scripts/test-upstream-resources.py
-          if git diff --cached --quiet; then exit 0; fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'sync: validated upstream candidates and coverage report [test only]'
-          git push origin HEAD:refs/heads/test
-      - name: Upload complete sync report
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          files=json.loads(Path('upstream/sync-report.json').read_text())['changed']
+          subprocess.run(['git','add','--',*files,'upstream/sync-state.json','upstream/sync-report.json'],check=True)
+          PY
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'sync: tested upstream content updates'
+            git push origin HEAD:refs/heads/test
+          fi
+      - name: Publish only validated changes to main
+        if: steps.changes.outputs.changed == 'true'
+        run: python tooling/scripts/promote-upstreams.py --test-root work --main-root tooling --report work/upstream/sync-report.json --push
+      - name: Audit resources when content changed or manually requested
+        id: resources
+        if: steps.changes.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+        continue-on-error: true
+        working-directory: work
+        run: python scripts/upstream-resources.py --root . --report upstream/resource-report.json --state upstream/resource-state.json
+      - name: Upload diagnostics without no-change commits
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -90,8 +117,6 @@ jobs:
             work/upstream/sync-report.json
             work/upstream/resource-report.json
           if-no-files-found: warn
-      - name: Surface blocked or failed sources
+      - name: Surface blocked sources and resource failures
         if: steps.sync.outcome == 'failure' || steps.resources.outcome == 'failure'
-        run: |
-          echo 'Some upstreams need review or failed to fetch. See the report; last good outputs and baselines were retained.'
-          exit 1
+        run: exit 1

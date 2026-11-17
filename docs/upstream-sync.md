@@ -4,10 +4,10 @@
 
 - 工作流已安装并启用（GitHub state: active）；安装提交 `bc419ba05a47e2bfa231216d6e1a929809151187`。
 - 工作流名称：`Sync all upstreams to test`。
-- 计划每天 UTC 19:10（北京时间次日 03:10）运行，也支持手动 Run workflow；GitHub 定时任务可能延迟。
-- 调度与工具从 main 读取；更新候选、基线与报告只写 test，正式覆写不自动发布。
+- 计划每周日 UTC 19:10（北京时间每周一 03:10，每7天一次）运行，也支持手动 Run workflow；GitHub 定时任务可能延迟。
+- 先检测上游实质内容变化；有更新才写入 test 并验证，通过后自动发布本轮对应文件到 main。
 - test 缺少的正式文件从 main 补齐；test 已有文件（含微博试用版、诊断覆写）保留。
-- 通过测试后，由维护者按文件发布到 main，禁止把整个历史 test 分支直接合入 main。
+- 仅发布本轮测试通过的精确文件列表，逐项核对测试前后哈希；main 有并发修复或 test 为另一套实现时中止发布，禁止整分支合并。
 - 现有腾讯视频专项同步工作流保留，其原有正式发布行为独立于此工作流。
 
 ## 来源与覆盖
@@ -35,7 +35,7 @@
 - 单个失败不妨碍其他已验证候选进入 test；Actions 最后仍显示失败并提供完整报告。
 - 并发推送不使用 force、不重写历史；远端变动导致推送失败时保留现有远端数据。
 
-报告：test 分支的 `upstream/sync-report.json`、`upstream/resource-report.json` 以及 Actions artifacts/运行摘要。没有时间戳噪声时重复运行不应产生空提交。
+没有实质内容变化时不提交仓库，仅将报告保存到 Actions artifacts/运行摘要。发生更新时，test 保存候选、基线和报告；发布中断的候选保留 pending_publish 标记供下次重试，main 已包含相同哈希的文件不重复发布。
 
 这些是静态/样本自检，不代表 Stash 真机加载及目标 App 功能验证。仅在 YG 明确要求本地测试时进行本机联调。
 
@@ -58,3 +58,10 @@ python scripts/sync-upstreams.py --apply # 仅在 test 检出目录运行
 - 来源登记：110 enrolled、16 local-only、9 test-only；没有覆写更新候选。
 - 资源审计：135 个覆写、249 项资源；134 fetched、80 self-mirror、25 inline、9 HTML、1 HTTP 403，另有 1 个重复 YAML 键错误，共 11 项异常。
 - 最终失败是审计报告的预期信号，不代表工作流未启用；异常没有被自动修改或当成健康资源。
+
+## 每周发布规则与异常修复
+
+- 2026-11-17：改为每7天检测；无内容更新零提交，有更新先test自检后自动按文件发布main。
+- 资源审计使用 provider 已声明的 headers，缓存按 URL + headers 隔离，敏感头不回显。京东原配置已有 UA，不为误报修改其覆写。
+- 超格教育的三个 mock 合并到同一列表，三条静态响应全部保留。MyBlockAds/WebPage 七个 HTML 缓存地址恢复为验证过的原站源码并显式配置其请求头。YouTube test 专用覆写改用作者逐字节一致的公开镜像。
+- 自动检测覆盖仍以 sources.json 的已登记来源为准；review/local 项不伪装为全自动适配，自托管脚本资源审计不等于已接入原作者同步。

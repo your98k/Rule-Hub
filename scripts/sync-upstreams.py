@@ -186,11 +186,14 @@ def resource_gate(root, relative, text):
         spec=importlib.util.spec_from_file_location('upstream_resources_gate',source)
         _RESOURCE_MODULE=importlib.util.module_from_spec(spec);spec.loader.exec_module(_RESOURCE_MODULE)
     inspector=_RESOURCE_MODULE
-    def cached_fetch(url):
-        if url not in _RESOURCE_CACHE:
-            try: _RESOURCE_CACHE[url]=(inspector.default_fetcher(url),None)
-            except Exception as error: _RESOURCE_CACHE[url]=(None,error)
-        content,error=_RESOURCE_CACHE[url]
+    def cached_fetch(url,headers=None):
+        # Cache identity is URL plus provider headers: one host may serve
+        # JavaScript to a specific agent and HTML to anything else.
+        key=inspector.cache_key(url,headers)
+        if key not in _RESOURCE_CACHE:
+            try: _RESOURCE_CACHE[key]=(inspector.call_fetcher(inspector.default_fetcher,url,headers),None)
+            except Exception as error: _RESOURCE_CACHE[key]=(None,error)
+        content,error=_RESOURCE_CACHE[key]
         if error is not None: raise error
         return content
     with tempfile.TemporaryDirectory(prefix='rulehub-candidate-resources-') as directory:
@@ -274,7 +277,20 @@ def run(root,fetcher=fetch,apply=False,selected=None):
         if old and (old['url']!=entry['url'] or old['adapter']!=entry['adapter']):
             status.update(status='blocked',detail='source identity changed; explicit re-enrollment required'); report['results'].append(status); continue
         if old and old['sha256']==digest:
-            status['status']='unchanged'; report['results'].append(status); continue
+            queued=old.get('pending_publish')
+            if queued:
+                target_file=local_path(root,target)
+                if not target_file.is_file() or sha(target_file.read_bytes())!=queued['after_sha256']:
+                    status.update(status='blocked',detail='pending candidate changed after validation')
+                else:
+                    try:
+                        grammar_gate(root,target,target_file.read_text())
+                        pending[target]=target_file.read_text()
+                        status.update(status='updated',retry_publish=True,**queued)
+                    except Exception as error:
+                        status.update(status='blocked',detail=str(error)[:2500])
+            else: status['status']='unchanged'
+            report['results'].append(status); continue
         if old and entry['mode'] in {'review','external','specialized'}:
             status.update(status='review-required',detail='upstream changed; local/specialized adaptation retained',upstream_sha256=digest)
             report['results'].append(status); continue
@@ -319,6 +335,10 @@ def run(root,fetcher=fetch,apply=False,selected=None):
                 if out!=text: grammar_gate(root,target,out); pending[target]=out
             newstate['sources'][target]={'sha256':digest,'snapshot':pack(raw),'url':entry['url'],'adapter':entry['adapter']}
             status['status']='updated' if out!=text else 'baseline-advanced'
+            if out!=text:
+                status['before_sha256']=sha(text.encode())
+                status['after_sha256']=sha(out.encode())
+                newstate['sources'][target]['pending_publish']={'before_sha256':status['before_sha256'],'after_sha256':status['after_sha256']}
         except Exception as error:
             status.update(status='blocked',detail=str(error)[:2500])
         report['results'].append(status)
