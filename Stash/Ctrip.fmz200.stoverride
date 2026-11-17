@@ -5,6 +5,7 @@ name: '携程旅行去广告'
 desc: |-
   适配携程 App 开屏广告及微信小程序推广内容。
 category: '去广告'
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/CtripTravel.png'
 openUrl: 'https://apps.apple.com/cn/app/id379395415'
 author: '奶思（fmz200，上游规则）；Stash 适配'
 homepage: 'https://github.com/fmz200/wool_scripts'
