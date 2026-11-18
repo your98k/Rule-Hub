@@ -1,4 +1,4 @@
-name: 'FilmNoir 内购解锁'
+name: 'FilmNoir解锁内购'
 desc: |-
   解锁 FilmNoir Plus(响应改写,仅本机生效,不经过任何第三方服务)。
   · 只处理 FilmNoir 的 api.revenuecat.com 请求;请求侧解除 RevenueCat 的条件缓存,
@@ -7,7 +7,7 @@ desc: |-
   · 其他 App、非 JSON、结构不符、开关关闭时一律原样放行,不会让内购页报错。
   · 只影响 App 客户端显示,不改 Apple 真实订阅;系统订阅页的到期日不受影响。
   · 自定义参数仅支持 Stash 3.7 及以上版本。
-icon: 'https://raw.githubusercontent.com/fishdown/Icon/refs/heads/master/app/RevenueCat.png'
+icon: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/assets/icons/FilmNoir.png'
 category: '内购解锁'
 date: '2026-11-18'
 version: '2.0.0'
