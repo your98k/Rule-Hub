@@ -85,11 +85,11 @@ http:
     - 'api.revenuecat.com'
   script:
     - name: filmnoir-req
-      match: '^https://api\\.revenuecat\\.com/v1/(subscribers|receipts|customercenter)'
+      match: '^https://api\.revenuecat\.com/v1/(subscribers|receipts|customercenter)'
       type: request
       argument: '{"enable":${args.enable|json},"bundle":${args.bundle|json},"ua":${args.ua|json},"entitlements":${args.entitlements|json},"product_annual":${args.product_annual|json},"product_lifetime":${args.product_lifetime|json},"mode":${args.mode|json},"expiry":${args.expiry|json},"verbose":${args.verbose|json}'
     - name: filmnoir-entitlement
-      match: '^https://api\\.revenuecat\\.com/v1/(subscribers|receipts|customercenter)'
+      match: '^https://api\.revenuecat\.com/v1/(subscribers|receipts|customercenter)'
       type: response
       require-body: true
       binary-mode: false
@@ -226,6 +226,10 @@ script-providers:
           'etag': 1,
           'digest': 1,
           'content-md5': 1,
+          // RevenueCat 的响应验证:签名是对「原始 body」算的,
+          // 我们改过 body 后签名必然不匹配,SDK 会直接判定响应不可信。
+          // 删掉它,SDK 按「未启用验证」处理,才会采用改写后的内容。
+          'x-signature': 1,
         };
         var PURCHASE_DATE = '2024-01-01T00:00:00Z';
         var FAR_FUTURE = '2099-12-31T23:59:59Z';
@@ -329,9 +333,10 @@ script-providers:
         }
 
         // ── 2. 只处理 JSON 响应 ────────────────────────────────────
+        var respStatus = (typeof $response !== 'undefined' && $response && $response.status) || 0;
         var rawBody = typeof $response !== 'undefined' && $response ? $response.body : undefined;
         if (rawBody === undefined || rawBody === null || rawBody === '') {
-          log('skip: empty body (304 or not read)');
+          log('skip: empty body status=' + respStatus + ' (304/204 或未读取 body)');
           done({});
           return;
         }
@@ -460,22 +465,27 @@ script-providers:
           if (!merged.purchase_date) merged.purchase_date = PURCHASE_DATE;
           subscriber.entitlements[name] = merged;
 
+          // 在原有订阅记录上增量覆盖,不要重建:
+          // display_name / management_url / auto_resume_date 等展示字段必须原样保留,
+          // 否则 App 的订阅页会丢掉「Plus Annual」标题和管理链接。
           var prevSub = subscriber.subscriptions[product];
           var mergedSub = prevSub && typeof prevSub === 'object' ? prevSub : {};
-          subscriber.subscriptions[product] = {
-            billing_issues_detected_at: null,
-            expires_date: expires,
-            grace_period_expires_date: null,
-            is_sandbox: false,
-            original_purchase_date: mergedSub.original_purchase_date || PURCHASE_DATE,
-            ownership_type: 'PURCHASED',
-            period_type: 'normal',
-            purchase_date: mergedSub.purchase_date || PURCHASE_DATE,
-            refunded_at: null,
-            store: mergedSub.store || 'app_store',
-            store_transaction_id: mergedSub.store_transaction_id || (isAnnual ? '2000000000000001' : '2000000000000002'),
-            unsubscribe_detected_at: null,
-          };
+          mergedSub.expires_date = expires;
+          mergedSub.grace_period_expires_date = null;
+          mergedSub.billing_issues_detected_at = null;
+          mergedSub.unsubscribe_detected_at = null;
+          if (mergedSub.period_type === 'trial' || mergedSub.period_type === 'intro') mergedSub.period_type = 'normal';
+          if (!mergedSub.period_type) mergedSub.period_type = 'normal';
+          mergedSub.is_sandbox = false;
+          mergedSub.ownership_type = 'PURCHASED';
+          if (mergedSub.refunded_at === undefined) mergedSub.refunded_at = null;
+          if (!mergedSub.original_purchase_date) mergedSub.original_purchase_date = PURCHASE_DATE;
+          if (!mergedSub.purchase_date) mergedSub.purchase_date = PURCHASE_DATE;
+          if (!mergedSub.store) mergedSub.store = 'app_store';
+          if (!mergedSub.store_transaction_id) {
+            mergedSub.store_transaction_id = isAnnual ? '2000000000000001' : '2000000000000002';
+          }
+          subscriber.subscriptions[product] = mergedSub;
 
           if (!isAnnual) {
             subscriber.non_subscriptions[product] = [
