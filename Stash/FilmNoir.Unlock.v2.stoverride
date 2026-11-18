@@ -1,0 +1,527 @@
+name: 'FilmNoir解锁内购'
+desc: |-
+  解锁 FilmNoir Plus(响应改写,仅本机生效,不经过任何第三方服务)。
+  · 只处理 FilmNoir 的 api.revenuecat.com 请求;请求侧解除 RevenueCat 的条件缓存,
+    避免服务端返回 304 导致响应脚本拿不到 body;响应侧在真实 customer info 上补写
+    plus / premier 权益与订阅记录,到期日 2099-12-31。
+  · 其他 App、非 JSON、结构不符、开关关闭时一律原样放行,不会让内购页报错。
+  · 只影响 App 客户端显示,不改 Apple 真实订阅;系统订阅页的到期日不受影响。
+  · 自定义参数仅支持 Stash 3.7 及以上版本。
+icon: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/assets/icons/FilmNoir.png'
+category: '内购解锁'
+date: '2026-11-18'
+version: '2.0.0'
+author: 'your98k'
+
+arguments-version: 1
+arguments:
+  enable:
+    type: switch
+    title: 启用注入
+    description: 关闭后本覆写完全放行,用来快速回退。
+    default: true
+  bundle:
+    type: input
+    title: 目标 App 包名
+    description: 只处理 X-Client-Bundle-ID 等于该值的请求;留空则只靠 UA 识别。
+    default: 'app.filmnoir.appstore'
+    required: true
+    max-length: 128
+  ua:
+    type: input
+    title: UA 兜底前缀
+    description: 请求没有包名头时,用 User-Agent 前缀识别。
+    default: 'FilmNoir/'
+    max-length: 128
+  entitlements:
+    type: input
+    title: 权益名
+    description: 要注入的 entitlements 键名,多个用英文逗号分隔。
+    default: 'plus,premier'
+    required: true
+    max-length: 256
+  mode:
+    type: select
+    title: 权益挂载方式
+    description: both 第一项挂年订阅、其余挂永久;annual 全挂年订阅;lifetime 全挂永久。
+    default: both
+    options:
+      - value: both
+        label: both(年订阅 + 永久)
+      - value: annual
+        label: annual(只有年订阅)
+      - value: lifetime
+        label: lifetime(只有永久)
+  product_annual:
+    type: input
+    title: 年订阅商品 ID
+    description: 与抓包中的商品 ID 一致。
+    default: 'app.filmnoir.appstore.plus.annual'
+    max-length: 256
+  product_lifetime:
+    type: input
+    title: 永久购买商品 ID
+    description: 写进 non_subscriptions 与 other_purchases 的商品 ID。
+    default: 'app.filmnoir.appstore.lifetime'
+    max-length: 256
+  expiry:
+    type: select
+    title: 到期时间
+    description: 2099 写 2099-12-31;nil 写 null(部分老 SDK 视为永久)。
+    default: '2099'
+    options:
+      - value: '2099'
+        label: 2099-12-31
+      - value: nil
+        label: null(永久)
+  verbose:
+    type: switch
+    title: 输出脚本日志
+    description: 排查是否命中时打开,Stash 脚本日志里能看到每次判定结果。
+    default: false
+
+http:
+  mitm:
+    - 'api.revenuecat.com'
+  script:
+    - name: filmnoir-req
+      match: '^https://api\.revenuecat\.com/v1/(subscribers|receipts|customercenter)'
+      type: request
+      argument: '{"enable":${args.enable|json},"bundle":${args.bundle|json},"ua":${args.ua|json},"entitlements":${args.entitlements|json},"product_annual":${args.product_annual|json},"product_lifetime":${args.product_lifetime|json},"mode":${args.mode|json},"expiry":${args.expiry|json},"verbose":${args.verbose|json}'
+    - name: filmnoir-entitlement
+      match: '^https://api\.revenuecat\.com/v1/(subscribers|receipts|customercenter)'
+      type: response
+      require-body: true
+      binary-mode: false
+      max-size: 4194304
+      timeout: 10
+      engine: auto
+      argument: '{"enable":${args.enable|json},"bundle":${args.bundle|json},"ua":${args.ua|json},"entitlements":${args.entitlements|json},"product_annual":${args.product_annual|json},"product_lifetime":${args.product_lifetime|json},"mode":${args.mode|json},"expiry":${args.expiry|json},"verbose":${args.verbose|json}'
+
+script-providers:
+  filmnoir-req:
+    payload: |-
+      /**
+       * FilmNoir · 请求侧解除条件缓存(Stash 版,署名 your98k)
+       *
+       * 背景:RevenueCat SDK 用自定义头 x-revenuecat-etag / x-rc-last-refresh-time
+       * 发起条件请求,服务端直接回 304 Not Modified、不带 body。
+       * 304 没有响应体,response 脚本拿不到任何内容,所以权益永远改不了。
+       * 本脚本在请求发出前删掉这两个头,让服务端返回 200 + 完整 customer info,
+       * 后面的响应脚本才有东西可改。
+       *
+       * 只对命中 bundle 的 FilmNoir 请求生效,其他 App 原样放行。
+       */
+      (function () {
+        var DROP = {
+          'x-revenuecat-etag': 1,
+          'x-rc-last-refresh-time': 1,
+          'if-none-match': 1,
+          'if-modified-since': 1,
+        };
+
+        function trim(s) {
+          return String(s === undefined || s === null ? '' : s).replace(/^\s+|\s+$/g, '');
+        }
+
+        function headerValue(headers, name) {
+          if (!headers) return '';
+          var lower = name.toLowerCase();
+          for (var k in headers) {
+            if (!Object.prototype.hasOwnProperty.call(headers, k)) continue;
+            if (k.toLowerCase() === lower) {
+              var v = headers[k];
+              return Array.isArray(v) ? String(v[0] || '') : String(v === undefined || v === null ? '' : v);
+            }
+          }
+          return '';
+        }
+
+        var cfg = {
+          enable: true,
+          bundle: 'app.filmnoir.appstore',
+          ua: 'FilmNoir/',
+          verbose: false,
+        };
+        try {
+          var raw = typeof $argument === 'undefined' ? '' : $argument;
+          if (raw && typeof raw === 'string' && trim(raw).charAt(0) === '{') {
+            var o = JSON.parse(raw);
+            if (o.enable === false || o.enable === 'false') cfg.enable = false;
+            if (o.bundle) cfg.bundle = trim(o.bundle);
+            if (o.ua) cfg.ua = trim(o.ua);
+            if (o.verbose === true || o.verbose === 'true') cfg.verbose = true;
+          }
+        } catch (e) {
+          /* 参数坏了就用默认值,不影响放行 */
+        }
+
+        if (!cfg.enable) {
+          $done({});
+          return;
+        }
+
+        var req = typeof $request !== 'undefined' && $request ? $request : {};
+        var headers = req.headers || {};
+        var bundle = trim(headerValue(headers, 'x-client-bundle-id')).toLowerCase();
+        var ua = trim(headerValue(headers, 'user-agent'));
+
+        var matched;
+        if (bundle) {
+          matched = bundle === cfg.bundle.toLowerCase();
+        } else {
+          matched = ua.length > 0 && ua.toLowerCase().indexOf(cfg.ua.toLowerCase()) === 0;
+        }
+
+        if (!matched) {
+          $done({});
+          return;
+        }
+
+        var out = {};
+        var dropped = [];
+        for (var k in headers) {
+          if (!Object.prototype.hasOwnProperty.call(headers, k)) continue;
+          if (DROP[k.toLowerCase()]) {
+            dropped.push(k);
+            continue;
+          }
+          out[k] = headers[k];
+        }
+
+        if (cfg.verbose) {
+          try {
+            console.log('filmnoir-req: dropped=' + (dropped.join(',') || '-') + ' url=' + String(req.url || '').slice(0, 80));
+          } catch (e) {
+            /* 日志失败不影响主流程 */
+          }
+        }
+
+        $done({ headers: out });
+      })();
+  filmnoir-entitlement:
+    payload: |-
+      /**
+       * FilmNoir · 本地内购权益注入(Stash 版,署名 your98k)
+       *
+       * 在 App 收到的真实 RevenueCat 响应上做增量补写,不重建结构,
+       * 所以不会出现「内购页白屏/报错」——结构不符时一律原样放行。
+       *
+       * 覆盖三类响应:
+       *   /v1/subscribers/{id}       → {subscriber:{...}}
+       *   /v1/receipts               → {subscriber:{...}}
+       *   /v1/customercenter/{id}    → 结构未定,脚本会自动定位含 entitlements 的对象
+       *
+       * verbose 打开时会把顶层字段名写进 Stash 脚本日志,用来确认结构。
+       */
+      (function () {
+        var PRODUCT_FALLBACK = 'app.filmnoir.appstore.lifetime';
+        var ANNUAL_FALLBACK = 'app.filmnoir.appstore.plus.annual';
+        var DROP_HEADERS = {
+          'content-length': 1,
+          'content-encoding': 1,
+          'transfer-encoding': 1,
+          'connection': 1,
+          'keep-alive': 1,
+          'etag': 1,
+          'digest': 1,
+          'content-md5': 1,
+          // RevenueCat 的响应验证:签名是对「原始 body」算的,
+          // 我们改过 body 后签名必然不匹配,SDK 会直接判定响应不可信。
+          // 删掉它,SDK 按「未启用验证」处理,才会采用改写后的内容。
+          'x-signature': 1,
+        };
+        var PURCHASE_DATE = '2024-01-01T00:00:00Z';
+        var FAR_FUTURE = '2099-12-31T23:59:59Z';
+
+        function log(msg) {
+          try {
+            if (cfg && cfg.verbose) console.log('filmnoir: ' + msg);
+          } catch (e) {
+            /* 日志失败不影响主流程 */
+          }
+        }
+
+        function trim(s) {
+          return String(s === undefined || s === null ? '' : s).replace(/^\s+|\s+$/g, '');
+        }
+
+        function parseArgument(raw) {
+          var out = {
+            enable: true,
+            bundle: 'app.filmnoir.appstore',
+            ua: 'FilmNoir/',
+            entitlements: 'plus,premier',
+            product_lifetime: PRODUCT_FALLBACK,
+            product_annual: ANNUAL_FALLBACK,
+            mode: 'both',
+            expiry: '2099',
+            verbose: false,
+          };
+          if (raw === undefined || raw === null || raw === '') return out;
+
+          var obj = raw;
+          if (typeof raw === 'string') {
+            var s = trim(raw);
+            if (s.charAt(0) !== '{') return out;
+            try {
+              obj = JSON.parse(s);
+            } catch (e) {
+              return out;
+            }
+          }
+          if (!obj || typeof obj !== 'object') return out;
+
+          if (obj.enable === false || obj.enable === 'false') out.enable = false;
+          if (obj.enable === true || obj.enable === 'true') out.enable = true;
+
+          var keys = ['bundle', 'ua', 'entitlements', 'product_lifetime', 'product_annual', 'mode', 'expiry'];
+          for (var i = 0; i < keys.length; i++) {
+            var k = keys[i];
+            if (obj[k] !== undefined && obj[k] !== null && trim(obj[k]) !== '') out[k] = trim(obj[k]);
+          }
+          if (obj.verbose === true || obj.verbose === 'true') out.verbose = true;
+
+          if (['lifetime', 'annual', 'both'].indexOf(out.mode) < 0) out.mode = 'both';
+          if (['2099', 'nil'].indexOf(out.expiry) < 0) out.expiry = '2099';
+          return out;
+        }
+
+        var cfg = parseArgument(typeof $argument === 'undefined' ? '' : $argument);
+
+        function done(value) {
+          $done(value || {});
+        }
+
+        if (!cfg.enable) {
+          log('disabled by argument');
+          done({});
+          return;
+        }
+
+        // ── 1. 只认 FilmNoir ────────────────────────────────────────
+        function headerValue(headers, name) {
+          if (!headers) return '';
+          var lower = name.toLowerCase();
+          for (var k in headers) {
+            if (!Object.prototype.hasOwnProperty.call(headers, k)) continue;
+            if (k.toLowerCase() === lower) {
+              var v = headers[k];
+              return Array.isArray(v) ? String(v[0] || '') : String(v === undefined || v === null ? '' : v);
+            }
+          }
+          return '';
+        }
+
+        var reqHeaders = (typeof $request !== 'undefined' && $request && $request.headers) || {};
+        var bundle = trim(headerValue(reqHeaders, 'x-client-bundle-id')).toLowerCase();
+        var ua = trim(headerValue(reqHeaders, 'user-agent'));
+        var wantBundle = cfg.bundle.toLowerCase();
+        var matched = false;
+
+        if (bundle) {
+          // 有包名就以包名为准:不是 FilmNoir 就不处理,不允许 UA 覆盖包名
+          matched = bundle === wantBundle;
+        } else {
+          matched = ua.length > 0 && ua.toLowerCase().indexOf(cfg.ua.toLowerCase()) === 0;
+        }
+
+        if (!matched) {
+          log('skip: bundle=' + (bundle || '-') + ' ua=' + (ua ? ua.slice(0, 24) : '-'));
+          done({});
+          return;
+        }
+
+        // ── 2. 只处理 JSON 响应 ────────────────────────────────────
+        var respStatus = (typeof $response !== 'undefined' && $response && $response.status) || 0;
+        var rawBody = typeof $response !== 'undefined' && $response ? $response.body : undefined;
+        if (rawBody === undefined || rawBody === null || rawBody === '') {
+          log('skip: empty body status=' + respStatus + ' (304/204 或未读取 body)');
+          done({});
+          return;
+        }
+
+        var text = rawBody;
+        if (typeof text !== 'string') {
+          try {
+            text = new TextDecoder('utf-8').decode(rawBody);
+          } catch (e) {
+            log('skip: body not decodable');
+            done({});
+            return;
+          }
+        }
+
+        var data;
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          log('skip: body is not json');
+          done({});
+          return;
+        }
+        if (!data || typeof data !== 'object') {
+          log('skip: body not object');
+          done({});
+          return;
+        }
+
+        // ── 3. 定位含 entitlements 的 subscriber 对象 ──────────────
+        // /v1/customercenter 的结构官方没公开,这里按已知形态逐层找:
+        //   data.subscriber                                (标准 customer info)
+        //   data.customer_info / data.customerInfo         (部分 SDK 包装)
+        //   data.subscriptions / data.entitlements         (customer center 扁平形态)
+        function looksLikeSubscriber(o) {
+          if (!o || typeof o !== 'object' || Array.isArray(o)) return false;
+          return !!(o.entitlements || o.subscriptions || o.non_subscriptions || o.other_purchases);
+        }
+
+        var holder = null;
+        var keyInHolder = null;
+
+        var candidates = [
+          [data, 'subscriber'],
+          [data, 'customer_info'],
+          [data, 'customerInfo'],
+          [data, 'subscriberInfo'],
+        ];
+        for (var ci = 0; ci < candidates.length; ci++) {
+          var parent = candidates[ci][0];
+          var key = candidates[ci][1];
+          if (looksLikeSubscriber(parent[key])) {
+            holder = parent;
+            keyInHolder = key;
+            break;
+          }
+        }
+        if (!holder && looksLikeSubscriber(data)) {
+          // customercenter 可能直接把 entitlements 放在顶层
+          holder = { __self__: data };
+          keyInHolder = '__self__';
+        }
+
+        if (!holder) {
+          var topKeys = [];
+          for (var tk in data) {
+            if (Object.prototype.hasOwnProperty.call(data, tk)) topKeys.push(tk);
+          }
+          log('skip: no subscriber-like object; top keys=' + topKeys.join(',') +
+              ' url=' + String((typeof $request !== 'undefined' && $request && $request.url) || '').slice(0, 70));
+          done({});
+          return;
+        }
+
+        var subscriber = keyInHolder === '__self__' ? holder.__self__ : holder[keyInHolder];
+
+        // ── 4. 补权益 ──────────────────────────────────────────────
+        var expires = cfg.expiry === 'nil' ? null : FAR_FUTURE;
+
+        var entNames = cfg.entitlements.split(',').map(trim).filter(function (n) {
+          return n.length > 0;
+        });
+        if (entNames.length === 0) {
+          log('skip: no entitlement names');
+          done({});
+          return;
+        }
+
+        if (!subscriber.entitlements || typeof subscriber.entitlements !== 'object') subscriber.entitlements = {};
+        if (!subscriber.subscriptions || typeof subscriber.subscriptions !== 'object') subscriber.subscriptions = {};
+        if (!subscriber.non_subscriptions || typeof subscriber.non_subscriptions !== 'object') subscriber.non_subscriptions = {};
+        if (!subscriber.other_purchases || typeof subscriber.other_purchases !== 'object') subscriber.other_purchases = {};
+
+        // 已存在的订阅记录一律延长:有的 SDK 读 subscriptions,有的读 entitlements,
+        // 两边都补才不会出现「权益有了但订阅仍显示到期」。
+        for (var sk in subscriber.subscriptions) {
+          if (!Object.prototype.hasOwnProperty.call(subscriber.subscriptions, sk)) continue;
+          var srec = subscriber.subscriptions[sk];
+          if (!srec || typeof srec !== 'object') continue;
+          srec.expires_date = expires;
+          if (srec.period_type === 'trial' || srec.period_type === 'intro') srec.period_type = 'normal';
+          srec.unsubscribe_detected_at = null;
+          srec.billing_issues_detected_at = null;
+          srec.grace_period_expires_date = null;
+          srec.is_sandbox = false;
+        }
+
+        function productFor(index) {
+          if (cfg.mode === 'annual') return cfg.product_annual;
+          if (cfg.mode === 'lifetime') return cfg.product_lifetime;
+          return index === 0 ? cfg.product_annual : cfg.product_lifetime;
+        }
+
+        var injected = [];
+
+        for (var idx = 0; idx < entNames.length; idx++) {
+          var name = entNames[idx];
+          var product = productFor(idx);
+          var isAnnual = product === cfg.product_annual && cfg.mode !== 'lifetime';
+
+          var prev = subscriber.entitlements[name];
+          var merged = prev && typeof prev === 'object' ? prev : {};
+          merged.expires_date = expires;
+          if (!merged.grace_period_expires_date) merged.grace_period_expires_date = null;
+          if (cfg.mode !== 'both' || !merged.product_identifier) merged.product_identifier = product;
+          if (!merged.purchase_date) merged.purchase_date = PURCHASE_DATE;
+          subscriber.entitlements[name] = merged;
+
+          // 在原有订阅记录上增量覆盖,不要重建:
+          // display_name / management_url / auto_resume_date 等展示字段必须原样保留,
+          // 否则 App 的订阅页会丢掉「Plus Annual」标题和管理链接。
+          var prevSub = subscriber.subscriptions[product];
+          var mergedSub = prevSub && typeof prevSub === 'object' ? prevSub : {};
+          mergedSub.expires_date = expires;
+          mergedSub.grace_period_expires_date = null;
+          mergedSub.billing_issues_detected_at = null;
+          mergedSub.unsubscribe_detected_at = null;
+          if (mergedSub.period_type === 'trial' || mergedSub.period_type === 'intro') mergedSub.period_type = 'normal';
+          if (!mergedSub.period_type) mergedSub.period_type = 'normal';
+          mergedSub.is_sandbox = false;
+          mergedSub.ownership_type = 'PURCHASED';
+          if (mergedSub.refunded_at === undefined) mergedSub.refunded_at = null;
+          if (!mergedSub.original_purchase_date) mergedSub.original_purchase_date = PURCHASE_DATE;
+          if (!mergedSub.purchase_date) mergedSub.purchase_date = PURCHASE_DATE;
+          if (!mergedSub.store) mergedSub.store = 'app_store';
+          if (!mergedSub.store_transaction_id) {
+            mergedSub.store_transaction_id = isAnnual ? '2000000000000001' : '2000000000000002';
+          }
+          subscriber.subscriptions[product] = mergedSub;
+
+          if (!isAnnual) {
+            subscriber.non_subscriptions[product] = [
+              {
+                id: product,
+                is_sandbox: false,
+                purchase_date: PURCHASE_DATE,
+                store: 'app_store',
+                store_transaction_id: '2000000000000002',
+              },
+            ];
+            subscriber.other_purchases[product] = { purchase_date: PURCHASE_DATE };
+          }
+
+          injected.push(name + ' -> ' + product);
+        }
+
+        var outBody;
+        try {
+          outBody = JSON.stringify(data);
+        } catch (e) {
+          log('skip: serialise failed');
+          done({});
+          return;
+        }
+
+        // ── 5. 清掉旧实体头,长度交给引擎重算 ──────────────────────
+        var outHeaders = {};
+        var srcHeaders = ($response && $response.headers) || {};
+        for (var h in srcHeaders) {
+          if (!Object.prototype.hasOwnProperty.call(srcHeaders, h)) continue;
+          if (DROP_HEADERS[h.toLowerCase()]) continue;
+          outHeaders[h] = srcHeaders[h];
+        }
+
+        log('ok: ' + injected.join(', ') + ' via ' + keyInHolder + ' expires=' + (expires === null ? 'null' : expires));
+
+        $done({ body: outBody, headers: outHeaders });
+      })();
