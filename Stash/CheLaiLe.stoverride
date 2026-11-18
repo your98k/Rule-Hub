@@ -16,6 +16,8 @@ http:
     - 'cdn.api.chelaileapp.cn'
     - 'web.chelaile.net.cn'
     - 'cdn.*.chelaileapp.cn'
+    - 'adx.yg84.com'
+    - 'mobads.baidu.com'
   url-rewrite:
     - '^https?://[^/]*chelaile(?:app)?\.cn/(?:adpub|goocity/advert|goocity/flowPos/home|feserver/vip-page/images/).* - reject'
     - '^https?://[^/]*chelaile\.net\.cn/adpub/.* - reject'

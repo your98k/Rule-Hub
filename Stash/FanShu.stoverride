@@ -10,6 +10,7 @@ version: '1.0.0'
 http:
   mitm:
     - 'g*.dushu365.com'
+    - 'popup.dushu365.com'
   url-rewrite:
     - '^https?://popup\.dushu365\.com/api/v2/sfo/(user_)?popup_(?:config|display)s - reject'
     - '^https?://g[a-z0-9-]+\.dushu365\.com/chief-orch/config/config/v\d+/(?:shortCut|appUpdateUnite|loadingAd) - reject'
