@@ -17,6 +17,7 @@
 | 覆写 | 版本要求 | 说明 | Raw | CDN |
 | :--- | :--- | :--- | :---: | :---: |
 | 菜鸟去广告 | iOS/tvOS 2.8+ | 移植 loon.103516.xyz 插件；首页瀑布流/搜索栏/寄件券/发现页直接 REJECT，四处响应 jq 删广告位；纯原生实现，无远程脚本 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/CaiNiao.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/CaiNiao.stoverride) |
+| HTTPDNS 拦截器 | 通用 | 移植可莉 Block_HTTPDNS.lpx;161 条规则(域名 68 / IP-CIDR 59 / IP-CIDR6 8 / URL-REGEX 16 / USER-AGENT 4 / KEYWORD 2 / AND 4)+ 6 条 url-rewrite;去重 3 条、补 3 个漏掉的 mitm 域名,AND 例外补 UTF-8 UA 变体 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Block_HTTPDNS.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Block_HTTPDNS.stoverride) |
 | Porntube VIP 解锁 | Stash 3.7+ | Yu9191 上游 2026-11-14 四脚本版移植；视频页内嵌播放器按钮（网页播放/lenna/SenPlayer/Infuse/VLC/自定义），5 项原生参数，跳转默认关闭 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Porntube.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Porntube.stoverride) |
 | YouTube 去广告增强版 | Stash 3.7+ | 12 项参数（10 开关 + 字幕/歌词翻译 + 首页补强），内嵌脚本 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/YouTube-ADBlock-Enhanced.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/YouTube-ADBlock-Enhanced.stoverride) |
 | 哔哩哔哩去广告 | Stash 3.7+ | Biliverse v0.7.5 移植，32 项原生参数，无需 BoxJS；内置 8 条 QUIC 拦截 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Bilibili.ADBlock.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Bilibili.ADBlock.stoverride) |
