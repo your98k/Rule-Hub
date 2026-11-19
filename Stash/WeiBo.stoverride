@@ -1,27 +1,31 @@
 name: '微博去广告'
 desc: |-
-  微博与微博国际版净化，原生实现，不依赖远程脚本
-  覆盖信息流、详情页、评论、搜索、超话、开屏
+  微博与微博国际版净化,原生实现,不依赖远程脚本。
+  覆盖开屏、信息流、详情与评论、搜索与发现、超话、个人页、视频与浮层;自定义参数仅支持 Stash 3.7 及以上版本。
 category: '去广告'
-icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/weibo.png
+icon: 'https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/WeiBo.png'
 openUrl: 'https://apps.apple.com/cn/app/id350962117'
-date: '2026-11-16 23:00'
-version: '1.2'
-author: 'ddgksf2013 / zmqcherish（上游规则），Stash 原生重写'
+date: '2026-11-19'
+version: '2.0.0'
+author: 'your98k'
+homepage: 'https://github.com/your98k/Rule-Hub'
 
 arguments-version: 1
 arguments:
   splash:
     type: switch
     title: 开屏广告
+    description: 关闭后开屏接口原样放行。
     default: true
   detail_extra:
     type: switch
-    title: 详情页相关推荐/好物种草/打赏
+    title: 详情页扩展
+    description: 相关推荐、好物种草、打赏、关注提醒、大家都在搜。
     default: true
   comment_related:
     type: switch
-    title: 评论区相关推荐
+    title: 评论区推荐位
+    description: 为你推荐更多精彩内容、氛围调查、伪装成评论的超话与微博官方号。
     default: true
   interest_user:
     type: switch
@@ -29,15 +33,22 @@ arguments:
     default: true
   home_vip:
     type: switch
-    title: 个人页 VIP 卡片
+    title: 个人页会员卡片
     default: true
   lvzhou:
     type: switch
-    title: 绿洲模块
+    title: 商品橱窗/绿洲卡片
+    description: 关闭后信息流里的商品与绿洲卡片保留。
+    default: true
+  main_tab:
+    type: switch
+    title: 顶部 Tab 过滤
+    description: 只保留微博/特别关注/好友圈/视频四个 Tab;有关口消失就关掉它。
     default: true
   debug:
     type: switch
     title: 输出调试日志
+    description: 排查是否命中时打开,Stash 脚本日志里搜 [weibo]。
     default: false
 
 http:
@@ -47,298 +58,1353 @@ http:
     - '*.uve.weibo.com'
     - 'api.weibo.cn'
     - 'api.weibo.com'
-    - 'boot.biz.weibo.com'
+    - 'card.weibo.com'
     - 'mapi.weibo.cn'
     - 'mapi.weibo.com'
     - 'new.vip.weibo.cn'
+    - 'weibo.com'
     - 'weibointl.api.weibo.cn'
     - 'weibointl.api.weibo.com'
   url-rewrite:
-  - '^https?://api\.weibo\.cn/\d/statuses/container_positive - reject-200'
-  - '^https?://api\.weibo\.cn/\d/push/info - reject-200'
-  - '^https?://api\.weibo\.cn/.*account/recommend_interesttags - reject-dict'
-  - '^https?://api\.weibo\.cn/.*/media_homelist - reject-200'
-  - '^https?://api\.weibo\.cn/.*finder/searchbarchange - reject-200'
-  - '^https?://api\.weibo\.cn/\d/ad/preload - reject-dict'
-  - '^https?://api\.weibo\.cn/\d/profile/recommend_popuser - reject-dict'
-  - '^https?://boot.*weibo\.com/v\d/ad/realtime - reject-200'
-  - '^https?://api\.weibo\.cn/.*discovery_home_bottom_getdotinfo - reject-dict'
-  - '^https?://m?api\.weibo\.c(n|om)/\d/push/daily - reject-dict'
-  - '^https?://(preload-click|preload-impression)\.uve\.weibo\.com/(interface/wbpullad/wbpullad_click\.php|wbapplua/get_wbpullad_log\.lua) - reject'
-  - '^https?://sdkapp\.uve\.weibo\.com/interface/sdk/sdkconfig\.php - reject'
-  - '^https?://m?api\.weibo\.c(n|om)/\d/hot/hours_spotlight - reject-dict'
-  - '^https?://api\.weibo\.cn/\d/cardlist\?v_f=.*Weibo_intl - reject-dict'
-  - '^https?://weibointl\.api\.weibo\.c(n|om)/portal\.php\?a=hot_search_users - reject-dict'
-  - '^https?://m?api\.weibo\.c(n|om)/\d/ad/weibointl\? - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/statuses/(container_positive|push_info) - reject-200'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/push/info - reject-200'
+    - '^https?://m?api\.weibo\.c(n|om)/.*account/recommend_interesttags - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/.*/media_homelist - reject-200'
+    - '^https?://m?api\.weibo\.c(n|om)/.*finder/searchbarchange - reject-200'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/ad/preload - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/profile/recommend_popuser - reject-dict'
+    - '^https?://boot(preload|realtime)\.uve\.weibo\.com/v\d/ad/realtime - reject-200'
+    - '^https?://m?api\.weibo\.c(n|om)/.*discovery_home_bottom_getdotinfo - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/push/daily - reject-dict'
+    - '^https?://(preload-click|preload-impression)\.uve\.weibo\.com/(interface/wbpullad/wbpullad_click\.php|wbapplua/get_wbpullad_log\.lua) - reject'
+    - '^https?://sdkapp\.uve\.weibo\.com/interface/sdk/sdkconfig\.php - reject'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/hot/hours_spotlight - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/cardlist\?v_f=.*Weibo_intl - reject-dict'
+    - '^https?://weibointl\.api\.weibo\.c(n|om)/portal\.php\?a=hot_search_users - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/ad/weibointl\? - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/logservice/service\? - reject'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/ug/checkin/list\? - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/!/live/media_homelist\? - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/comments/bullet_screens\? - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/photo/info\? - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/vote/get_vote_detail\? - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/video/redpacket\? - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/video/tiny_video_info_show\? - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/!/chaohua/discovery/home_bottom/switch\? - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/!/huati/(discovery_home_bottom_channels|discovery_home_bottom_getdotinfo|mobile_discovery_searchchange) - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/!/wbox/\w+/(home_bottom_modal|interest_category) - reject-dict'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/!/(search/finder_nav_polling|sug/list/finderchange|was/finder/searchbarchange)\? - reject-200'
+    - '^https?://m?api\.weibo\.c(n|om)/\d/search/(container_discover|finder_nav_polling)\? - reject-dict'
+    - '^https?://sdkapp\.uve\.weibo\.com/interface/sdk/get-lbs-cell-info\.php - reject'
+    - '^https?://card\.weibo\.com/article/m/aj/(reward|uvead) - reject-dict'
+    - '^https?://weibo\.com/ttarticle/x/m/aj/(reward|uvead) - reject-dict'
+    - '^https?://weibointl\.api\.weibo\.c(n|om)/portal\.php\?a=(treehole&auth=|get_searching_info) - reject-dict'
   body-rewrite:
-  - '^https?://api\.weibo\.cn/\d/ug/checkin/stream response-jq .items |= map(select(.category != "card"))'
+    - '^https?://m?api\.weibo\.c(?:n|om)/\d/ug/checkin/stream response-jq .items |= map(select(.category != "card"))'
   script:
     - name: weibo-clean
-      match: '^https?://[^/]+weibo\.(cn|com)/'
+      match: '^https?://m?api\.weibo\.c(?:n|om)/'
       type: response
       require-body: true
       max-size: 8388608
       timeout: 10
       engine: auto
-      argument: '{"splash":${args.splash|json},"detail_extra":${args.detail_extra|json},"comment_related":${args.comment_related|json},"interest_user":${args.interest_user|json},"home_vip":${args.home_vip|json},"lvzhou":${args.lvzhou|json},"debug":${args.debug|json}}'
+      argument: '{"splash":${args.splash|json},"detail_extra":${args.detail_extra|json},"comment_related":${args.comment_related|json},"interest_user":${args.interest_user|json},"home_vip":${args.home_vip|json},"lvzhou":${args.lvzhou|json},"main_tab":${args.main_tab|json},"debug":${args.debug|json}}'
+    - name: weibo-clean
+      match: '^https?://[^/]+\.uve\.weibo\.com/'
+      type: response
+      require-body: true
+      max-size: 8388608
+      timeout: 10
+      engine: auto
+      argument: '{"splash":${args.splash|json},"detail_extra":${args.detail_extra|json},"comment_related":${args.comment_related|json},"interest_user":${args.interest_user|json},"home_vip":${args.home_vip|json},"lvzhou":${args.lvzhou|json},"main_tab":${args.main_tab|json},"debug":${args.debug|json}}'
+    - name: weibo-clean
+      match: '^https?://(?:new\.vip|weibointl\.api)\.weibo\.c(?:n|om)/'
+      type: response
+      require-body: true
+      max-size: 8388608
+      timeout: 10
+      engine: auto
+      argument: '{"splash":${args.splash|json},"detail_extra":${args.detail_extra|json},"comment_related":${args.comment_related|json},"interest_user":${args.interest_user|json},"home_vip":${args.home_vip|json},"lvzhou":${args.lvzhou|json},"main_tab":${args.main_tab|json},"debug":${args.debug|json}}'
 
 script-providers:
   weibo-clean:
-    payload: |
-      var cfg = {};
-      try { cfg = JSON.parse($argument || '{}'); } catch (e) { cfg = {}; }
-      var url = $request.url || '';
-      var body = (typeof $response.body === 'string') ? $response.body : String($response.body || '');
-
-      function log(m) { if (cfg.debug) console.log('[weibo] ' + m); }
-
-      // 判据：一条 mblog / 卡片是否为广告
-      function isAd(m) {
-        if (!m) return false;
-        if (m.mblogtypename === '广告' || m.mblogtypename === '热推') return true;
-        if (m.promotion && m.promotion.type === 'ad') return true;
-        if (m.page_info && m.page_info.actionlog && m.page_info.actionlog.source === 'ad') return true;
-        if (m.content_auth_info && m.content_auth_info.content_auth_title === '广告') return true;
-        return false;
-      }
-
-      // 信息流：删 ads/advertises/trends/headers，过滤 statuses
-      function cleanTimeline(o) {
-        ['ad', 'advertises', 'trends', 'headers'].forEach(function (k) { if (o[k]) delete o[k]; });
-        if (Array.isArray(o.statuses)) {
-          o.statuses = o.statuses.filter(function (s) {
-            if (isAd(s)) return false;
-            if (cfg.lvzhou !== false && s.common_struct) delete s.common_struct;
-            return true;
-          });
-        }
-        log('timeline');
-        return o;
-      }
-
-      // 卡片列表（cardlist/page/searchall 等）
-      function cleanCards(o) {
-        if (o.hotwords) o.hotwords = [];
-        if (Array.isArray(o.cards)) {
-          o.cards = o.cards.filter(function (c) {
-            if ([9, 165].indexOf(c.card_type) >= 0) return !isAd(c.mblog);
-            if ([1007, 180].indexOf(c.card_type) >= 0) return false;
-            if (Array.isArray(c.card_group)) {
-              c.card_group = c.card_group.filter(function (g) {
-                if (g.card_type === 118) return false;
-                if (isAd(g.mblog)) return false;
-                try { if (JSON.stringify(g).indexOf('res_from:ads') >= 0) return false; } catch (e) {}
-                return true;
-              });
+    payload: |-
+      /**
+       * 微博去广告 · Stash 原生响应脚本(署名 your98k)
+       *
+       * 对齐上游 Loon 插件 weibo.lpx(weibo.js 1609 行 / 约 40 个端点)的行为,
+       * 全部逻辑在本地完成,不依赖任何远程脚本。
+       *
+       * 设计约束:
+       *   1. 只改结构已知的字段;任何一步不符预期(非 JSON / 无对应根节点)一律原样放行。
+       *   2. 参数关闭时对应逻辑整段跳过,不产生部分改写。
+       *   3. 改 body 时清理旧实体头(Content-Length / Content-Encoding / ETag 等),长度交给引擎重算。
+       */
+      (function () {
+        // ── 参数 ────────────────────────────────────────────────────────
+        var cfg = {
+          splash: true,          // 开屏广告
+          detail_extra: true,    // 详情页相关推荐/好物种草/打赏
+          comment_related: true, // 评论区相关推荐与伪装评论
+          interest_user: true,   // 可能感兴趣的人/超话
+          home_vip: true,        // 个人页 VIP 卡片
+          lvzhou: true,          // 商品橱窗/绿洲卡片
+          main_tab: true,        // 顶部 Tab 过滤
+          debug: false
+        };
+        try {
+          var rawArg = (typeof $argument === 'undefined' || $argument === null) ? '' : String($argument);
+          if (rawArg) {
+            var ao = JSON.parse(rawArg);
+            for (var ck in cfg) {
+              if (!Object.prototype.hasOwnProperty.call(cfg, ck)) continue;
+              if (!Object.prototype.hasOwnProperty.call(ao, ck)) continue;
+              var v = ao[ck];
+              if (v === false || v === 'false' || v === 0) cfg[ck] = false;
+              else if (v === true || v === 'true' || v === 1) cfg[ck] = true;
             }
-            return true;
+          }
+        } catch (e) { /* 参数坏了走默认值 */ }
+
+        function log(m) {
+          try { if (cfg.debug) console.log('[weibo] ' + m); } catch (e) {}
+        }
+
+        // ── 基础工具 ────────────────────────────────────────────────────
+        function isArr(v) { return Object.prototype.toString.call(v) === '[object Array]'; }
+        function isObj(v) { return !!v && typeof v === 'object' && !isArr(v); }
+        function num(v) { var n = parseInt(v, 10); return isNaN(n) ? -1 : n; }
+        function has(o, k) { return isObj(o) && Object.prototype.hasOwnProperty.call(o, k); }
+        function IN(v, list) { return list.indexOf(v) >= 0; }
+        function del(o, keys) {
+          if (!isObj(o)) return;
+          for (var i = 0; i < keys.length; i++) {
+            if (Object.prototype.hasOwnProperty.call(o, keys[i])) delete o[keys[i]];
+          }
+        }
+        function text(v) { return typeof v === 'string' ? v : ''; }
+
+        // 广告判据:对齐上游 isAd(),另补 readtimetype / ads_material_info
+        function isAd(d) {
+          if (!isObj(d)) return false;
+          if (d.mblogtypename === '广告' || d.mblogtypename === '热推') return true;
+          if (d.readtimetype === 'adMblog') return true;
+          var p = d.promotion;
+          if (isObj(p)) {
+            if (p.recommend === '广告' || p.recommend === '热推') return true;
+            if (typeof p.type === 'string' && p.type.indexOf('ad') >= 0) return true;
+          }
+          var ca = d.content_auth_info;
+          if (isObj(ca) && (ca.content_auth_title === '广告' || ca.content_auth_title === '热推')) return true;
+          if (isObj(d.ads_material_info) && d.ads_material_info.is_ads === true) return true;
+          return false;
+        }
+
+        // 头像挂件、关注按钮、会员等级图标
+        function removeAvatar(d) {
+          if (!isObj(d)) return;
+          del(d, ['block_card_bg', 'buttons', 'cardid', 'icons', 'mblog_buttons', 'pic_bg_new']);
+          if (isObj(d.user)) {
+            del(d.user, ['avatargj_id', 'avatar_extend_info', 'cardid', 'icons', 'mbtype']);
+          }
+        }
+
+        // 信息流推广位、商品橱窗、热评、红包图标
+        function removeFeedAd(it) {
+          if (!isObj(it)) return;
+          removeAvatar(it);
+          if (it.retweeted_status) removeAvatar(it.retweeted_status);
+          del(it, ['action_button_icon_dic', 'comment_summary', 'icons_material', 'semantic_brand_params']);
+          if (cfg.lvzhou) del(it, ['common_struct', 'extend_info']);
+        }
+
+        // 投票窗口
+        function removeVoteInfo(it) {
+          if (!isObj(it)) return;
+          if (isObj(it.page_info) && isObj(it.page_info.media_info)) delete it.page_info.media_info.vote_info;
+        }
+
+        // ── 详情页菜单白名单(上游 itemMenusConfig) ──────────────────────
+        var MENUS = {
+          creatortypeask: false, mblog_menus_apeal: true, mblog_menus_avatar_widget: false,
+          mblog_menus_bullet_shield: true, mblog_menus_card_bg: false, mblog_menus_comment_manager: true,
+          mblog_menus_copy_url: true, mblog_menus_custom: false, mblog_menus_delete: true,
+          mblog_menus_edit: true, mblog_menus_edit_history: true, mblog_menus_edit_video: true,
+          mblog_menus_favorite: true, mblog_menus_follow: true, mblog_menus_home: false,
+          mblog_menus_long_picture: true, mblog_menus_modify_visible: true, mblog_menus_novelty: false,
+          mblog_menus_open_reward: false, mblog_menus_popularize: false, mblog_menus_promote: false,
+          mblog_menus_report: true, mblog_menus_shield: true, mblog_menus_sticking: true,
+          mblog_menus_video_feedback: false, mblog_menus_video_later: false
+        };
+
+        // ══ 开屏 ═══════════════════════════════════════════════════════
+        // interface/sdk/sdkad.php
+        function hSdkad(o) {
+          if (!cfg.splash) return;
+          if (has(o, 'needlocation')) o.needlocation = false;
+          if (o.show_push_splash_ad) o.show_push_splash_ad = false;
+          // 「延迟展示」:上游设一年,设 0 等于立即展示
+          if (o.background_delay_display_time) o.background_delay_display_time = 31536000;
+          if (o.lastAdShow_delay_display_time) o.lastAdShow_delay_display_time = 31536000;
+          if (has(o, 'realtime_ad_video_stall_time')) o.realtime_ad_video_stall_time = 0;
+          if (has(o, 'realtime_ad_timeout_duration')) o.realtime_ad_timeout_duration = 0;
+          if (isArr(o.ads)) {
+            for (var i = 0; i < o.ads.length; i++) {
+              var a = o.ads[i];
+              if (!isObj(a)) continue;
+              a.displaytime = 0;
+              a.displayintervel = 31536000;
+              a.allowdaydisplaynum = 0;
+              a.begintime = '2040-01-01 00:00:00';
+              a.endtime = '2040-01-01 23:59:59';
+            }
+          }
+        }
+
+        // v1/v2 ad/preload
+        function hSplashPreload(o) {
+          if (!cfg.splash) return;
+          var lists = [];
+          if (isArr(o.ads)) lists.push(o.ads);
+          if (isObj(o.ads) && isArr(o.ads.creatives)) lists.push(o.ads.creatives);
+          for (var n = 0; n < lists.length; n++) {
+            var arr = lists[n];
+            for (var i = 0; i < arr.length; i++) {
+              var a = arr[i];
+              if (!isObj(a)) continue;
+              a.start_time = 3818332800;
+              a.end_time = 3818419199;
+              a.daily_display_cnt = 0;
+              a.total_display_cnt = 0;
+              a.display_duration = 0;
+            }
+          }
+        }
+
+        // wbapplua/wbpullad.lua、preload/get_ad
+        function hSplashLua(o) {
+          if (!cfg.splash) return;
+          if (isObj(o.cached_ad) && isArr(o.cached_ad.ads)) {
+            for (var i = 0; i < o.cached_ad.ads.length; i++) {
+              var a = o.cached_ad.ads[i];
+              if (!isObj(a)) continue;
+              a.show_count = 0;
+              a.duration = 0;
+              a.start_date = 3818332800;
+              a.end_date = 3818419199;
+            }
+          }
+        }
+
+        // ══ 信息流 / 卡片 ══════════════════════════════════════════════
+        // /2/cardlist 发现页
+        function hCardlist(o) {
+          del(o, ['top']);
+          if (!isArr(o.cards)) return;
+          var out = [];
+          for (var i = 0; i < o.cards.length; i++) {
+            var c = o.cards[i];
+            if (!isObj(c)) continue;
+            if (isArr(c.card_group)) {
+              var g = [];
+              for (var j = 0; j < c.card_group.length; j++) {
+                var x = c.card_group[j];
+                if (!isObj(x)) continue;
+                // 120/145 视频轮播 192 横版热门视频 6 我的热搜
+                if (IN(num(x.card_type), [120, 145, 192, 6])) continue;
+                if (x.mblog) {
+                  if (isAd(x.mblog)) continue;
+                  removeAvatar(x.mblog);
+                }
+                g.push(x);
+              }
+              c.card_group = g;
+              out.push(c);
+            } else {
+              // 17 猜你想搜 58 搜索偏好设置
+              if (cfg.interest_user && IN(num(c.card_type), [17, 58])) continue;
+              if (c.mblog) {
+                if (isAd(c.mblog)) continue;
+                removeAvatar(c.mblog);
+              }
+              out.push(c);
+            }
+          }
+          o.cards = out;
+        }
+
+        // /2/checkin/show 首页签到
+        function hCheckin(o) {
+          if (has(o, 'show')) o.show = 0;
+          if (has(o, 'show_time')) o.show_time = 0;
+        }
+
+        // /2/client/publisher_list 首页右上角按钮
+        function hPublisher(o) {
+          if (!isArr(o.elements)) return;
+          o.elements = o.elements.filter(function (i) {
+            return isObj(i) && IN(i.app_name, ['写微博', '图片', '视频']);
           });
         }
-        log('cards');
-        return o;
-      }
 
-      // 主页 timeline（container_timeline / 超话）
-      function cleanMainTab(o) {
-        if (o.loadedInfo && o.loadedInfo.headers) delete o.loadedInfo.headers;
-        if (Array.isArray(o.items)) {
-          o.items = o.items.filter(function (it) {
-            if (it.category === 'group') {
-              if (Array.isArray(it.items) && it.items.length) {
-                try { if (JSON.stringify(it.items).indexOf('profile_top') >= 0) return true; } catch (e) {}
+        // /2/container/asyn
+        function hContainerAsyn(o) {
+          if (!isArr(o.items)) return;
+          var out = [];
+          for (var i = 0; i < o.items.length; i++) {
+            var it = o.items[i];
+            if (!isObj(it)) continue;
+            removeAvatar(it.data);
+            if (cfg.interest_user && text(it.itemId).indexOf('infeed_may_interest_in') >= 0) continue;
+            if (it.itemId === null) continue; // 横版博主卡片
+            if (isArr(it.items)) {
+              var g = [];
+              for (var j = 0; j < it.items.length; j++) {
+                var x = it.items[j];
+                if (!isObj(x)) continue;
+                removeAvatar(x.data);
+                removeVoteInfo(x.data);
+                var d = isObj(x.data) ? x.data : {};
+                if (d.itemid === '' && num(d.card_type) === 22) continue; // 商家卡片
+                if (d.itemid === 'Square_HotHuati' && num(d.card_type) === 17) continue; // 热门话题
+                if (d.title === '品牌话题' && num(d.card_type) === 101) continue;
+                g.push(x);
+              }
+              it.items = g;
+            }
+            out.push(it);
+          }
+          o.items = out;
+        }
+
+        // /2/direct_messages/user_list 私信列表
+        function hDm(o) {
+          if (!isArr(o.user_list)) return;
+          o.user_list = o.user_list.filter(function (i) {
+            if (!isObj(i) || !isObj(i.user)) return true;
+            return !IN(i.user.name, ['活动通知', '闪聊']);
+          });
+        }
+
+        // /2/flowlist 关注页
+        function hFlowlist(o) {
+          if (isArr(o.items)) {
+            for (var i = 0; i < o.items.length; i++) {
+              var it = o.items[i];
+              if (!isObj(it) || !isArr(it.items)) continue;
+              for (var j = 0; j < it.items.length; j++) {
+                removeAvatar(it.items[j].data);
+                removeVoteInfo(it.items[j].data);
               }
             }
-            if (it.data && isAd(it.data)) return false;
-            if (it.data && it.data.page_info && it.data.page_info.video_limit) delete it.data.page_info.video_limit;
-            if (it.data && it.data.common_struct && cfg.lvzhou !== false) delete it.data.common_struct;
-            return true;
+          }
+          if (!cfg.main_tab) return;
+          if (isObj(o.channelInfo) && isArr(o.channelInfo.channels)) {
+            o.channelInfo.channels = o.channelInfo.channels.filter(function (t) {
+              var id = isObj(t) ? text(t.flowId) : '';
+              return id.indexOf('_selfrecomm') < 0 && id.indexOf('_chaohua') < 0;
+            });
+          }
+        }
+
+        // /2/flowpage 热搜页
+        function hFlowpage(o) {
+          if (!isArr(o.items)) return;
+          var out = [];
+          for (var i = 0; i < o.items.length; i++) {
+            var it = o.items[i];
+            if (!isObj(it)) continue;
+            if (isObj(it.data) && it.data.itemid === 'hot-search-push-notice') continue; // 开启推送提示
+            if (isArr(it.items)) {
+              var g = [];
+              for (var j = 0; j < it.items.length; j++) {
+                var x = it.items[j];
+                if (!isObj(x)) continue;
+                if (has(x.data, 'promotion')) continue; // 热搜推广项
+                if (text(isObj(x.data) ? x.data.pic : '').indexOf('_img_search_stick') >= 0) continue; // 手动置顶
+                g.push(x);
+              }
+              it.items = g;
+            }
+            out.push(it);
+          }
+          o.items = out;
+        }
+
+        // /2/groups/allgroups/v2 顶部 Tab
+        function hGroups(o) {
+          if (!cfg.main_tab) return;
+          if (!isArr(o.pageDatas)) return;
+          var out = [];
+          for (var i = 0; i < o.pageDatas.length; i++) {
+            var it = o.pageDatas[i];
+            if (!isObj(it)) continue;
+            if (it.pageDataType === 'homeExtend') continue; // 推广 tab
+            if (isArr(it.categories)) {
+              for (var j = 0; j < it.categories.length; j++) {
+                var cate = it.categories[j];
+                if (!isObj(cate) || cate.title !== '默认分组') continue;
+                if (!isArr(cate.pageDatas)) continue;
+                var g = [];
+                for (var k = 0; k < cate.pageDatas.length; k++) {
+                  var ii = cate.pageDatas[k];
+                  if (!isObj(ii)) continue;
+                  if (!IN(ii.title, ['最新微博', '特别关注', '好友圈', '视频'])) continue;
+                  if (ii.title === '最新微博') ii.title = '微博';
+                  g.push(ii);
+                }
+                cate.pageDatas = g;
+              }
+            }
+            out.push(it);
+          }
+          o.pageDatas = out;
+        }
+
+        // /2/messageflow/notice 消息动态
+        function hMessageflow(o) {
+          if (!isArr(o.messages)) return;
+          o.messages = o.messages.filter(function (m) {
+            return !(isObj(m) && isObj(m.msg_card) && m.msg_card.ad_tag);
           });
         }
-        log('mainTab');
-        return o;
-      }
 
-      // 详情页及评论区
-      function cleanComments(o) {
-        var bad = ['广告', '廣告', '相关内容', '推荐', '热推', '推薦', '荐读'];
-        if (o.pageHeader && o.pageHeader.data && Array.isArray(o.pageHeader.data.items)) {
-          o.pageHeader.data.items = o.pageHeader.data.items.filter(function (i) { return i.category === 'detail'; });
+        // /2/page 搜索页列表、超话
+        function hPage(o) {
+          if (isArr(o.cards)) {
+            if (isObj(o.cards[0]) && isArr(o.cards[0].card_group)) {
+              o.cards[0].card_group = o.cards[0].card_group.filter(function (c) {
+                if (!isObj(c)) return false;
+                var ext = isObj(c.actionlog) ? text(c.actionlog.ext) : '';
+                var id = text(c.itemid);
+                return !(ext.indexOf('ads_word') >= 0 || id.indexOf('t:51') >= 0 || id.indexOf('ads_word') >= 0);
+              });
+            }
+            o.cards = o.cards.filter(function (i) {
+              if (!isObj(i)) return false;
+              var id = text(i.itemid);
+              if (id.indexOf('feed_-_invite') >= 0) return false;         // 超话里的好友
+              if (id.indexOf('infeed_friends_recommend') >= 0) return false; // 好友关注
+              if (cfg.interest_user && id.indexOf('infeed_may_interest_in') >= 0) return false;
+              if (id.indexOf('infeed_pagemanual3') >= 0) return false;    // 手动区域3
+              if (id.indexOf('infeed_weibo_mall') >= 0) return false;     // 微博小店
+              if (isObj(i.mblog) && text(i.mblog.mblogtypename).indexOf('广告') >= 0) return false;
+              return true;
+            });
+          } else if (isArr(o.card_group)) {
+            o.card_group = o.card_group.filter(function (i) {
+              return isObj(i) && text(i.desc).indexOf('你可能感兴趣的超话') >= 0;
+            });
+          }
         }
-        if (Array.isArray(o.items)) {
+
+        // ══ 个人页 ═════════════════════════════════════════════════════
+        function hProfileTimeline(o) {
+          if (isObj(o.loadedInfo)) delete o.loadedInfo.follow_guide_info;
+          if (!isArr(o.items)) return;
+          var out = [];
+          for (var i = 0; i < o.items.length; i++) {
+            var it = o.items[i];
+            if (!isObj(it)) continue;
+            var d = isObj(it.data) ? it.data : {};
+            // 全部微博(0) 的博主 / 刷完后的推荐微博:后面的都是填充,直接截断
+            if (num(d.card_type) === 216 && isArr(d.left_hint) && isObj(d.left_hint[0]) &&
+                d.left_hint[0].content === '全部微博(0)') break;
+            if (num(d.card_type) === 58 && text(d.name).indexOf('内容') >= 0) break;
+
+            if (it.category === 'card') {
+              if (IN(num(d.card_type), [58, 216]) && text(d.name).indexOf('没有公开博文,为你推荐以下精彩内容') >= 0) continue;
+              out.push(it);
+            } else if (it.category === 'group') {
+              if (isObj(it.header) && isObj(it.header.data)) delete it.header.data.icon;
+              if (cfg.interest_user && text(it.itemId).indexOf('INTEREST_PEOPLE') >= 0) continue;
+              if (it.profile_type_id === 'weibo_cardpics') continue; // 近期热门/精选微博/那年今日
+              if (isArr(it.items)) {
+                var g = [];
+                for (var j = 0; j < it.items.length; j++) {
+                  var ii = it.items[j];
+                  if (!isObj(ii)) continue;
+                  if (ii.category === 'feed') {
+                    removeAvatar(ii.data);
+                    removeFeedAd(ii.data);
+                    removeVoteInfo(ii.data);
+                    if (isObj(ii.data) && ii.data.enable_comment_guide) ii.data.enable_comment_guide = false;
+                    g.push(ii);
+                  } else if (ii.category === 'card') {
+                    if (IN(num(isObj(ii.data) ? ii.data.card_type : -1), [10, 48, 176])) continue;
+                    if (isObj(ii.data)) del(ii.data, ['rightImage', 'backgroundImage']);
+                    g.push(ii);
+                  }
+                }
+                it.items = g;
+              }
+              out.push(it);
+            } else if (it.category === 'feed') {
+              if (isAd(d)) continue;
+              removeFeedAd(d);
+              removeVoteInfo(d);
+              if (text(d.source).indexOf('生日动态') >= 0) continue;
+              if (isObj(d.title) && d.title.text !== '热门' && isArr(d.title.structs) && d.title.structs.length) continue;
+              out.push(it);
+            }
+          }
+          o.items = out;
+        }
+
+        // /2/profile/dealatt、/2/friendships/* 关注后菜单
+        function hFollowMenu(o) {
+          if (isArr(o.cards)) o.cards = [];
+          if (isObj(o.toolbar_menus_new) && isArr(o.toolbar_menus_new.items)) {
+            o.toolbar_menus_new.items = o.toolbar_menus_new.items.filter(function (i) {
+              if (!isObj(i)) return false;
+              if (i.identifier === 'recommend') return false;
+              if (text(i.identifier).indexOf('reward_') >= 0) return false;
+              return true;
+            });
+          }
+        }
+
+        // /2/profile/me 我的页面
+        function hProfileMe(o) {
+          if (has(o, 'vipHeaderBgImage')) delete o.vipHeaderBgImage;
+          if (!isArr(o.items)) return;
+          var out = [];
+          for (var i = 0; i < o.items.length; i++) {
+            var it = o.items[i];
+            if (!isObj(it)) continue;
+            var id = text(it.itemId);
+            if (id === 'profileme_mine') {
+              if (isObj(it.header) && cfg.home_vip) del(it.header, ['vipView', 'vipCenter', 'vipIcon']);
+              if (isArr(it.items)) {
+                for (var j = 0; j < it.items.length; j++) {
+                  var d = it.items[j];
+                  if (!isObj(d) || d.itemId !== 'mainnums_friends') continue;
+                  try {
+                    var mod = d.click.modules[0];
+                    mod.scheme = text(mod.scheme).replace('231093_-_selfrecomm', '231093_-_selffollowed');
+                  } catch (e) {}
+                }
+              }
+              out.push(it);
+            } else if (id === '100505_-_top8') {
+              if (isArr(it.items)) {
+                it.items = it.items.filter(function (x) {
+                  return isObj(x) && IN(x.itemId, ['100505_-_album', '100505_-_like', '100505_-_watchhistory', '100505_-_draft']);
+                });
+              }
+              out.push(it);
+            } else if (id === '100505_-_manage') {
+              del(it, ['style', 'images']);
+              out.push(it);
+            } else if (id === '100505_-_manage2') {
+              del(it, ['footer', 'body']);
+              out.push(it);
+            } else if (id === '100505_-_chaohua' || id === '100505_-_recentlyuser') {
+              out.push(it);
+            }
+            // 其余条目(推广位)丢弃
+          }
+          o.items = out;
+        }
+
+        // /2/profile/statuses/tab
+        function hProfileStatuses(o) {
+          if (isArr(o.cards)) {
+            var out = [];
+            for (var i = 0; i < o.cards.length; i++) {
+              var c = o.cards[i];
+              if (!isObj(c)) continue;
+              if (isArr(c.card_group)) {
+                var g = [];
+                for (var j = 0; j < c.card_group.length; j++) {
+                  var x = c.card_group[j];
+                  if (!isObj(x)) continue;
+                  if (num(x.card_type) === 22) continue; // 那年今天
+                  if (x.mblog) { removeAvatar(x.mblog); removeVoteInfo(x.mblog); }
+                  g.push(x);
+                }
+                c.card_group = g;
+                out.push(c);
+              } else {
+                if (c.mblog) { removeAvatar(c.mblog); removeVoteInfo(c.mblog); }
+                out.push(c);
+              }
+            }
+            o.cards = out;
+          }
+          if (isObj(o.cardlistInfo) && o.cardlistInfo.page_type === '08') delete o.cardlistInfo;
+        }
+
+        // /2/profile/userinfo 个人详情页
+        function hUserinfo(o) {
+          if (isObj(o.header) && isObj(o.header.data) && isObj(o.header.data.userInfo)) {
+            delete o.header.data.userInfo.avatar_extend_info;
+          }
+          if (isObj(o.profileSkin)) delete o.profileSkin.data;
+          if (isObj(o.footer) && isObj(o.footer.data)) {
+            var tb = o.footer.data.toolbar_menus_new;
+            if (isObj(tb)) {
+              delete tb.lottie_guide;
+              if (isObj(tb.servicePopup)) delete tb.servicePopup.subData;
+              if (isArr(tb.items)) {
+                tb.items = tb.items.filter(function (i) {
+                  if (!isObj(i)) return false;
+                  if (i.identifier === 'recommend' || i.identifier === 'urge') return false;
+                  if (text(i.identifier).indexOf('reward_') >= 0) return false;
+                  return true;
+                });
+              }
+            }
+          }
+        }
+
+        // /2/push/active 首页浮层与红包
+        function hPushActive(o) {
+          del(o, ['compose_add_guide', 'floating_windows_force_show', 'interceptad', 'interceptad_cardlist',
+                  'loginconfig', 'profile_lotties', 'ug_red_paper', 'weibo_pic_banner']);
+          if (has(o, 'disable_floating_window')) o.disable_floating_window = '1';
+          if (isObj(o.feed_redpacket)) {
+            o.feed_redpacket.starttime = '2208960000';
+            o.feed_redpacket.interval = '31536000';
+            o.feed_redpacket.endtime = '2209046399';
+            del(o.feed_redpacket, ['finish_icon', 'guide', 'icon', 'pre_icon']);
+          }
+          if (has(o, 'floating_window_for_live_streaming')) o.floating_window_for_live_streaming = false;
+          if (has(o, 'floating_window_show_interval')) o.floating_window_show_interval = 31536000;
+          if (isArr(o.floating_windows)) {
+            o.floating_windows = o.floating_windows.filter(function (i) {
+              var st = isObj(i) ? text(i.subtype) : '';
+              return !(/^(?:ad_?|red_pocket|ug_high_priority)/.test(st));
+            });
+          }
+        }
+
+        // ══ 搜索 ═══════════════════════════════════════════════════════
+        // 搜索页 / 发现页 信息流(container_timeline 与 finder 共用条目过滤)
+        var SEARCH_CARD_DROP = [19, 22, 101, 118, 206, 208, 217, 236, 249, 261];
+        var SEARCH_GROUP_DROP = [101, 118, 182, 192, 217, 247, 264];
+
+        function searchItems(items) {
+          if (!isArr(items)) return null;
+          var out = [];
+          for (var i = 0; i < items.length; i++) {
+            var it = items[i];
+            if (!isObj(it)) continue;
+            var d = isObj(it.data) ? it.data : {};
+            if (it.category === 'feed') {
+              if (isAd(d)) continue;
+              removeFeedAd(d);
+              out.push(it);
+            } else if (it.category === 'card') {
+              if (IN(num(d.card_type), SEARCH_CARD_DROP)) continue;
+              if (d.itemid === 'ads_slide') continue;       // 商业推广主图
+              if (d.cate_id === '1114') continue;           // 微博趋势标题
+              if (has(d, 'rank')) continue;                 // 各类排行榜
+              out.push(it);
+            } else if (it.category === 'cell') {
+              out.push(it);                                 // 保留分割线
+            } else if (it.category === 'group') {
+              if (it.item_category === 'insert_item') continue; // 内嵌热搜/个性化开关
+              if (isArr(it.items)) {
+                var g = [];
+                for (var j = 0; j < it.items.length; j++) {
+                  var ii = it.items[j];
+                  if (!isObj(ii)) continue;
+                  var dd = isObj(ii.data) ? ii.data : {};
+                  if (IN(num(dd.card_type), SEARCH_GROUP_DROP)) continue;
+                  if (dd.cate_id === '1114') continue;
+                  removeFeedAd(dd);
+                  g.push(ii);
+                }
+                it.items = g;
+              }
+              out.push(it);
+            }
+          }
+          return out;
+        }
+
+        function hSearchTimeline(o) {
+          if (has(o, 'loadedInfo')) delete o.loadedInfo;
+          var r = searchItems(o.items);
+          if (r) o.items = r;
+        }
+
+        function hSearchFinder(o) {
+          var ci = o.channelInfo;
+          if (isObj(ci) && isArr(ci.channels)) {
+            var keep = [];
+            for (var i = 0; i < ci.channels.length; i++) {
+              var ch = ci.channels[i];
+              if (!isObj(ch)) continue;
+              if (!IN(ch.key, ['band_channel', 'discover_channel', 'trends_channel'])) continue;
+              var pl = ch.payload;
+              if (isObj(pl)) {
+                if (isObj(pl.loadedInfo)) {
+                  if (isArr(pl.loadedInfo.searchBarContent)) pl.loadedInfo.searchBarContent = [];
+                  if (isObj(pl.loadedInfo.headerBack)) delete pl.loadedInfo.headerBack.channelStyleMap;
+                  delete pl.loadedInfo.searchBarStyleInfo;
+                }
+                var r = searchItems(pl.items);
+                if (r) pl.items = r;
+              }
+              keep.push(ch);
+            }
+            ci.channels = keep;
+            if (has(ci, 'moreChannels')) delete ci.moreChannels;
+          }
+          if (isObj(o.header)) {
+            delete o.header.insert_data;
+            if (isObj(o.header.data) && isArr(o.header.data.items)) {
+              var hdr = [];
+              for (var k = 0; k < o.header.data.items.length; k++) {
+                var it = o.header.data.items[k];
+                if (!isObj(it)) continue;
+                var d = isObj(it.data) ? it.data : {};
+                if (it.category === 'card') {
+                  if (IN(num(d.card_type), SEARCH_CARD_DROP)) continue;
+                  if (has(d, 'rank')) continue;
+                } else if (it.category === 'group' && isArr(it.items)) {
+                  var g = [];
+                  for (var m = 0; m < it.items.length; m++) {
+                    var ii = it.items[m];
+                    if (!isObj(ii)) continue;
+                    if (IN(num(isObj(ii.data) ? ii.data.card_type : -1), SEARCH_GROUP_DROP)) continue;
+                    g.push(ii);
+                  }
+                  it.items = g;
+                }
+                hdr.push(it);
+              }
+              o.header.data.items = hdr;
+            }
+          }
+        }
+
+        // /2/searchall 综合搜索
+        function hSearchAll(o) {
+          if (isObj(o.header) && isObj(o.header.data)) {
+            del(o.header.data, ['bg_img', 'background_scheme', 'background_url']);
+          }
+          if (isObj(o.loadedInfo) && isObj(o.loadedInfo.serviceMap)) delete o.loadedInfo.serviceMap.layer;
+          if (isObj(o.footer) && isObj(o.footer.data)) {
+            var f = o.footer.data;
+            del(f, ['bg_lottie', 'bg_lottie_dark', 'discuss_avatars']);
+            if (isArr(f.menus)) {
+              f.menus = f.menus.filter(function (i) {
+                return !(isObj(i) && /\d+_ai\./.test(text(i.pic)));
+              });
+            }
+          }
+          var ALL_GROUP_DROP = [3, 17, 22, 30, 42, 89, 101, 206];
+          if (isArr(o.cards)) {
+            var cards = [];
+            for (var i = 0; i < o.cards.length; i++) {
+              var c = o.cards[i];
+              if (!isObj(c)) continue;
+              if (isArr(c.card_group)) {
+                var g = [];
+                for (var j = 0; j < c.card_group.length; j++) {
+                  var x = c.card_group[j];
+                  if (!isObj(x)) continue;
+                  if (num(x.card_type) === 22) continue;                    // 横版广告图
+                  if (num(x.card_type) === 42 && x.title_extra_text === '广告') continue;
+                  if (num(x.card_type) === 3 && isArr(x.pics) && x.pics.length) continue;
+                  if (x.mblog) {
+                    if (isAd(x.mblog)) continue;
+                    del(x.mblog, ['title_source', 'source_tag_struct']);
+                    if (cfg.lvzhou) del(x.mblog, ['extend_info', 'common_struct']);
+                    removeAvatar(x.mblog);
+                    removeVoteInfo(x.mblog);
+                    if (num(x.mblog.is_ad) === 1) continue;                 // 新版热推
+                  }
+                  g.push(x);
+                }
+                c.card_group = g;
+                cards.push(c);
+              } else if (c.mblog) {
+                if (isAd(c.mblog)) continue;
+                removeAvatar(c.mblog);
+                del(c.mblog, ['title_source', 'source_tag_struct']);
+                if (cfg.lvzhou) del(c.mblog, ['extend_info', 'common_struct']);
+                removeVoteInfo(c.mblog);
+                if (isObj(c.mblog.page_info) && isArr(c.mblog.page_info.cards)) {
+                  for (var n = 0; n < c.mblog.page_info.cards.length; n++) {
+                    var pc = c.mblog.page_info.cards[n];
+                    if (isObj(pc) && isObj(pc.media_info)) delete pc.media_info.vote_info;
+                  }
+                }
+                cards.push(c);
+              }
+            }
+            o.cards = cards;
+          }
+          // 13.11.1 起 cards 变 items
+          if (isArr(o.items)) {
+            var items = [];
+            for (var a = 0; a < o.items.length; a++) {
+              var it = o.items[a];
+              if (!isObj(it)) continue;
+              if (isAd(it.data)) continue;
+              var d = isObj(it.data) ? it.data : {};
+              if (it.category === 'feed') {
+                removeFeedAd(d);
+                removeVoteInfo(d);
+                items.push(it);
+              } else if (it.category === 'group') {
+                if (isArr(it.items)) {
+                  var gi = [];
+                  for (var b = 0; b < it.items.length; b++) {
+                    var ii = it.items[b];
+                    if (!isObj(ii)) continue;
+                    if (ii.cate_id === '638' && ii.readtimetype === 'card') continue; // 大家都在问
+                    if (isAd(ii.data)) continue;
+                    removeFeedAd(ii.data);
+                    var cdt = num(isObj(ii.data) ? ii.data.card_type : -1);
+                    if (IN(cdt, ALL_GROUP_DROP)) continue;
+                    if (cdt === 4 && ii.data.cate_id === '640') continue;
+                    if (cdt === 42 && ii.data.is_ads === true) continue;
+                    gi.push(ii);
+                  }
+                  it.items = gi;
+                }
+                items.push(it);
+              } else {
+                items.push(it);
+              }
+            }
+            o.items = items;
+          }
+        }
+
+        // /2/shproxy/chaohua/discovery/searchactive 超话搜索
+        function hChaohuaSearch(o) {
+          if (!isArr(o.items)) return;
           o.items = o.items.filter(function (i) {
-            var d = i.data || {};
-            if (cfg.comment_related === false) return true;
-            if (bad.indexOf(d.adType || '') >= 0) return false;
-            if (d.card_type === 6 || d.card_type === 236) return false;
-            return true;
+            return !(isObj(i) && isObj(i.data) && num(i.data.card_type) === 1007);
           });
         }
-        if (cfg.comment_tip !== false && o.tip_msg) delete o.tip_msg;
-        log('comments');
-        return o;
-      }
 
-      // 详情页扩展（相关推荐 / 好物种草 / 关注 / 打赏）
-      function cleanExtend(o) {
-        if (cfg.detail_extra === false) return o;
-        try {
-          var t = o.trend && o.trend.titles && o.trend.titles.title;
-          if (t === '相关推荐' || t === '博主好物种草') delete o.trend;
-        } catch (e) {}
-        if (o.follow_data) o.follow_data = null;
-        if (o.reward_info) o.reward_info = null;
-        if (o.head_cards) delete o.head_cards;
-        if (o.page_alerts) o.page_alerts = null;
-        log('extend');
-        return o;
-      }
-
-      // 个人页
-      function cleanProfile(o) {
-        if (Array.isArray(o.items)) {
-          o.items = o.items.filter(function (it) {
-            var id = it.itemId || '';
-            if (id === '100505_-_newcreator' && it.type !== 'grid') {
-              return cfg.home_creator === true;
+        // ══ 详情页与评论 ═══════════════════════════════════════════════
+        function hDetail(o) {
+          if (isObj(o.pageHeader) && isObj(o.pageHeader.data) && isArr(o.pageHeader.data.items)) {
+            var out = [];
+            for (var i = 0; i < o.pageHeader.data.items.length; i++) {
+              var it = o.pageHeader.data.items[i];
+              if (!isObj(it)) continue;
+              var d = isObj(it.data) ? it.data : {};
+              if (it.category === 'card' && num(d.is_ad_card) === 1) continue;  // 底部卡片广告
+              if (it.category === 'card' && num(d.card_type) === 227) continue; // 铁粉参与互动
+              if (it.category === 'group' && isArr(it.items) && it.items.length && cfg.detail_extra) continue;
+              if (it.category === 'wboxcard' && num(d.card_type) === 236) continue;
+              if (d.itemid === 'top_searching' && num(d.card_type) === 248) continue;
+              out.push(it);
             }
-            if (cfg.interest_user !== false && it.category === 'group') {
-              try {
-                if (it.items && it.items[0] && it.items[0].data && it.items[0].data.desc === '可能感兴趣的人') return false;
-              } catch (e) {}
+            o.pageHeader.data.items = out;
+          }
+          var ext = isObj(o.detailInfo) && isObj(o.detailInfo.extend) ? o.detailInfo.extend : null;
+          if (ext && cfg.detail_extra) del(ext, ['ai_search_share', 'follow_data', 'reward_info', 'sharecontent']);
+          if (isObj(o.detailInfo) && isObj(o.detailInfo.status)) delete o.detailInfo.status.reward_info;
+        }
+
+        function hCommentsExpand(o) {
+          if (!isArr(o.items)) return;
+          for (var i = 0; i < o.items.length; i++) removeAvatar(isObj(o.items[i]) ? o.items[i].data : null);
+        }
+
+        function hDetailComment(o) {
+          if (!isArr(o.items)) return;
+          var out = [];
+          for (var i = 0; i < o.items.length; i++) {
+            var it = o.items[i];
+            if (!isObj(it)) continue;
+            if (it.type === 'trend' || it.type === 'comment_header_tip') continue; // 广告位与铁粉提示
+            if (isObj(it.data)) {
+              removeAvatar(it.data);
+              if (num(it.data.card_type) === 236 || it.data.itemid === 'ai_summary_entrance_real_show') continue;
+              del(it.data, ['comment_bubble', 'comment_bullet_screens_message', 'hot_icon', 'vip_button']);
             }
-            return true;
-          });
-        }
-        if (cfg.home_vip !== false) {
-          o.items && o.items.forEach(function (it) {
-            if (it.itemId === 'profileme_mine' && it.header) {
-              if (it.header.vipView) it.header.vipView = null;
-              if (it.header.vipIcon) delete it.header.vipIcon;
+            if (isArr(it.items)) {
+              var g = [];
+              for (var j = 0; j < it.items.length; j++) {
+                var ii = it.items[j];
+                if (!isObj(ii)) continue;
+                if (isObj(ii.data)) {
+                  removeAvatar(ii.data);
+                  if (cfg.comment_related && text(ii.data.user && ii.data.user.name).indexOf('微博智搜') >= 0) continue;
+                  del(ii.data, ['comment_bubble', 'comment_bullet_screens_message', 'hot_icon', 'vip_button']);
+                }
+                g.push(ii);
+              }
+              it.items = g;
             }
-          });
+            out.push(it);
+          }
+          o.items = out;
         }
-        log('profile');
-        return o;
-      }
 
-      // 开屏：preload（rpc 时间戳推远）
-      function cleanAdPreload(o) {
-        if (cfg.splash === false) return o;
-        if (Array.isArray(o.ads)) {
-          o.last_ad_show_interval = 86400;
-          o.ads.forEach(function (a) {
-            a.start_time = 2681574400; a.end_time = 2681660799;
-            a.display_duration = 0; a.daily_display_cnt = 0; a.total_display_cnt = 0;
-          });
+        // /2/comments/build_comments 评论区
+        function hComments(o) {
+          var ADS_TYPE = [6, 15, 41]; // 为你推荐更多精彩内容 / 过滤提示 / 氛围调查
+          if (isArr(o.datas)) {
+            var out = [];
+            for (var i = 0; i < o.datas.length; i++) {
+              var it = o.datas[i];
+              if (!isObj(it) || !isObj(it.data)) continue;
+              var d = it.data;
+              if (isAd(d)) continue;
+              del(d, ['comment_bubble', 'comment_bullet_screens_message', 'hot_icon', 'vip_button']);
+              if (isObj(d.user)) {
+                removeAvatar(d);
+                if (cfg.comment_related && /(超话社区|微博)/.test(text(d.user.name))) continue;
+              }
+              if (cfg.comment_related && IN(num(it.type), ADS_TYPE)) continue;
+              if (has(it, 'adType')) continue;
+              out.push(it);
+            }
+            o.datas = out;
+          } else if (isArr(o.root_comments)) {
+            var rc = [];
+            for (var j = 0; j < o.root_comments.length; j++) {
+              var r = o.root_comments[j];
+              if (!isObj(r) || isAd(r)) continue;
+              del(r, ['comment_bubble']);
+              if (isObj(r.data)) {
+                del(r.data, ['comment_bubble', 'comment_bullet_screens_message', 'hot_icon', 'vip_button']);
+              }
+              if (isObj(r.user)) {
+                removeAvatar(r);
+                if (cfg.comment_related && IN(r.user.name, ['超话社区', '微博视频'])) continue;
+              }
+              rc.push(r);
+            }
+            o.root_comments = rc;
+          } else if (isArr(o.comments)) {
+            var cs = [];
+            for (var k = 0; k < o.comments.length; k++) {
+              var c = o.comments[k];
+              if (!isObj(c)) continue;
+              if (isObj(c.reply_comment)) delete c.reply_comment.comment_badge;
+              if (isObj(c.user)) delete c.user.icons;
+              cs.push(c);
+            }
+            o.comments = cs;
+          }
+          if (isObj(o.rootComment)) delete o.rootComment.comment_bubble;
+          if (isObj(o.status)) removeVoteInfo(o.status);
         }
-        log('adPreload');
-        return o;
-      }
 
-      // 开屏：sdkad.php
-      function cleanPhpSplash(o) {
-        if (cfg.splash === false) return o;
-        if (Array.isArray(o.ads)) {
-          o.show_push_splash_ad = false;
-          o.background_delay_display_time = 0;
-          o.lastAdShow_delay_display_time = 0;
-          o.realtime_ad_video_stall_time = 0;
-          o.realtime_ad_timeout_duration = 0;
-          o.ads.forEach(function (a) {
-            a.displaytime = 1; a.displayintervel = 86400;
-            a.allowdaydisplaynum = 0; a.displaynum = 0;
-            a.begintime = '2029-12-30 00:00:00'; a.endtime = '2029-12-30 23:59:59';
-          });
+        // ══ 时间线 ═════════════════════════════════════════════════════
+        function hHotTimeline(o) {
+          del(o, ['ad', 'advertises', 'trends', 'headers']);
+          if (isArr(o.items)) {
+            var out = [];
+            for (var i = 0; i < o.items.length; i++) {
+              var it = o.items[i];
+              if (!isObj(it)) continue;
+              if (isAd(it.data)) continue;
+              if (it.category !== 'feed') continue; // 其余为推广位
+              removeFeedAd(it.data);
+              removeVoteInfo(it.data);
+              out.push(it);
+            }
+            o.items = out;
+          }
+          if (isArr(o.statuses)) {
+            var st = [];
+            for (var j = 0; j < o.statuses.length; j++) {
+              var s = o.statuses[j];
+              if (!isObj(s) || isAd(s)) continue;
+              removeFeedAd(s);
+              st.push(s);
+            }
+            o.statuses = st;
+          }
         }
-        log('phpSplash');
-        return o;
-      }
 
-      // 开屏：lua 缓存
-      function cleanLuaSplash(o) {
-        if (cfg.splash === false) return o;
-        if (o.cached_ad && Array.isArray(o.cached_ad.ads)) {
-          o.cached_ad.ads.forEach(function (a) {
-            a.start_date = 1893254400; a.show_count = 0;
-            a.duration = 0; a.end_date = 1893340799;
-          });
+        function hFollowTimeline(o) {
+          if (isObj(o.loadedInfo)) delete o.loadedInfo.headers;
+          if (cfg.lvzhou) delete o.common_struct;
+          if (!isArr(o.items)) return;
+          var out = [];
+          for (var i = 0; i < o.items.length; i++) {
+            var it = o.items[i];
+            if (!isObj(it)) continue;
+            if (isAd(it.data) || isAd(it.status)) continue;
+
+            if (it.category === 'dynamic') {
+              var s = isObj(it.status) ? it.status : {};
+              del(s, ['action_button_icon_dic']);
+              removeFeedAd(s);
+              removeVoteInfo(s);
+              if (isObj(s.title) && isArr(s.title.structs) && s.title.structs.length) continue; // 未关注人消息
+              if (isArr(s.screen_name_suffix_new) && isObj(s.screen_name_suffix_new[3]) &&
+                  s.screen_name_suffix_new[3].content === '快转了') continue;
+              if (isObj(s.title) && text(s.title.text).indexOf('精选') >= 0) continue;
+              if (isObj(s.user) && s.user.following === false) continue;
+              if (isObj(s.user) && num(s.user.unfollowing_recom_switch) === 1) s.user.unfollowing_recom_switch = 0;
+              if (isArr(s.tag_struct) && s.tag_struct.length) s.tag_struct = [];
+              out.push(it);
+            } else if (it.category === 'feed') {
+              var d = isObj(it.data) ? it.data : {};
+              del(d, ['action_button_icon_dic']);
+              removeFeedAd(d);
+              removeVoteInfo(d);
+              if (isObj(d.title) && isArr(d.title.structs) && d.title.structs.length) continue;
+              if (isArr(d.screen_name_suffix_new) && isObj(d.screen_name_suffix_new[3]) &&
+                  d.screen_name_suffix_new[3].content === '快转了') continue;
+              if (isObj(d.title) && text(d.title.text).indexOf('精选') >= 0) continue;
+              if (isObj(d.user) && d.user.following === false) continue;
+              if (isObj(d.user) && num(d.user.unfollowing_recom_switch) === 1) d.user.unfollowing_recom_switch = 0;
+              if (isArr(d.tag_struct) && d.tag_struct.length) d.tag_struct = [];
+              out.push(it);
+            } else if (it.category === 'feedBiz') {
+              out.push(it); // 特别关注管理按钮
+            }
+            // 其余为推广位
+          }
+          o.items = out;
         }
-        log('luaSplash');
-        return o;
-      }
 
-      // ── 国际版 ──
-      // portal.php?a=open_app：帖子下方 banner
-      function cleanIntlBanner(o) {
-        if (o.data) {
-          if (o.data.close_ad_setting) delete o.data.close_ad_setting;
+        function hTopicTimeline(o) {
+          if (isObj(o.header) && isObj(o.header.data)) delete o.header.data.follow_guide_info;
+          if (!isArr(o.items)) return;
+          var out = [];
+          for (var i = 0; i < o.items.length; i++) {
+            var it = o.items[i];
+            if (!isObj(it)) continue;
+            if (it.category === 'feed') {
+              removeAvatar(it.data);
+              if (isAd(it.data)) continue;
+              if (isObj(it.data) && isObj(it.data.title) && text(it.data.title.text).indexOf('新人导师') >= 0) {
+                delete it.data.title;
+              }
+              out.push(it);
+            } else if (it.category === 'card') {
+              var cdt = num(isObj(it.data) ? it.data.card_type : -1);
+              // 4/197 你可能感兴趣的超话 236 壁纸故事 1012 热门超话
+              if (IN(cdt, [4, 197, 236, 1012]) && cfg.interest_user) continue;
+              if (cdt === 31 && isObj(it.data) && isArr(it.data.hotwords) && it.data.hotwords.length) it.data.hotwords = [];
+              if (cdt === 22 && has(it.data, 'card_ad_style')) continue;
+              out.push(it);
+            } else if (it.category === 'group') {
+              if (isObj(it.style)) delete it.style.topHover;
+              if (isArr(it.items)) {
+                if (it.itemId === null) {
+                  var g1 = [];
+                  for (var j = 0; j < it.items.length; j++) {
+                    var ii = it.items[j];
+                    if (!isObj(ii)) continue;
+                    if (has(ii.data, 'itemid')) {
+                      var id = text(ii.data.itemid);
+                      if (id.indexOf('mine_topics') >= 0) g1.push(ii);
+                      else if (id.indexOf('tab_search_input') >= 0) {
+                        if (isArr(ii.data.hotwords)) ii.data.hotwords = [{ word: '搜索超话' }];
+                        g1.push(ii);
+                      } else if (id.indexOf('poiRankList') >= 0) g1.push(ii);
+                    } else {
+                      g1.push(ii);
+                    }
+                    removeAvatar(ii.data);
+                  }
+                  it.items = g1;
+                } else {
+                  var g2 = [];
+                  for (var k = 0; k < it.items.length; k++) {
+                    var i2 = it.items[k];
+                    if (!isObj(i2) || !isObj(i2.data)) continue;
+                    if (cfg.lvzhou) delete i2.data.common_struct;
+                    removeAvatar(i2.data);
+                    // 1008 关注你感兴趣的超话 1024 超话顶部发现
+                    if (cfg.interest_user && IN(num(i2.data.card_type), [1008, 1024])) continue;
+                    g2.push(i2);
+                  }
+                  it.items = g2;
+                }
+              }
+              if (isObj(it.header) && isObj(it.header.arrayText) &&
+                  isArr(it.header.arrayText.contents) && it.header.arrayText.contents.length) continue;
+              out.push(it);
+            }
+          }
+          o.items = out;
+        }
+
+        // /2/statuses/extend 详情页扩展
+        function hExtend(o) {
+          if (isObj(o.trend)) {
+            var pic = text(o.trend.extra_struct && o.trend.extra_struct.extBtnInfo && o.trend.extra_struct.extBtnInfo.btn_picurl);
+            if (pic.indexOf('ad') >= 0) delete o.trend;
+          }
+          if (isObj(o.trend) && isObj(o.trend.titles)) {
+            var t = text(o.trend.titles.title);
+            if (/(博主好物种草|相关推荐|专区)/.test(t)) delete o.trend;
+          }
+          if (cfg.detail_extra) {
+            del(o, ['bubble_guide_data', 'button_extra_info', 'display_info', 'extend_info', 'floating_button',
+                    'follow_data', 'head_cards', 'highlight', 'interaction_extra_info', 'page_alerts',
+                    'reward_info', 'source_tag_struct', 'top_cards']);
+          }
+          if (isArr(o.custom_action_list)) {
+            var out = [];
+            for (var i = 0; i < o.custom_action_list.length; i++) {
+              var it = o.custom_action_list[i];
+              if (!isObj(it)) continue;
+              if (it.type === 'mblog_menus_copy_url') out.unshift(it);
+              else if (MENUS[it.type] === true) out.push(it);
+            }
+            o.custom_action_list = out;
+          }
+          if (has(o, 'has_common_struct')) o.has_common_struct = false;
+          if (has(o, 'enable_comment_guide')) o.enable_comment_guide = false;
+        }
+
+        // /2/statuses/repost_timeline 转发区
+        function hRepost(o) {
+          var keys = ['hot_reposts', 'reposts'];
+          for (var i = 0; i < keys.length; i++) {
+            var arr = o[keys[i]];
+            if (!isArr(arr)) continue;
+            o[keys[i]] = arr.filter(function (x) { return !isAd(x); });
+          }
+        }
+
+        // /2/statuses/show
+        function hShow(o) {
+          removeFeedAd(o);
+          if (isObj(o.text)) removeFeedAd(o.text);
+          delete o.reward_info;
+          removeVoteInfo(o);
+        }
+
+        // ══ 视频 ═══════════════════════════════════════════════════════
+        function hVideoFull(o) {
+          if (!isArr(o.statuses)) return;
+          var out = [];
+          for (var i = 0; i < o.statuses.length; i++) {
+            var s = o.statuses[i];
+            if (!isObj(s) || isAd(s)) continue;
+            removeAvatar(s);
+            if (isObj(s.video_info) && isArr(s.video_info.tags)) s.video_info.tags = [];
+            out.push(s);
+          }
+          o.statuses = out;
+        }
+
+        function hVideoMid(o) {
+          var vi = isObj(o.status) && isObj(o.status.video_info) ? o.status.video_info : null;
+          if (!vi) return;
+          if (isArr(vi.shopping)) vi.shopping = [];
+          if (vi.bottom_banner) vi.bottom_banner = {};
+          if (vi.float_info) vi.float_info = {};
+        }
+
+        function hVideoList(o) {
+          if (isArr(o.statuses)) o.statuses = []; // 关闭自动连播
+          if (isArr(o.tab_list)) o.tab_list = [];
+        }
+
+        // ══ 超话 / 图标 ════════════════════════════════════════════════
+        function hHuati(o) {
+          delete o.button_configs;
+          var ci = o.channelInfo;
+          if (isObj(ci) && isArr(ci.channel_list)) {
+            ci.channel_list = ci.channel_list.filter(function (t) {
+              return !(isObj(t) && t.title === '广场');
+            });
+          }
+        }
+
+        function hAppicon(o) {
+          if (!isObj(o.data) || !isArr(o.data.list)) return;
+          for (var i = 0; i < o.data.list.length; i++) {
+            var it = o.data.list[i];
+            if (isObj(it) && has(it, 'cardType')) it.cardType = 2;
+          }
+        }
+
+        // ══ 国际版 portal.php ══════════════════════════════════════════
+        function hIntlBanner(o) {
+          if (!isObj(o.data)) return;
+          delete o.data.close_ad_setting;
           if (o.data.detail_banner_ad) o.data.detail_banner_ad = [];
         }
-        log('intlBanner');
-        return o;
-      }
 
-      // portal.php?a=get_coopen_ads：开屏
-      function cleanIntlOpenAds(o) {
-        if (cfg.splash === false) return o;
-        if (o.data) o.data = { display_ad: 1 };
-        log('intlOpenAds');
-        return o;
-      }
+        function hIntlOpenAds(o) {
+          if (!cfg.splash) return;
+          o.data = { display_ad: 1 };
+        }
 
-      // portal.php?a=search_topic：搜索页话题
-      function cleanSearchTopic(o) {
-        if (o.data && o.data.search_topic) {
+        function hSearchTopic(o) {
+          if (!isObj(o.data)) return;
           var st = o.data.search_topic;
-          if (st.cards) {
-            st.cards = Object.keys(st.cards).map(function (k) { return st.cards[k]; })
-              .filter(function (c) { return c && c.type !== 'searchtop'; });
+          if (isObj(st) && isObj(st.cards)) {
+            var out = [];
+            for (var k in st.cards) {
+              if (!Object.prototype.hasOwnProperty.call(st.cards, k)) continue;
+              var c = st.cards[k];
+              if (isObj(c) && c.type === 'searchtop') continue;
+              out.push(c);
+            }
+            st.cards = out;
           }
-          if (o.data.trending_topic) delete o.data.trending_topic;
+          delete o.data.trending_topic;
         }
-        log('searchTopic');
-        return o;
-      }
 
-      // 路由
-      var out = null;
-      try {
-        if (/portal\.php/.test(url)) {
-          if (/a=open_app/.test(url)) out = cleanIntlBanner;
-          else if (/a=get_coopen_ads/.test(url)) out = cleanIntlOpenAds;
-          else if (/a=search_topic/.test(url)) out = cleanSearchTopic;
-        }
-        else if (/ad\/preload/.test(url)) out = cleanAdPreload;
-        else if (/ad\/realtime/.test(url)) out = cleanAdPreload;
-        else if (/sdkad\.php/.test(url)) out = cleanPhpSplash;
-        else if (/wbpullad\.lua/.test(url)) out = cleanLuaSplash;
-        else if (/container_detail|container\/get_item/.test(url)) out = cleanComments;
-        else if (/statuses\/extend/.test(url)) out = cleanExtend;
-        else if (/profile\/(me|container_timeline)/.test(url)) out = cleanProfile;
-        else if (/container_timeline|groups\/timeline|unread_topic_timeline/.test(url)) out = cleanMainTab;
-        else if (/friends.*timeline|hot_timeline|video_mixtimeline|timeline/.test(url)) out = cleanTimeline;
-        else if (/cardlist|searchall|page\?|flowpage|search\/|finder/.test(url)) out = cleanCards;
-      } catch (e) { log('route err ' + e); }
-
-      if (!out) { $done({}); }
-      else {
-        try {
-          var m = body.match(/\{[\s\S]*\}/);
-          if (!m) { $done({}); }
-          else {
-            var data = JSON.parse(m[0]);
-            out(data);
-            var nb = JSON.stringify(data);
-            if (/sdkad\.php/.test(url)) nb += 'OK';
-            $done({ body: nb });
+        function hIntlTrends(o) {
+          if (!isObj(o.data)) return;
+          del(o.data, ['banner', 'user_footprint', 'profile_accessrecord', 'native_content', 'topics']);
+          if (isArr(o.data.discover)) {
+            o.data.discover = o.data.discover.filter(function (d) {
+              return !(isObj(d) && d.schema === '尊享会员');
+            });
           }
-        } catch (e) {
-          log('parse err ' + e);
-          $done({});
+          if (isArr(o.data.cards)) {
+            for (var i = 0; i < o.data.cards.length; i++) {
+              var c = o.data.cards[i];
+              if (!isObj(c) || !isArr(c.items)) continue;
+              for (var j = 0; j < c.items.length; j++) {
+                var it = c.items[j];
+                if (isObj(it) && it.type === 'personal_vip') it.right_text = '';
+              }
+            }
+          }
         }
-      }
+
+        // ══ 路由(顺序敏感:更具体的路径必须在前) ══════════════════════
+        function pick(url) {
+          if (/portal\.php/.test(url)) {
+            if (/a=open_app/.test(url)) return hIntlBanner;
+            if (/a=get_coopen_ads/.test(url)) return hIntlOpenAds;
+            if (/a=search_topic/.test(url)) return hSearchTopic;
+            if (/a=trends/.test(url)) return hIntlTrends;
+            return null;
+          }
+          if (/\/interface\/sdk\/sdkad\.php/.test(url)) return hSdkad;
+          if (/\/aj\/appicon\/list/.test(url)) return hAppicon;
+          if (/\/v[12]\/ad\/preload/.test(url)) return hSplashPreload;
+          if (/wbpullad\.lua/.test(url) || /\/preload\/get_ad/.test(url)) return hSplashLua;
+
+          if (/\/2\/cardlist/.test(url)) return hCardlist;
+          if (/\/2\/checkin\/show/.test(url)) return hCheckin;
+          if (/\/2\/client\/publisher_list/.test(url)) return hPublisher;
+          if (/\/2\/comments\/build_comments/.test(url)) return hComments;
+          if (/\/2\/container\/asyn/.test(url)) return hContainerAsyn;
+          if (/\/2\/direct_messages\/user_list/.test(url)) return hDm;
+          if (/\/2\/flowlist/.test(url)) return hFlowlist;
+          if (/\/2\/flowpage/.test(url)) return hFlowpage;
+          if (/\/2\/groups\/allgroups\/v2/.test(url)) return hGroups;
+          if (/\/2\/messageflow\/notice/.test(url)) return hMessageflow;
+          if (/\/2\/page\?/.test(url)) return hPage;
+
+          if (/\/2\/profile\/container_timeline/.test(url)) return hProfileTimeline;
+          if (/\/2\/profile\/dealatt/.test(url)) return hFollowMenu;
+          if (/\/2\/friendships\//.test(url)) return hFollowMenu;
+          if (/\/2\/profile\/me/.test(url)) return hProfileMe;
+          if (/\/2\/profile\/statuses\/tab/.test(url)) return hProfileStatuses;
+          if (/\/2\/profile\/userinfo/.test(url)) return hUserinfo;
+          if (/\/2\/push\/active/.test(url)) return hPushActive;
+
+          if (/\/2\/search\/container_timeline/.test(url)) return hSearchTimeline;
+          if (/\/2\/search\/finder/.test(url)) return hSearchFinder;
+          if (/\/2\/searchall/.test(url)) return hSearchAll;
+          if (/\/2\/shproxy\/chaohua\/discovery\/searchactive/.test(url)) return hChaohuaSearch;
+
+          if (/\/2\/statuses\/container_detail\?/.test(url)) return hDetail;
+          if (/\/2\/statuses\/comments_expand_child/.test(url)) return hCommentsExpand;
+          if (/\/2\/statuses\/container_detail_comment/.test(url)) return hDetailComment;
+          if (/\/2\/statuses\/container_timeline_topic/.test(url)) return hTopicTimeline;
+          if (/\/2\/statuses\/container_timeline_hot/.test(url)) return hHotTimeline;
+          if (/\/2\/statuses\/unread_hot_timeline/.test(url)) return hHotTimeline;
+          if (/\/2\/statuses\/container_timeline/.test(url)) return hFollowTimeline;
+          if (/\/2\/statuses\/extend/.test(url)) return hExtend;
+          if (/\/2\/statuses\/repost_timeline/.test(url)) return hRepost;
+          if (/\/2\/statuses\/show/.test(url)) return hShow;
+
+          if (/\/2\/video\/full_screen_stream/.test(url)) return hVideoFull;
+          if (/\/2\/video\/tiny_stream_mid_detail/.test(url)) return hVideoMid;
+          if (/\/2\/video\/tiny_stream_video_list/.test(url)) return hVideoList;
+          if (/\/2\/!\/huati\/discovery_home_bottom_channels/.test(url)) return hHuati;
+          return null;
+        }
+
+        // ── 主流程 ──────────────────────────────────────────────────────
+        var url = text($request && $request.url);
+        var body = ($response && typeof $response.body === 'string') ? $response.body : '';
+        if (!body) { $done({}); return; }
+
+        var handler = pick(url);
+        if (!handler) { $done({}); return; }
+
+        // sdkad.php 的响应体尾部带非 JSON 尾巴,原样保留语义:抽出 JSON 处理后再补 'OK'
+        var isSdkad = handler === hSdkad;
+        var o = null;
+        try { o = JSON.parse(body); } catch (e) { o = null; }
+        if (o === null) {
+          var s = body.indexOf('{'), t = body.lastIndexOf('}');
+          if (s >= 0 && t > s) {
+            try { o = JSON.parse(body.substring(s, t + 1)); } catch (e2) { o = null; }
+          }
+        }
+        if (!isObj(o)) { $done({}); return; }
+
+        try { handler(o); } catch (e) { log('handler error: ' + e); $done({}); return; }
+
+        var nb = JSON.stringify(o);
+        if (isSdkad) nb += 'OK';
+        if (nb === body) { $done({}); return; }
+
+        var DROP = {
+          'content-length': 1, 'content-encoding': 1, 'transfer-encoding': 1,
+          'connection': 1, 'keep-alive': 1, etag: 1, digest: 1, 'content-md5': 1
+        };
+        var src = ($response && $response.headers) || {};
+        var out = {};
+        for (var h in src) {
+          if (!Object.prototype.hasOwnProperty.call(src, h)) continue;
+          if (DROP[String(h).toLowerCase()]) continue;
+          out[h] = src[h];
+        }
+
+        log('ok ' + url.replace(/^https?:\/\/[^/]+/, '').slice(0, 60) + ' ' + body.length + '->' + nb.length);
+        $done({ body: nb, headers: out });
+      })();
 
 rules:
-  - 'DOMAIN-SUFFIX,api.touch-moblie.com,REJECT,pre-matching'
   - 'DOMAIN-SUFFIX,adstrategy.biz.weibo.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,api.touch-moblie.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,ad.weibo.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,adimg.uve.weibo.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,alitui.weibo.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,alitui.weibo.com.cn,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,beacon.sina.com.cn,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,biz.weibo.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,click.uve.weibo.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,datacollection.uve.weibo.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,dp.im.weibo.cn,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,dsp.edm.weibo.cn,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,game.weibo.cn,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,game.weibo.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,huodong.weibo.cn,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,adpinpai.video.weibocdn.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,promote.biz.weibo.cn,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,sax.sina.com.cn,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,saxn.sina.com.cn,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,saxs.sina.com.cn,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,tui.weibo.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,u1.img.mobile.sina.cn,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,wax.weibo.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,wax.weibo.com.cn,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,weibomingzi.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,widget.weibo.com,REJECT,pre-matching'
+  - 'DOMAIN-SUFFIX,zymo.mps.weibo.com,REJECT,pre-matching'
+  - 'DOMAIN,bootpreload.uve.weibo.com,DIRECT'
+  - 'DOMAIN,bootrealtime.uve.weibo.com,DIRECT'
   - 'DOMAIN,sdkapp.uve.weibo.com,DIRECT'
+  - 'DOMAIN,wbapp.uve.weibo.com,DIRECT'
+  # ── 强制回落 HTTP/2:QUIC 不走 HTTP 引擎,脚本与改写对 HTTP/3 完全无效 ──
+  - 'AND,((DOMAIN-SUFFIX,api.weibo.cn),(PROTOCOL,QUIC)),REJECT,no-track'
+  - 'AND,((DOMAIN-SUFFIX,api.weibo.com),(PROTOCOL,QUIC)),REJECT,no-track'
+  - 'AND,((DOMAIN-SUFFIX,uve.weibo.com),(PROTOCOL,QUIC)),REJECT,no-track'
+  - 'AND,((DOMAIN-SUFFIX,weibointl.api.weibo.cn),(PROTOCOL,QUIC)),REJECT,no-track'
