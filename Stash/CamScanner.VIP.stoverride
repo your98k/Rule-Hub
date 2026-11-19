@@ -1,9 +1,11 @@
 name: '扫描全能王 解锁至尊会员'
-desc: '改写至尊会员属性及已有 OCR、PDF 转 Word 等配额；自定义参数仅支持 Stash 3.7 及以上版本。'
+desc: |-
+  改写至尊会员属性与全部功能配额;会员节点缺失时自动补建,适配不同账号与版本的响应结构。
+  自定义参数仅支持 Stash 3.7 及以上版本。
 icon: 'https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/CSsaomiaoquannengwang.png'
 category: '会员解锁'
 date: '2026-11-19'
-version: '2.0.0'
+version: '2.1.0'
 author: 'your98k'
 homepage: 'https://github.com/your98k/Rule-Hub'
 
@@ -55,14 +57,20 @@ script-providers:
        *
        * 与旧 mock 版的区别:
        *   旧版用 mock 整包替换成 54 字节 {"data":{"psnl_vip_property":{"expiry":"2013017600"}}},
-       *   只骗到了「会员标识」,丢掉了配额字段(ocr_balance / pdfword_balance 等),
+       *   只骗到「会员标识」,丢掉了配额字段(ocr_balance / pdfword_balance 等),
        *   所以 App 显示会员但高级功能仍按免费额度走。
        *
-       *   本版在服务器真实响应上做增量补写:
-       *     1. 保留 ret / server_time / 全部原有字段结构,不重建 JSON;
-       *     2. psnl_vip_property 补齐 vip_type / grade / svip / is_super_vip / auto_renewal 等;
-       *     3. 配额类字段改为「无限」语义的大值,让客户端不再弹额度用尽;
-       *     4. 任何一步不符合预期(非 JSON / 无 data / 开关关闭)原样放行。
+       *   本版在服务器真实响应上做增量补写,不重建 JSON。
+       *
+       * v2.1 修正(2026-11-19):
+       *   旧版把会员节点写死成 data.psnl_vip_property,节点不存在就整包放行。
+       *   实测存在多种响应形态,同一份覆写在不同账号/版本上表现不一致:
+       *     - data.psnl_vip_property        ← 我这边抓到的形态
+       *     - data.cs_vip                   ← property_id 里就叫 cs_vip,部分账号返这个
+       *     - data.vip_property / *vip_property
+       *     - psnl_vip_property 是 JSON 字符串(二次编码)
+       *     - data 为空对象,会员字段压根没下发
+       *   现在按结构找节点,找不到就补建,不再因为键名不同就放行。
        *
        * 参数(Stash 3.7+):
        *   {"enable":true,"expiry":2013017600,"quota":9999999,"verbose":false}
@@ -74,14 +82,6 @@ script-providers:
 
         function trim(s) {
           return String(s === undefined || s === null ? '' : s).replace(/^\s+|\s+$/g, '');
-        }
-
-        function log(msg) {
-          try {
-            if (cfg.verbose) console.log('camscanner: ' + msg);
-          } catch (e) {
-            /* 日志失败不影响主流程 */
-          }
         }
 
         var cfg = { enable: true, expiry: DEFAULT_EXPIRY, quota: DEFAULT_QUOTA, verbose: false };
@@ -100,6 +100,14 @@ script-providers:
           /* 参数坏了走默认值,不影响放行 */
         }
 
+        function log(msg) {
+          try {
+            if (cfg.verbose) console.log('camscanner: ' + msg);
+          } catch (e) {
+            /* 日志失败不影响主流程 */
+          }
+        }
+
         if (!cfg.enable) {
           log('disabled');
           $done({});
@@ -113,27 +121,114 @@ script-providers:
           return;
         }
 
-        var data;
+        var root;
         try {
-          data = JSON.parse(body);
+          root = JSON.parse(body);
         } catch (e) {
           log('skip: not json');
           $done({});
           return;
         }
-
-        if (!data || typeof data !== 'object' || !data.data || typeof data.data !== 'object') {
-          log('skip: no data');
+        if (!root || typeof root !== 'object') {
+          log('skip: not object');
           $done({});
           return;
         }
 
-        var d = data.data;
-        var vip = d.psnl_vip_property;
-        if (!vip || typeof vip !== 'object') {
-          log('skip: no psnl_vip_property');
+        function isObj(v) {
+          return !!v && typeof v === 'object' && Object.prototype.toString.call(v) !== '[object Array]';
+        }
+
+        // 业务错误码不是 0 时不碰,避免把报错响应改成「成功」
+        if (root.ret !== undefined && root.ret !== null && String(root.ret) !== '0' && String(root.ret) !== '') {
+          log('skip: ret=' + root.ret);
           $done({});
           return;
+        }
+
+        // ── 定位容器:正常是 data,个别形态把会员字段直接放根上 ──────────
+        var d = isObj(root.data) ? root.data : null;
+
+        // ── 找会员节点:按结构认,不认死键名 ────────────────────────────
+        // 判据:键名含 vip_property / cs_vip,或对象里出现 vip_type / expiry 这类会员专有字段
+        function looksLikeVip(v) {
+          if (!isObj(v)) return false;
+          if ('vip_type' in v || 'is_super_vip' in v || 'svip' in v) return true;
+          if ('expiry' in v && ('grade' in v || 'group1_paid' in v || 'auto_renewal' in v)) return true;
+          return false;
+        }
+
+        var vip = null;
+        var vipKey = '';
+
+        function scan(container, depth) {
+          if (!isObj(container) || depth > 2 || vip) return;
+          var keys = Object.keys(container);
+          // 第一优先:名字明确指向会员属性的键
+          for (var i = 0; i < keys.length; i++) {
+            var k = keys[i];
+            var v = container[k];
+            if (!isObj(v)) continue;
+            if (/vip_property|^cs_vip$/i.test(k)) { vip = v; vipKey = k; return; }
+          }
+          // 第二优先:结构上像会员节点
+          for (var j = 0; j < keys.length; j++) {
+            var k2 = keys[j];
+            if (looksLikeVip(container[k2])) { vip = container[k2]; vipKey = k2; return; }
+          }
+          // 第三优先:往下一层找(data 里可能还套一层)
+          for (var m = 0; m < keys.length; m++) {
+            var v2 = container[keys[m]];
+            if (isObj(v2)) scan(v2, depth + 1);
+            if (vip) return;
+          }
+        }
+
+        if (d) {
+          scan(d, 0);
+        } else {
+          scan(root, 0);
+        }
+
+        // 字符串形态:会员属性被二次编码成 JSON 字符串
+        var vipAsString = false;
+        var vipHolder = null;
+        if (!vip) {
+          var holder = d || root;
+          var cands = Object.keys(holder);
+          for (var ci = 0; ci < cands.length; ci++) {
+            var cv = holder[cands[ci]];
+            if (typeof cv === 'string' && cv.charAt(0) === '{') {
+              try {
+                var parsed = JSON.parse(cv);
+                if (looksLikeVip(parsed)) {
+                  vip = parsed; vipKey = cands[ci];
+                  vipAsString = true; vipHolder = holder;
+                  break;
+                }
+              } catch (e) { /* 不是 JSON,跳过 */ }
+            }
+          }
+        }
+
+        // 兜底:重建容器与节点。到这里说明服务器没下发会员字段(或下发了空结构)
+        if (!d) {
+          // 会员节点原来挂在根上时,建出 data 后把它挪进去 —— 客户端读的是 data 层
+          var hadAtRoot = vipKey && (vipKey in root);
+          d = {};
+          root.data = d;
+          if (hadAtRoot) {
+            d[vipKey] = vip;
+            delete root[vipKey];
+          }
+        }
+        if (!vip) {
+          vipKey = 'psnl_vip_property';
+          vip = {};
+          d[vipKey] = vip;
+          log('create: no vip node, building ' + vipKey);
+        } else {
+          log('found: vip node at ' + vipKey);
         }
 
         // ── 1. 会员属性:按真实响应结构逐字段补齐 ──────────────────
@@ -155,49 +250,72 @@ script-providers:
         if (!vip.initial_tm || vip.initial_tm === '0') vip.initial_tm = String(PURCHASE_DATE);
         if (!vip.renew_method) vip.renew_method = 'appstore';
         if (!vip.last_payment_method) vip.last_payment_method = 'appstore';
-        if (!vip.vip_level_info || typeof vip.vip_level_info !== 'object') {
+        if (!isObj(vip.vip_level_info)) {
           vip.vip_level_info = { create_time: 0, level: 0, score: 0, next_score: 0 };
         }
         vip.vip_level_info.level = 1;
-        if (!vip.level_info || typeof vip.level_info !== 'object') vip.level_info = {};
+        if (!isObj(vip.level_info)) vip.level_info = {};
 
         // ── 2. 配额:改成大值,避免「额度用尽」弹窗 ────────────────
         // 字符串型与数字型都要处理:真实响应里两种类型混用。
+        // 缺字段时补上,否则新版本新增的额度项仍是 0,功能照旧不可用。
         function setQuota(key, val) {
-          if (!(key in d)) return;
-          if (typeof d[key] === 'string') d[key] = String(val);
-          else d[key] = val;
+          if (key in d) {
+            d[key] = (typeof d[key] === 'string') ? String(val) : val;
+            return;
+          }
+          d[key] = val;
         }
-        setQuota('ocr_balance', cfg.quota);
-        setQuota('login_ocr_balance', cfg.quota);
-        setQuota('no_login_ocr_balance', cfg.quota);
-        setQuota('pdfword_balance', cfg.quota);
-        setQuota('bookmode_balance', cfg.quota);
-        setQuota('fax_balance', cfg.quota);
-        setQuota('points', cfg.quota);
-        // 这两个是开关型(0/1),不是余额:置 1 表示可用
-        if ('CamScanner_RoadMap' in d) d.CamScanner_RoadMap = 1;
-        if ('CamScanner_RoadMap_Excel' in d) d.CamScanner_RoadMap_Excel = 1;
 
-        // ── 3. 输出:清理旧实体头,长度交给引擎重算 ────────────────
-        var out = JSON.stringify(data);
+        // 两个 property_id 清单里出现过的全部额度项
+        var QUOTA_KEYS = [
+          'ocr_balance', 'login_ocr_balance', 'no_login_ocr_balance',
+          'pdfword_balance', 'bookmode_balance', 'fax_balance', 'points',
+          'trans_count', 'upload_pdf', 'patting_count', 'excel_count',
+          'watermarks_count', 'greetcard', 'profile_card_count'
+        ];
+        for (var qi = 0; qi < QUOTA_KEYS.length; qi++) setQuota(QUOTA_KEYS[qi], cfg.quota);
+
+        // 开关型(0/1),不是余额:置 1 表示可用
+        var FLAG_KEYS = [
+          'CamScanner_RoadMap', 'CamScanner_RoadMap_Excel', 'removead', 'watchad_vip',
+          'CamScanner_ImageRestore', 'CamScanner_DirNum', 'CamScanner_Recolor',
+          'CamScanner_Pdfword', 'CamScanner_Erase', 'CamScanner_Demoire', 'CamScanner_CertMode',
+          'CamScanner_AIImageFilter', 'CamScanner_Intellect_Erase', 'CamScanner_ADD_Watermarks',
+          'CamScanner_SharePdf', 'CamScanner_Bills_Verify', 'CamScanner_Toolbox_Watermark',
+          'CamScanner_AI_Doc_Image_Multi_Edit'
+        ];
+        for (var fi = 0; fi < FLAG_KEYS.length; fi++) d[FLAG_KEYS[fi]] = 1;
+
+        // ── 3. 字符串形态写回:原字段是字符串就还它字符串 ────────────
+        if (vipAsString && vipHolder) vipHolder[vipKey] = JSON.stringify(vip);
+
+        // ── 4. 输出:清理旧实体头,长度交给引擎重算 ────────────────
+        var out = JSON.stringify(root);
         if (out === body) {
+          log('no-change');
           $done({});
           return;
         }
 
         var DROP = {
           'content-length': 1, 'content-encoding': 1, 'transfer-encoding': 1,
-          'connection': 1, 'keep-alive': 1, etag: 1, digest: 1, 'content-md5': 1,
+          'connection': 1, 'keep-alive': 1, etag: 1, digest: 1, 'content-md5': 1
         };
         var outHeaders = {};
         var src = ($response && $response.headers) || {};
         for (var h in src) {
           if (!Object.prototype.hasOwnProperty.call(src, h)) continue;
-          if (DROP[h.toLowerCase()]) continue;
+          if (DROP[String(h).toLowerCase()]) continue;
           outHeaders[h] = src[h];
         }
 
-        log('ok: vip_type=vip expiry=' + cfg.expiry + ' quota=' + cfg.quota);
+        log('ok: node=' + vipKey + ' expiry=' + cfg.expiry + ' quota=' + cfg.quota + ' ' + body.length + '->' + out.length);
         $done({ body: out, headers: outHeaders });
       })();
+
+rules:
+  # 接口域必须直连:命中 REJECT 就拿不到 body,脚本也就没得改
+  - 'DOMAIN-SUFFIX,intsig.net,DIRECT'
+  # 强制回落 HTTP/2:QUIC 不走 HTTP 引擎,脚本与改写都无效
+  - 'AND,((DOMAIN-SUFFIX,intsig.net),(PROTOCOL,QUIC)),REJECT,no-track'
