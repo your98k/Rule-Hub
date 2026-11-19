@@ -301,6 +301,8 @@ async function main() {
     fs.copyFileSync(source, path.join(SITE, 'assets', asset));
   }
 
+  fs.copyFileSync(path.join(ROOT, "assets", "apple-touch-icon.png"), path.join(SITE, "apple-touch-icon.png"));
+
   const plugins = collectStashOverrides();
   plugins.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   await localizeIcons(plugins);
