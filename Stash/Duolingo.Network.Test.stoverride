@@ -1,0 +1,38 @@
+name: '多邻国 · 网络诊断测试版'
+desc: '保留原分流，仅记录多邻国 API 的主机名与 HTTP 状态；不读取正文。QUIC 流量不走 HTTP 引擎，因此不记录。'
+author: 'your98k'
+category: '网络诊断'
+version: '0.1.0-test'
+icon: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/assets/icons/Duolingo.png'
+openUrl: 'https://apps.apple.com/app/id570060128'
+
+http:
+  mitm:
+    - 'ios-api-*.duolingo.com'
+    - 'ios-api-*.duolingo.cn'
+    - 'api*.duolingo.com'
+    - 'api*.duolingo.cn'
+  script:
+    - name: duolingo-network-probe-test
+      match: '^https://(?:ios-api-[a-z0-9-]+|api[a-z0-9-]*)\.duolingo\.(?:com|cn)/'
+      type: response
+      require-body: false
+      timeout: 2
+      engine: auto
+
+script-providers:
+  duolingo-network-probe-test:
+    payload: |-
+      (function () {
+        try {
+          var url = typeof $request === 'undefined' ? '' : $request.url;
+          var m = /^https:\/\/((?:ios-api-[a-z0-9-]+|api[a-z0-9-]*)\.duolingo\.(?:com|cn))\//.exec(url || '');
+          var status = typeof $response === 'undefined' ? '' : $response.status;
+          var code = String(status || '').match(/^(?:HTTP\/\d(?:\.\d)?\s+)?([1-5]\d{2})(?:\s|$)/);
+          if (m) console.log('[duolingo-net] ' + m[1] + ' status=' + (code ? code[1] : 'unknown'));
+        } catch (_) {}
+        $done({});
+      })();
+
+# No DNS, routing or transport overrides. QUIC/HTTP3 is preserved;
+# Stash's HTTP engine will not log requests carried over HTTP/3.
