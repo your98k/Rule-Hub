@@ -1,5 +1,5 @@
-name: '扫描全能王 会员解锁'
-desc: '解锁扫描全能王高级特权，会员信息接口返回固定有效期。'
+name: '扫描全能王 解锁会员（基础版）'
+desc: '会员到期时间固定显示；不修改 OCR、PDF 转 Word 等配额。'
 icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/CSsaomiaoquannengwang.png
 author: 'your98k'
 category: '会员解锁'

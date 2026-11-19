@@ -1,10 +1,5 @@
-name: '扫描全能王 会员解锁'
-desc: |-
-  解锁扫描全能王会员功能:会员属性与全部配额字段一起改写,高级功能不再受免费额度限制。
-  · 只处理 api / api-cs.intsig.net 的 /purchase/cs/query_property 接口。
-  · 在服务器真实响应上增量补写,结构完整保留;其他接口、非 JSON、开关关闭时原样放行。
-  · 只影响 App 客户端显示,不改 Apple 订阅记录。
-  · 自定义参数仅支持 Stash 3.7 及以上版本。
+name: '扫描全能王 解锁至尊会员'
+desc: '改写至尊会员属性及已有 OCR、PDF 转 Word 等配额；自定义参数仅支持 Stash 3.7 及以上版本。'
 icon: 'https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/CSsaomiaoquannengwang.png'
 category: '会员解锁'
 date: '2026-11-19'
