@@ -1,0 +1,398 @@
+name: '多邻国解锁会员'
+desc: |-
+  Duolingo iOS 解锁 Max:无限体力、去广告、视频通话,附带经验加倍、限时挑战时长与直接通关开关。
+  自定义参数仅支持 Stash 3.7 及以上版本。
+category: '会员解锁'
+icon: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/assets/icons/Duolingo.png'
+openUrl: 'https://apps.apple.com/app/id570060128'
+date: '2026-11-19'
+version: '2.0.0'
+author: 'your98k'
+homepage: 'https://github.com/your98k/Rule-Hub'
+
+arguments-version: 1
+arguments:
+  xp_boost:
+    type: switch
+    title: 经验加倍
+    description: 练习时按选定倍数结算经验。
+    default: false
+  multiplier:
+    type: select
+    title: 经验倍数
+    default: '2'
+    options:
+      - value: '2'
+        label: '2 倍'
+      - value: '3'
+        label: '3 倍'
+  timer_switch:
+    type: switch
+    title: 限时挑战时间增强
+    description: 用下面的时长覆盖限时挑战。
+    default: false
+  timer_mins:
+    type: input
+    value-type: integer
+    title: 限时挑战时长(分钟)
+    description: 仅在上一项开启时生效。
+    default: 60
+    minimum: 1
+    maximum: 1440
+  unlock_all:
+    type: switch
+    title: 解锁全部关卡
+    description: 把当前课程里锁住的关卡改为可进入。
+    default: false
+  instant_clear:
+    type: switch
+    title: 直接通关
+    description: 清空挑战池即视为完成;两类特殊练习会自动跳过。
+    default: false
+  debug:
+    type: switch
+    title: 输出调试日志
+    description: 排查是否命中时打开,Stash 脚本日志里搜 [duolingo]。
+    default: false
+
+http:
+  mitm:
+    - '*.duolingo.com'
+    - '*.duolingo.cn'
+  script:
+    - name: duolingo-max
+      match: '^https?://(?:ios-api-[a-z0-9-]+|api[0-9]+)\.duolingo\.c(?:n|om)/2023-05-23/(?:batch|users/[^/?#]+)(?:[?#]|$)'
+      type: response
+      require-body: true
+      max-size: 8388608
+      timeout: 20
+      engine: auto
+      argument: '{"xp_boost":${args.xp_boost|json},"multiplier":${args.multiplier|json},"unlock_all":${args.unlock_all|json},"debug":${args.debug|json}}'
+    - name: duolingo-timer
+      match: '^https?://(?:ios-api-[a-z0-9-]+|api[0-9]+)\.duolingo\.c(?:n|om)/.*/live-ops-challenges'
+      type: response
+      require-body: true
+      max-size: 2097152
+      timeout: 20
+      engine: auto
+      argument: '{"timer_switch":${args.timer_switch|json},"timer_mins":${args.timer_mins|json},"debug":${args.debug|json}}'
+    - name: duolingo-clear
+      match: '^https?://(?:ios-api-[a-z0-9-]+|api[0-9]+|stories)\.duolingo\.c(?:n|om)/(?:.*/sessions|api2/stories)'
+      type: response
+      require-body: true
+      max-size: 4194304
+      timeout: 20
+      engine: auto
+      argument: '{"instant_clear":${args.instant_clear|json},"debug":${args.debug|json}}'
+
+script-providers:
+  duolingo-max:
+    payload: |-
+      /**
+       * Duolingo Max 解锁 · 会员与经验(Stash 原生版,署名 your98k)
+       *
+       * 上游:TAKAGIVEGETA/MyScripts · lingoDuo/lingoDuo-xaM-enhanced.js
+       * 改动:
+       *   1. $argument 在 Stash 里是字符串,统一按字符串解析(上游同时兼容对象);
+       *   2. 已存在 gold_subscription 时也刷新到期时间,避免旧记录过期后会员栏失效;
+       *   3. /batch 响应里 responses[0] 带 etag 时上游直接放弃 —— 保留该判断,但改成
+       *      「有 etag 且 body 缺失」才放弃,body 存在时照常改写;
+       *   4. 改 body 后清理旧实体头(Content-Length / Content-Encoding / ETag)。
+       */
+      (function () {
+        var cfg = { xp_boost: false, multiplier: 2, unlock_all: false };
+        try {
+          var raw = (typeof $argument === 'undefined' || $argument === null) ? '' : String($argument);
+          if (raw) {
+            var a = JSON.parse(raw) || {};
+            cfg.xp_boost = (a.xp_boost === true || a.xp_boost === 'true' || a.xp_boost === 1);
+            cfg.unlock_all = (a.unlock_all === true || a.unlock_all === 'true' || a.unlock_all === 1);
+            var m = parseInt(a.multiplier, 10);
+            if (!isNaN(m) && m > 0 && m <= 10) cfg.multiplier = m;
+          }
+        } catch (e) { /* 参数坏了走默认 */ }
+
+        var DBG = false;
+        try {
+          var rawD = (typeof $argument === 'undefined' || $argument === null) ? '' : String($argument);
+          if (rawD) { var ad = JSON.parse(rawD) || {}; DBG = (ad.debug === true || ad.debug === 'true' || ad.debug === 1); }
+        } catch (e) {}
+        function log(m) { try { if (DBG) console.log('[duolingo] ' + m); } catch (e) {} }
+
+        var body = ($response && typeof $response.body === 'string') ? $response.body : '';
+        if (!body) { $done({}); return; }
+
+        var root;
+        try { root = JSON.parse(body); } catch (e) { $done({}); return; }
+        if (!root || typeof root !== 'object') { $done({}); return; }
+
+        var now = Math.floor(Date.now() / 1000);
+
+        function applyGold(u) {
+          if (!u || typeof u !== 'object') return;
+          if (!u.shopItems || Object.prototype.toString.call(u.shopItems) !== '[object Array]') u.shopItems = [];
+          var hit = null;
+          for (var i = 0; i < u.shopItems.length; i++) {
+            if (u.shopItems[i] && u.shopItems[i].id === 'gold_subscription') { hit = u.shopItems[i]; break; }
+          }
+          if (!hit) {
+            hit = { id: 'gold_subscription', purchaseDate: now - 172800, purchasePrice: 0, subscriptionInfo: {} };
+            u.shopItems.push(hit);
+          }
+          // 到期时间每次都往后推:上游只在缺记录时写,旧记录过期后会员会失效
+          hit.purchaseDate = now - 172800;
+          hit.purchasePrice = 0;
+          if (!hit.subscriptionInfo || typeof hit.subscriptionInfo !== 'object') hit.subscriptionInfo = {};
+          var si = hit.subscriptionInfo;
+          si.expectedExpiration = now + 31536000;
+          si.productId = 'com.duolingo.DuolingoMobile.subscription.Gold.TwelveMonth.24Q2Max.168';
+          si.renewer = 'APPLE';
+          si.renewing = true;
+          si.tier = 'twelve_month';
+          si.type = 'gold';
+
+          u.subscriberLevel = 'GOLD';
+          if (!u.trackingProperties || typeof u.trackingProperties !== 'object') u.trackingProperties = {};
+          var flags = ['has_item_immersive_subscription', 'has_item_premium_subscription',
+                       'has_item_live_subscription', 'has_item_gold_subscription', 'has_item_max_subscription'];
+          for (var k = 0; k < flags.length; k++) u.trackingProperties[flags[k]] = true;
+        }
+
+        function applyXp(u) {
+          if (!cfg.xp_boost || !u || typeof u !== 'object') return;
+          if (!u.shopItems || Object.prototype.toString.call(u.shopItems) !== '[object Array]') u.shopItems = [];
+          var hit = null;
+          for (var i = 0; i < u.shopItems.length; i++) {
+            if (u.shopItems[i] && u.shopItems[i].id === 'xp_boost_stackable') { hit = u.shopItems[i]; break; }
+          }
+          if (!hit) {
+            hit = { id: 'xp_boost_stackable', purchasePrice: 0 };
+            u.shopItems.push(hit);
+          }
+          hit.purchaseDate = now;
+          hit.expectedExpirationDate = now + 3600;
+          hit.xpBoostMultiplier = cfg.multiplier;
+        }
+
+        function applyUnlock(u) {
+          if (!cfg.unlock_all || !u || typeof u !== 'object') return;
+          var cc = u.currentCourse;
+          if (!cc || Object.prototype.toString.call(cc.pathSectioned) !== '[object Array]') return;
+          for (var i = 0; i < cc.pathSectioned.length; i++) {
+            var units = cc.pathSectioned[i] && cc.pathSectioned[i].units;
+            if (Object.prototype.toString.call(units) !== '[object Array]') continue;
+            for (var j = 0; j < units.length; j++) {
+              var levels = units[j] && units[j].levels;
+              if (Object.prototype.toString.call(levels) !== '[object Array]') continue;
+              for (var k = 0; k < levels.length; k++) {
+                if (levels[k] && levels[k].state === 'locked') levels[k].state = 'active';
+              }
+            }
+          }
+        }
+
+        function applyAll(u) { applyGold(u); applyXp(u); applyUnlock(u); }
+
+        var changed = false;
+
+        // /batch:多条子响应打包,会员资料固定在 responses[0]
+        if (Object.prototype.toString.call(root.responses) === '[object Array]' && root.responses.length >= 2) {
+          var r0 = root.responses[0];
+          if (!r0 || typeof r0 !== 'object' || typeof r0.body !== 'string' || !r0.body) {
+            $done({});
+            return;
+          }
+          var u0;
+          try { u0 = JSON.parse(r0.body); } catch (e) { $done({}); return; }
+          if (!u0 || typeof u0 !== 'object') { $done({}); return; }
+          applyAll(u0);
+          r0.body = JSON.stringify(u0);
+          changed = true;
+          root.responses[0] = r0;
+        } else if (root && typeof root === 'object' &&
+                   (root.shopItems !== undefined || root.subscriberLevel !== undefined ||
+                    root.currentCourse !== undefined ||
+                    (root.id && root.trackingProperties))) {
+          // 比上游多认一个 currentCourse:只下发课程结构的响应里没有 shopItems,
+          // 上游会直接放行,导致「解锁所有关卡」在那类响应上永远不生效。
+          applyAll(root);
+          changed = true;
+        } else {
+          $done({});
+          return;
+        }
+
+        if (!changed) { $done({}); return; }
+        var out = JSON.stringify(root);
+        if (out === body) { log('no-change'); $done({}); return; }
+        log('ok vip sub=' + root.subscriberLevel + ' xp=' + cfg.xp_boost + ' x' + cfg.multiplier +
+            ' unlock=' + cfg.unlock_all + ' ' + body.length + '->' + out.length);
+
+        var DROP = {
+          'content-length': 1, 'content-encoding': 1, 'transfer-encoding': 1,
+          'connection': 1, 'keep-alive': 1, etag: 1, digest: 1, 'content-md5': 1
+        };
+        var src = ($response && $response.headers) || {};
+        var hdr = {};
+        for (var h in src) {
+          if (!Object.prototype.hasOwnProperty.call(src, h)) continue;
+          if (DROP[String(h).toLowerCase()]) continue;
+          hdr[h] = src[h];
+        }
+        $done({ body: out, headers: hdr });
+      })();
+  duolingo-timer:
+    payload: |-
+      /**
+       * Duolingo 限时挑战时长改写(Stash 原生版,署名 your98k)
+       * 上游:TAKAGIVEGETA/MyScripts · lingoDuo/lingoDuo-time-modifier.js
+       */
+      (function () {
+        var cfg = { on: false, mins: 60, bad: false };
+        try {
+          var raw = (typeof $argument === 'undefined' || $argument === null) ? '' : String($argument);
+          if (raw) {
+            var a = JSON.parse(raw) || {};
+            cfg.on = (a.timer_switch === true || a.timer_switch === 'true' || a.timer_switch === 1);
+            if (Object.prototype.hasOwnProperty.call(a, 'timer_mins')) {
+              var n = parseInt(a.timer_mins, 10);
+              if (!isNaN(n) && n > 0) cfg.mins = n;
+              else cfg.bad = true;  // 显式填了非法值:放行,不拿默认值悄悄替用户改时长
+            }
+          }
+        } catch (e) { /* 参数整串坏了走默认 */ }
+        if (!cfg.on || cfg.bad) { $done({}); return; }
+
+        var DBG = false;
+        try {
+          var rawD = (typeof $argument === 'undefined' || $argument === null) ? '' : String($argument);
+          if (rawD) { var ad = JSON.parse(rawD) || {}; DBG = (ad.debug === true || ad.debug === 'true' || ad.debug === 1); }
+        } catch (e) {}
+        function log(m) { try { if (DBG) console.log('[duolingo] ' + m); } catch (e) {} }
+
+        var body = ($response && typeof $response.body === 'string') ? $response.body : '';
+        if (!body) { $done({}); return; }
+        var root;
+        try { root = JSON.parse(body); } catch (e) { $done({}); return; }
+        if (!root || typeof root !== 'object') { $done({}); return; }
+
+        var seconds = cfg.mins * 60;
+        if (!(seconds > 0)) { $done({}); return; }
+
+        var list = root.liveOpsChallenges;
+        if (Object.prototype.toString.call(list) !== '[object Array]' || !list.length) { $done({}); return; }
+
+        var touched = false;
+        for (var i = 0; i < list.length; i++) {
+          var c = list[i];
+          if (!c || typeof c !== 'object') continue;
+          if (c.initialTime) { c.initialTime = seconds; touched = true; }
+          if (Object.prototype.toString.call(c.initialLevelTimes) === '[object Array]') {
+            c.initialLevelTimes = c.initialLevelTimes.map(function () { return seconds; });
+            touched = true;
+          }
+          if (Object.prototype.toString.call(c.initialSessionTimes) === '[object Array]') {
+            c.initialSessionTimes = c.initialSessionTimes.map(function () { return seconds; });
+            touched = true;
+          }
+        }
+        if (!touched) { $done({}); return; }
+
+        var out = JSON.stringify(root);
+        if (out === body) { log('no-change'); $done({}); return; }
+        log('ok timer ' + cfg.mins + 'min ' + body.length + '->' + out.length);
+        var DROP = {
+          'content-length': 1, 'content-encoding': 1, 'transfer-encoding': 1,
+          'connection': 1, 'keep-alive': 1, etag: 1, digest: 1, 'content-md5': 1
+        };
+        var src = ($response && $response.headers) || {};
+        var hdr = {};
+        for (var h in src) {
+          if (!Object.prototype.hasOwnProperty.call(src, h)) continue;
+          if (DROP[String(h).toLowerCase()]) continue;
+          hdr[h] = src[h];
+        }
+        $done({ body: out, headers: hdr });
+      })();
+  duolingo-clear:
+    payload: |-
+      /**
+       * Duolingo 关卡直接通关(Stash 原生版,署名 your98k)
+       * 上游:TAKAGIVEGETA/MyScripts · lingoDuo/lingoDuo-clear.js
+       *
+       * 清空挑战池即视为完成,但两类练习必须跳过:
+       *   SIDE_QUEST_RAMP_UP_PRACTICE / MATCH_PRACTICE —— 清空后 App 会卡在加载。
+       */
+      (function () {
+        var cfg = { on: false };
+        try {
+          var raw = (typeof $argument === 'undefined' || $argument === null) ? '' : String($argument);
+          if (raw) {
+            var a = JSON.parse(raw) || {};
+            cfg.on = (a.instant_clear === true || a.instant_clear === 'true' || a.instant_clear === 1);
+          }
+        } catch (e) { /* 走默认 */ }
+        if (!cfg.on) { $done({}); return; }
+
+        var DBG = false;
+        try {
+          var rawD = (typeof $argument === 'undefined' || $argument === null) ? '' : String($argument);
+          if (rawD) { var ad = JSON.parse(rawD) || {}; DBG = (ad.debug === true || ad.debug === 'true' || ad.debug === 1); }
+        } catch (e) {}
+        function log(m) { try { if (DBG) console.log('[duolingo] ' + m); } catch (e) {} }
+
+        var body = ($response && typeof $response.body === 'string') ? $response.body : '';
+        if (!body) { $done({}); return; }
+        var root;
+        try { root = JSON.parse(body); } catch (e) { $done({}); return; }
+        if (!root || typeof root !== 'object') { $done({}); return; }
+
+        var SKIP = ['SIDE_QUEST_RAMP_UP_PRACTICE', 'MATCH_PRACTICE'];
+        var type = root.type;
+        var changed = false;
+
+        if (type && SKIP.indexOf(type) < 0) {
+          var pools = ['challenges', 'adaptiveChallenges',
+                       'adaptiveInterleavedChallenges', 'mistakesReplacementChallenges'];
+          for (var i = 0; i < pools.length; i++) {
+            var p = pools[i];
+            if (Object.prototype.toString.call(root[p]) === '[object Array]' && root[p].length) {
+              root[p] = [];
+              changed = true;
+            }
+          }
+        }
+        if (Object.prototype.toString.call(root.elements) === '[object Array]' && root.elements.length) {
+          root.elements = [];
+          changed = true;
+        }
+        if (!changed) { $done({}); return; }
+
+        var out = JSON.stringify(root);
+        if (out === body) { log('no-change'); $done({}); return; }
+        log('ok clear type=' + type + ' ' + body.length + '->' + out.length);
+        var DROP = {
+          'content-length': 1, 'content-encoding': 1, 'transfer-encoding': 1,
+          'connection': 1, 'keep-alive': 1, etag: 1, digest: 1, 'content-md5': 1
+        };
+        var src = ($response && $response.headers) || {};
+        var hdr = {};
+        for (var h in src) {
+          if (!Object.prototype.hasOwnProperty.call(src, h)) continue;
+          if (DROP[String(h).toLowerCase()]) continue;
+          hdr[h] = src[h];
+        }
+        $done({ body: out, headers: hdr });
+      })();
+
+rules:
+  # 广告投放域(DNS 实测可解析),建连前断掉
+  - 'DOMAIN-SUFFIX,ads.duolingo.com,REJECT,pre-matching'
+  # 接口域必须直连:命中 REJECT 就拿不到 body,脚本也就没得改
+  - 'DOMAIN-SUFFIX,api.duolingo.com,DIRECT'
+  - 'DOMAIN-SUFFIX,api.duolingo.cn,DIRECT'
+  - 'DOMAIN-SUFFIX,stories.duolingo.com,DIRECT'
+  - 'DOMAIN-SUFFIX,stories.duolingo.cn,DIRECT'
+  # 强制回落 HTTP/2:QUIC 不走 HTTP 引擎,脚本与改写都无效
+  - 'AND,((DOMAIN-SUFFIX,duolingo.com),(PROTOCOL,QUIC)),REJECT,no-track'
+  - 'AND,((DOMAIN-SUFFIX,duolingo.cn),(PROTOCOL,QUIC)),REJECT,no-track'

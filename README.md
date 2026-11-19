@@ -43,6 +43,7 @@
 | 水印猫会员信息解锁 | iOS/tvOS 3.2.5+ | 移植 89996462/Quantumult-X 的 sym.js；实测 App 接口域名为 watersymaoa.zijiemofang.cn（上游的 yunxiaoguo.cn 已弃用，两个域名均已覆盖）；需 MitM，脚本每日同步 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/ShuiYinMao.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/ShuiYinMao.stoverride) |
 | 去上网 去广告 | Stash 3.7+ | 76 条域名拦截（实测 30+ 广告联盟，含二进制静态分析才可见的 iytcdn/adiu.amap/mon.toutiao）；开屏广告由自有接口 AES 下发，改为替换响应为空 data 让 App 直接跳过，不破解密钥；4 项原生参数 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/QuShangWang.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/QuShangWang.stoverride) |
 | 可莉广告平台拦截器 | 通用 | 330 条规则拦截广告 SDK 域名/IP（穿山甲/优量汇/快手/百度/友盟/汇量/AppLovin 等近百平台）+ 4 条拼多多路径；纯声明式无脚本。**依赖型**：只拦广告平台本身，需配合其他去广告覆写并排在前面 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/KeliBlockAdvertisers.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/KeliBlockAdvertisers.stoverride) |
+| 多邻国解锁会员 | Stash 3.7+ | 移植 TAKAGIVEGETA/MyScripts 的 lingoDuo 三脚本版;注入 `gold_subscription` 解锁 Max(无限体力/去广告/视频通话),另可开经验倍数、限时挑战时长、解锁全部关卡、直接通关;7 项原生参数,三个脚本内嵌 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Duolingo.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Duolingo.stoverride) |
 
 ## 使用要点
 
@@ -65,6 +66,7 @@
 - **Trakt**：需信任 MitM CA 并开启 MitM，否则脚本不触发。12 项参数与上游 Loon 插件一一对应；「篡改应用授权」默认关闭，仅在第三方 App 报连接数超限时开启。「翻译引擎」选 DeepLX 可免翻墙但较慢。不要与 Loon 版 Trakt 插件同时启用——同名请求会被两边各改写一次。
 - **可莉广告平台拦截器**：依赖型插件，只拦广告平台自身的域名与 IP，不针对具体 App，所以装上后单靠它不会让某个 App 变干净。关键是在覆写列表里**排到其他去广告覆写前面**，否则广告平台的连接会先被后面的覆写按域名放行。330 条规则里含 12 条 `DOMAIN-KEYWORD`，其中 `adstrategy` 较宽、另有几条写的其实是完整域名（如 `trace.qq.com`），均为上游原样保留。只有 4 条拼多多路径拦截需要 MitM，其余纯域名/IP 规则不需要。
 - **水印猫**：只改写会员字段（isPurchasedSubscribe、waterVipInfo、maskMobile、nickName），需信任 MitM CA；脚本每 24 小时从仓库内的 `Stash/ShuiYinMao.stash.js` 同步，内嵌 payload 仅作离线兜底。**域名会变**：上游脚本写的是 yunxiaoguo.cn，实测 App 已改用 zijiemofang.cn，覆写已同时覆盖两者；若日后又失效，先在 Stash 的连接记录里看 App 实际连哪个域名，再据此调整 mitm 与 match，不要只信脚本注释。
+- **多邻国**:需信任 MitM CA;改完参数点「保存并应用」,首次生效要彻底退出 App 再打开。会员是写在用户资料响应里的 `gold_subscription` 记录,到期时间每次请求往后推一年,不会因为旧记录过期掉会员。**「直接通关」会跳过 `SIDE_QUEST_RAMP_UP_PRACTICE` 与 `MATCH_PRACTICE`**——这两类练习清空挑战池会让 App 卡在加载。经验加倍只维持一小时,过期重进练习即刷新。不要与 Loon 版插件同时启用。
 
 ## 鸣谢
 
