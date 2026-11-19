@@ -1,0 +1,208 @@
+name: '扫描全能王 会员解锁'
+desc: |-
+  解锁扫描全能王会员功能:会员属性与全部配额字段一起改写,高级功能不再受免费额度限制。
+  · 只处理 api / api-cs.intsig.net 的 /purchase/cs/query_property 接口。
+  · 在服务器真实响应上增量补写,结构完整保留;其他接口、非 JSON、开关关闭时原样放行。
+  · 只影响 App 客户端显示,不改 Apple 订阅记录。
+  · 自定义参数仅支持 Stash 3.7 及以上版本。
+icon: 'https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/CSsaomiaoquannengwang.png'
+category: '会员解锁'
+date: '2026-11-19'
+version: '2.0.0'
+author: 'your98k'
+homepage: 'https://github.com/your98k/Rule-Hub'
+
+arguments-version: 1
+arguments:
+  enable:
+    type: switch
+    title: 启用解锁
+    description: 关闭后本覆写完全放行,用来快速回退。
+    default: true
+  expiry:
+    type: input
+    title: 会员到期时间戳
+    description: Unix 秒级时间戳。默认 2013017600 = 2033-10-15,在 int32 安全区内;填更大值会溢出显示成 1970 年代。
+    default: '2013017600'
+    max-length: 16
+  quota:
+    type: input
+    title: 配额数值
+    description: ocr / pdfword / fax / bookmode / points 统一写这个值。
+    default: '9999999'
+    max-length: 12
+  verbose:
+    type: switch
+    title: 输出脚本日志
+    description: 排查是否命中时打开,Stash 脚本日志里能看到每次判定结果。
+    default: false
+
+http:
+  mitm:
+    - 'api.intsig.net'
+    - 'api-cs.intsig.net'
+  script:
+    - name: camscanner-vip
+      match: '^https://api(?:-cs)?\.intsig\.net/purchase/cs/query_property'
+      type: response
+      require-body: true
+      binary-mode: false
+      max-size: 1048576
+      timeout: 10
+      engine: auto
+      argument: '{"enable":${args.enable|json},"expiry":${args.expiry|json},"quota":${args.quota|json},"verbose":${args.verbose|json}}'
+
+script-providers:
+  camscanner-vip:
+    payload: |-
+      /**
+       * 扫描全能王 · 会员权益完整注入(Stash 版,署名 your98k)
+       *
+       * 与旧 mock 版的区别:
+       *   旧版用 mock 整包替换成 54 字节 {"data":{"psnl_vip_property":{"expiry":"2013017600"}}},
+       *   只骗到了「会员标识」,丢掉了配额字段(ocr_balance / pdfword_balance 等),
+       *   所以 App 显示会员但高级功能仍按免费额度走。
+       *
+       *   本版在服务器真实响应上做增量补写:
+       *     1. 保留 ret / server_time / 全部原有字段结构,不重建 JSON;
+       *     2. psnl_vip_property 补齐 vip_type / grade / svip / is_super_vip / auto_renewal 等;
+       *     3. 配额类字段改为「无限」语义的大值,让客户端不再弹额度用尽;
+       *     4. 任何一步不符合预期(非 JSON / 无 data / 开关关闭)原样放行。
+       *
+       * 参数(Stash 3.7+):
+       *   {"enable":true,"expiry":2013017600,"quota":9999999,"verbose":false}
+       */
+      (function () {
+        var DEFAULT_EXPIRY = 2013017600;   // 2033-10-15,int32 安全区,留 4.3 年余量
+        var DEFAULT_QUOTA = 9999999;
+        var PURCHASE_DATE = 1609897624;    // 页面里 initial_tm 的真实值,保持一致更自然
+
+        function trim(s) {
+          return String(s === undefined || s === null ? '' : s).replace(/^\s+|\s+$/g, '');
+        }
+
+        function log(msg) {
+          try {
+            if (cfg.verbose) console.log('camscanner: ' + msg);
+          } catch (e) {
+            /* 日志失败不影响主流程 */
+          }
+        }
+
+        var cfg = { enable: true, expiry: DEFAULT_EXPIRY, quota: DEFAULT_QUOTA, verbose: false };
+        try {
+          var raw = typeof $argument === 'undefined' ? '' : $argument;
+          if (raw && typeof raw === 'string' && trim(raw).charAt(0) === '{') {
+            var o = JSON.parse(raw);
+            if (o.enable === false || o.enable === 'false') cfg.enable = false;
+            if (o.verbose === true || o.verbose === 'true') cfg.verbose = true;
+            var e = parseInt(o.expiry, 10);
+            if (e > 0 && e < 2147483647) cfg.expiry = e;
+            var q = parseInt(o.quota, 10);
+            if (q > 0) cfg.quota = q;
+          }
+        } catch (e) {
+          /* 参数坏了走默认值,不影响放行 */
+        }
+
+        if (!cfg.enable) {
+          log('disabled');
+          $done({});
+          return;
+        }
+
+        var body = ($response && $response.body) || '';
+        if (typeof body !== 'string' || body === '') {
+          log('skip: empty body');
+          $done({});
+          return;
+        }
+
+        var data;
+        try {
+          data = JSON.parse(body);
+        } catch (e) {
+          log('skip: not json');
+          $done({});
+          return;
+        }
+
+        if (!data || typeof data !== 'object' || !data.data || typeof data.data !== 'object') {
+          log('skip: no data');
+          $done({});
+          return;
+        }
+
+        var d = data.data;
+        var vip = d.psnl_vip_property;
+        if (!vip || typeof vip !== 'object') {
+          log('skip: no psnl_vip_property');
+          $done({});
+          return;
+        }
+
+        // ── 1. 会员属性:按真实响应结构逐字段补齐 ──────────────────
+        vip.expiry = cfg.expiry;          // 数字类型,与服务器一致(不是字符串)
+        vip.vip_type = 'vip';             // 真实值 nonvip → vip
+        vip.svip = 1;                     // 超级会员
+        vip.is_super_vip = 1;
+        vip.pc_vip = 1;
+        vip.grade = 1;                    // 最高等级
+        vip.auto_renewal = false;         // 不走自动续费,避免客户端去查订阅
+        vip.in_trial = 0;
+        vip.pending = 0;
+        vip.inherited_flag = 0;
+        vip.nxt_renew_tm = 0;
+        vip.ys_first_pay = 0;
+        vip.ms_first_pay = 0;
+        vip.group1_paid = 1;
+        vip.group2_paid = 1;
+        if (!vip.initial_tm || vip.initial_tm === '0') vip.initial_tm = String(PURCHASE_DATE);
+        if (!vip.renew_method) vip.renew_method = 'appstore';
+        if (!vip.last_payment_method) vip.last_payment_method = 'appstore';
+        if (!vip.vip_level_info || typeof vip.vip_level_info !== 'object') {
+          vip.vip_level_info = { create_time: 0, level: 0, score: 0, next_score: 0 };
+        }
+        vip.vip_level_info.level = 1;
+        if (!vip.level_info || typeof vip.level_info !== 'object') vip.level_info = {};
+
+        // ── 2. 配额:改成大值,避免「额度用尽」弹窗 ────────────────
+        // 字符串型与数字型都要处理:真实响应里两种类型混用。
+        function setQuota(key, val) {
+          if (!(key in d)) return;
+          if (typeof d[key] === 'string') d[key] = String(val);
+          else d[key] = val;
+        }
+        setQuota('ocr_balance', cfg.quota);
+        setQuota('login_ocr_balance', cfg.quota);
+        setQuota('no_login_ocr_balance', cfg.quota);
+        setQuota('pdfword_balance', cfg.quota);
+        setQuota('bookmode_balance', cfg.quota);
+        setQuota('fax_balance', cfg.quota);
+        setQuota('points', cfg.quota);
+        // 这两个是开关型(0/1),不是余额:置 1 表示可用
+        if ('CamScanner_RoadMap' in d) d.CamScanner_RoadMap = 1;
+        if ('CamScanner_RoadMap_Excel' in d) d.CamScanner_RoadMap_Excel = 1;
+
+        // ── 3. 输出:清理旧实体头,长度交给引擎重算 ────────────────
+        var out = JSON.stringify(data);
+        if (out === body) {
+          $done({});
+          return;
+        }
+
+        var DROP = {
+          'content-length': 1, 'content-encoding': 1, 'transfer-encoding': 1,
+          'connection': 1, 'keep-alive': 1, etag: 1, digest: 1, 'content-md5': 1,
+        };
+        var outHeaders = {};
+        var src = ($response && $response.headers) || {};
+        for (var h in src) {
+          if (!Object.prototype.hasOwnProperty.call(src, h)) continue;
+          if (DROP[h.toLowerCase()]) continue;
+          outHeaders[h] = src[h];
+        }
+
+        log('ok: vip_type=vip expiry=' + cfg.expiry + ' quota=' + cfg.quota);
+        $done({ body: out, headers: outHeaders });
+      })();
