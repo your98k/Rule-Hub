@@ -1,3 +1,5 @@
+<p align="center"><img src="https://raw.githubusercontent.com/your98k/Icon-Hub/main/icons/Rule-Hub.png" alt="Rule-Hub Logo" width="240"></p>
+
 # Rule-Hub
 
 自用及精选的 **Stash 覆写**合集，专为 Stash 整理与适配。
