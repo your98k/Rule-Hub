@@ -44,6 +44,7 @@
 | 去上网 去广告 | Stash 3.7+ | 76 条域名拦截（实测 30+ 广告联盟，含二进制静态分析才可见的 iytcdn/adiu.amap/mon.toutiao）；开屏广告由自有接口 AES 下发，改为替换响应为空 data 让 App 直接跳过，不破解密钥；4 项原生参数 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/QuShangWang.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/QuShangWang.stoverride) |
 | 可莉广告平台拦截器 | 通用 | 330 条规则拦截广告 SDK 域名/IP（穿山甲/优量汇/快手/百度/友盟/汇量/AppLovin 等近百平台）+ 4 条拼多多路径；纯声明式无脚本。**依赖型**：只拦广告平台本身，需配合其他去广告覆写并排在前面 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/KeliBlockAdvertisers.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/KeliBlockAdvertisers.stoverride) |
 | 多邻国解锁会员 | Stash 3.7+ | 移植 TAKAGIVEGETA/MyScripts 的 lingoDuo 三脚本版;注入 `gold_subscription` 解锁 Max(无限体力/去广告/视频通话),另可开经验倍数、限时挑战时长、解锁全部关卡、直接通关;7 项原生参数,三个脚本内嵌 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/Duolingo.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/Duolingo.stoverride) |
+| 墨鱼去开屏 2.0 | iOS/tvOS 2.8+ | 移植 ddgksf2013 的 StartUpAds.conf；5 条分流 + 407 条 URL 重写 + 34 条响应体改写，覆盖 447 个 MitM 域名；纯声明式无远程脚本，排除银行、TestFlight 与超范围项 | [链接](https://raw.githubusercontent.com/your98k/Rule-Hub/main/Stash/StartUpAds.stoverride) | [链接](https://cdn.jsdelivr.net/gh/your98k/Rule-Hub@main/Stash/StartUpAds.stoverride) |
 
 ## 使用要点
 
