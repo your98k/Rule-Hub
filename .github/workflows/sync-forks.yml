@@ -55,6 +55,32 @@ jobs:
               except urllib.error.HTTPError as error:
                   raise RuntimeError('HTTP ' + str(error.code) + ': ' + error.read().decode()) from None
 
+          def merge_with_git(repo, upstream, target, before, source, message):
+              import base64, subprocess, tempfile
+              environment = dict(os.environ)
+              basic = base64.b64encode(('x-access-token:' + os.environ['SYNC_TOKEN']).encode()).decode()
+              environment.update({'GIT_CONFIG_COUNT': '3',
+                  'GIT_CONFIG_KEY_0': 'http.https://github.com/.extraheader',
+                  'GIT_CONFIG_VALUE_0': 'AUTHORIZATION: basic ' + basic,
+                  'GIT_CONFIG_KEY_1': 'user.name', 'GIT_CONFIG_VALUE_1': 'github-actions[bot]',
+                  'GIT_CONFIG_KEY_2': 'user.email',
+                  'GIT_CONFIG_VALUE_2': '41898282+github-actions[bot]@users.noreply.github.com',
+                  'GIT_TERMINAL_PROMPT': '0'})
+              with tempfile.TemporaryDirectory(prefix='safe-upstream-') as directory:
+                  def git(*args, text=None):
+                      result = subprocess.run(['git', '-C', directory, *args],
+                          input=text, text=True, capture_output=True, env=environment, timeout=480)
+                      if result.returncode:
+                          raise RuntimeError('Native Git operation blocked at ' + args[0] +
+                                             '; no force push or conflict resolution was attempted.')
+                      return result.stdout.strip()
+                  git('init', '--bare', '--quiet')
+                  git('fetch', '--quiet', '--no-tags', 'https://github.com/' + repo + '.git', before)
+                  git('fetch', '--quiet', '--no-tags', 'https://github.com/' + upstream + '.git', source)
+                  merged_tree = git('merge-tree', '--write-tree', before, source).splitlines()[0]
+                  merged_commit = git('commit-tree', merged_tree, '-p', before, '-p', source, text=message + '\n')
+                  git('push', '--quiet', 'https://github.com/' + repo + '.git', merged_commit + ':refs/heads/' + target)
+
           results = ['## Fork upstream synchronization', '',
                      '| Repository | Upstream | Branch | Result |',
                      '| --- | --- | --- | --- |']
@@ -71,14 +97,21 @@ jobs:
                   target = configured_branch or metadata['default_branch']
                   source = api('/repos/' + expected_parent + '/git/ref/heads/' + quote(source_branch))['object']['sha']
                   before = api('/repos/' + repo + '/git/ref/heads/' + quote(target))['object']['sha']
-                  compare = api('/repos/' + repo + '/compare/' + source + '...' + before)
+                  source_ref = expected_parent.split('/')[0] + ':' + source
+                  compare = api('/repos/' + repo + '/compare/' + source_ref + '...' + before)
                   missing = compare['behind_by']
                   if missing:
-                      api('/repos/' + repo + '/merges', 'POST', {
-                          'base': target, 'head': source,
-                          'commit_message': 'chore: sync upstream ' + expected_parent + ':' + source_branch + ' [skip ci]'})
+                      message = 'chore: sync upstream ' + expected_parent + ':' + source_branch + ' [skip ci]'
+                      try:
+                          api('/repos/' + repo + '/merges', 'POST', {
+                              'base': target, 'head': source, 'commit_message': message})
+                      except RuntimeError as error:
+                          if not str(error).startswith('HTTP 404:'):
+                              raise
+                          print(repo + ': importing a new upstream commit through native Git, without checkout.')
+                          merge_with_git(repo, expected_parent, target, before, source, message)
                   after = api('/repos/' + repo + '/git/ref/heads/' + quote(target))['object']['sha']
-                  verified = api('/repos/' + repo + '/compare/' + source + '...' + after)
+                  verified = api('/repos/' + repo + '/compare/' + source_ref + '...' + after)
                   if verified['behind_by']:
                       raise RuntimeError('Post-merge ancestry verification failed.')
                   result = 'Already current' if not missing else 'Merged; ' + str(missing) + ' upstream commits'
@@ -109,7 +142,7 @@ jobs:
           except Exception as error:
               failed.append('schedule-keepalive')
               print('::error title=Schedule keepalive::' + str(error).replace('\n', ' '))
-          results += ['', 'No force pushes, resets, deletions, or executions of upstream code are performed.',
+          results += ['', 'No force pushes, resets, branch deletions, or executions of upstream code are performed.',
                       'Merge conflicts and permission failures stop only the affected repository; other targets continue.',
                       'dsh-purge: master is intentionally preserved; rewritten upstream history is tracked in upstream-sync.']
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as output:
