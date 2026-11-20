@@ -1,0 +1,118 @@
+name: Sync fork repositories
+
+on:
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: account-fork-upstream-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'your98k/Rule-Hub'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Safely merge each configured upstream without executing fork code
+        shell: python
+        env:
+          SYNC_TOKEN: ${{ secrets.UPSTREAM_SYNC_TOKEN }}
+          HUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          import datetime, json, os, urllib.error, urllib.parse, urllib.request
+
+          # Keep credentials only in this trusted repository. Never check out or run fork code.
+          targets = [
+              ('your98k/dsh-purge', 'ZiPengWei/dsh-purge', 'upstream-sync'),
+              ('your98k/dsh-purge-', 'kingcharleslzy-ai/dsh-purge', None),
+              ('your98k/dsh-purge-safe', 'CallMeGuLab/dsh-purge-safe', None),
+              ('your98k/gemini-playground', 'tech-shrimp/gemini-playground', None),
+              ('your98k/rea', 'morluto/rea', None),
+              ('your98k/wb2api-ios', 'chenyynx/wb2api-ios', None),
+              ('your98k/yx-auto', 'byJoey/yx-auto', None),
+          ]
+          if not os.environ.get('SYNC_TOKEN'):
+              raise SystemExit('UPSTREAM_SYNC_TOKEN is missing or expired.')
+          quote = lambda value: urllib.parse.quote(value, safe='')
+
+          def api(path, method='GET', payload=None, hub=False):
+              token = os.environ['HUB_TOKEN' if hub else 'SYNC_TOKEN']
+              request = urllib.request.Request(os.environ['GITHUB_API_URL'] + path,
+                  data=None if payload is None else json.dumps(payload).encode(), method=method,
+                  headers={'Authorization': 'Bearer ' + token,
+                           'Accept': 'application/vnd.github+json',
+                           'X-GitHub-Api-Version': '2022-11-28',
+                           'Content-Type': 'application/json'})
+              try:
+                  with urllib.request.urlopen(request, timeout=60) as response:
+                      body = response.read()
+                      return json.loads(body) if body else {}
+              except urllib.error.HTTPError as error:
+                  raise RuntimeError('HTTP ' + str(error.code) + ': ' + error.read().decode()) from None
+
+          results = ['## Fork upstream synchronization', '',
+                     '| Repository | Upstream | Branch | Result |',
+                     '| --- | --- | --- | --- |']
+          failed = []
+          for repo, expected_parent, configured_branch in targets:
+              target = configured_branch or '(default)'
+              try:
+                  metadata = api('/repos/' + repo)
+                  if not metadata.get('fork') or metadata.get('parent', {}).get('full_name') != expected_parent:
+                      raise RuntimeError('Fork parent changed; refusing to switch upstream automatically.')
+                  if metadata.get('archived') or metadata.get('disabled'):
+                      raise RuntimeError('Target is archived or disabled; no repository settings were changed.')
+                  source_branch = api('/repos/' + expected_parent)['default_branch']
+                  target = configured_branch or metadata['default_branch']
+                  source = api('/repos/' + expected_parent + '/git/ref/heads/' + quote(source_branch))['object']['sha']
+                  before = api('/repos/' + repo + '/git/ref/heads/' + quote(target))['object']['sha']
+                  compare = api('/repos/' + repo + '/compare/' + source + '...' + before)
+                  missing = compare['behind_by']
+                  if missing:
+                      api('/repos/' + repo + '/merges', 'POST', {
+                          'base': target, 'head': source,
+                          'commit_message': 'chore: sync upstream ' + expected_parent + ':' + source_branch + ' [skip ci]'})
+                  after = api('/repos/' + repo + '/git/ref/heads/' + quote(target))['object']['sha']
+                  verified = api('/repos/' + repo + '/compare/' + source + '...' + after)
+                  if verified['behind_by']:
+                      raise RuntimeError('Post-merge ancestry verification failed.')
+                  result = 'Already current' if not missing else 'Merged; ' + str(missing) + ' upstream commits'
+                  print(repo + ':' + target + ' <- ' + expected_parent + ':' + source_branch + ': ' + result)
+                  results.append('| `' + repo + '` | `' + expected_parent + '` | `' + target + '` | ' + result + ' |')
+              except Exception as error:
+                  message = str(error).replace('\n', ' ').replace('|', '/')
+                  print('::error title=' + repo + '::' + message)
+                  failed.append(repo)
+                  results.append('| `' + repo + '` | `' + expected_parent + '` | `' + target + '` | BLOCKED: ' + message + ' |')
+
+          # GitHub disables public-repository schedules after 60 days without activity.
+          # A content-free commit after 45 days keeps this central schedule alive.
+          try:
+              hub = os.environ['GITHUB_REPOSITORY']
+              metadata = api('/repos/' + hub, hub=True)
+              branch = metadata['default_branch']
+              head = api('/repos/' + hub + '/git/ref/heads/' + quote(branch), hub=True)['object']['sha']
+              commit = api('/repos/' + hub + '/git/commits/' + head, hub=True)
+              timestamp = datetime.datetime.fromisoformat(commit['committer']['date'].replace('Z', '+00:00'))
+              if (datetime.datetime.now(datetime.timezone.utc) - timestamp).days >= 45:
+                  keepalive = api('/repos/' + hub + '/git/commits', 'POST', {
+                      'message': 'chore: keep upstream synchronization active [skip ci]',
+                      'tree': commit['tree']['sha'], 'parents': [head]}, hub=True)
+                  api('/repos/' + hub + '/git/refs/heads/' + quote(branch), 'PATCH', {
+                      'sha': keepalive['sha'], 'force': False}, hub=True)
+                  results += ['', 'Added a content-free keepalive commit after 45 inactive days.']
+          except Exception as error:
+              failed.append('schedule-keepalive')
+              print('::error title=Schedule keepalive::' + str(error).replace('\n', ' '))
+          results += ['', 'No force pushes, resets, deletions, or executions of upstream code are performed.',
+                      'Merge conflicts and permission failures stop only the affected repository; other targets continue.',
+                      'dsh-purge: master is intentionally preserved; rewritten upstream history is tracked in upstream-sync.']
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as output:
+              output.write('\n'.join(results) + '\n')
+          if failed:
+              raise SystemExit('Blocked: ' + ', '.join(failed))
