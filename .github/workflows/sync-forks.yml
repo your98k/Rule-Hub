@@ -116,3 +116,132 @@ jobs:
               output.write('\n'.join(results) + '\n')
           if failed:
               raise SystemExit('Blocked: ' + ', '.join(failed))
+      - name: Safely synchronize verified template copies without disclosing private contents
+        if: always()
+        shell: python
+        env:
+          SYNC_TOKEN: ${{ secrets.UPSTREAM_SYNC_TOKEN }}
+          TEMPLATE_CONFIG: ${{ secrets.UPSTREAM_TEMPLATE_CONFIG }}
+        run: |
+          import base64, json, os, urllib.error, urllib.parse, urllib.request
+          from pathlib import PurePosixPath
+
+          def api(path, method='GET', payload=None):
+              request = urllib.request.Request(os.environ['GITHUB_API_URL'] + path,
+                  data=None if payload is None else json.dumps(payload).encode(), method=method,
+                  headers={'Authorization': 'Bearer ' + os.environ['SYNC_TOKEN'],
+                           'Accept': 'application/vnd.github+json',
+                           'X-GitHub-Api-Version': '2022-11-28',
+                           'Content-Type': 'application/json'})
+              try:
+                  with urllib.request.urlopen(request, timeout=60) as response:
+                      body = response.read()
+                      return json.loads(body) if body else {}
+              except urllib.error.HTTPError as error:
+                  raise RuntimeError('GitHub API HTTP ' + str(error.code)) from None
+
+          def tree(repo, ref):
+              result = api('/repos/' + repo + '/git/trees/' + ref + '?recursive=1')
+              if result.get('truncated'):
+                  raise RuntimeError('Tree is truncated; refusing an incomplete comparison.')
+              return {item['path']: (item['mode'], item['type'], item['sha'])
+                      for item in result['tree'] if item['type'] != 'tree'}
+
+          def plan(base, local, source, preserved):
+              changes = {}
+              for path in sorted(set(base) | set(source)):
+                  if path in preserved or base.get(path) == source.get(path):
+                      continue
+                  if local.get(path) == source.get(path):
+                      continue
+                  if local.get(path) != base.get(path):
+                      raise RuntimeError('Overlapping local and upstream changes; no files were overwritten.')
+                  item = source.get(path)
+                  if item and item[1] != 'blob':
+                      raise RuntimeError('Changed submodules are not automatically imported.')
+                  changes[path] = item
+              return changes
+
+          failed = []
+          configs = json.loads(os.environ['TEMPLATE_CONFIG'])
+          summaries = ['## Verified private template copies', '']
+          for index, config in enumerate(configs, 1):
+              label = 'Private template ' + str(index)
+              try:
+                  repo, upstream = config['repo'], config['upstream']
+                  metadata = api('/repos/' + repo)
+                  if not metadata.get('private'):
+                      raise RuntimeError('Configured private target changed visibility; review required.')
+                  branch = metadata['default_branch']
+                  escaped = urllib.parse.quote(branch, safe='')
+                  head = api('/repos/' + repo + '/git/ref/heads/' + escaped)['object']['sha']
+                  commit = api('/repos/' + repo + '/git/commits/' + head)
+                  local = tree(repo, commit['tree']['sha'])
+                  state_path = '.github/upstream-template-sync.json'
+                  state = None
+                  if state_path in local:
+                      blob = api('/repos/' + repo + '/git/blobs/' + local[state_path][2])
+                      state = json.loads(base64.b64decode(blob['content']))
+                      if state['source'] != upstream or state['preserve_local'] != config['preserve_local']:
+                          raise RuntimeError('Recorded source or preservation policy changed; review required.')
+                  baseline = state['upstream_commit'] if state else config['baseline']
+                  if not state:
+                      initial = api('/repos/' + repo + '/git/commits/' + config['local_initial'])
+                      original = api('/repos/' + upstream + '/git/commits/' + baseline)
+                      if initial['tree']['sha'] != original['tree']['sha']:
+                          raise RuntimeError('Template baseline is not an exact original snapshot.')
+                      ancestry = api('/repos/' + repo + '/compare/' + config['local_initial'] + '...' + head)
+                      if ancestry['behind_by']:
+                          raise RuntimeError('Original snapshot is not an ancestor of the target.')
+                  source_meta = api('/repos/' + upstream)
+                  source_branch = source_meta['default_branch']
+                  source_head = api('/repos/' + upstream + '/git/ref/heads/' + urllib.parse.quote(source_branch, safe=''))['object']['sha']
+                  base, source = tree(upstream, baseline), tree(upstream, source_head)
+                  if state_path in source:
+                      raise RuntimeError('Upstream attempted to use the reserved synchronization-state path.')
+                  changes = plan(base, local, source, set(config['preserve_local']))
+                  new_state = {'version': 1, 'source': upstream, 'upstream_commit': source_head,
+                               'preserve_local': config['preserve_local']}
+                  if not changes and state == new_state:
+                      summaries.append('- ' + label + ': already current; local generated artifacts retained.')
+                      continue
+                  entries = []
+                  for path, item in changes.items():
+                      if item is None:
+                          entries.append({'path': path, 'mode': local[path][0], 'type': 'blob', 'sha': None})
+                      else:
+                          blob = api('/repos/' + upstream + '/git/blobs/' + item[2])
+                          copied = api('/repos/' + repo + '/git/blobs', 'POST', {
+                              'encoding': 'base64', 'content': blob['content']})
+                          if copied['sha'] != item[2]:
+                              raise RuntimeError('Imported blob hash verification failed.')
+                          entries.append({'path': path, 'mode': item[0], 'type': 'blob', 'sha': copied['sha']})
+                  state_blob = api('/repos/' + repo + '/git/blobs', 'POST', {
+                      'encoding': 'utf-8', 'content': json.dumps(new_state, indent=2) + '\n'})
+                  entries.append({'path': state_path, 'mode': '100644', 'type': 'blob', 'sha': state_blob['sha']})
+                  merged_tree = api('/repos/' + repo + '/git/trees', 'POST', {
+                      'base_tree': commit['tree']['sha'], 'tree': entries})
+                  merged = api('/repos/' + repo + '/git/commits', 'POST', {
+                      'message': 'chore: safely synchronize verified template upstream [skip ci]',
+                      'tree': merged_tree['sha'], 'parents': [head]})
+                  api('/repos/' + repo + '/git/refs/heads/' + escaped, 'PATCH', {
+                      'sha': merged['sha'], 'force': False})
+                  verified = tree(repo, merged['sha'])
+                  for path, item in changes.items():
+                      if verified.get(path) != item:
+                          raise RuntimeError('Post-write file verification failed.')
+                  for path in set(local) - set(changes) - {state_path}:
+                      if verified.get(path) != local[path]:
+                          raise RuntimeError('An untouched file changed unexpectedly.')
+                  summaries.append('- ' + label + ': synchronized ' + str(len(changes)) +
+                                   ' upstream files; existing local edits and generated artifacts retained.')
+              except Exception as error:
+                  failed.append(label)
+                  # Never print repository names, file paths, HTTP response bodies, or private contents.
+                  message = str(error) if isinstance(error, RuntimeError) else type(error).__name__
+                  print('::error title=' + label + '::' + message)
+                  summaries.append('- ' + label + ': BLOCKED; no force push was performed.')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as output:
+              output.write('\n'.join(summaries) + '\n')
+          if failed:
+              raise SystemExit(', '.join(failed) + ' blocked.')
