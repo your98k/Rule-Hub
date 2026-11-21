@@ -9,7 +9,7 @@ category: '会员解锁'
 icon: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/assets/icons/ESFileExplorer.png'
 openUrl: 'https://apps.apple.com/app/id1441621965'
 date: '2026-11-22'
-version: '1.0.1'
+version: '1.0.2'
 author: 'your98k'
 homepage: 'https://github.com/your98k/Rule-Hub'
 
@@ -41,12 +41,19 @@ arguments:
     default: false
 
 http:
+  # iects 实测走明文 80,明文不经过 mitm,必须用 force-http-engine 拉进 HTTP 引擎
+  force-http-engine:
+    - 'iects.doglobal.net:80'
+    - 'esfile.doglobal.net:80'
+    - 'api.duapps.com:80'
+    - 'dvc.doglobal.net:80'
+    - 'api-es.doglobal.net:80'
   mitm:
-    - 'iects.doglobal.net'
-    - 'esfile.doglobal.net'
-    - 'api.duapps.com'
-    - 'dvc.doglobal.net'
-    - 'api-es.doglobal.net'
+    - 'iects.doglobal.net:*'
+    - 'esfile.doglobal.net:*'
+    - 'api.duapps.com:*'
+    - 'dvc.doglobal.net:*'
+    - 'api-es.doglobal.net:*'
   script:
     - name: es-vip-request
       match: '^https?://(?:iects|esfile)\.doglobal\.net/|^https?://(?:api|dvc)\.duapps\.com/|^https?://dvc\.doglobal\.net/|^https?://api-es\.doglobal\.net/'
