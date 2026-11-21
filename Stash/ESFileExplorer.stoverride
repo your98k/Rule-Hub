@@ -9,7 +9,7 @@ category: '会员解锁'
 icon: 'https://raw.githubusercontent.com/your98k/Rule-Hub/main/assets/icons/ESFileExplorer.png'
 openUrl: 'https://apps.apple.com/app/id1441621965'
 date: '2026-11-22'
-version: '1.0.0'
+version: '1.0.1'
 author: 'your98k'
 homepage: 'https://github.com/your98k/Rule-Hub'
 
@@ -42,19 +42,20 @@ arguments:
 
 http:
   mitm:
+    - 'iects.doglobal.net'
     - 'esfile.doglobal.net'
     - 'api.duapps.com'
     - 'dvc.doglobal.net'
     - 'api-es.doglobal.net'
   script:
     - name: es-vip-request
-      match: '^https?://(?:esfile\.doglobal\.net|api\.duapps\.com|dvc\.doglobal\.net|api-es\.doglobal\.net)/'
+      match: '^https?://(?:iects|esfile)\.doglobal\.net/|^https?://(?:api|dvc)\.duapps\.com/|^https?://dvc\.doglobal\.net/|^https?://api-es\.doglobal\.net/'
       type: request
       require-body: false
       timeout: 10
       argument: '{"debug":${args.debug|json}}'
     - name: es-vip-response
-      match: '^https?://(?:esfile\.doglobal\.net|api\.duapps\.com|dvc\.doglobal\.net|api-es\.doglobal\.net)/'
+      match: '^https?://(?:iects|esfile)\.doglobal\.net/|^https?://(?:api|dvc)\.duapps\.com/|^https?://dvc\.doglobal\.net/|^https?://api-es\.doglobal\.net/'
       type: response
       require-body: true
       timeout: 15
